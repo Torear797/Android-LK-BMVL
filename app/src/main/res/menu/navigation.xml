@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_order"
+        android:icon="@drawable/ic_description_black_24dp"
+        android:title="@string/order" />
+
+    <item
+        android:id="@+id/navigation_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="@string/search" />
+
+    <item
+        android:id="@+id/navigation_people"
+        android:icon="@drawable/ic_people_black_24dp"
+        android:title="@string/people" />
+</menu>

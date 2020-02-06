@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import com.bmvl.lk.OnBackPressedListener;
 import com.bmvl.lk.R;
 
 import static com.bmvl.lk.MenuActivity.MyActionBar;
@@ -15,7 +16,7 @@ import static com.bmvl.lk.MenuActivity.MyActionBar;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements OnBackPressedListener {
 
 
     public SearchFragment() {
@@ -32,4 +33,8 @@ public class SearchFragment extends Fragment {
         return MyView;
     }
 
+    @Override
+    public void onBackPressed() {
+
+    }
 }

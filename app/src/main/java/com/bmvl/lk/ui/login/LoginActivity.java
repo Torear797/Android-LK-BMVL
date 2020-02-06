@@ -80,8 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                 setResult(Activity.RESULT_OK);
 
                 //Complete and destroy login activity once successful
-                Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
-                startActivity(intent);
+
                 //Objects.requireNonNull(getActivity()).finish();
 
                 finish();
@@ -125,6 +124,9 @@ public class LoginActivity extends AppCompatActivity {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+
+                Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
+                startActivity(intent);
             }
         });
     }

@@ -11,9 +11,32 @@
     <string name="login_failed">"Некорректный Логин"</string>
     <string name="order">Заказы</string>
     <string name="search">Поиск</string>
+    <string name="profile">Профиль</string>
+    <string name="Notice">Уведомления</string>
     <string name="people">Подчиненные</string>
     <string name="AB_notification">Уведомление</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="order_types">
+        <item>Заявка на исследование пищевых продуктов и кормов</item>
+        <item>Заявка на фитосанитарное заключение</item>
+        <item>Заявка на исследование семян, почв, удобрений</item>
+        <item>Сопроводительное письмо</item>
+        <item>Гарантийное письмо</item>
+        <item>Информационное письмо</item>
+        <item>Заявка на изменение в протокол</item>
+    </string-array>
+
+    <string-array name="order_statuses">
+        <item>Новый</item>
+        <item>Принят</item>
+        <item>На рассмотрении</item>
+        <item>Отказано</item>
+        <item>В обработке</item>
+        <item>Готов</item>
+        <item>Оплачен</item>
+        <item>Протокол скачен</item>
+        <item>Оплачен и протокол скачан</item>
+        <item>Подписано</item>
+    </string-array>
+
 </resources>

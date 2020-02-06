@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import com.bmvl.lk.OnBackPressedListener;
 import com.bmvl.lk.R;
 import com.bmvl.lk.models.Orders;
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.util.Attributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +42,47 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
         SetTestData();
 
-        OrdersAdapter OrderAdapter = new OrdersAdapter(getContext(), Orders);
+       // OrdersAdapter OrderAdapter = new OrdersAdapter(getContext(), Orders);
+       OrderSwipeAdapter OrderAdapter = new OrderSwipeAdapter(getContext(), Orders);
+        (OrderAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(OrderAdapter);
 
+
+//        SwipeLayout swipeLayout =  MyView.findViewById(R.id.swipe);
+//        swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+//        swipeLayout.addDrag(SwipeLayout.DragEdge.Left, MyView.findViewById(R.id.bottom_wrapper));
+//
+//        swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+//            @Override
+//            public void onStartOpen(SwipeLayout layout) {
+//
+//            }
+//
+//            @Override
+//            public void onOpen(SwipeLayout layout) {
+//
+//            }
+//
+//            @Override
+//            public void onStartClose(SwipeLayout layout) {
+//
+//            }
+//
+//            @Override
+//            public void onClose(SwipeLayout layout) {
+//
+//            }
+//
+//            @Override
+//            public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
+//
+//            }
+//
+//            @Override
+//            public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
+//
+//            }
+//        });
         return MyView;
     }
     private void SetTestData(){

@@ -15,6 +15,14 @@
     <string name="Notice">Уведомления</string>
     <string name="people">Подчиненные</string>
     <string name="AB_notification">Уведомление</string>
+    <string name="s_numer">Номер заявки</string>
+    <string name="s_numer_protocol">Номер протокола</string>
+    <string name="ot">Дата от</string>
+    <string name="Do">Дата до</string>
+    <string name="email">Email</string>
+    <string name="password">Пароль</string>
+    <string name="price_ot">Цена От</string>
+    <string name="price_do">Цена До</string>
 
     <string-array name="order_types">
         <item>Заявка на исследование пищевых продуктов и кормов</item>
@@ -37,6 +45,12 @@
         <item>Протокол скачен</item>
         <item>Оплачен и протокол скачан</item>
         <item>Подписано</item>
+    </string-array>
+
+    <string-array name="sort_types">
+        <item>Сначала новые</item>
+        <item>Сначала старые</item>
+        <item>По статусу</item>
     </string-array>
 
 </resources>

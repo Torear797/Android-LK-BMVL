@@ -15,7 +15,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.Calendar;
 import java.util.Objects;
 
-import static com.bmvl.lk.MenuActivity.MyActionBar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,7 +33,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.fragment_search, container, false);
-        MyActionBar.setTitle(R.string.search);
+       // MyActionBar.setTitle(R.string.search);
 
         final EditText Edit_ot = MyView.findViewById(R.id.Data_ot);
         final EditText Edit_Do = MyView.findViewById(R.id.Data_do);

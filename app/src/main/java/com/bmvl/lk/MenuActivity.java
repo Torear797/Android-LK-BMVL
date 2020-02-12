@@ -1,28 +1,31 @@
 package com.bmvl.lk;
 
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.bmvl.lk.ui.Notification.NoticeFragment;
 import com.bmvl.lk.ui.order.OrderFragment;
-import com.bmvl.lk.ui.profile.ProfileFragment;
+import com.bmvl.lk.ui.profile.ProfileActivity;
 import com.bmvl.lk.ui.search.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.Objects;
 
 
 public class MenuActivity extends AppCompatActivity {
     private  int CurrentPage = R.id.navigation_order;
-    public static  ActionBar MyActionBar;
+
+    private Toolbar MenuToolbar;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -34,12 +37,15 @@ public class MenuActivity extends AppCompatActivity {
                 CurrentPage = item.getItemId();
                 switch (item.getItemId()) {
                     case R.id.navigation_order:
+                        MenuToolbar.setTitle(R.string.order);
                         loadFragment(OrderFragment.newInstance());
                         return true;
                     case R.id.navigation_search:
+                        MenuToolbar.setTitle(R.string.search);
                         loadFragment(SearchFragment.newInstance());
                         return true;
                     case R.id.notice:
+                        MenuToolbar.setTitle(R.string.Notice);
                         loadFragment(NoticeFragment.newInstance());
                         return true;
                 }
@@ -49,18 +55,13 @@ public class MenuActivity extends AppCompatActivity {
     };
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(CurrentPage == item.getItemId()) {
-            return false;
-        } else {
-            CurrentPage = item.getItemId();
             switch (item.getItemId()) {
                 case R.id.profile:
-//                Toast.makeText(this, "Menu Item 1 selected", Toast.LENGTH_SHORT).show();
-                    loadFragment(ProfileFragment.newInstance());
+                    Intent intent = new Intent(MenuActivity.this, ProfileActivity.class);
+                    startActivity(intent);
                     break;
             }
             return true;
-        }
     }
 
     @Override
@@ -92,12 +93,16 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        MyActionBar = (Objects.requireNonNull(this)).getSupportActionBar();
+       // MyActionBar = (Objects.requireNonNull(this)).getSupportActionBar();
+        MenuToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(MenuToolbar);
+
 
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         BottomNavigationView navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         loadFragment(OrderFragment.newInstance());
+        MenuToolbar.setTitle(R.string.order);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

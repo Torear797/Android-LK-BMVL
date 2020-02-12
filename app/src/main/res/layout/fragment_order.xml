@@ -18,28 +18,22 @@
         android:layout_height="wrap_content"
         app:layoutManager="LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Страница 1"
-        app:layout_constraintEnd_toEndOf="@+id/list"
-        app:layout_constraintStart_toStartOf="@+id/list"
-        app:layout_constraintTop_toBottomOf="@+id/list" />
+    </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:focusable="true"
+        android:layout_marginEnd="@dimen/myfab_margin"
+        android:layout_marginBottom="@dimen/myfab_margin"
         android:src="@drawable/ic_add_black_24dp"
-        app:backgroundTint="@color/colorLightGreen"
+        app:rippleColor="@color/colorPrimary"
+        app:backgroundTint="@color/colorPrimary_dark"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,15 @@ public class Notifications {
     private int status;
     private String event;
 
+    public Notifications(int id, int user_id, String date, int order_id, int status, String event) {
+        this.id = id;
+        this.user_id = user_id;
+        this.date = date;
+        this.order_id = order_id;
+        this.status = status;
+        this.event = event;
+    }
+
     public int getId() {
         return id;
     }

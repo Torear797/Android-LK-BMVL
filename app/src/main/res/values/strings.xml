@@ -23,6 +23,7 @@
     <string name="password">Пароль</string>
     <string name="price_ot">Цена От</string>
     <string name="price_do">Цена До</string>
+    <string name="Login_title">Авторизация</string>
 
     <string-array name="order_types">
         <item>Заявка на исследование пищевых продуктов и кормов</item>
@@ -52,5 +53,7 @@
         <item>Сначала старые</item>
         <item>По статусу</item>
     </string-array>
+    <string name="title_activity_fab">FabActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 
 </resources>

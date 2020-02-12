@@ -24,7 +24,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import java.util.List;
 
 public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.SimpleViewHolder> {
-    private List<com.bmvl.lk.models.Orders> Orders;
+    private List<Orders> Orders;
     private LayoutInflater inflater;
   //  private Context MyContext;
 
@@ -106,8 +106,8 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 
     class SimpleViewHolder extends RecyclerView.ViewHolder {
         final TextView Number,Name,Status,Adres,Person,PersonStatus,Data;
-        SwipeLayout swipeLayout;
-        ImageView buttonDelete;
+        final SwipeLayout swipeLayout;
+        final ImageView buttonDelete;
         SimpleViewHolder(@NonNull View itemView) {
             super(itemView);
             Number = itemView.findViewById(R.id.nomer);

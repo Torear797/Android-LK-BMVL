@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 
 import com.bmvl.lk.R;
 
-import static com.bmvl.lk.MenuActivity.MyActionBar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,7 +27,7 @@ public class PeopleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.fragment_people, container, false);
-                MyActionBar.setTitle(R.string.people);
+              //  MyActionBar.setTitle(R.string.people);
         return MyView;
     }
 

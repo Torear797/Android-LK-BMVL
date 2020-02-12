@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bmvl.lk.OnBackPressedListener;
 import com.bmvl.lk.R;
 
-import static com.bmvl.lk.MenuActivity.MyActionBar;
 
 
 /**
@@ -29,8 +28,8 @@ public class ProfileFragment extends Fragment implements OnBackPressedListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View MyView = inflater.inflate(R.layout.fragment_profile, container, false);
-        MyActionBar.setTitle(R.string.profile);
+        View MyView = inflater.inflate(R.layout.activity_profile, container, false);
+       // MyActionBar.setTitle(R.string.profile);
 
         TextView FIO = MyView.findViewById(R.id.FIO);
         String Name = "Имя", Surname = "Фамилия", Patronic = "Отчество";

@@ -1,15 +1,14 @@
 package com.bmvl.lk.ui.order;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.OnBackPressedListener;
 import com.bmvl.lk.R;
@@ -44,6 +43,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
         final RecyclerView recyclerView = MyView.findViewById(R.id.list);
         final FloatingActionButton fab = MyView.findViewById(R.id.floatingActionButton);
+        fab.setColorFilter(Color.argb(255, 255, 255, 255));
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
@@ -70,13 +70,11 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
             }
         });
 
-
         YoYo.with(Techniques.Tada)
                 .duration(700)
-                .playOn(MyView.findViewById(R.id.floatingActionButton));
+                .playOn(fab);
         SetTestData();
 
-        // OrdersAdapter OrderAdapter = new OrdersAdapter(getContext(), Orders);
         OrderSwipeAdapter OrderAdapter = new OrderSwipeAdapter(getContext(), Orders);
         (OrderAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(OrderAdapter);

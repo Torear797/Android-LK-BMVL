@@ -93,16 +93,18 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-       // MyActionBar = (Objects.requireNonNull(this)).getSupportActionBar();
         MenuToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(MenuToolbar);
+        if(MenuToolbar != null) {
+            MenuToolbar.setTitle(R.string.order);
+            setSupportActionBar(MenuToolbar);
+        }
 
 
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         BottomNavigationView navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         loadFragment(OrderFragment.newInstance());
-        MenuToolbar.setTitle(R.string.order);
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

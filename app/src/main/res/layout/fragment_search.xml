@@ -12,15 +12,22 @@
         tools:layout_editor_absoluteX="125dp"
         tools:layout_editor_absoluteY="105dp">
 
-        <Button
-            android:id="@+id/ыуфкср_button"
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/search_button"
+            android:layout_marginTop="10dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/ic_search_black_24dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/colorPrimary_dark"
             android:text="@string/search"
             app:layout_constraintEnd_toEndOf="@+id/spinner4"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner4" />
+            app:layout_constraintTop_toBottomOf="@+id/spinner4"
+            />
 
         <Spinner
             android:id="@+id/spinner4"

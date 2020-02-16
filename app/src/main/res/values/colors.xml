@@ -11,4 +11,6 @@
 
     <color name="colorLightGreen">#47CF4F</color>
     <color name="White">#FFFFFF</color>
+    <color name="backround_color_site">#f3f5f7</color>
+
 </resources>

@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center|top"
+    android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context="ui.search.SearchFragment"
         tools:layout_editor_absoluteX="125dp"
+        android:background="@color/White"
+        android:layout_margin="5dp"
         tools:layout_editor_absoluteY="105dp">
 
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/search_button"
-            android:layout_marginTop="10dp"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/search"
             app:cornerRadius="16dp"
             app:icon="@drawable/ic_search_black_24dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/colorPrimary_dark"
-            android:text="@string/search"
             app:layout_constraintEnd_toEndOf="@+id/spinner4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner4"
-            />
+            app:strokeColor="@color/colorPrimary_dark"
+            app:strokeWidth="1dp" />
 
         <Spinner
             android:id="@+id/spinner4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:spinnerMode="dialog"
             android:entries="@array/sort_types"
+            android:spinnerMode="dialog"
             app:layout_constraintEnd_toEndOf="@+id/spinner3"
             app:layout_constraintStart_toStartOf="@+id/spinner3"
             app:layout_constraintTop_toBottomOf="@+id/spinner3" />
@@ -45,8 +48,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:spinnerMode="dialog"
             android:entries="@array/order_statuses"
+            android:spinnerMode="dialog"
             app:layout_constraintEnd_toEndOf="@+id/textInputLayout6"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout5"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout5" />
@@ -58,15 +61,15 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:spinnerMode="dialog"
             android:entries="@array/order_types"
+            android:spinnerMode="dialog"
             app:layout_constraintEnd_toEndOf="@+id/textInputLayout4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout"
-            android:layout_width="170dp"
+            android:layout_width="@dimen/wiedth_button"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
@@ -85,9 +88,11 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout2"
-            android:layout_width="170dp"
+            android:layout_width="@dimen/wiedth_button"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textInputLayout"
             app:layout_constraintTop_toTopOf="@+id/textInputLayout">
 
@@ -104,13 +109,13 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout3"
-            android:layout_width="170dp"
+            android:layout_width="@dimen/wiedth_button"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:endIconMode="custom"
             app:endIconDrawable="@drawable/ic_date_range_black_24dp"
+            app:endIconMode="custom"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -126,7 +131,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout4"
-            android:layout_width="170dp"
+            android:layout_width="@dimen/wiedth_button"
             android:layout_height="wrap_content"
 
             android:layout_marginStart="10dp"
@@ -146,7 +151,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout5"
-            android:layout_width="170dp"
+            android:layout_width="@dimen/wiedth_button"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="@+id/spinner2"
@@ -162,7 +167,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout6"
-            android:layout_width="170dp"
+            android:layout_width="@dimen/wiedth_button"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             app:layout_constraintStart_toEndOf="@+id/textInputLayout5"
@@ -177,5 +182,12 @@
         </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Результат поиска" />
+</LinearLayout>
 

@@ -8,7 +8,6 @@
     tools:context="ui.order.OrderFragment"
     tools:layout_editor_absoluteX="125dp"
     tools:layout_editor_absoluteY="105dp"
-    android:background="#E7E7E7"
     >
 
     <androidx.recyclerview.widget.RecyclerView
@@ -28,8 +27,8 @@
         android:layout_marginEnd="@dimen/myfab_margin"
         android:layout_marginBottom="@dimen/myfab_margin"
         android:src="@drawable/ic_add_black_24dp"
-        app:rippleColor="@color/colorPrimary"
-        app:backgroundTint="@color/colorPrimary_dark"
+        app:rippleColor="@color/colorPrimary_dark"
+        app:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />

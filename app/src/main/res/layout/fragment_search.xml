@@ -19,17 +19,16 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/search_button"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/search"
-            app:cornerRadius="16dp"
+            app:cornerRadius="5dp"
             app:icon="@drawable/ic_search_black_24dp"
             app:layout_constraintEnd_toEndOf="@+id/spinner4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner4"
-            app:strokeColor="@color/colorPrimary_dark"
+            app:strokeColor="@color/accent"
             app:strokeWidth="1dp" />
 
         <Spinner
@@ -154,6 +153,8 @@
             android:layout_width="@dimen/wiedth_button"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_attach_money_black_24dp"
             app:layout_constraintStart_toStartOf="@+id/spinner2"
             app:layout_constraintTop_toBottomOf="@+id/spinner2">
 
@@ -170,6 +171,8 @@
             android:layout_width="@dimen/wiedth_button"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_attach_money_black_24dp"
             app:layout_constraintStart_toEndOf="@+id/textInputLayout5"
             app:layout_constraintTop_toTopOf="@+id/textInputLayout5">
 

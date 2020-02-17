@@ -20,6 +20,8 @@ import com.bmvl.lk.ui.profile.ProfileActivity;
 import com.bmvl.lk.ui.search.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Objects;
+
 
 public class MenuActivity extends AppCompatActivity {
     private  int CurrentPage = R.id.navigation_order;
@@ -97,14 +99,17 @@ public class MenuActivity extends AppCompatActivity {
         if(MenuToolbar != null) {
             MenuToolbar.setTitle(R.string.order);
             setSupportActionBar(MenuToolbar);
+            //getSupportActionBar().setDisplayShowTitleEnabled(true);
+
         }
 
 
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         BottomNavigationView navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        loadFragment(OrderFragment.newInstance());
 
+        loadFragment(OrderFragment.newInstance());
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

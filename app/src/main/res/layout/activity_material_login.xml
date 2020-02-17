@@ -61,10 +61,8 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/login"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        app:cornerRadius="16dp"
+        app:cornerRadius="5dp"
         app:strokeWidth="1dp"
-        app:strokeColor="@color/colorPrimary_dark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
@@ -73,6 +71,7 @@
         android:layout_marginEnd="48dp"
         android:layout_marginBottom="64dp"
         android:enabled="false"
+        app:strokeColor="@color/accent"
         android:text="@string/action_sign_in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,13 +1,13 @@
 package com.bmvl.lk.ui.profile;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bmvl.lk.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -21,16 +21,19 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_material);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.profile);
-       setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
+        Objects.requireNonNull(getSupportActionBar()).setIcon(R.drawable.logo);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
 
         //TextView FIO = findViewById(R.id.FIO);
         String Name = "Имя", Surname = "Фамилия", Patronic = "Отчество";
-       // FIO.setText(String.format("Личный кабинет пользователя %s %s %s", Name ,Surname, Patronic));
+        // FIO.setText(String.format("Личный кабинет пользователя %s %s %s", Name ,Surname, Patronic));
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setColorFilter(Color.argb(255, 255, 255, 255));
@@ -42,6 +45,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

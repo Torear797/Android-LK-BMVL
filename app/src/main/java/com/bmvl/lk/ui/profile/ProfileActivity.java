@@ -20,8 +20,8 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_material);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setContentView(R.layout.activity_profile_material);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.profile);
@@ -37,6 +37,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setColorFilter(Color.argb(255, 255, 255, 255));
+
+
+
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

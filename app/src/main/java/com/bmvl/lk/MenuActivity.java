@@ -20,8 +20,6 @@ import com.bmvl.lk.ui.profile.ProfileActivity;
 import com.bmvl.lk.ui.search.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.Objects;
-
 
 public class MenuActivity extends AppCompatActivity {
     private  int CurrentPage = R.id.navigation_order;
@@ -93,6 +91,7 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_menu);
 
         MenuToolbar = findViewById(R.id.toolbar);
@@ -104,7 +103,7 @@ public class MenuActivity extends AppCompatActivity {
         }
 
 
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
 
         BottomNavigationView navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

@@ -32,8 +32,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_material_login);
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setContentView(R.layout.activity_material_login);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.Login_title);
+        setSupportActionBar(toolbar);
+
 
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
@@ -42,9 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.Login_title);
-        setSupportActionBar(toolbar);
+
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -69,17 +72,16 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 loadingProgressBar.setVisibility(View.GONE);
+
                 if (loginResult.getError() != null) {
                     showLoginFailed(loginResult.getError());
                 }
-//                if (loginResult.getSuccess() != null) {
-//                    updateUiWithUser(loginResult.getSuccess());
-//                }
+                if (loginResult.getSuccess() != null) {
+                    updateUiWithUser(loginResult.getSuccess());
+                }
                 setResult(Activity.RESULT_OK);
 
                 //Complete and destroy login activity once successful
-
-                //Objects.requireNonNull(getActivity()).finish();
 
                 finish();
             }
@@ -122,17 +124,16 @@ public class LoginActivity extends AppCompatActivity {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
-
-                Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
-                startActivity(intent);
             }
         });
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+//        String welcome = getString(R.string.welcome) + model.getDisplayName();
+//        // TODO : initiate successful logged in experience
+//        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
+        startActivity(intent);
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {

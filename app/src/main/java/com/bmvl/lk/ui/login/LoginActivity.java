@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_material_login);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.Login_title);
         setSupportActionBar(toolbar);
 
@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
+        final Button loginButton = findViewById(R.id.Create);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
 

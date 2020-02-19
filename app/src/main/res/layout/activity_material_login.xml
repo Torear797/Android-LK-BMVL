@@ -5,9 +5,11 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
+    android:clickable="true"
     tools:context=".ui.login.LoginActivity">
-
     <include layout="@layout/toolbar" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -60,7 +62,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/login"
+        android:id="@+id/Create"
         app:cornerRadius="5dp"
         app:strokeWidth="1dp"
         android:layout_width="wrap_content"

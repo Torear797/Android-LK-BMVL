@@ -23,7 +23,7 @@ public class ProfileActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_profile_material);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.profile);
         setSupportActionBar(toolbar);
 

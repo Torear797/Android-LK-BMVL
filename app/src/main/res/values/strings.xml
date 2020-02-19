@@ -24,8 +24,19 @@
     <string name="price_ot">Цена От</string>
     <string name="price_do">Цена До</string>
     <string name="Login_title">Авторизация</string>
+    <string name="new_order_title">Выберите тип заявки</string>
+    <string name="new_order">Новая заявка</string>
 
     <string-array name="order_types">
+        <item>Заявка на исследование пищевых продуктов и кормов</item>
+        <item>Сопроводительное письмо (Заявка на исследование биоматериалов)</item>
+        <item>Гарантийное письмо</item>
+        <item>Информационное письмо</item>
+        <item>Запрос</item>
+    </string-array>
+
+
+    <string-array name="order_name">
         <item>Заявка на исследование пищевых продуктов и кормов</item>
         <item>Заявка на фитосанитарное заключение</item>
         <item>Заявка на исследование семян, почв, удобрений</item>
@@ -53,7 +64,11 @@
         <item>Сначала старые</item>
         <item>По статусу</item>
     </string-array>
+
     <string name="title_activity_fab">FabActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
+    <string name="contact_face">Контактное лицо</string>
+    <string name="create_botton">Отправить</string>
+
 
 </resources>

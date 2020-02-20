@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fl_news"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ui.order.OrderFragment"
@@ -26,12 +25,13 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/myfab_margin"
         android:layout_marginBottom="@dimen/myfab_margin"
+        android:fitsSystemWindows="false"
         android:src="@drawable/ic_add_black_24dp"
-        app:rippleColor="@color/colorPrimary_dark"
+        app:borderWidth="0dp"
         app:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:rippleColor="@color/colorPrimary_dark" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

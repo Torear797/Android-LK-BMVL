@@ -5,16 +5,16 @@ public class Field {
     private int column_id;
 
     private String value;
-    private boolean Enabled;
+    private boolean Doublesize;
     private String Hint;
     private int InputType;
 
 
-    public Field(int id, int column_id, String value, boolean enabled, String hint, int inputType) {
+    public Field(int id, int column_id, String value, boolean DoubleSize, String hint, int inputType) {
         this.id = id;
         this.column_id = column_id;
         this.value = value;
-        Enabled = enabled;
+        Doublesize = DoubleSize;
         Hint = hint;
         InputType = inputType;
     }
@@ -43,12 +43,12 @@ public class Field {
         this.value = value;
     }
 
-    public boolean isEnabled() {
-        return Enabled;
+    public boolean isDoubleSize() {
+        return Doublesize;
     }
 
-    public void setEnabled(boolean enabled) {
-        Enabled = enabled;
+    public void setDoubleSize(boolean enabled) {
+        Doublesize = enabled;
     }
 
     public String getHint() {

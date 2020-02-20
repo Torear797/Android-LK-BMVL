@@ -22,13 +22,10 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 
 public class OrderFragment extends Fragment implements OnBackPressedListener {
@@ -58,6 +55,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         YoYo.with(Techniques.Tada)
                 .duration(700)
                 .playOn(fab);
+
         SetTestData();
 
         OrderSwipeAdapter OrderAdapter = new OrderSwipeAdapter(getContext(), Orders);
@@ -74,7 +72,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 byte choce = 0;
-                                String order_name;
                                 switch (which) {
                                     case 1:
                                         choce = 1;

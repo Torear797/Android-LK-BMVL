@@ -15,19 +15,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.Create_Order.CreateOrderActivity"></activity>
         <activity
+            android:screenOrientation="portrait"
+            android:name=".ui.Create_Order.CreateOrderActivity">
+
+        </activity>
+        <activity
+            android:screenOrientation="portrait"
             android:name=".ui.profile.ProfileActivity"
             android:label="@string/title_activity_profile"
-            android:theme="@style/AppTheme"></activity>
-        <activity android:name=".ui.login.LoginActivity">
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".ui.login.LoginActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MenuActivity" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".MenuActivity"/>
     </application>
 
 </manifest>

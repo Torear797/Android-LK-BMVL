@@ -20,10 +20,11 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_profile_material);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
+        final FloatingActionButton fab = findViewById(R.id.fab);
+
         toolbar.setTitle(R.string.profile);
         setSupportActionBar(toolbar);
 
@@ -35,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
         String Name = "Имя", Surname = "Фамилия", Patronic = "Отчество";
         // FIO.setText(String.format("Личный кабинет пользователя %s %s %s", Name ,Surname, Patronic));
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+
         fab.setColorFilter(Color.argb(255, 255, 255, 255));
 
 

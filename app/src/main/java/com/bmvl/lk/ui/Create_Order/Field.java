@@ -1,17 +1,46 @@
 package com.bmvl.lk.ui.Create_Order;
 
-public class Field {
-    private int id;
-    private int column_id;
+import android.graphics.drawable.Drawable;
 
+public class Field {
+
+    private int column_id;
     private String value;
     private boolean Doublesize;
     private String Hint;
     private int InputType;
 
+    public Field(int column_id, String value, String hint, int inputType, Drawable icon, boolean data) {
+        this.column_id = column_id;
+        this.value = value;
+        Hint = hint;
+        InputType = inputType;
+        Icon = icon;
+        Data = data;
+    }
 
-    public Field(int id, int column_id, String value, boolean DoubleSize, String hint, int inputType) {
-        this.id = id;
+    private Drawable Icon;
+
+    public boolean isData() {
+        return Data;
+    }
+
+    public void setData(boolean data) {
+        Data = data;
+    }
+
+    private boolean Data;
+
+    public Field(int column_id, String value, boolean doublesize, String hint, int inputType, Drawable icon) {
+        this.column_id = column_id;
+        this.value = value;
+        Doublesize = doublesize;
+        Hint = hint;
+        InputType = inputType;
+        Icon = icon;
+    }
+
+    public Field(int column_id, String value, boolean DoubleSize, String hint, int inputType) {
         this.column_id = column_id;
         this.value = value;
         Doublesize = DoubleSize;
@@ -19,12 +48,19 @@ public class Field {
         InputType = inputType;
     }
 
-    public int getId() {
-        return id;
+    public Field(int column_id, String value, String hint, int inputType) {
+        this.column_id = column_id;
+        this.value = value;
+        Hint = hint;
+        InputType = inputType;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Field(int column_id, String value, String hint, int inputType, Drawable icon) {
+        this.column_id = column_id;
+        this.value = value;
+        Hint = hint;
+        InputType = inputType;
+        Icon = icon;
     }
 
     public int getColumn_id() {
@@ -65,5 +101,21 @@ public class Field {
 
     public void setInputType(int inputType) {
         InputType = inputType;
+    }
+
+    public boolean isDoublesize() {
+        return Doublesize;
+    }
+
+    public void setDoublesize(boolean doublesize) {
+        Doublesize = doublesize;
+    }
+
+    public Drawable getIcon() {
+        return Icon;
+    }
+
+    public void setIcon(Drawable icon) {
+        Icon = icon;
     }
 }

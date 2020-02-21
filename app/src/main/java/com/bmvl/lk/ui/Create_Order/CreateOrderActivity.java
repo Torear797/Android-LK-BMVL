@@ -1,5 +1,6 @@
 package com.bmvl.lk.ui.Create_Order;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.MenuItem;
@@ -7,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
@@ -35,14 +37,27 @@ public class CreateOrderActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
+        recyclerView.setHasFixedSize(true);
         LoadDefaultFields();
 
         OrderName.setText(OrderFragment.OrderTypes[order_id]);
         //Objects.requireNonNull(getSupportActionBar()).setIcon(R.drawable.logo);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+        final GridLayoutManager mng_layout = new GridLayoutManager(this, 2);
+        mng_layout.setSpanSizeLookup( new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position == 1 || position == 2) {
+                    return 1;
+                } else {
+                    return 2;
+                }
+            }
+        });
+        recyclerView.setLayoutManager(mng_layout);
 
-        FieldsAdapter adapter = new FieldsAdapter(this);
+        final FieldsAdapter adapter = new FieldsAdapter(this);
         recyclerView.setAdapter(adapter);
 
 
@@ -71,33 +86,34 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private void addFieldOrderType2() {
-        Fields.add(new Field(9,1,"", false,"Сумма долга (руб)", InputType.TYPE_CLASS_NUMBER));
-        Fields.add(new Field(10,1,"", false,"Номер заявки", InputType.TYPE_CLASS_NUMBER));
-        Fields.add(new Field(11,1,"", false,"Срок уплаты", InputType.TYPE_DATETIME_VARIATION_DATE));
-        Fields.add(new Field(12,1,"", true,"Текст", InputType.TYPE_TEXT_FLAG_MULTI_LINE));
+        Fields.add(new Field(1,"","Сумма долга (руб)", InputType.TYPE_CLASS_NUMBER,getDrawable(R.drawable.rub) ));
+        Fields.add(new Field(1,"","Номер заявки", InputType.TYPE_CLASS_NUMBER));
+        Fields.add(new Field(1,"","Срок уплаты", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp),true));
+        Fields.add(new Field(1,"", true,"Текст", InputType.TYPE_TEXT_FLAG_MULTI_LINE));
     }
 
     private void addFieldOrderType3() {
-        Fields.add(new Field(9,1,"", false,"Заголовок", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field(10,1,"", true,"Текст", InputType.TYPE_TEXT_FLAG_MULTI_LINE));
+        Fields.add(new Field(1,"","Заголовок", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(1,"",true,"Текст", InputType.TYPE_TEXT_FLAG_MULTI_LINE));
     }
 
     private void addFieldOrderType4() {
-        Fields.add(new Field(9,1,"", false,"Номер заявки", InputType.TYPE_CLASS_NUMBER));
-        Fields.add(new Field(10,1,"", false,"Заголовок", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field(11,1,"", true,"Текст", InputType.TYPE_TEXT_FLAG_MULTI_LINE));
+        Fields.add(new Field(1,"","Номер заявки", InputType.TYPE_CLASS_NUMBER));
+        Fields.add(new Field(1,"","Заголовок", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(1,"", true,"Текст", InputType.TYPE_TEXT_FLAG_MULTI_LINE));
     }
 
     private void LoadDefaultFields() {
         Fields.clear();
-        Fields.add(new Field(1,1,"Общество с ограниченной ответственностью \"БИЗНЕС ФУД СФЕРА\"", false,"Заявитель", InputType.TYPE_NULL));
-        Fields.add(new Field(2,1,"12-19/Ш0015 от 11.01.2019", false,"Договор №", InputType.TYPE_NULL));
-        Fields.add(new Field(3,1,"308006, Белгородская область, Белгород город, Производственная улица, дом № Дом 4, Этаж/Офис 1/4", false,"Адрес", InputType.TYPE_NULL));
-        Fields.add(new Field(4,1,"3123427599", false,"ИНН", InputType.TYPE_NULL));
-        Fields.add(new Field(5,1,"", false,"Телефон", InputType.TYPE_NULL));
-        Fields.add(new Field(6,1,"user@mail.ru", false,"E-mail", InputType.TYPE_NULL));
-        Fields.add(new Field(7,1,"Иванов Иван Иванович, Должность, действующий на основании устава", false,"Представитель организации", InputType.TYPE_NULL));
-        Fields.add(new Field(8,1,String.valueOf(new Date()), false,"Дата протокола", InputType.TYPE_NULL));
+        Fields.add(new Field(1,"Общество с ограниченной ответственностью \"БИЗНЕС ФУД СФЕРА\"", false,"Заявитель", InputType.TYPE_NULL));
+        Fields.add(new Field(1,"12-19/Ш0015", false,"Договор №", InputType.TYPE_NULL));
+        Fields.add(new Field(1,"11.01.2019", false,"от", InputType.TYPE_NULL));
+        Fields.add(new Field(1,"308006, Белгородская область, Белгород город, Производственная улица, дом № Дом 4, Этаж/Офис 1/4", false,"Адрес", InputType.TYPE_NULL));
+        Fields.add(new Field(1,"3123427599", false,"ИНН", InputType.TYPE_NULL));
+        Fields.add(new Field(1,"", false,"Телефон", InputType.TYPE_NULL));
+        Fields.add(new Field(1,"user@mail.ru", false,"E-mail", InputType.TYPE_NULL));
+        Fields.add(new Field(1,"Иванов Иван Иванович, Должность, действующий на основании устава", false,"Представитель организации", InputType.TYPE_NULL));
+        Fields.add(new Field(1,String.valueOf(new Date()), false,"Дата протокола", InputType.TYPE_NULL));
     }
 
     @Override

@@ -58,6 +58,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
         SetTestData();
 
+        recyclerView.setHasFixedSize(true);
         OrderSwipeAdapter OrderAdapter = new OrderSwipeAdapter(getContext(), Orders);
         (OrderAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(OrderAdapter);

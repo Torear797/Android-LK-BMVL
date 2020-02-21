@@ -38,6 +38,8 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
 
         final RecyclerView recyclerView = MyView.findViewById(R.id.Notifi_list);
         setTestData();
+
+        recyclerView.setHasFixedSize(true);
         NotifiSwipeAdapter NotifiAdapter = new NotifiSwipeAdapter(getContext(), Notifi);
         (NotifiAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(NotifiAdapter);

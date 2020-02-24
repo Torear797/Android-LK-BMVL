@@ -4,6 +4,33 @@ import android.graphics.drawable.Drawable;
 
 public class Field {
 
+    private byte Type;
+
+    public Field(byte type, int entries, int column_id, String value, String hint) {
+        Type = type;
+        this.entries = entries;
+        this.column_id = column_id;
+        this.value = value;
+        Hint = hint;
+    }
+
+    public Field(byte type, int column_id, String value, String hint) {
+        Type = type;
+        this.column_id = column_id;
+        this.value = value;
+        Hint = hint;
+    }
+
+    public int getEntries() {
+        return entries;
+    }
+
+    public void setEntries(int entries) {
+        this.entries = entries;
+    }
+
+    private int entries;
+
     private int column_id;
     private String value;
     private boolean Doublesize;
@@ -11,6 +38,7 @@ public class Field {
     private int InputType;
 
     public Field(int column_id, String value, String hint, int inputType, Drawable icon, boolean data) {
+        this.Type = 0;
         this.column_id = column_id;
         this.value = value;
         Hint = hint;
@@ -32,6 +60,7 @@ public class Field {
     private boolean Data;
 
     public Field(int column_id, String value, boolean doublesize, String hint, int inputType, Drawable icon) {
+        this.Type = 0;
         this.column_id = column_id;
         this.value = value;
         Doublesize = doublesize;
@@ -41,6 +70,7 @@ public class Field {
     }
 
     public Field(int column_id, String value, boolean DoubleSize, String hint, int inputType) {
+        this.Type = 0;
         this.column_id = column_id;
         this.value = value;
         Doublesize = DoubleSize;
@@ -49,6 +79,7 @@ public class Field {
     }
 
     public Field(int column_id, String value, String hint, int inputType) {
+        this.Type = 0;
         this.column_id = column_id;
         this.value = value;
         Hint = hint;
@@ -56,6 +87,7 @@ public class Field {
     }
 
     public Field(int column_id, String value, String hint, int inputType, Drawable icon) {
+        this.Type = 0;
         this.column_id = column_id;
         this.value = value;
         Hint = hint;
@@ -117,5 +149,13 @@ public class Field {
 
     public void setIcon(Drawable icon) {
         Icon = icon;
+    }
+
+    public byte getType() {
+        return Type;
+    }
+
+    public void setType(byte type) {
+        Type = type;
     }
 }

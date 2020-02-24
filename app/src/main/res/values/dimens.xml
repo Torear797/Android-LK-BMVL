@@ -5,4 +5,5 @@
     <dimen name="myfab_margin">16dp</dimen>
     <dimen name="wiedth_button">150dp</dimen>
     <dimen name="ShadowSize">2dp</dimen>
+    <dimen name="FieldSize">190dp</dimen>
 </resources>

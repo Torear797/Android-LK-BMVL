@@ -10,6 +10,8 @@
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
+    <color name="field">#f4f7f9</color>
+    <color name="field_inactive">#e9ecef</color>
 
     <color name="colorLightGreen">#47CF4F</color>
     <color name="White">#FFFFFF</color>

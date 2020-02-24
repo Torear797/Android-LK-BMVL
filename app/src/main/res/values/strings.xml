@@ -26,6 +26,38 @@
     <string name="Login_title">Авторизация</string>
     <string name="new_order_title">Выберите тип заявки</string>
     <string name="new_order">Новая заявка</string>
+    <string name="Doc_Face">Доверянное лицо</string>
+
+    <string-array name="DocList">
+        <item>Выдать результаты на руки определенному лицу по доверенности</item>
+        <item>Прислать посредством почты России на адрес</item>
+        <item>Отправить по Email с последующей досылкой оригиналов почтой</item>
+    </string-array>
+
+    <string-array name="Reserch_start">
+        <item>Первично</item>
+        <item>Повторно</item>
+    </string-array>
+
+    <string-array name="hoz_zab">
+        <item>Благополучно</item>
+        <item>Не благополучно</item>
+    </string-array>
+
+    <string-array name="target_research">
+        <item>Производственный контроль</item>
+        <item>Входной производственный контроль</item>
+        <item>Экспорт</item>
+        <item>Импорт</item>
+        <item>УЛК</item>
+        <item>Сертификация/Декларирование</item>
+    </string-array>
+
+    <string-array name="target_research2">
+        <item>Платная</item>
+        <item>Производственный контроль</item>
+        <item>Сертификация/Декларирование</item>
+    </string-array>
 
     <string-array name="order_types">
         <item>Заявка на исследование пищевых продуктов и кормов</item>
@@ -34,7 +66,6 @@
         <item>Информационное письмо</item>
         <item>Запрос</item>
     </string-array>
-
 
     <string-array name="order_name">
         <item>Заявка на исследование пищевых продуктов и кормов</item>
@@ -69,6 +100,9 @@
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="contact_face">Контактное лицо</string>
     <string name="create_botton">Отправить</string>
+    <string name="adres">Адрес</string>
+    <string name="Select_btn">Обзор...</string>
+    <string name="file_no_select">Файл не выбран</string>
 
 
 </resources>

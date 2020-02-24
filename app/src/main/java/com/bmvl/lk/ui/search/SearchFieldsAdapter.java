@@ -8,11 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
@@ -31,7 +30,7 @@ class SearchFieldsAdapter extends RecyclerView.Adapter{
 
     @Override
     public int getItemViewType(int position) {
-         SearchField sf = SearchFragment.Fields.get(position);
+         final SearchField sf = SearchFragment.Fields.get(position);
          if(sf.isSpener()){
              return 0;
          } else return 1;
@@ -51,26 +50,18 @@ class SearchFieldsAdapter extends RecyclerView.Adapter{
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
-        SearchField f = SearchFragment.Fields.get(position);
+        final SearchField f = SearchFragment.Fields.get(position);
        if(f.isSpener()){
            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
            ((SpinerViewHolder)holder).spiner.setAdapter(adapter);
+           ((SpinerViewHolder)holder).txtHint.setText(f.getHint());
        } else  {
 
            ((EditTextViewHolder)holder).Layout.setHint(f.getHint());
            ((EditTextViewHolder)holder).field.setInputType(f.getInputType());
            ((EditTextViewHolder)holder).field.setText(f.getValue());
 
-           if(f.isDoubleColumn()){
-
-//               GridLayout.LayoutParams gridLayoutParams = new GridLayout.LayoutParams();
-//               gridLayoutParams.se = GridLayout.spec(0, 2);
-////               GridLayoutManager layoutManager = new GridLayoutManager(inflater.getContext(), 2);
-////               layoutManager.setSpanCount(1);
-//               holder.itemView.setLayoutParams(gridLayoutParams);
-
-           }
            if(f.getIcon() != null){
                ((EditTextViewHolder)holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
                ((EditTextViewHolder)holder).Layout.setEndIconDrawable(f.getIcon());
@@ -123,9 +114,11 @@ class SearchFieldsAdapter extends RecyclerView.Adapter{
 
     public class SpinerViewHolder extends RecyclerView.ViewHolder {
          final Spinner spiner;
+         final TextView txtHint;
          SpinerViewHolder(@NonNull View itemView) {
             super(itemView);
             spiner = itemView.findViewById(R.id.spinner);
+            txtHint = itemView.findViewById(R.id.hint);
         }
     }
 

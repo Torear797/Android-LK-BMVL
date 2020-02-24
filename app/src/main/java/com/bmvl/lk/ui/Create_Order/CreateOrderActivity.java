@@ -1,6 +1,5 @@
 package com.bmvl.lk.ui.Create_Order;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.MenuItem;
@@ -37,7 +36,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        recyclerView.setHasFixedSize(true);
+       // recyclerView.setHasFixedSize(true);
         LoadDefaultFields();
 
         OrderName.setText(OrderFragment.OrderTypes[order_id]);
@@ -48,11 +47,11 @@ public class CreateOrderActivity extends AppCompatActivity {
         mng_layout.setSpanSizeLookup( new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (position == 1 || position == 2) {
+                if (order_id == 0 && (position == 1 || position == 2 || position == 14 || position == 15))
                     return 1;
-                } else {
-                    return 2;
-                }
+                    if (order_id == 1 && (position == 1 || position == 2 || position == 13 || position == 14))
+                        return 1;
+                return 2;
             }
         });
         recyclerView.setLayoutManager(mng_layout);
@@ -80,9 +79,38 @@ public class CreateOrderActivity extends AppCompatActivity {
         }
     }
     private void addFieldOrderType0() {
+        Fields.add(new Field((byte)1,R.array.target_research,0,"","Цель исследования/категория"));
+        Fields.add(new Field((byte)2,R.array.DocList,0,"","Оригиналы документов предоставлять"));
+        Fields.add(new Field((byte)3,0,"","Возврат образцов"));
+        Fields.add(new Field((byte)4,0,"","Акт отбора"));
+        Fields.add(new Field((byte)3,0,"","Контрольный образец"));
+        Fields.add(new Field(1,"","Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp),true));
+        Fields.add(new Field(1,"","№", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(1,"","Площадка",InputType.TYPE_CLASS_TEXT));
     }
 
     private void addFieldOrderType1() {
+        Fields.add(new Field((byte)1,R.array.target_research2,0,"","Цель исследования/категория"));
+        Fields.add(new Field((byte)2,R.array.DocList,0,"","Оригиналы документов предоставлять"));
+        Fields.add(new Field((byte)1,R.array.Reserch_start,0,"","Исследование проводится"));
+        Fields.add(new Field((byte)4,0,"","Акт отбора"));
+        Fields.add(new Field(1,"","Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp),true));
+        Fields.add(new Field(1,"","№", InputType.TYPE_CLASS_TEXT));
+
+        Fields.add(new Field(1,"","Сопроводительный документ",InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(1,"","Владелец образцов",InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(1,"","Площадка",InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(1,"","Количество проб",InputType.TYPE_NULL));
+        Fields.add(new Field(1,"","Общее поголовье",InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(1,"","Дата предыдущего исследоваия", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp),true));
+        Fields.add(new Field(1,"","Результат предыдущего исследования",InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field((byte)1,R.array.hoz_zab,0,"","Хозяйство по вышеуказанному заболеванию"));
+        Fields.add(new Field(1,"","Дата заболевания животного(ных)", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp),true));
+        Fields.add(new Field(1,"","Дата падежа", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp),true));
+        Fields.add(new Field(1,"","Клиническая картина",InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(1,"","Данные патологического вскрытия",InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(1,"","Предположительный диагноз",InputType.TYPE_CLASS_TEXT));
+
     }
 
     private void addFieldOrderType2() {

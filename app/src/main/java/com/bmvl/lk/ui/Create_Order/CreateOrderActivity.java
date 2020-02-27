@@ -3,15 +3,22 @@ package com.bmvl.lk.ui.Create_Order;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
 import com.bmvl.lk.ui.order.OrderFragment;
+import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,7 +38,8 @@ public class CreateOrderActivity extends AppCompatActivity {
         final TextView OrderName = findViewById(R.id.Order_name);
         final Toolbar toolbar = findViewById(R.id.toolbar);
         final RecyclerView recyclerView =  findViewById(R.id.FieldList);
-
+        final MaterialCheckBox cbox = findViewById(R.id.AcceptcheckBox);
+        final FrameLayout Frame = findViewById(R.id.Menu_proby_fragment);
         toolbar.setTitle(R.string.new_order);
         setSupportActionBar(toolbar);
 
@@ -63,9 +71,15 @@ public class CreateOrderActivity extends AppCompatActivity {
         switch (order_id) {
             case 0:
                 addFieldOrderType0();
+                cbox.setVisibility(View.VISIBLE);
+                Frame.setVisibility(View.VISIBLE);
+                loadFragment(ProbyMenuFragment.newInstance());
                 break;
             case 1:
                 addFieldOrderType1();
+                cbox.setVisibility(View.VISIBLE);
+                Frame.setVisibility(View.VISIBLE);
+                loadFragment(ProbyMenuFragment.newInstance());
                 break;
             case 2:
                 addFieldOrderType2();
@@ -142,6 +156,12 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field(1,"user@mail.ru", false,"E-mail", InputType.TYPE_NULL));
         Fields.add(new Field(1,"Иванов Иван Иванович, Должность, действующий на основании устава", false,"Представитель организации", InputType.TYPE_NULL));
         Fields.add(new Field(1,String.valueOf(new Date()), false,"Дата протокола", InputType.TYPE_NULL));
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.Menu_proby_fragment, fragment);
+        ft.commit();
     }
 
     @Override

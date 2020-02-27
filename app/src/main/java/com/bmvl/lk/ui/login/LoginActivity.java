@@ -2,7 +2,6 @@ package com.bmvl.lk.ui.login;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,7 +19,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bmvl.lk.MenuActivity;
 import com.bmvl.lk.R;
@@ -32,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_material_login);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
@@ -40,8 +38,10 @@ public class LoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        //   loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
+        //     .get(LoginViewModel.class);
+
+        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
 
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
@@ -55,7 +55,9 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginFormState == null) {
                     return;
                 }
+
                 loginButton.setEnabled(loginFormState.isDataValid());
+
                 if (loginFormState.getUsernameError() != null) {
                     usernameEditText.setError(getString(loginFormState.getUsernameError()));
                 }
@@ -80,8 +82,6 @@ public class LoginActivity extends AppCompatActivity {
                     updateUiWithUser(loginResult.getSuccess());
                 }
                 setResult(Activity.RESULT_OK);
-
-                //Complete and destroy login activity once successful
 
                 finish();
             }

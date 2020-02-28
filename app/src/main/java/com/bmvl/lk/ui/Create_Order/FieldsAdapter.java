@@ -51,7 +51,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 View view = inflater.inflate(R.layout.item_field, parent, false);
                 return new FieldsAdapter.ViewHolder(view);
             case 1:
-                View view1 = inflater.inflate(R.layout.search_item_spiner, parent, false);
+                View view1 = inflater.inflate(R.layout.item_spiner, parent, false);
                 return new FieldsAdapter.ViewHolderSpiner(view1);
             case 2:
                 View view2 = inflater.inflate(R.layout.item_original_doc, parent, false);

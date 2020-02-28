@@ -36,7 +36,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.one_order, parent, false);
+        View view = inflater.inflate(R.layout.item_order, parent, false);
         return new SimpleViewHolder(view);
     }
 

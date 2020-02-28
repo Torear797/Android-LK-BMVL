@@ -2,32 +2,24 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/scrollView"
+    style="@style/ClearFocus"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backround_color_site"
-    android:clickable="true"
-    android:descendantFocusability="beforeDescendants"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:background="@color/backround_color_site">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/ClearFocus"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/toolbar_color"
-        android:clickable="true"
-        android:descendantFocusability="beforeDescendants"
-        android:focusable="true"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:focusableInTouchMode="true">
+        android:background="@color/toolbar_color">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
+            style="@style/ClearFocus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:descendantFocusability="beforeDescendants"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             app:layoutManager="GridLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

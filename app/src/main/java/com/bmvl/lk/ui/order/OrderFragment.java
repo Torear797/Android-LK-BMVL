@@ -50,9 +50,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
         final RecyclerView recyclerView = MyView.findViewById(R.id.list);
         final FloatingActionButton fab = MyView.findViewById(R.id.floatingActionButton);
-        final ProgressBar pb = MyView.findViewById(R.id.progressBar);
         fab.setColorFilter(Color.argb(255, 255, 255, 255));
-
 
         YoYo.with(Techniques.Tada)
                 .duration(700)
@@ -74,7 +72,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                         .setItems(R.array.order_types, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                pb.setVisibility(View.VISIBLE);
                                 byte choce = 0;
                                 switch (which) {
                                     case 1:

@@ -40,7 +40,7 @@ class SearchFieldsAdapter extends RecyclerView.Adapter{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
          if(viewType == 0){
-             View view = inflater.inflate(R.layout.search_item_spiner, parent, false);
+             View view = inflater.inflate(R.layout.item_spiner, parent, false);
              return new SearchFieldsAdapter.SpinerViewHolder(view);
          } else {
              View view = inflater.inflate(R.layout.item_field, parent, false);

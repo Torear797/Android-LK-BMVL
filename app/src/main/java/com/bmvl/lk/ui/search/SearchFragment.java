@@ -33,7 +33,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View MyView = inflater.inflate(R.layout.fragment_search2, container, false);
+        View MyView = inflater.inflate(R.layout.fragment_search, container, false);
 
         final RecyclerView recyclerView = MyView.findViewById(R.id.recyclerView);
         final Button SearchButton = MyView.findViewById(R.id.search_button);
@@ -41,7 +41,6 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
         CreateSerchFields();
 
         recyclerView.setHasFixedSize(true);
-
 
         final GridLayoutManager mng_layout = new GridLayoutManager(getContext(), 2);
         mng_layout.setSpanSizeLookup( new GridLayoutManager.SpanSizeLookup() {

@@ -41,6 +41,14 @@
         <item>Служебная информация</item>
     </string-array>
 
+    <string-array name="dimension_prob">
+        <item>-</item>
+        <item>°С</item>
+        <item>1 проба</item>
+        <item>мм</item>
+        <item>1 протокол</item>
+    </string-array>
+
     <string-array name="Reserch_start">
         <item>Первично</item>
         <item>Повторно</item>

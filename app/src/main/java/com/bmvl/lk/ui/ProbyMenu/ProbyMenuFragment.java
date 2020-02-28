@@ -41,7 +41,6 @@ public class ProbyMenuFragment extends Fragment {
                     @Override
                     public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                         tab.setText(tabTitles[position]);
-                       // tab.setText("rere");
                     }
                 }).attach();
 

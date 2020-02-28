@@ -3,12 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
+    style="@style/ClearFocus"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusable="true"
-    android:clickable="true"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
     android:background="@color/backround_color_site"
     tools:context=".ui.Create_Order.CreateOrderActivity">
 
@@ -23,14 +20,11 @@
 
     <TextView
         android:id="@+id/Order_name"
+        style="@style/ClearFocus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:descendantFocusability="beforeDescendants"
-        android:focusableInTouchMode="true"
-        android:focusable="true"
-        android:clickable="true"
         android:text="Заявка на исследование пищевых продуктов и кормов и к цуацуацуацуацуа"
         android:textColor="#555555"
         android:textSize="17dp"
@@ -39,16 +33,13 @@
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView2"
+        style="@style/ClearFocus"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="5dp"
         android:background="@color/toolbar_color"
-        android:descendantFocusability="beforeDescendants"
-        android:focusableInTouchMode="true"
-        android:focusable="true"
-        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/Order_name"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,12 +47,9 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
 
+            style="@style/ClearFocus"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:descendantFocusability="beforeDescendants"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
+            android:layout_height="match_parent">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/Create"
@@ -78,12 +66,9 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/FieldList"
+                style="@style/ClearFocus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:descendantFocusability="beforeDescendants"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -92,12 +77,9 @@
 
             <FrameLayout
                 android:id="@+id/Menu_proby_fragment"
+                style="@style/ClearFocus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:descendantFocusability="beforeDescendants"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -110,8 +92,8 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:visibility="gone"
                 android:text="@string/accept"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/Menu_proby_fragment" />

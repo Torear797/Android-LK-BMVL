@@ -27,12 +27,10 @@ import java.util.Objects;
 
 public class PartyInfoAdapter extends RecyclerView.Adapter{
     private LayoutInflater inflater;
-    private Context MyContext;
     private static Calendar dateAndTime = Calendar.getInstance();
 
     PartyInfoAdapter(Context context) {
         this.inflater = LayoutInflater.from(context);
-        this.MyContext = context;
     }
     @Override
     public int getItemViewType(int position) {
@@ -44,19 +42,18 @@ public class PartyInfoAdapter extends RecyclerView.Adapter{
         switch (viewType) {
             case 0:
                 View view = inflater.inflate(R.layout.item_field, parent, false);
-                return new PartyInfoAdapter.ViewHolder(view);
+                return new ViewHolder(view);
             case 1:
                 View view1 = inflater.inflate(R.layout.item_spiner, parent, false);
-                return new PartyInfoAdapter.ViewHolderSpiner(view1);
+                return new ViewHolderSpiner(view1);
 
             case 3:
                 View view3 = inflater.inflate(R.layout.item_check_button, parent, false);
-                return new PartyInfoAdapter.ViewHolderSwitch(view3);
-
+                return new ViewHolderSwitch(view3);
         }
 
         View view = inflater.inflate(R.layout.item_field, parent, false);
-        return new PartyInfoAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -83,7 +80,7 @@ public class PartyInfoAdapter extends RecyclerView.Adapter{
                         ((PartyInfoAdapter.ViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                new DatePickerDialog(Objects.requireNonNull(MyContext), Datapicker,
+                                new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
                                         dateAndTime.get(Calendar.YEAR),
                                         dateAndTime.get(Calendar.MONTH),
                                         dateAndTime.get(Calendar.DAY_OF_MONTH))
@@ -139,7 +136,7 @@ public class PartyInfoAdapter extends RecyclerView.Adapter{
         return PartyInfoFragment.PartyInfoFields.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         final TextInputEditText field;
         final TextInputLayout Layout;
 
@@ -150,7 +147,7 @@ public class PartyInfoAdapter extends RecyclerView.Adapter{
         }
     }
 
-    public class ViewHolderSpiner extends PartyInfoAdapter.ViewHolder {
+    public static class ViewHolderSpiner extends PartyInfoAdapter.ViewHolder {
         final Spinner spiner;
         final TextView txtHint;
 
@@ -161,7 +158,7 @@ public class PartyInfoAdapter extends RecyclerView.Adapter{
         }
     }
 
-    public class ViewHolderSwitch extends RecyclerView.ViewHolder {
+    static class ViewHolderSwitch extends RecyclerView.ViewHolder {
         final SwitchMaterial switchButton;
         ViewHolderSwitch(View view3) {
             super(view3);

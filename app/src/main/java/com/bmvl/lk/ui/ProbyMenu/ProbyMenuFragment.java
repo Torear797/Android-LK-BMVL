@@ -32,7 +32,6 @@ public class ProbyMenuFragment extends Fragment {
 
         final ViewPager2 viewPager = MyView.findViewById(R.id.viewPager);
         final TabLayout tabLayout = MyView.findViewById(R.id.tabLayout);
-
         final String[] tabTitles = getResources().getStringArray(R.array.Menu_proby);
 
         viewPager.setAdapter(createAdapter());

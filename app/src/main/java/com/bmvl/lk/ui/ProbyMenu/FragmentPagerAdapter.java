@@ -9,24 +9,30 @@ import com.bmvl.lk.ui.ProbyMenu.PartyInfo.PartyInfoFragment;
 
 public class FragmentPagerAdapter extends FragmentStateAdapter {
     private static final int CARD_ITEM_SIZE = 4;
-     FragmentPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+
+    FragmentPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
+
     @NonNull
-    @Override public Fragment createFragment(int position) {
-        switch (position){
+    @Override
+    public Fragment createFragment(int position) {
+        switch (position) {
             case 0:
-                return ProbsFragment.newInstance();
+                return PartyInfoFragment.newInstance((byte) position);
+            //return ProbsFragment.newInstance();
             case 1:
-                return OriginFragment.newInstance();
+                return ProbsFragment.newInstance();
             case 2:
-                return PartyInfoFragment.newInstance();
+                return PartyInfoFragment.newInstance((byte) position);
             case 3:
                 return ServiceInfoFragment.newInstance();
         }
         return ProbsFragment.newInstance();
     }
-    @Override public int getItemCount() {
+
+    @Override
+    public int getItemCount() {
         return CARD_ITEM_SIZE;
     }
 }

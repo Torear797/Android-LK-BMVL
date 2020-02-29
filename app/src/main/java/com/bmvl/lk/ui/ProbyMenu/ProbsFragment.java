@@ -3,6 +3,7 @@ package com.bmvl.lk.ui.ProbyMenu;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ public class ProbsFragment extends Fragment {
     public ProbsFragment() {
         // Required empty public constructor
     }
+
     public static ProbsFragment newInstance() {
         return new ProbsFragment();
     }
@@ -23,7 +25,9 @@ public class ProbsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_probs, container, false);
+        View MyView = inflater.inflate(R.layout.fragment_probs, container, false);
+        //final RecyclerView recyclerView = MyView.findViewById(R.id.PartyInfoList);
+      //  recyclerView.setHasFixedSize(true);
+        return MyView;
     }
 }

@@ -39,7 +39,7 @@ public class PartyInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.fragment_recyclerview, container, false);
 
-        final RecyclerView recyclerView = MyView.findViewById(R.id.PartyInfoList);
+        final RecyclerView recyclerView = MyView.findViewById(R.id.List);
         recyclerView.setHasFixedSize(true);
 
         if (TypeTabs == 2) {

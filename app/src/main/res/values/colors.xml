@@ -12,9 +12,7 @@
     <color name="divider">#BDBDBD</color>
     <color name="field">#f4f7f9</color>
     <color name="field_inactive">#e9ecef</color>
-
-    <color name="colorLightGreen">#47CF4F</color>
+    <color name="colorLightGreen">#93c73e</color>
     <color name="White">#FFFFFF</color>
     <color name="backround_color_site">#f3f5f7</color>
-
 </resources>

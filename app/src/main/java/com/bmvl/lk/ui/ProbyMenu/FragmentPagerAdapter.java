@@ -6,29 +6,29 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.bmvl.lk.ui.ProbyMenu.PartyInfo.PartyInfoFragment;
+import com.bmvl.lk.ui.ProbyMenu.Probs.ProbsFragment;
 
 public class FragmentPagerAdapter extends FragmentStateAdapter {
     private static final int CARD_ITEM_SIZE = 4;
+    private byte order_id;
 
-    FragmentPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    FragmentPagerAdapter(@NonNull FragmentActivity fragmentActivity, byte id) {
         super(fragmentActivity);
+        order_id = id;
     }
-
     @NonNull
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return PartyInfoFragment.newInstance((byte) position);
-            //return ProbsFragment.newInstance();
+                return ProbsFragment.newInstance(order_id);
             case 1:
-                return ProbsFragment.newInstance();
             case 2:
                 return PartyInfoFragment.newInstance((byte) position);
             case 3:
                 return ServiceInfoFragment.newInstance();
         }
-        return ProbsFragment.newInstance();
+        return ProbsFragment.newInstance(order_id);
     }
 
     @Override

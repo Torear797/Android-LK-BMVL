@@ -73,13 +73,13 @@ public class CreateOrderActivity extends AppCompatActivity {
                 addFieldOrderType0();
                 cbox.setVisibility(View.VISIBLE);
                 Frame.setVisibility(View.VISIBLE);
-                loadFragment(ProbyMenuFragment.newInstance());
+                loadFragment(ProbyMenuFragment.newInstance(order_id));
                 break;
             case 1:
                 addFieldOrderType1();
                 cbox.setVisibility(View.VISIBLE);
                 Frame.setVisibility(View.VISIBLE);
-                loadFragment(ProbyMenuFragment.newInstance());
+                loadFragment(ProbyMenuFragment.newInstance(order_id));
                 break;
             case 2:
                 addFieldOrderType2();

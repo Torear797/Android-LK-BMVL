@@ -18,13 +18,14 @@ import com.bmvl.lk.ui.Notification.NoticeFragment;
 import com.bmvl.lk.ui.order.OrderFragment;
 import com.bmvl.lk.ui.profile.ProfileActivity;
 import com.bmvl.lk.ui.search.SearchFragment;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class MenuActivity extends AppCompatActivity {
     private  int CurrentPage = R.id.navigation_order;
 
-    private Toolbar MenuToolbar;
+    private MaterialToolbar MenuToolbar;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {

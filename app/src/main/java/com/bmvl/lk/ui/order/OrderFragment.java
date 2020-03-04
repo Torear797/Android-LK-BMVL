@@ -22,6 +22,8 @@ import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.util.Attributes;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.dialog.MaterialDialogs;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -67,7 +69,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                AlertDialog alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
+                new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
                         .setTitle(R.string.new_order_title)
                         .setItems(R.array.order_types, new DialogInterface.OnClickListener() {
                             @Override
@@ -92,8 +94,8 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                 startActivity(intent);
                             }
                         })
-                        .create();
-                alertDialog.show();
+                        .create()
+                        .show();
             }
         });
 

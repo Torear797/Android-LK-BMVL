@@ -8,7 +8,8 @@
     android:layout_marginEnd="10dp"
 
     >
-    <Spinner
+
+    <com.bmvl.lk.ui.ProbyMenu.Probs.MultiSpinner
         android:id="@+id/spinner"
         style="@style/MySpinner"
         android:layout_width="match_parent"
@@ -16,9 +17,10 @@
         android:paddingTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+    </com.bmvl.lk.ui.ProbyMenu.Probs.MultiSpinner>
 
-    <com.google.android.material.textview.MaterialTextView
+    <TextView
         android:id="@+id/hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -2,6 +2,7 @@ package com.bmvl.lk.ui.ProbyMenu.Probs;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
@@ -62,6 +64,9 @@ class ProbFieldAdapter extends RecyclerView.Adapter{
             case 4:
                 View view4 = inflater.inflate(R.layout.item_button_select, parent, false);
                 return new ViewHolderButton(view4);
+            case 5:
+                View view5 = inflater.inflate(R.layout.item_multi_spinner, parent, false);
+                return new ViewHolderMultiSpiner(view5);
         }
 
         View view = inflater.inflate(R.layout.item_field, parent, false);
@@ -122,6 +127,26 @@ class ProbFieldAdapter extends RecyclerView.Adapter{
             case 4:
                 ((ViewHolderButton) holder).hint.setText(f.getHint());
                 break;
+            case 5:
+              //  String[] countries = inflater.getContext().getResources().getStringArray(f.getEntries());
+               // ArrayAdapter<String> adapter = new ArrayAdapter<String>(inflater.getContext(), android.R.layout.simple_spinner_item, countries);
+
+              //  ((ViewHolderMultiSpiner) holder).spiner.setAdapter(adapter);
+              //  ((ViewHolderMultiSpiner) holder).spiner.setItems(items, getString(R.string.documents), this);;
+
+
+
+                List<String> items = Arrays.asList(inflater.getContext().getResources().getStringArray(f.getEntries()));
+
+                 MultiSpinner.MultiSpinnerListener onSelectedListener = new MultiSpinner.MultiSpinnerListener() {
+                    public void onItemsSelected(boolean[] selected) {
+                        // Do something here with the selected items
+                    }
+                };
+
+                ((ViewHolderMultiSpiner) holder).spiner.setItems(items, inflater.getContext().getString(R.string.for_all), onSelectedListener);
+                ((ViewHolderMultiSpiner) holder).txtHint.setText(f.getHint());
+                break;
         }
     }
     private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt) {
@@ -147,7 +172,7 @@ class ProbFieldAdapter extends RecyclerView.Adapter{
         return ProbFields.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         final TextInputEditText field;
         final TextInputLayout Layout;
 
@@ -169,7 +194,7 @@ class ProbFieldAdapter extends RecyclerView.Adapter{
         }
     }
 
-    public class ViewHolderSwitch extends ViewHolder {
+    public static class ViewHolderSwitch extends ViewHolder {
         final SwitchMaterial switchButton;
         ViewHolderSwitch(View view3) {
             super(view3);
@@ -177,7 +202,7 @@ class ProbFieldAdapter extends RecyclerView.Adapter{
         }
     }
 
-    public class ViewHolderButton extends ViewHolder {
+    public static class ViewHolderButton extends ViewHolder {
         final TextView hint,path;
         final Button select_btn;
         ViewHolderButton(View view4) {
@@ -185,6 +210,16 @@ class ProbFieldAdapter extends RecyclerView.Adapter{
             hint = itemView.findViewById(R.id.hint);
             path = itemView.findViewById(R.id.path);
             select_btn = itemView.findViewById(R.id.select);
+        }
+    }
+
+    private static class ViewHolderMultiSpiner extends RecyclerView.ViewHolder {
+        final MultiSpinner  spiner;
+        final TextView txtHint;
+        ViewHolderMultiSpiner(View view5) {
+            super(view5);
+            spiner = itemView.findViewById(R.id.spinner);
+            txtHint = itemView.findViewById(R.id.hint);
         }
     }
 }

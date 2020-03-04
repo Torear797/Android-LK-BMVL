@@ -15,4 +15,5 @@
     <color name="colorLightGreen">#93c73e</color>
     <color name="White">#FFFFFF</color>
     <color name="backround_color_site">#f3f5f7</color>
+    <color name="text_order_field_color">#616161</color>
 </resources>

@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bmvl.lk.MenuActivity;
 import com.bmvl.lk.R;
+import com.google.android.material.appbar.MaterialToolbar;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -33,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_material_login);
 
-        final Toolbar toolbar = findViewById(R.id.toolbar);
+        final MaterialToolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.Login_title);
         setSupportActionBar(toolbar);
 

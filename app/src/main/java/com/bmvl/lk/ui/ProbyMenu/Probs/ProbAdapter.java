@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
@@ -44,13 +45,26 @@ class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final SimpleViewHolder simpleViewHolder, int i) {
-        //Proby Prob = Probs.get(i);
+        final Proby Prob = Probs.get(i);
+
+
+        final GridLayoutManager mng_layout = new GridLayoutManager(inflater.getContext(), 2);
+        mng_layout.setSpanSizeLookup( new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (Prob.getOrder_id() == 0 && (position >= 4 && position <= 7 || position == 22 || position == 23))
+                    return 1;
+               // if (Prob.getOrder_id() == 1 && (position == 1 || position == 2 || position == 13 || position == 14))
+                 //   return 1;
+                return 2;
+            }
+        });
+        simpleViewHolder.ProbList.setLayoutManager(mng_layout);
 
         final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields);
         simpleViewHolder.ProbList.setAdapter(adapter);
 
         simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", i+1));
-        //simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", ProbFields.size()));
 
         simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         simpleViewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {

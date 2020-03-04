@@ -18,6 +18,7 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ProbsFragment extends Fragment {
@@ -78,9 +79,34 @@ public class ProbsFragment extends Fragment {
     }
     private void AddOrderFieldsType0(){
         ProbFields.clear();
-        ProbFields.add(new Field(1,"","Вид материала", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1,"","Вид материала", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1,"","Вид материала", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field((byte)1,R.array.type_material,0,"","Вид материала"));
+        ProbFields.add(new Field((byte)5,R.array.documents,0,"","На соответствие требованиям"));
+        ProbFields.add(new Field(1,"","Номер сейф пакета", InputType.TYPE_CLASS_NUMBER));
+        ProbFields.add(new Field((byte)1,R.array.sample_states,0,"","Состояние образца"));
+        ProbFields.add(new Field((byte)1,R.array.transport,0,"","Транспорт"));
+        ProbFields.add(new Field(1,"","", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(1,"","Широта", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(1,"","Долгота", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field((byte)1,R.array.packaging_type,0,"","Вид упаковки, наличие маркировки"));
+        ProbFields.add(new Field(1,"","Наименование организации, проводившей отбор проб", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(1,"","Адрес организации, проводившей отбор проб", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(1,"","Страна отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(1,"","Регион отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(1,"","Район отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(1,"","Место отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(1,"","План и метод отбора образца", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(1,"","Должность лица,проводившего отбор", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(1,"","ФИО лица, проводившего отбор", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(1,"","В присутствии", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(1,"","Дата и время отбора", InputType.TYPE_CLASS_TEXT));
+
+        ProbFields.add(new Field(1,"","Наименование образца, термическое состояние", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(1,"","Дата выработки", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getActivity()).getDrawable(R.drawable.ic_date_range_black_24dp),true));
+
+        ProbFields.add(new Field(1, "", "Масса/объем образца", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field((byte) 1, R.array.units_of_measure, 0, "", " "));
+
+        ProbFields.add(new Field((byte)5,R.array.documents,0,"","НД на продукцию"));
     }
     private void AddOrderFieldsType1(){
         ProbFields.clear();

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.textview.MaterialTextView;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -114,7 +115,7 @@ class SearchFieldsAdapter extends RecyclerView.Adapter{
 
     public class SpinerViewHolder extends RecyclerView.ViewHolder {
          final Spinner spiner;
-         final TextView txtHint;
+         final MaterialTextView txtHint;
          SpinerViewHolder(@NonNull View itemView) {
             super(itemView);
             spiner = itemView.findViewById(R.id.spinner);

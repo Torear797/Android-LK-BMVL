@@ -85,9 +85,9 @@ public class PartyInfoFragment extends Fragment {
         PartyInfoFields.add(new Field(1, "", "№", InputType.TYPE_CLASS_TEXT));
         PartyInfoFields.add(new Field(1, "", "Номер партии", InputType.TYPE_CLASS_TEXT));
         PartyInfoFields.add(new Field(1, "", "Масса (объем) партии", InputType.TYPE_CLASS_TEXT));
-        PartyInfoFields.add(new Field((byte) 1, R.array.dimension_prob, 0, "", " "));
+        PartyInfoFields.add(new Field((byte) 1, R.array.units_of_measure, 0, "", " "));
         PartyInfoFields.add(new Field(1, "", "Количество в партии", InputType.TYPE_CLASS_TEXT));
-        PartyInfoFields.add(new Field((byte) 1, R.array.dimension_prob, 0, "", " "));
+        PartyInfoFields.add(new Field((byte) 1, R.array.units_of_measure, 0, "", " "));
         PartyInfoFields.add(new Field(1, "", "Упаковка партии", InputType.TYPE_CLASS_TEXT));
         PartyInfoFields.add(new Field(1, "", "Срок годности", InputType.TYPE_CLASS_TEXT));
         PartyInfoFields.add(new Field(1, "", true, "Примечание", InputType.TYPE_TEXT_FLAG_MULTI_LINE));

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bmvl.lk.R;
@@ -37,6 +38,7 @@ public class ProbyMenuFragment extends Fragment {
         final String[] tabTitles = getResources().getStringArray(R.array.Menu_proby);
 
         viewPager.setAdapter(createAdapter());
+
         new TabLayoutMediator(tabLayout, viewPager,
                 new TabLayoutMediator.TabConfigurationStrategy() {
                     @Override
@@ -44,6 +46,12 @@ public class ProbyMenuFragment extends Fragment {
                         tab.setText(tabTitles[position]);
                     }
                 }).attach();
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            public void onPageSelected(int position) {
+                Objects.requireNonNull(viewPager.getAdapter()).notifyDataSetChanged();
+            }
+        });
 
         return MyView;
     }

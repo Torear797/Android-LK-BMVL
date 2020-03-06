@@ -309,5 +309,10 @@
 
     <string name="add_prob">Добавить пробу</string>
     <string name="for_all" />
+    <string name="Indicator">Показатель</string>
+    <string name="Test_method">Метод испытаний</string>
+    <string name="Price">Цена</string>
+    <string name="Type_of_research">Тип исследования</string>
+    <string name="add_research">Добавить исследование</string>
 
 </resources>

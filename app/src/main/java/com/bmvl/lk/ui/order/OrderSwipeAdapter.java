@@ -27,12 +27,10 @@ import java.util.List;
 public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.SimpleViewHolder> {
     private List<Orders> Orders;
     private LayoutInflater inflater;
-  //  private Context MyContext;
 
     OrderSwipeAdapter(Context context, List<Orders> Contents) {
         this.Orders = Contents;
         this.inflater = LayoutInflater.from(context);
-        //this.MyContext = context;
     }
 
     @Override

@@ -27,8 +27,10 @@ public class ProbsFragment extends Fragment {
         // Required empty public constructor
     }
     private static byte order_id;
+
+    private static List<Proby> ProbList = new ArrayList<>();
     private static List<Field> ProbFields = new ArrayList<>();
-    public static List<Proby> ProbList = new ArrayList<>();
+    private static List<Field> ResearchFields= new ArrayList<>();
 
     public static ProbsFragment newInstance(byte id) {
         order_id = id;
@@ -47,7 +49,7 @@ public class ProbsFragment extends Fragment {
         if(order_id == 0) AddOrderFieldsType0();
         else if(order_id == 1) AddOrderFieldsType1();
 
-        final ProbAdapter adapter = new ProbAdapter(getContext(),ProbList, ProbFields);
+        final ProbAdapter adapter = new ProbAdapter(getContext(), ProbList, ProbFields, ResearchFields);
         recyclerView.setAdapter(adapter);
 
 
@@ -107,6 +109,14 @@ public class ProbsFragment extends Fragment {
         ProbFields.add(new Field((byte) 1, R.array.units_of_measure, 0, "", " "));
 
         ProbFields.add(new Field((byte)5,R.array.documents,0,"","НД на продукцию"));
+        ProbFields.add(new Field((byte)6,0,"",""));
+
+        ResearchFields.clear();
+        ResearchFields.add(new Field((byte)1,R.array.documents,0,"","Показатель"));
+        ResearchFields.add(new Field((byte)1,R.array.documents,0,"","Метод испытаний"));
+        ResearchFields.add(new Field((byte)1,R.array.documents,0,"","Тип исследования"));
+      //  ResearchFields.add(new Field(1,"","Цена", InputType.TYPE_NULL));
+
     }
     private void AddOrderFieldsType1(){
         ProbFields.clear();

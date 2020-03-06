@@ -2,14 +2,11 @@ package com.bmvl.lk.ui.ProbyMenu.Probs;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -21,11 +18,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.models.Research;
 import com.bmvl.lk.ui.Create_Order.Field;
+import com.daimajia.swipe.util.Attributes;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -33,14 +34,15 @@ import java.util.Objects;
 
 class ProbFieldAdapter extends RecyclerView.Adapter{
     private LayoutInflater inflater;
-    private Context MyContext;
     private static Calendar dateAndTime = Calendar.getInstance();
     private static List<Field> ProbFields;
+    private static List<Field> ResearchFields;
+    private static List<Research> Researchs = new ArrayList<>();
 
-    ProbFieldAdapter(Context context,List<Field> Fields) {
+    ProbFieldAdapter(Context context,List<Field> Fields, List<Field> ResFields) {
         this.inflater = LayoutInflater.from(context);
-        this.MyContext = context;
         ProbFields = Fields;
+        ResearchFields = ResFields;
     }
 
     @Override
@@ -67,6 +69,9 @@ class ProbFieldAdapter extends RecyclerView.Adapter{
             case 5:
                 View view5 = inflater.inflate(R.layout.item_multi_spinner, parent, false);
                 return new ViewHolderMultiSpiner(view5);
+            case 6:
+                View view6 = inflater.inflate(R.layout.item_research_list, parent, false);
+                return new ViewHolderResearchPanel(view6);
         }
 
         View view = inflater.inflate(R.layout.item_field, parent, false);
@@ -95,7 +100,7 @@ class ProbFieldAdapter extends RecyclerView.Adapter{
                     ((ViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            new DatePickerDialog(Objects.requireNonNull(MyContext), Datapicker,
+                            new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
                                     dateAndTime.get(Calendar.YEAR),
                                     dateAndTime.get(Calendar.MONTH),
                                     dateAndTime.get(Calendar.DAY_OF_MONTH))
@@ -146,6 +151,26 @@ class ProbFieldAdapter extends RecyclerView.Adapter{
 
                 ((ViewHolderMultiSpiner) holder).spiner.setItems(items, inflater.getContext().getString(R.string.for_all), onSelectedListener);
                 ((ViewHolderMultiSpiner) holder).txtHint.setText(f.getHint());
+                break;
+            case 6:
+                Researchs.add(new Research());
+               // ((ViewHolderResearchPanel) holder).ResearchList.setHasFixedSize(true);
+
+                final ResearhAdapter Adapter = new ResearhAdapter(inflater.getContext(), Researchs, ResearchFields);
+                (Adapter).setMode(Attributes.Mode.Single);
+                ((ViewHolderResearchPanel) holder).ResearchList.setAdapter(Adapter);
+
+
+                ((ViewHolderResearchPanel) holder).btnAddReserch.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        List<Research> insertlist = new ArrayList<>();
+                        Researchs.add(new Research());
+                        Adapter.insertdata(insertlist);
+                        ((ViewHolderResearchPanel) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount()-1);
+                    }
+                });
+
                 break;
         }
     }
@@ -220,6 +245,16 @@ class ProbFieldAdapter extends RecyclerView.Adapter{
             super(view5);
             spiner = itemView.findViewById(R.id.spinner);
             txtHint = itemView.findViewById(R.id.hint);
+        }
+    }
+
+    private static class ViewHolderResearchPanel extends RecyclerView.ViewHolder {
+        final MaterialButton btnAddReserch;
+        final RecyclerView ResearchList;
+        ViewHolderResearchPanel(View view6) {
+            super(view6);
+            btnAddReserch = itemView.findViewById(R.id.addResearch);
+            ResearchList = itemView.findViewById(R.id.researchList);
         }
     }
 }

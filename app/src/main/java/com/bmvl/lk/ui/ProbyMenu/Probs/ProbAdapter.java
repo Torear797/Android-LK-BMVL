@@ -1,7 +1,6 @@
 package com.bmvl.lk.ui.ProbyMenu.Probs;
 
 import android.content.Context;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,14 +24,16 @@ import java.text.MessageFormat;
 import java.util.List;
 
 class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHolder> {
-    private List<Proby> Probs;
+    private static List<Proby> Probs;
     private static List<Field> ProbFields;
+    private static List<Field> ResearchFields;
     private LayoutInflater inflater;
 
-    ProbAdapter(Context context, List<Proby> Contents,List<Field> Fields) {
-        this.Probs = Contents;
+    ProbAdapter(Context context, List<Proby> Contents, List<Field> Fields, List<Field> ResFields) {
         this.inflater = LayoutInflater.from(context);
+        Probs = Contents;
         ProbFields = Fields;
+        ResearchFields = ResFields;
     }
 
     @NonNull
@@ -49,22 +49,23 @@ class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHolder> {
 
 
         final GridLayoutManager mng_layout = new GridLayoutManager(inflater.getContext(), 2);
-        mng_layout.setSpanSizeLookup( new GridLayoutManager.SpanSizeLookup() {
+        mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 if (Prob.getOrder_id() == 0 && (position >= 4 && position <= 7 || position == 22 || position == 23))
                     return 1;
-               // if (Prob.getOrder_id() == 1 && (position == 1 || position == 2 || position == 13 || position == 14))
-                 //   return 1;
+                // if (Prob.getOrder_id() == 1 && (position == 1 || position == 2 || position == 13 || position == 14))
+                //   return 1;
                 return 2;
             }
         });
         simpleViewHolder.ProbList.setLayoutManager(mng_layout);
 
-        final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields);
+        final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields);
         simpleViewHolder.ProbList.setAdapter(adapter);
 
-        simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", i+1));
+        simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", i + 1));
+
 
         simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         simpleViewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
@@ -73,18 +74,20 @@ class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHolder> {
                 Toast.makeText(view.getContext(), "Deleted !", Toast.LENGTH_SHORT).show();
             }
         });
+        mItemManger.bindView(simpleViewHolder.itemView, i);
 
         simpleViewHolder.head.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(simpleViewHolder.ProbList.getVisibility() == View.VISIBLE)
+                if (simpleViewHolder.ProbList.getVisibility() == View.VISIBLE) {
+                    simpleViewHolder.swipeLayout.setSwipeEnabled(true);
                     simpleViewHolder.ProbList.setVisibility(View.GONE);
-                else simpleViewHolder.ProbList.setVisibility(View.VISIBLE);
+                } else {
+                    simpleViewHolder.swipeLayout.setSwipeEnabled(false);
+                    simpleViewHolder.ProbList.setVisibility(View.VISIBLE);
+                }
             }
         });
-
-
-        mItemManger.bindView(simpleViewHolder.itemView, i);
     }
 
     @Override
@@ -103,6 +106,7 @@ class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHolder> {
         final SwipeLayout swipeLayout;
         final ImageView buttonDelete;
         final RecyclerView ProbList;
+
         SimpleViewHolder(@NonNull View itemView) {
             super(itemView);
             NameProb = itemView.findViewById(R.id.NumberProb);
@@ -114,15 +118,16 @@ class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHolder> {
         }
     }
 
-    public void insertdata(List<Proby> insertList){
+    public void insertdata(List<Proby> insertList) {
         ProbDiffUtilCallback diffUtilCallback = new ProbDiffUtilCallback(Probs, insertList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
         Probs.addAll(insertList);
         diffResult.dispatchUpdatesTo(this);
 
     }
-    public void updateList(List<Proby> newList){
-        ProbDiffUtilCallback diffUtilCallback = new ProbDiffUtilCallback(Probs,newList);
+
+    public void updateList(List<Proby> newList) {
+        ProbDiffUtilCallback diffUtilCallback = new ProbDiffUtilCallback(Probs, newList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
         Probs.clear();
         Probs.addAll(newList);

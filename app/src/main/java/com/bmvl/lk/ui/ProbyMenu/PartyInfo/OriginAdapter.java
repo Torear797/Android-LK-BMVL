@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.ViewHolders.SwitchHolder;
+import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
@@ -31,15 +33,15 @@ class OriginAdapter extends  RecyclerView.Adapter {
         switch (viewType) {
             case 0:
                 View view = inflater.inflate(R.layout.item_field, parent, false);
-                return new ViewHolder(view);
+                return new TextViewHolder(view);
 
             case 3:
                 View view3 = inflater.inflate(R.layout.item_check_button, parent, false);
-                return new ViewHolderSwitch(view3);
+                return new SwitchHolder(view3);
         }
 
         View view = inflater.inflate(R.layout.item_field, parent, false);
-        return new ViewHolder(view);
+        return new TextViewHolder(view);
     }
 
     @Override
@@ -48,13 +50,13 @@ class OriginAdapter extends  RecyclerView.Adapter {
 
         switch (f.getType()){
             case 0:{
-                ((OriginAdapter.ViewHolder) holder).Layout.setHint(f.getHint());
-                ((OriginAdapter.ViewHolder) holder).field.setInputType(f.getInputType());
-                ((OriginAdapter.ViewHolder) holder).field.setText(f.getValue());
+                ((TextViewHolder) holder).Layout.setHint(f.getHint());
+                ((TextViewHolder) holder).field.setInputType(f.getInputType());
+                ((TextViewHolder) holder).field.setText(f.getValue());
                 break;
             }
             case 3:
-                ((OriginAdapter.ViewHolderSwitch) holder).switchButton.setText(String.format("%s  ", f.getHint()));
+                ((SwitchHolder) holder).switchButton.setText(String.format("%s  ", f.getHint()));
                 break;
         }
     }
@@ -62,24 +64,5 @@ class OriginAdapter extends  RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         return PartyInfoFragment.OriginFields.size();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        final TextInputEditText field;
-        final TextInputLayout Layout;
-
-        ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            field = itemView.findViewById(R.id.TextInput);
-            Layout = itemView.findViewById(R.id.TextLayout);
-        }
-    }
-
-    public static class ViewHolderSwitch extends RecyclerView.ViewHolder {
-        final SwitchMaterial switchButton;
-        ViewHolderSwitch(View view3) {
-            super(view3);
-            switchButton = itemView.findViewById(R.id.my_switch);
-        }
     }
 }

@@ -1,9 +1,10 @@
-package com.bmvl.lk.ui.ProbyMenu.Probs;
+package com.bmvl.lk.ui.ProbyMenu.Probs.Research;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,15 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.R;
 import com.bmvl.lk.models.Research;
 import com.bmvl.lk.ui.Create_Order.Field;
+import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
 import java.text.MessageFormat;
 import java.util.List;
 
-class ResearhAdapter  extends RecyclerSwipeAdapter<ResearhAdapter.SimpleViewHolder> {
+public class ResearhAdapter  extends RecyclerSwipeAdapter<ResearhAdapter.SimpleViewHolder> {
     private LayoutInflater inflater;
     private static List<Research> Researchs;
     private static List<Field> ResearchField;
+
     public ResearhAdapter(Context context,List<Research> ResearchList, List<Field> Fields) {
         this.inflater = LayoutInflater.from(context);
         Researchs = ResearchList;
@@ -32,7 +35,7 @@ class ResearhAdapter  extends RecyclerSwipeAdapter<ResearhAdapter.SimpleViewHold
     @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_research, parent, false);
+        View view = inflater.inflate(R.layout.item_research_s, parent, false);
         return new SimpleViewHolder(view);
     }
 
@@ -44,7 +47,7 @@ class ResearhAdapter  extends RecyclerSwipeAdapter<ResearhAdapter.SimpleViewHold
 
         simpleViewHolder.NumberResearch.setText(MessageFormat.format("№ {0}", i+1));
 
-//        simpleViewHolder.slResearh.setShowMode(SwipeLayout.ShowMode.LayDown);
+      //  simpleViewHolder.slResearh.setShowMode(SwipeLayout.ShowMode.LayDown);
 //        simpleViewHolder.slResearh.addSwipeListener(new SimpleSwipeListener() {
 //            @Override
 //            public void onOpen(SwipeLayout layout) {
@@ -96,8 +99,8 @@ class ResearhAdapter  extends RecyclerSwipeAdapter<ResearhAdapter.SimpleViewHold
         final ConstraintLayout HeaderResearch;
         final TextView NumberResearch, HeaderInfo;
         final RecyclerView ResearchList;
-      //  final SwipeLayout slResearh;
-      //  final ImageView buttonDelete;
+        final SwipeLayout slResearh;
+        final ImageView buttonDelete;
 
         SimpleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -106,12 +109,12 @@ class ResearhAdapter  extends RecyclerSwipeAdapter<ResearhAdapter.SimpleViewHold
             ResearchList = itemView.findViewById(R.id.ResearchList);
             HeaderInfo = itemView.findViewById(R.id.InfoResearch);
 
-          //  slResearh = itemView.findViewById(R.id.swipeResearch);
-           // buttonDelete = itemView.findViewById(R.id.trashResearch);
+            slResearh = itemView.findViewById(R.id.swipeResearch);
+            buttonDelete = itemView.findViewById(R.id.trashResearch);
         }
     }
 
-    void insertdata(List<Research> insertList){
+    public void insertdata(List<Research> insertList){
         ResearchDiffUtilCallback diffUtilCallback = new ResearchDiffUtilCallback(Researchs, insertList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
         Researchs.addAll(insertList);

@@ -27,13 +27,28 @@ class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHolder> {
     private static List<Proby> Probs;
     private static List<Field> ProbFields;
     private static List<Field> ResearchFields;
+    private static List<Field> SampleFields; //Поля Образцов
     private LayoutInflater inflater;
+
+    ProbAdapter(Context context, List<Proby> Contents, List<Field> Fields, List<Field> ResFields, List<Field> SamFields) {
+        this.inflater = LayoutInflater.from(context);
+        Probs = Contents;
+        ProbFields = Fields;
+        ResearchFields = ResFields;
+        SampleFields = SamFields;
+    }
 
     ProbAdapter(Context context, List<Proby> Contents, List<Field> Fields, List<Field> ResFields) {
         this.inflater = LayoutInflater.from(context);
         Probs = Contents;
         ProbFields = Fields;
         ResearchFields = ResFields;
+    }
+
+    ProbAdapter(Context context, List<Proby> Contents, List<Field> Fields) {
+        this.inflater = LayoutInflater.from(context);
+        Probs = Contents;
+        ProbFields = Fields;
     }
 
     @NonNull
@@ -54,15 +69,24 @@ class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHolder> {
             public int getSpanSize(int position) {
                 if (Prob.getOrder_id() == 0 && (position >= 4 && position <= 7 || position == 22 || position == 23))
                     return 1;
-                // if (Prob.getOrder_id() == 1 && (position == 1 || position == 2 || position == 13 || position == 14))
-                //   return 1;
+                 if (Prob.getOrder_id() == 1 && (position >= 4 && position <= 7))
+                   return 1;
                 return 2;
             }
         });
         simpleViewHolder.ProbList.setLayoutManager(mng_layout);
 
-        final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields);
-        simpleViewHolder.ProbList.setAdapter(adapter);
+        if(Prob.getOrder_id() == 0 ){
+            final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields);
+            simpleViewHolder.ProbList.setAdapter(adapter);
+        } else if(Prob.getOrder_id() == 1){
+            final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, SampleFields);
+            simpleViewHolder.ProbList.setAdapter(adapter);
+        } else {
+            final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields);
+            simpleViewHolder.ProbList.setAdapter(adapter);
+        }
+
 
         simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", i + 1));
 

@@ -10,74 +10,75 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.ViewHolders.SpinerHolder;
+import com.bmvl.lk.ViewHolders.SwitchHolder;
+import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.ui.Create_Order.Field;
-import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
 import java.util.Objects;
 
-public class PartyInfoAdapter extends RecyclerView.Adapter{
+public class PartyInfoAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private static Calendar dateAndTime = Calendar.getInstance();
 
     PartyInfoAdapter(Context context) {
         this.inflater = LayoutInflater.from(context);
     }
+
     @Override
     public int getItemViewType(int position) {
         return PartyInfoFragment.PartyInfoFields.get(position).getType();
     }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case 0:
                 View view = inflater.inflate(R.layout.item_field, parent, false);
-                return new ViewHolder(view);
+                return new TextViewHolder(view);
             case 1:
                 View view1 = inflater.inflate(R.layout.item_spiner, parent, false);
-                return new ViewHolderSpiner(view1);
+                return new SpinerHolder(view1);
 
             case 3:
                 View view3 = inflater.inflate(R.layout.item_check_button, parent, false);
-                return new ViewHolderSwitch(view3);
+                return new SwitchHolder(view3);
         }
 
         View view = inflater.inflate(R.layout.item_field, parent, false);
-        return new ViewHolder(view);
+        return new TextViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         final Field f = PartyInfoFragment.PartyInfoFields.get(position);
 
-        switch (f.getType()){
-            case 0:{
+        switch (f.getType()) {
+            case 0: {
 
-                ((PartyInfoAdapter.ViewHolder) holder).Layout.setHint(f.getHint());
-                ((PartyInfoAdapter.ViewHolder) holder).field.setInputType(f.getInputType());
-                ((PartyInfoAdapter.ViewHolder) holder).field.setText(f.getValue());
+                ((TextViewHolder) holder).Layout.setHint(f.getHint());
+                ((TextViewHolder) holder).field.setInputType(f.getInputType());
+                ((TextViewHolder) holder).field.setText(f.getValue());
 
                 if (f.getIcon() != null) {
-                    ((PartyInfoAdapter.ViewHolder) holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
-                    ((PartyInfoAdapter.ViewHolder) holder).Layout.setEndIconDrawable(f.getIcon());
+                    ((TextViewHolder) holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
+                    ((TextViewHolder) holder).Layout.setEndIconDrawable(f.getIcon());
 
                     if (f.isData()) {
                         final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                ChangeData(year, monthOfYear, dayOfMonth, ((PartyInfoAdapter.ViewHolder) holder).field);
+                                ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field);
                             }
                         };
-                        ((PartyInfoAdapter.ViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
+                        ((TextViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
@@ -92,27 +93,28 @@ public class PartyInfoAdapter extends RecyclerView.Adapter{
                 }
 
                 if (f.isDoubleSize()) {
-                    ((PartyInfoAdapter.ViewHolder) holder).field.setGravity(Gravity.START | Gravity.TOP);
-                    ((PartyInfoAdapter.ViewHolder) holder).field.setMinLines(4);
-                    ((PartyInfoAdapter.ViewHolder) holder).field.setLines(6);
-                    ((PartyInfoAdapter.ViewHolder) holder).field.setSingleLine(false);
-                    ((PartyInfoAdapter.ViewHolder) holder).field.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+                    ((TextViewHolder) holder).field.setGravity(Gravity.START | Gravity.TOP);
+                    ((TextViewHolder) holder).field.setMinLines(4);
+                    ((TextViewHolder) holder).field.setLines(6);
+                    ((TextViewHolder) holder).field.setSingleLine(false);
+                    ((TextViewHolder) holder).field.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
                 }
                 break;
             }
-            case 1:{
+            case 1: {
                 ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                ((PartyInfoAdapter.ViewHolderSpiner) holder).spiner.setAdapter(adapter);
-               // ((PartyInfoAdapter.ViewHolderSpiner) holder).txtHint.setText(f.getHint());
-                ((PartyInfoAdapter.ViewHolderSpiner) holder).txtHint.setVisibility(View.GONE);
+                ((SpinerHolder) holder).spiner.setAdapter(adapter);
+                // ((PartyInfoAdapter.ViewHolderSpiner) holder).txtHint.setText(f.getHint());
+                ((SpinerHolder) holder).txtHint.setVisibility(View.GONE);
                 break;
             }
             case 3:
-                ((PartyInfoAdapter.ViewHolderSwitch) holder).switchButton.setText(String.format("%s  ", f.getHint()));
+                ((SwitchHolder) holder).switchButton.setText(String.format("%s  ", f.getHint()));
                 break;
         }
     }
+
     private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt) {
         monthOfYear = monthOfYear + 1;
         dateAndTime.set(Calendar.YEAR, year);
@@ -131,38 +133,9 @@ public class PartyInfoAdapter extends RecyclerView.Adapter{
         }
         Edt.setText(formattedDayOfMonth + "-" + formattedMonth + "-" + year);
     }
+
     @Override
     public int getItemCount() {
         return PartyInfoFragment.PartyInfoFields.size();
-    }
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        final TextInputEditText field;
-        final TextInputLayout Layout;
-
-        ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            field = itemView.findViewById(R.id.TextInput);
-            Layout = itemView.findViewById(R.id.TextLayout);
-        }
-    }
-
-    public static class ViewHolderSpiner extends PartyInfoAdapter.ViewHolder {
-        final Spinner spiner;
-        final TextView txtHint;
-
-        ViewHolderSpiner(View view1) {
-            super(view1);
-            spiner = itemView.findViewById(R.id.spinner);
-            txtHint = itemView.findViewById(R.id.hint);
-        }
-    }
-
-    static class ViewHolderSwitch extends RecyclerView.ViewHolder {
-        final SwitchMaterial switchButton;
-        ViewHolderSwitch(View view3) {
-            super(view3);
-            switchButton = itemView.findViewById(R.id.my_switch);
-        }
     }
 }

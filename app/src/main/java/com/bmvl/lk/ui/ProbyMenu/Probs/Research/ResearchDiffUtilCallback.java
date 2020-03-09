@@ -1,4 +1,4 @@
-package com.bmvl.lk.ui.ProbyMenu.Probs;
+package com.bmvl.lk.ui.ProbyMenu.Probs.Research;
 
 import androidx.recyclerview.widget.DiffUtil;
 

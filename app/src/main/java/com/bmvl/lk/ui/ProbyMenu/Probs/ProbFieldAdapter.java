@@ -8,41 +8,60 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
 import com.bmvl.lk.models.Research;
+import com.bmvl.lk.models.Samples;
 import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
+import com.bmvl.lk.ViewHolders.MultiSpinerHolder;
+import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
+import com.bmvl.lk.ViewHolders.SamplesPanelHolder;
+import com.bmvl.lk.ViewHolders.SelectButtonHolder;
+import com.bmvl.lk.ViewHolders.SpinerHolder;
+import com.bmvl.lk.ViewHolders.SwitchHolder;
+import com.bmvl.lk.ViewHolders.TextViewHolder;
+import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
 import com.daimajia.swipe.util.Attributes;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
-class ProbFieldAdapter extends RecyclerView.Adapter{
+public class ProbFieldAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private static Calendar dateAndTime = Calendar.getInstance();
     private static List<Field> ProbFields;
     private static List<Field> ResearchFields;
+    private static List<Field> SampleFields; //Поля Образцов
     private static List<Research> Researchs = new ArrayList<>();
+    private static List<Samples> Samples = new ArrayList<>();
 
-    ProbFieldAdapter(Context context,List<Field> Fields, List<Field> ResFields) {
+    ProbFieldAdapter(Context context, List<Field> Fields, List<Field> ResFields) {
         this.inflater = LayoutInflater.from(context);
         ProbFields = Fields;
         ResearchFields = ResFields;
+    }
+
+    ProbFieldAdapter(Context context, List<Field> Fields) {
+        this.inflater = LayoutInflater.from(context);
+        ProbFields = Fields;
+    }
+
+    public ProbFieldAdapter(Context context, List<Field> probFields, List<Field> researchFields, List<Field> sampleFields) {
+        this.inflater = LayoutInflater.from(context);
+        ProbFields = probFields;
+        ResearchFields = researchFields;
+        SampleFields = sampleFields;
     }
 
     @Override
@@ -56,26 +75,29 @@ class ProbFieldAdapter extends RecyclerView.Adapter{
         switch (viewType) {
             case 0:
                 View view = inflater.inflate(R.layout.item_field, parent, false);
-                return new ViewHolder(view);
+                return new TextViewHolder(view);
             case 1:
                 View view1 = inflater.inflate(R.layout.item_spiner, parent, false);
-                return new ViewHolderSpiner(view1);
+                return new SpinerHolder(view1);
             case 3:
                 View view3 = inflater.inflate(R.layout.item_check_button, parent, false);
-                return new ViewHolderSwitch(view3);
+                return new SwitchHolder(view3);
             case 4:
                 View view4 = inflater.inflate(R.layout.item_button_select, parent, false);
-                return new ViewHolderButton(view4);
+                return new SelectButtonHolder(view4);
             case 5:
                 View view5 = inflater.inflate(R.layout.item_multi_spinner, parent, false);
-                return new ViewHolderMultiSpiner(view5);
+                return new MultiSpinerHolder(view5);
             case 6:
                 View view6 = inflater.inflate(R.layout.item_research_list, parent, false);
-                return new ViewHolderResearchPanel(view6);
+                return new ResearchPanelHolder(view6);
+            case 7:
+                View view7 = inflater.inflate(R.layout.item_research_list, parent, false);
+                return new SamplesPanelHolder(view7);
         }
 
         View view = inflater.inflate(R.layout.item_field, parent, false);
-        return new ViewHolder(view);
+        return new TextViewHolder(view);
     }
 
     @Override
@@ -83,21 +105,21 @@ class ProbFieldAdapter extends RecyclerView.Adapter{
         final Field f = ProbFields.get(position);
         if (f.getType() == 0) {
 
-            ((ViewHolder) holder).Layout.setHint(f.getHint());
-            ((ViewHolder) holder).field.setInputType(f.getInputType());
-            ((ViewHolder) holder).field.setText(f.getValue());
+            ((TextViewHolder) holder).Layout.setHint(f.getHint());
+            ((TextViewHolder) holder).field.setInputType(f.getInputType());
+            ((TextViewHolder) holder).field.setText(f.getValue());
 
             if (f.getIcon() != null) {
-                ((ViewHolder) holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
-                ((ViewHolder) holder).Layout.setEndIconDrawable(f.getIcon());
+                ((TextViewHolder) holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
+                ((TextViewHolder) holder).Layout.setEndIconDrawable(f.getIcon());
 
                 if (f.isData()) {
                     final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                            ChangeData(year, monthOfYear, dayOfMonth, ((ViewHolder) holder).field);
+                            ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field);
                         }
                     };
-                    ((ViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
+                    ((TextViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
@@ -112,68 +134,87 @@ class ProbFieldAdapter extends RecyclerView.Adapter{
             }
 
             if (f.isDoubleSize()) {
-                ((ViewHolder) holder).field.setGravity(Gravity.START | Gravity.TOP);
-                ((ViewHolder) holder).field.setMinLines(4);
-                ((ViewHolder) holder).field.setLines(6);
-                ((ViewHolder) holder).field.setSingleLine(false);
-                ((ViewHolder) holder).field.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+                ((TextViewHolder) holder).field.setGravity(Gravity.START | Gravity.TOP);
+                ((TextViewHolder) holder).field.setMinLines(4);
+                ((TextViewHolder) holder).field.setLines(6);
+                ((TextViewHolder) holder).field.setSingleLine(false);
+                ((TextViewHolder) holder).field.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
             }
         } else if (f.getType() == 1) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            ((ViewHolderSpiner) holder).spiner.setAdapter(adapter);
-            ((ViewHolderSpiner) holder).txtHint.setText(f.getHint());
+            ((SpinerHolder) holder).spiner.setAdapter(adapter);
+            ((SpinerHolder) holder).txtHint.setText(f.getHint());
         }
 
-        switch (f.getType()){
+        switch (f.getType()) {
             case 3:
-                ((ViewHolderSwitch) holder).switchButton.setText(String.format("%s  ", f.getHint()));
+                ((SwitchHolder) holder).switchButton.setText(String.format("%s  ", f.getHint()));
                 break;
             case 4:
-                ((ViewHolderButton) holder).hint.setText(f.getHint());
+                ((SelectButtonHolder) holder).hint.setText(f.getHint());
                 break;
             case 5:
-              //  String[] countries = inflater.getContext().getResources().getStringArray(f.getEntries());
-               // ArrayAdapter<String> adapter = new ArrayAdapter<String>(inflater.getContext(), android.R.layout.simple_spinner_item, countries);
+                //  String[] countries = inflater.getContext().getResources().getStringArray(f.getEntries());
+                // ArrayAdapter<String> adapter = new ArrayAdapter<String>(inflater.getContext(), android.R.layout.simple_spinner_item, countries);
 
-              //  ((ViewHolderMultiSpiner) holder).spiner.setAdapter(adapter);
-              //  ((ViewHolderMultiSpiner) holder).spiner.setItems(items, getString(R.string.documents), this);;
-
+                //  ((ViewHolderMultiSpiner) holder).spiner.setAdapter(adapter);
+                //  ((ViewHolderMultiSpiner) holder).spiner.setItems(items, getString(R.string.documents), this);;
 
 
                 List<String> items = Arrays.asList(inflater.getContext().getResources().getStringArray(f.getEntries()));
 
-                 MultiSpinner.MultiSpinnerListener onSelectedListener = new MultiSpinner.MultiSpinnerListener() {
+                MultiSpinner.MultiSpinnerListener onSelectedListener = new MultiSpinner.MultiSpinnerListener() {
                     public void onItemsSelected(boolean[] selected) {
                         // Do something here with the selected items
                     }
                 };
 
-                ((ViewHolderMultiSpiner) holder).spiner.setItems(items, inflater.getContext().getString(R.string.for_all), onSelectedListener);
-                ((ViewHolderMultiSpiner) holder).txtHint.setText(f.getHint());
+                ((MultiSpinerHolder) holder).spiner.setItems(items, inflater.getContext().getString(R.string.for_all), onSelectedListener);
+                ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
             case 6:
                 Researchs.add(new Research());
-               // ((ViewHolderResearchPanel) holder).ResearchList.setHasFixedSize(true);
+                // ((ViewHolderResearchPanel) holder).ResearchList.setHasFixedSize(true);
 
                 final ResearhAdapter Adapter = new ResearhAdapter(inflater.getContext(), Researchs, ResearchFields);
                 (Adapter).setMode(Attributes.Mode.Single);
-                ((ViewHolderResearchPanel) holder).ResearchList.setAdapter(Adapter);
+                ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
 
-
-                ((ViewHolderResearchPanel) holder).btnAddReserch.setOnClickListener(new View.OnClickListener() {
+                ((ResearchPanelHolder) holder).btnAddReserch.setText("Добавить исследование");
+                ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         List<Research> insertlist = new ArrayList<>();
                         Researchs.add(new Research());
                         Adapter.insertdata(insertlist);
-                        ((ViewHolderResearchPanel) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount()-1);
+                        ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
+                    }
+                });
+
+                break;
+            case 7:
+                Samples.add(new Samples(0, Samples.size()));
+
+                  final SamplesAdapter SamAdapter = new SamplesAdapter(inflater.getContext(), Researchs, ResearchFields,Samples,SampleFields);
+                  (SamAdapter).setMode(Attributes.Mode.Single);
+                  ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
+
+                ((SamplesPanelHolder) holder).btnAddSample.setText("Добавить образец");
+                ((SamplesPanelHolder) holder).btnAddSample.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        List<Samples> insertlist = new ArrayList<>();
+                        Samples.add(new Samples(0,Samples.size()+1));
+                        SamAdapter.insertdata(insertlist);
+                        ((SamplesPanelHolder) holder).SampleList.smoothScrollToPosition(SamAdapter.getItemCount() - 1);
                     }
                 });
 
                 break;
         }
     }
+
     private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt) {
         monthOfYear = monthOfYear + 1;
         dateAndTime.set(Calendar.YEAR, year);
@@ -192,69 +233,9 @@ class ProbFieldAdapter extends RecyclerView.Adapter{
         }
         Edt.setText(formattedDayOfMonth + "-" + formattedMonth + "-" + year);
     }
+
     @Override
     public int getItemCount() {
         return ProbFields.size();
-    }
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        final TextInputEditText field;
-        final TextInputLayout Layout;
-
-        ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            field = itemView.findViewById(R.id.TextInput);
-            Layout = itemView.findViewById(R.id.TextLayout);
-        }
-    }
-
-    public static class ViewHolderSpiner extends RecyclerView.ViewHolder {
-        final Spinner spiner;
-        final TextView txtHint;
-
-        ViewHolderSpiner(View view1) {
-            super(view1);
-            spiner = itemView.findViewById(R.id.spinner);
-            txtHint = itemView.findViewById(R.id.hint);
-        }
-    }
-
-    public static class ViewHolderSwitch extends ViewHolder {
-        final SwitchMaterial switchButton;
-        ViewHolderSwitch(View view3) {
-            super(view3);
-            switchButton = itemView.findViewById(R.id.my_switch);
-        }
-    }
-
-    public static class ViewHolderButton extends ViewHolder {
-        final TextView hint,path;
-        final Button select_btn;
-        ViewHolderButton(View view4) {
-            super(view4);
-            hint = itemView.findViewById(R.id.hint);
-            path = itemView.findViewById(R.id.path);
-            select_btn = itemView.findViewById(R.id.select);
-        }
-    }
-
-    private static class ViewHolderMultiSpiner extends RecyclerView.ViewHolder {
-        final MultiSpinner  spiner;
-        final TextView txtHint;
-        ViewHolderMultiSpiner(View view5) {
-            super(view5);
-            spiner = itemView.findViewById(R.id.spinner);
-            txtHint = itemView.findViewById(R.id.hint);
-        }
-    }
-
-    private static class ViewHolderResearchPanel extends RecyclerView.ViewHolder {
-        final MaterialButton btnAddReserch;
-        final RecyclerView ResearchList;
-        ViewHolderResearchPanel(View view6) {
-            super(view6);
-            btnAddReserch = itemView.findViewById(R.id.addResearch);
-            ResearchList = itemView.findViewById(R.id.researchList);
-        }
     }
 }

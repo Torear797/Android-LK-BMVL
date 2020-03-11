@@ -1,16 +1,14 @@
 package com.bmvl.lk.ui.ProbyMenu.PartyInfo;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
 import com.bmvl.lk.ui.Create_Order.Field;
@@ -19,14 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
 public class PartyInfoFragment extends Fragment {
-    public static List<Field> PartyInfoFields = new ArrayList<>();
-    public static List<Field> OriginFields = new ArrayList<>();
+    private static List<Field> PartyInfoFields = new ArrayList<>();
+    private static List<Field> OriginFields = new ArrayList<>();
     private static byte TypeTabs;
 
     public PartyInfoFragment() {
-        // Required empty public constructor
     }
 
     public static PartyInfoFragment newInstance(byte Type) {
@@ -54,12 +50,11 @@ public class PartyInfoFragment extends Fragment {
                 }
             });
             recyclerView.setLayoutManager(mng_layout);
-            final PartyInfoAdapter adapter = new PartyInfoAdapter(getContext());
+            final PartyInfoAdapter adapter = new PartyInfoAdapter(getContext(), PartyInfoFields);
             recyclerView.setAdapter(adapter);
-        }
-        else {
+        } else {
             AddOriginField();
-            final OriginAdapter adapter2 = new OriginAdapter(getContext());
+            final OriginAdapter adapter2 = new OriginAdapter(getContext(), OriginFields);
             recyclerView.setAdapter(adapter2);
         }
 

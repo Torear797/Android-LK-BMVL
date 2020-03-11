@@ -21,9 +21,9 @@ import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import java.text.MessageFormat;
 import java.util.List;
 
-public class ResearhAdapter  extends RecyclerSwipeAdapter<ResearhAdapter.SimpleViewHolder> {
+public class ResearhAdapter  extends RecyclerSwipeAdapter<ResearhAdapter.ResearchItemHolder> {
     private LayoutInflater inflater;
-    private static List<Research> Researchs;
+    private List<Research> Researchs;
     private static List<Field> ResearchField;
 
     public ResearhAdapter(Context context,List<Research> ResearchList, List<Field> Fields) {
@@ -34,21 +34,21 @@ public class ResearhAdapter  extends RecyclerSwipeAdapter<ResearhAdapter.SimpleV
 
     @NonNull
     @Override
-    public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ResearchItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_research_s, parent, false);
-        return new SimpleViewHolder(view);
+        return new ResearchItemHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final SimpleViewHolder simpleViewHolder, int i) {
+    public void onBindViewHolder(final ResearchItemHolder ResearchItemHolder, int i) {
 
         final ResearchFieldAdapter adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchField);
-        simpleViewHolder.ResearchList.setAdapter(adapter);
+        ResearchItemHolder.ResearchList.setAdapter(adapter);
 
-        simpleViewHolder.NumberResearch.setText(MessageFormat.format("№ {0}", i+1));
+        ResearchItemHolder.NumberResearch.setText(MessageFormat.format("№ {0}", i+1));
 
-      //  simpleViewHolder.slResearh.setShowMode(SwipeLayout.ShowMode.LayDown);
-//        simpleViewHolder.slResearh.addSwipeListener(new SimpleSwipeListener() {
+        ResearchItemHolder.slResearh.setShowMode(SwipeLayout.ShowMode.LayDown);
+       // simpleViewHolder.slResearh.addSwipeListener(new SimpleSwipeListener() {
 //            @Override
 //            public void onOpen(SwipeLayout layout) {
 //                YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.trash));
@@ -68,18 +68,18 @@ public class ResearhAdapter  extends RecyclerSwipeAdapter<ResearhAdapter.SimpleV
 //            }
 //        });
 
-        //mItemManger.bindView(simpleViewHolder.itemView, i);
+        //mItemManger.bindView(ResearchItemHolder.itemView, i);
 
-        simpleViewHolder.HeaderInfo.setText(String.format("Цена: %d руб.", 0));
-        simpleViewHolder.HeaderResearch.setOnClickListener(new View.OnClickListener() {
+        ResearchItemHolder.HeaderInfo.setText(String.format("Цена: %d руб.", 0));
+        ResearchItemHolder.HeaderResearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (simpleViewHolder.ResearchList.getVisibility() == View.VISIBLE) {
+                if (ResearchItemHolder.ResearchList.getVisibility() == View.VISIBLE) {
                   //  simpleViewHolder.swipeLayout.setSwipeEnabled(true);
-                    simpleViewHolder.ResearchList.setVisibility(View.GONE);
+                    ResearchItemHolder.ResearchList.setVisibility(View.GONE);
                 } else {
                     //simpleViewHolder.swipeLayout.setSwipeEnabled(false);
-                    simpleViewHolder.ResearchList.setVisibility(View.VISIBLE);
+                    ResearchItemHolder.ResearchList.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -95,14 +95,14 @@ public class ResearhAdapter  extends RecyclerSwipeAdapter<ResearhAdapter.SimpleV
         return R.id.swipe;
     }
 
-    static class SimpleViewHolder extends RecyclerView.ViewHolder {
+    static class ResearchItemHolder extends RecyclerView.ViewHolder {
         final ConstraintLayout HeaderResearch;
         final TextView NumberResearch, HeaderInfo;
         final RecyclerView ResearchList;
         final SwipeLayout slResearh;
         final ImageView buttonDelete;
 
-        SimpleViewHolder(@NonNull View itemView) {
+        ResearchItemHolder(@NonNull View itemView) {
             super(itemView);
             HeaderResearch = itemView.findViewById(R.id.HeaderResearch);
             NumberResearch = itemView.findViewById(R.id.NumberResearch);
@@ -116,7 +116,7 @@ public class ResearhAdapter  extends RecyclerSwipeAdapter<ResearhAdapter.SimpleV
 
     public void insertdata(List<Research> insertList){
         ResearchDiffUtilCallback diffUtilCallback = new ResearchDiffUtilCallback(Researchs, insertList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
         Researchs.addAll(insertList);
         diffResult.dispatchUpdatesTo(this);
     }

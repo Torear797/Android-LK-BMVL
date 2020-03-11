@@ -22,19 +22,22 @@ import com.bmvl.lk.ui.Create_Order.Field;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 
 public class PartyInfoAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private static Calendar dateAndTime = Calendar.getInstance();
+    private static List<Field> PartyInfoFields;
 
-    PartyInfoAdapter(Context context) {
+    PartyInfoAdapter(Context context, List<Field> PartyFields) {
         this.inflater = LayoutInflater.from(context);
+        PartyInfoFields = PartyFields;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return PartyInfoFragment.PartyInfoFields.get(position).getType();
+        return PartyInfoFields.get(position).getType();
     }
 
     @NonNull
@@ -59,7 +62,7 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
-        final Field f = PartyInfoFragment.PartyInfoFields.get(position);
+        final Field f = PartyInfoFields.get(position);
 
         switch (f.getType()) {
             case 0: {
@@ -136,6 +139,6 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return PartyInfoFragment.PartyInfoFields.size();
+        return PartyInfoFields.size();
     }
 }

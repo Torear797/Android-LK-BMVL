@@ -12,19 +12,21 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.ui.Create_Order.Field;
-import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
-class OriginAdapter extends  RecyclerView.Adapter {
+import java.util.List;
+
+class OriginAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
+    private static List<Field> OriginFields;
 
-     OriginAdapter(Context context) {
+    OriginAdapter(Context context, List<Field> Fields) {
         this.inflater = LayoutInflater.from(context);
+        OriginFields = Fields;
     }
+
     @Override
     public int getItemViewType(int position) {
-        return PartyInfoFragment.OriginFields.get(position).getType();
+        return OriginFields.get(position).getType();
     }
 
     @NonNull
@@ -46,10 +48,9 @@ class OriginAdapter extends  RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        final Field f = PartyInfoFragment.OriginFields.get(position);
-
-        switch (f.getType()){
-            case 0:{
+        final Field f = OriginFields.get(position);
+        switch (f.getType()) {
+            case 0: {
                 ((TextViewHolder) holder).Layout.setHint(f.getHint());
                 ((TextViewHolder) holder).field.setInputType(f.getInputType());
                 ((TextViewHolder) holder).field.setText(f.getValue());
@@ -63,6 +64,6 @@ class OriginAdapter extends  RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return PartyInfoFragment.OriginFields.size();
+        return OriginFields.size();
     }
 }

@@ -20,19 +20,19 @@ public class FragmentPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
-            case 0:
-                return ProbsFragment.newInstance(order_id);
             case 1:
             case 2:
                 return PartyInfoFragment.newInstance((byte) position);
             case 3:
                 return ServiceInfoFragment.newInstance();
+            default:
+                return ProbsFragment.newInstance(order_id);
         }
-        return ProbsFragment.newInstance(order_id);
     }
 
     @Override
     public int getItemCount() {
         return CARD_ITEM_SIZE;
     }
+
 }

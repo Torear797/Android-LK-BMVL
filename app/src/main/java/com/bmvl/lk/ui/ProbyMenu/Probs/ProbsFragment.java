@@ -1,18 +1,17 @@
 package com.bmvl.lk.ui.ProbyMenu.Probs;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bmvl.lk.R;
 import com.bmvl.lk.models.Proby;
+import com.bmvl.lk.models.Research;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.google.android.material.button.MaterialButton;
 
@@ -22,17 +21,15 @@ import java.util.Objects;
 
 
 public class ProbsFragment extends Fragment {
-
-    public ProbsFragment() {
-        // Required empty public constructor
-    }
-
     private static byte order_id;
-
     private static List<Proby> ProbList = new ArrayList<>();  //Пробы
     private static List<Field> ProbFields = new ArrayList<>(); //Поля пробы
-//    private static List<Field> ResearchFields = new ArrayList<>(); //Поля исследований
-//    private static List<Field> SampleFields = new ArrayList<>(); //Поля Образцов
+    private static List<Field> ResearchFields = new ArrayList<>(); //Поля исследований
+    private static List<Field> SampleFields = new ArrayList<>(); //Поля Образцов
+    private static List<List<Research>> Researchs = new ArrayList<>(); //Исследования.
+
+    public ProbsFragment() {
+    }
 
     public static ProbsFragment newInstance(byte id) {
         order_id = id;
@@ -49,25 +46,26 @@ public class ProbsFragment extends Fragment {
         AddProb();
 
         if (order_id == 0) {
-            List<Field> ResearchFields = new ArrayList<>();
-            AddOrderFieldsType0(ResearchFields);
+            AddOrderFieldsType0();
             final ProbAdapter adapter = new ProbAdapter(getContext(), ProbList, ProbFields, ResearchFields);
             recyclerView.setAdapter(adapter);
             NewProbListener(AddProbBtn, adapter, recyclerView);
         } else if (order_id == 1) {
-            List<Field> ResearchFields = new ArrayList<>();
-            List<Field> SampleFields = new ArrayList<>();
-            AddOrderFieldsType1(SampleFields, ResearchFields);
+            AddOrderFieldsType1();
             final ProbAdapter adapter = new ProbAdapter(getContext(), ProbList, ProbFields, ResearchFields, SampleFields);
             recyclerView.setAdapter(adapter);
             NewProbListener(AddProbBtn, adapter, recyclerView);
-        } else {
-            final ProbAdapter adapter = new ProbAdapter(getContext(), ProbList, ProbFields);
-            recyclerView.setAdapter(adapter);
         }
 
-
         return MyView;
+    }
+
+    public static List<List<Research>> getResearchsList() {
+        return Researchs;
+    }
+
+    public static List<Research> getResearchsList(int i) {
+        return Researchs.get(i);
     }
 
     private void NewProbListener(final MaterialButton AddProbBtn, final ProbAdapter adapter, final RecyclerView recyclerView) {
@@ -75,14 +73,14 @@ public class ProbsFragment extends Fragment {
         AddProbBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // List<Proby> ProbListOld = ProbList;
                 List<Proby> insertlist = new ArrayList<>();
                 ProbList.add(new Proby(ProbList.size() + 1, "", order_id, 0));
-
-                //  adapter.notifyItemChanged(ProbList.size());
-
                 adapter.insertdata(insertlist);
                 recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+
+                List<Research> ResItems = new ArrayList<>();
+                ResItems.add(new Research());
+                Researchs.add(ResItems);
             }
         });
     }
@@ -90,9 +88,15 @@ public class ProbsFragment extends Fragment {
     private void AddProb() {
         ProbList.clear();
         ProbList.add(new Proby(1, "", order_id, 0));
+
+        Researchs.clear();
+
+        List<Research> ResItems = new ArrayList<>();
+        ResItems.add(new Research());
+        Researchs.add(ResItems);
     }
 
-    private void AddSamleFields(List<Field> SampleFields, List<Field> ResearchFields) {
+    private void AddSampleFields() {
         SampleFields.clear();
         SampleFields.add(new Field(1, "", "Наименование доставленного биоматериала", InputType.TYPE_CLASS_TEXT));
         SampleFields.add(new Field(1, "", "Инвентарный номер животного, кличка и т.д.", InputType.TYPE_CLASS_TEXT));
@@ -101,17 +105,17 @@ public class ProbsFragment extends Fragment {
         SampleFields.add(new Field(1, "", "Номер корпуса", InputType.TYPE_CLASS_TEXT));
         SampleFields.add(new Field(1, "", "Вакцинация поголовья", InputType.TYPE_CLASS_TEXT));
         SampleFields.add(new Field((byte) 6, 0, "", ""));
-        AddResearchFields(ResearchFields);
+        AddResearchFields();
     }
 
-    private void AddResearchFields(List<Field> ResearchFields) {
+    private void AddResearchFields() {
         ResearchFields.clear();
         ResearchFields.add(new Field((byte) 1, R.array.documents, 0, "", "Показатель"));
         ResearchFields.add(new Field((byte) 1, R.array.documents, 0, "", "Метод испытаний"));
         ResearchFields.add(new Field((byte) 1, R.array.documents, 0, "", "Тип исследования"));
     }
 
-    private void AddOrderFieldsType0(List<Field> ResearchFields) {
+    private void AddOrderFieldsType0() {
         ProbFields.clear();
         ProbFields.add(new Field((byte) 1, R.array.type_material, 0, "", "Вид материала"));
         ProbFields.add(new Field((byte) 5, R.array.documents, 0, "", "На соответствие требованиям"));
@@ -141,12 +145,12 @@ public class ProbsFragment extends Fragment {
         ProbFields.add(new Field((byte) 1, R.array.units_of_measure, 0, "", " "));
 
         ProbFields.add(new Field((byte) 5, R.array.documents, 0, "", "НД на продукцию"));
-        ProbFields.add(new Field((byte) 6, 0, "", ""));
+        ProbFields.add(new Field((byte) 6));
 
-        AddResearchFields(ResearchFields);
+        AddResearchFields();
     }
 
-    private void AddOrderFieldsType1(List<Field> SampleFields, List<Field> ResearchFields) {
+    private void AddOrderFieldsType1() {
         ProbFields.clear();
         ProbFields.add(new Field((byte) 1, R.array.type_material, 0, "", "Вид материала"));
         ProbFields.add(new Field((byte) 5, R.array.documents, 0, "", "На соответствие требованиям"));
@@ -169,7 +173,7 @@ public class ProbsFragment extends Fragment {
         ProbFields.add(new Field(1, "", "ФИО лица, проводившего отбор", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(1, "", "В присутствии", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(1, "", "Дата и время отбора", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field((byte) 7, 0, "", ""));
-        AddSamleFields(SampleFields, ResearchFields);
+        ProbFields.add(new Field((byte) 7));
+        AddSampleFields();
     }
 }

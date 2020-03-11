@@ -2,23 +2,19 @@ package com.bmvl.lk.ui.ProbyMenu.Probs;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
-import com.bmvl.lk.models.Research;
-import com.bmvl.lk.models.Samples;
-import com.bmvl.lk.ui.Create_Order.Field;
-import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
 import com.bmvl.lk.ViewHolders.MultiSpinerHolder;
 import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
 import com.bmvl.lk.ViewHolders.SamplesPanelHolder;
@@ -26,16 +22,21 @@ import com.bmvl.lk.ViewHolders.SelectButtonHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
+import com.bmvl.lk.models.Research;
+import com.bmvl.lk.models.Samples;
+import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class ProbFieldAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
@@ -43,21 +44,20 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     private static List<Field> ProbFields;
     private static List<Field> ResearchFields;
     private static List<Field> SampleFields; //Поля Образцов
-    private static List<Research> Researchs = new ArrayList<>();
+    private List<Research> Researchs; //Исследования конкретной пробы
+
+    private int ProbID;
+
     private static List<Samples> Samples = new ArrayList<>();
 
-    ProbFieldAdapter(Context context, List<Field> Fields, List<Field> ResFields) {
+    ProbFieldAdapter(Context context, List<Field> Fields, List<Field> ResFields, int id) {
         this.inflater = LayoutInflater.from(context);
         ProbFields = Fields;
         ResearchFields = ResFields;
+        ProbID = id;
     }
 
-    ProbFieldAdapter(Context context, List<Field> Fields) {
-        this.inflater = LayoutInflater.from(context);
-        ProbFields = Fields;
-    }
-
-    public ProbFieldAdapter(Context context, List<Field> probFields, List<Field> researchFields, List<Field> sampleFields) {
+     ProbFieldAdapter(Context context, List<Field> probFields, List<Field> researchFields, List<Field> sampleFields) {
         this.inflater = LayoutInflater.from(context);
         ProbFields = probFields;
         ResearchFields = researchFields;
@@ -73,9 +73,6 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
-            case 0:
-                View view = inflater.inflate(R.layout.item_field, parent, false);
-                return new TextViewHolder(view);
             case 1:
                 View view1 = inflater.inflate(R.layout.item_spiner, parent, false);
                 return new SpinerHolder(view1);
@@ -94,15 +91,16 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             case 7:
                 View view7 = inflater.inflate(R.layout.item_research_list, parent, false);
                 return new SamplesPanelHolder(view7);
+            default:
+                View view = inflater.inflate(R.layout.item_field, parent, false);
+                return new TextViewHolder(view);
         }
-
-        View view = inflater.inflate(R.layout.item_field, parent, false);
-        return new TextViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         final Field f = ProbFields.get(position);
+       // final Field f = ProbsFragment.ProbFields.get(position);
         if (f.getType() == 0) {
 
             ((TextViewHolder) holder).Layout.setHint(f.getHint());
@@ -133,13 +131,13 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 }
             }
 
-            if (f.isDoubleSize()) {
-                ((TextViewHolder) holder).field.setGravity(Gravity.START | Gravity.TOP);
-                ((TextViewHolder) holder).field.setMinLines(4);
-                ((TextViewHolder) holder).field.setLines(6);
-                ((TextViewHolder) holder).field.setSingleLine(false);
-                ((TextViewHolder) holder).field.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-            }
+//            if (f.isDoubleSize()) {
+//                ((TextViewHolder) holder).field.setGravity(Gravity.START | Gravity.TOP);
+//                ((TextViewHolder) holder).field.setMinLines(4);
+//                ((TextViewHolder) holder).field.setLines(6);
+//                ((TextViewHolder) holder).field.setSingleLine(false);
+//                ((TextViewHolder) holder).field.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+//            }
         } else if (f.getType() == 1) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -155,38 +153,31 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 ((SelectButtonHolder) holder).hint.setText(f.getHint());
                 break;
             case 5:
-                //  String[] countries = inflater.getContext().getResources().getStringArray(f.getEntries());
-                // ArrayAdapter<String> adapter = new ArrayAdapter<String>(inflater.getContext(), android.R.layout.simple_spinner_item, countries);
-
-                //  ((ViewHolderMultiSpiner) holder).spiner.setAdapter(adapter);
-                //  ((ViewHolderMultiSpiner) holder).spiner.setItems(items, getString(R.string.documents), this);;
-
-
                 List<String> items = Arrays.asList(inflater.getContext().getResources().getStringArray(f.getEntries()));
-
                 MultiSpinner.MultiSpinnerListener onSelectedListener = new MultiSpinner.MultiSpinnerListener() {
                     public void onItemsSelected(boolean[] selected) {
                         // Do something here with the selected items
                     }
                 };
-
                 ((MultiSpinerHolder) holder).spiner.setItems(items, inflater.getContext().getString(R.string.for_all), onSelectedListener);
                 ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
             case 6:
-                Researchs.add(new Research());
+                Researchs = ProbsFragment.getResearchsList(ProbID);
                 // ((ViewHolderResearchPanel) holder).ResearchList.setHasFixedSize(true);
 
                 final ResearhAdapter Adapter = new ResearhAdapter(inflater.getContext(), Researchs, ResearchFields);
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
 
-                ((ResearchPanelHolder) holder).btnAddReserch.setText("Добавить исследование");
+               // ((ResearchPanelHolder) holder).btnAddReserch.setText("Добавить исследование " + ProbID);
                 ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //((ResearchPanelHolder) holder).btnAddReserch.setText("Добавить исследование " + ProbID);
                         List<Research> insertlist = new ArrayList<>();
                         Researchs.add(new Research());
+                       // Adapter.notifyDataSetChanged();
                         Adapter.insertdata(insertlist);
                         ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
                     }

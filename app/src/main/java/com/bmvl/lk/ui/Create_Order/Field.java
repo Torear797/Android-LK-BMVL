@@ -21,6 +21,10 @@ public class Field {
         Hint = hint;
     }
 
+    public Field(byte type) {
+        Type = type;
+    }
+
     public int getEntries() {
         return entries;
     }

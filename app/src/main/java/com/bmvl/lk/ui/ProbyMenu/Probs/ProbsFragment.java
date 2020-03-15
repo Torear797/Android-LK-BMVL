@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.R;
 import com.bmvl.lk.models.Proby;
 import com.bmvl.lk.models.Research;
+import com.bmvl.lk.models.Samples;
+import com.bmvl.lk.models.SamplesData;
+import com.bmvl.lk.models.SamplesResearch;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.google.android.material.button.MaterialButton;
 
@@ -26,7 +29,12 @@ public class ProbsFragment extends Fragment {
     private static List<Field> ProbFields = new ArrayList<>(); //Поля пробы
     private static List<Field> ResearchFields = new ArrayList<>(); //Поля исследований
     private static List<Field> SampleFields = new ArrayList<>(); //Поля Образцов
+
     private static List<List<Research>> Researchs = new ArrayList<>(); //Исследования.
+
+    private static List<Samples> SamplesList = new ArrayList<>(); //Образцы.
+    private static List<List<SamplesResearch>> SamplesResearchs = new ArrayList<>(); //Данные исследований для образцов
+    private static List<SamplesData> SamplesData = new ArrayList<>(); //Данные полей образцов.
 
     public ProbsFragment() {
     }
@@ -63,9 +71,31 @@ public class ProbsFragment extends Fragment {
     public static List<List<Research>> getResearchsList() {
         return Researchs;
     }
-
     public static List<Research> getResearchsList(int i) {
         return Researchs.get(i);
+    }
+    public static List<Samples> getSampleList(int i) {
+        List<Samples> SamplesForBrobID = new ArrayList<>();
+        for (Samples sam : SamplesList){
+           if(sam.getProby_id() == i) SamplesForBrobID.add(sam);
+        }
+        return SamplesForBrobID;
+    }
+    public static List<Samples> getSampleList() {
+        return SamplesList;
+    }
+
+   // public stati
+
+    public static List<SamplesResearch> getSampleResearchList(int ProbID) {
+        return SamplesResearchs.get(ProbID);
+    }
+    public static List<SamplesResearch> getSampleResearchList(int i, int ProbId) {
+        List<SamplesResearch> SamplesResearchListForID = new ArrayList<>();
+        for (SamplesResearch sam : SamplesResearchs.get(ProbId)){
+            if(sam.getSample_id() == i) SamplesResearchListForID.add(sam);
+        }
+        return SamplesResearchListForID;
     }
 
     private void NewProbListener(final MaterialButton AddProbBtn, final ProbAdapter adapter, final RecyclerView recyclerView) {
@@ -74,13 +104,24 @@ public class ProbsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 List<Proby> insertlist = new ArrayList<>();
-                ProbList.add(new Proby(ProbList.size() + 1, "", order_id, 0));
+              //  ProbList.add(new Proby(ProbList.size() + 1, "", order_id, 0));
+                insertlist.add(new Proby(ProbList.size() + 1, "", order_id, 0));
                 adapter.insertdata(insertlist);
                 recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
 
-                List<Research> ResItems = new ArrayList<>();
-                ResItems.add(new Research());
-                Researchs.add(ResItems);
+                if(order_id == 0) {
+                    List<Research> ResItems = new ArrayList<>();
+                    ResItems.add(new Research());
+                    Researchs.add(ResItems);
+                } else {
+                    SamplesList.add(new Samples(ProbList.size()-1, 1));
+
+                    List<SamplesResearch> ResItems = new ArrayList<>();
+                    ResItems.add(new SamplesResearch(SamplesResearchs.get(ProbList.size()-2).size()-1, SamplesList.size()-1));
+                    SamplesResearchs.add(ResItems);
+
+                    SamplesData.add(new SamplesData(SamplesData.size()-1, SamplesList.size()-1));
+                }
             }
         });
     }
@@ -91,9 +132,21 @@ public class ProbsFragment extends Fragment {
 
         Researchs.clear();
 
-        List<Research> ResItems = new ArrayList<>();
-        ResItems.add(new Research());
-        Researchs.add(ResItems);
+        SamplesList.clear();
+        SamplesResearchs.clear();
+        SamplesData.clear();
+
+        if(order_id == 0) {
+            List<Research> ResItems = new ArrayList<>();
+            ResItems.add(new Research());
+            Researchs.add(ResItems);
+        } else {
+            SamplesList.add(new Samples(ProbList.size()-1, 1));
+            List<SamplesResearch> ResItems = new ArrayList<>();
+            ResItems.add(new SamplesResearch(0, SamplesList.size()-1));
+            SamplesResearchs.add(ResItems);
+            SamplesData.add(new SamplesData(SamplesData.size()-1, SamplesList.size()-1));
+        }
     }
 
     private void AddSampleFields() {

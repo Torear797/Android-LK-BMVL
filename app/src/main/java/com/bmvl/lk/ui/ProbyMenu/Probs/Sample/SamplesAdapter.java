@@ -16,8 +16,10 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.models.Proby;
 import com.bmvl.lk.models.Research;
 import com.bmvl.lk.models.Samples;
+import com.bmvl.lk.models.SamplesResearch;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.bmvl.lk.ui.ProbyMenu.Probs.ProbDiffUtilCallback;
+import com.bmvl.lk.ui.ProbyMenu.Probs.ProbsFragment;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -26,17 +28,21 @@ import java.util.List;
 
 public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleViewHolder> {
     private LayoutInflater inflater;
-    private static List<Research> Researchs;
-    private static List<Samples> Samples;
+
+    private  List<SamplesResearch> Researchs;
+    private  List<Samples> Samples;
+
     private static List<Field> ResearchsField;
     private static List<Field> SamplesField;
+    private int ProbID;
 
-    public SamplesAdapter(Context context, List<Research> ResearchList, List<Field> ResFields, List<Samples> SamList, List<Field> SamFields) {
+    public SamplesAdapter(Context context, List<SamplesResearch> ResearchList, List<Field> ResFields, List<Samples> SamList, List<Field> SamFields, int id) {
         this.inflater = LayoutInflater.from(context);
         Researchs = ResearchList;
         ResearchsField = ResFields;
         Samples = SamList;
         SamplesField = SamFields;
+        ProbID = id;
     }
 
     @Override
@@ -49,7 +55,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     public void onBindViewHolder(final SamplesAdapter.SimpleViewHolder simpleViewHolder, int i) {
         final Samples f = Samples.get(i);
 
-        final SamplesFieldAdapter adapter = new SamplesFieldAdapter(inflater.getContext(), Researchs, ResearchsField,Samples,SamplesField);
+        final SamplesFieldAdapter adapter = new SamplesFieldAdapter(inflater.getContext(), Researchs, ResearchsField,Samples,SamplesField , i, ProbID);
         simpleViewHolder.SampleList.setAdapter(adapter);
 
         simpleViewHolder.NumberSample.setText(MessageFormat.format("№ {0}", i + 1));
@@ -99,8 +105,9 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
 
     public void insertdata(List<Samples> insertList) {
         SamplesDiffUtilCallback diffUtilCallback = new SamplesDiffUtilCallback(Samples, insertList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
         Samples.addAll(insertList);
+        ProbsFragment.getSampleList().addAll(insertList);
         diffResult.dispatchUpdatesTo(this);
 
     }

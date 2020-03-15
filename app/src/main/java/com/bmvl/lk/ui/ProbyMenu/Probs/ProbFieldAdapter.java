@@ -44,11 +44,11 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     private static List<Field> ProbFields;
     private static List<Field> ResearchFields;
     private static List<Field> SampleFields; //Поля Образцов
-    private List<Research> Researchs; //Исследования конкретной пробы
+    //private List<Research> Researchs; //Исследования конкретной пробы
 
     private int ProbID;
 
-    private static List<Samples> Samples = new ArrayList<>();
+    //  private static List<Samples> Samples = new ArrayList<>();
 
     ProbFieldAdapter(Context context, List<Field> Fields, List<Field> ResFields, int id) {
         this.inflater = LayoutInflater.from(context);
@@ -57,11 +57,12 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
         ProbID = id;
     }
 
-     ProbFieldAdapter(Context context, List<Field> probFields, List<Field> researchFields, List<Field> sampleFields) {
+    ProbFieldAdapter(Context context, List<Field> probFields, List<Field> researchFields, List<Field> sampleFields, int id) {
         this.inflater = LayoutInflater.from(context);
         ProbFields = probFields;
         ResearchFields = researchFields;
         SampleFields = sampleFields;
+        ProbID = id;
     }
 
     @Override
@@ -100,7 +101,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         final Field f = ProbFields.get(position);
-       // final Field f = ProbsFragment.ProbFields.get(position);
+        // final Field f = ProbsFragment.ProbFields.get(position);
         if (f.getType() == 0) {
 
             ((TextViewHolder) holder).Layout.setHint(f.getHint());
@@ -163,21 +164,22 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
             case 6:
-                Researchs = ProbsFragment.getResearchsList(ProbID);
+                //  Researchs = ProbsFragment.getResearchsList(ProbID);
                 // ((ViewHolderResearchPanel) holder).ResearchList.setHasFixedSize(true);
 
-                final ResearhAdapter Adapter = new ResearhAdapter(inflater.getContext(), Researchs, ResearchFields);
+                final ResearhAdapter Adapter = new ResearhAdapter(inflater.getContext(), ProbsFragment.getResearchsList(ProbID), ResearchFields);
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
 
-               // ((ResearchPanelHolder) holder).btnAddReserch.setText("Добавить исследование " + ProbID);
+                ((ResearchPanelHolder) holder).btnAddReserch.setText("Добавить исследование ");
                 ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //((ResearchPanelHolder) holder).btnAddReserch.setText("Добавить исследование " + ProbID);
                         List<Research> insertlist = new ArrayList<>();
-                        Researchs.add(new Research());
-                       // Adapter.notifyDataSetChanged();
+                        //insertlist.add(new Research());
+                        ProbsFragment.getResearchsList(ProbID).add(new Research());
+                        // Adapter.notifyDataSetChanged();
                         Adapter.insertdata(insertlist);
                         ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
                     }
@@ -185,18 +187,21 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 break;
             case 7:
-                Samples.add(new Samples(0, Samples.size()));
+                // Samples.add(new Samples(0, Samples.size()));
+                final List<Samples> Sample = ProbsFragment.getSampleList(ProbID);
 
-                  final SamplesAdapter SamAdapter = new SamplesAdapter(inflater.getContext(), Researchs, ResearchFields,Samples,SampleFields);
-                  (SamAdapter).setMode(Attributes.Mode.Single);
-                  ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
+                final SamplesAdapter SamAdapter = new SamplesAdapter(inflater.getContext(), ProbsFragment.getSampleResearchList(ProbID), ResearchFields, Sample, SampleFields, ProbID);
+                (SamAdapter).setMode(Attributes.Mode.Single);
+                ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
 
                 ((SamplesPanelHolder) holder).btnAddSample.setText("Добавить образец");
                 ((SamplesPanelHolder) holder).btnAddSample.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         List<Samples> insertlist = new ArrayList<>();
-                        Samples.add(new Samples(0,Samples.size()+1));
+                        insertlist.add(new Samples(ProbID, Sample.size() + 1));
+                      //  Sample.add(new Samples(ProbID, Sample.size() + 1));
+                       // ProbsFragment.getSampleList().add(new Samples(ProbID, Sample.size() + 1));
                         SamAdapter.insertdata(insertlist);
                         ((SamplesPanelHolder) holder).SampleList.smoothScrollToPosition(SamAdapter.getItemCount() - 1);
                     }

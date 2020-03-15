@@ -15,7 +15,9 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
 import com.bmvl.lk.models.Research;
 import com.bmvl.lk.models.Samples;
+import com.bmvl.lk.models.SamplesResearch;
 import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.ProbyMenu.Probs.ProbsFragment;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearchFieldAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
 import com.daimajia.swipe.SwipeLayout;
@@ -31,17 +33,21 @@ import java.util.List;
 
 public class SamplesFieldAdapter extends RecyclerSwipeAdapter<SamplesFieldAdapter.SimpleViewHolder> {
     private LayoutInflater inflater;
-    private static List<Research> Researchs;
+    private static List<SamplesResearch> Researchs;
     private static List<Samples> Samples;
     private static List<Field> ResearchsField;
     private static List<Field> SamplesField;
+    private int sample_id;
+    private int prob_id;
 
-    public SamplesFieldAdapter(Context context, List<Research> ResearchList, List<Field> ResFields, List<Samples> SamList, List<Field> SamFields) {
+    public SamplesFieldAdapter(Context context, List<SamplesResearch> ResearchList, List<Field> ResFields, List<Samples> SamList, List<Field> SamFields, int id, int probid) {
         this.inflater = LayoutInflater.from(context);
         Researchs = ResearchList;
         ResearchsField = ResFields;
         Samples = SamList;
         SamplesField = SamFields;
+        sample_id = id;
+        prob_id = probid;
     }
 
     @Override
@@ -68,18 +74,19 @@ public class SamplesFieldAdapter extends RecyclerSwipeAdapter<SamplesFieldAdapte
             ((SwipeTextView) simpleViewHolder).field.setInputType(f.getInputType());
             ((SwipeTextView) simpleViewHolder).field.setText(f.getValue());
         } else {
-            final ResearhAdapter adapter = new ResearhAdapter(inflater.getContext(), Researchs, ResearchsField);
+            final SampleResearhAdapter adapter = new SampleResearhAdapter(inflater.getContext(), ProbsFragment.getSampleResearchList(sample_id,prob_id), ResearchsField);
             (adapter).setMode(Attributes.Mode.Single);
             simpleViewHolder.ResearchList.setAdapter(adapter);
 
-          //  simpleViewHolder.NumberResearch.setText(MessageFormat.format("№ {0}", i + 1));
             simpleViewHolder.AddResearch.setText("Добавить исследование");
             simpleViewHolder.AddResearch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    List<Research> insertlist = new ArrayList<>();
-                    Researchs.add(new Research());
-                    adapter.insertdata(insertlist);
+                    List<SamplesResearch> insertlist = new ArrayList<>();
+
+                    insertlist.add(new SamplesResearch(Researchs.size()-1,sample_id));
+                    adapter.insertdata(insertlist, prob_id);
+
                     simpleViewHolder.ResearchList.smoothScrollToPosition(adapter.getItemCount() - 1);
                 }
             });

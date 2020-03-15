@@ -76,7 +76,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
             final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, i);
             simpleViewHolder.ProbList.setAdapter(adapter);
         } else if (Prob.getOrder_id() == 1) {
-            final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, SampleFields);
+            final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, SampleFields, i);
             simpleViewHolder.ProbList.setAdapter(adapter);
         }
 
@@ -137,7 +137,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 
     public void insertdata(List<Proby> insertList) {
         ProbDiffUtilCallback diffUtilCallback = new ProbDiffUtilCallback(Probs, insertList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
         Probs.addAll(insertList);
         diffResult.dispatchUpdatesTo(this);
 

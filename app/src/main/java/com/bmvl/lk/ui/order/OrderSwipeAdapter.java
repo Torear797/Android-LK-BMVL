@@ -9,28 +9,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
 import com.bmvl.lk.models.Orders;
-
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
+import com.google.android.material.snackbar.Snackbar;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.SimpleViewHolder> {
-    private List<Orders> Orders;
+    private static List<Orders> Orders;
     private LayoutInflater inflater;
+    private TextView message;
 
-    OrderSwipeAdapter(Context context, List<Orders> Contents) {
-        this.Orders = Contents;
+    OrderSwipeAdapter(Context context, List<Orders> Contents, TextView msg) {
         this.inflater = LayoutInflater.from(context);
+        Orders = Contents;
+        this.message = msg;
     }
 
     @Override
@@ -40,8 +42,8 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
     }
 
     @Override
-    public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
-        Orders Order = Orders.get(i);
+    public void onBindViewHolder(final SimpleViewHolder simpleViewHolder, int i) {
+        final Orders Order = Orders.get(i);
         simpleViewHolder.Number.setText("№ " + Order.getId());
 
         int j = 1;
@@ -82,11 +84,37 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 //                Toast.makeText(MyContext, "DoubleClick", Toast.LENGTH_SHORT).show();
 //            }
 //        });
+        //final int id = i;
         simpleViewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+              //  Orders.remove(simpleViewHolder.getLayoutPosition());
+                List<Orders> insertlist = new ArrayList<>(Orders);
+                insertlist.remove(simpleViewHolder.getLayoutPosition());
+                updateList(insertlist);
+              //  simpleViewHolder.swipeLayout.close();
+                Snackbar.make(view, "Заявка удалена!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
+        });
 
-                Toast.makeText(view.getContext(), "Deleted !", Toast.LENGTH_SHORT).show();
+        simpleViewHolder.buttonDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Загрузка!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                //Toast.makeText(view.getContext(), "Загрузка!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        simpleViewHolder.buttonCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               /// Orders.add(0,new Orders(Orders.size()+1,Order.getUser_id(),Order.getType_id(),Order.getDate()));
+                List<Orders> insertlist = new ArrayList<>();
+                insertlist.add(new Orders(Orders.get(0).getId()+1,Order.getUser_id(),Order.getType_id(),Order.getDate()));
+                insertdata(insertlist, true);
+                //simpleViewHolder.swipeLayout.close();
+                Snackbar.make(view, "Заявка скопирвоана!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+              //  Toast.makeText(view.getContext(), "Заявка скопирвоана!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -107,7 +135,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 
         final TextView Number,Name,Status,Adres,Person,PersonStatus,Data;
         final SwipeLayout swipeLayout;
-        final ImageView buttonDelete;
+        final ImageView buttonDelete,buttonCopy,buttonOpen,buttonDownload;
         SimpleViewHolder(@NonNull View itemView) {
             super(itemView);
             Number = itemView.findViewById(R.id.nomer);
@@ -120,6 +148,31 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 
             swipeLayout = itemView.findViewById(R.id.swipe);
             buttonDelete = itemView.findViewById(R.id.trash);
+            buttonCopy = itemView.findViewById(R.id.create);
+            buttonOpen = itemView.findViewById(R.id.edit);
+            buttonDownload = itemView.findViewById(R.id.download);
         }
+    }
+    private void CheckEmpty(){
+        if(Orders.size() == 0) message.setVisibility(View.VISIBLE);
+        else message.setVisibility(View.GONE);
+    }
+
+    public void insertdata(List<Orders> insertList,boolean isCopy){
+        OrdersDiffUtilCallback diffUtilCallback = new OrdersDiffUtilCallback(Orders, insertList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
+        if(isCopy)
+        Orders.addAll(0, insertList);
+        else  Orders.addAll(insertList);
+        CheckEmpty();
+        diffResult.dispatchUpdatesTo(this);
+    }
+    public void updateList(List<Orders> newList){
+        OrdersDiffUtilCallback diffUtilCallback = new OrdersDiffUtilCallback(Orders, newList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
+        Orders.clear();
+        Orders.addAll(newList);
+        CheckEmpty();
+        diffResult.dispatchUpdatesTo(this);
     }
 }

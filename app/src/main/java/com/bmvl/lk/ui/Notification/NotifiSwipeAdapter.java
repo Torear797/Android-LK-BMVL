@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
@@ -19,15 +20,19 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
+import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleViewHolder> {
-    private List<Notifications> Notifi;
+    private static List<Notifications> Notifi;
     private LayoutInflater inflater;
-    NotifiSwipeAdapter(Context context, List<Notifications> notifi) {
-        this.Notifi = notifi;
+    private TextView Message;
+    NotifiSwipeAdapter(Context context, List<Notifications> notifi, TextView msg) {
         this.inflater = LayoutInflater.from(context);
+        this.Message = msg;
+        Notifi = notifi;
     }
 
     @NonNull
@@ -38,7 +43,7 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NotifiSwipeAdapter.SimpleViewHolder simpleViewHolder, int i) {
+    public void onBindViewHolder(@NonNull final NotifiSwipeAdapter.SimpleViewHolder simpleViewHolder, int i) {
 
         Notifications notifi = Notifi.get(i);
         simpleViewHolder.Data.setText(notifi.getDate());
@@ -67,8 +72,10 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
         simpleViewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Toast.makeText(view.getContext(), "Deleted Notifi", Toast.LENGTH_SHORT).show();
+                List<Notifications> insertlist = new ArrayList<>(Notifi);
+                insertlist.remove(simpleViewHolder.getLayoutPosition());
+                updateList(insertlist);
+                Snackbar.make(view, "Уведомление удалено!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
 
@@ -84,6 +91,27 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
     @Override
     public int getSwipeLayoutResourceId(int position) {
          return R.id.swipeNotifi;
+    }
+
+    private void CheckEmpty(){
+        if(Notifi.size() == 0) Message.setVisibility(View.VISIBLE);
+        else Message.setVisibility(View.GONE);
+    }
+
+    public void insertdata(List<Notifications> insertList){
+        NotifyDiffUtilCallback diffUtilCallback = new NotifyDiffUtilCallback(Notifi, insertList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
+        Notifi.addAll(insertList);
+        CheckEmpty();
+        diffResult.dispatchUpdatesTo(this);
+    }
+    public void updateList(List<Notifications> newList){
+        NotifyDiffUtilCallback diffUtilCallback = new NotifyDiffUtilCallback(Notifi, newList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
+        Notifi.clear();
+        Notifi.addAll(newList);
+        CheckEmpty();
+        diffResult.dispatchUpdatesTo(this);
     }
 
     class SimpleViewHolder extends RecyclerView.ViewHolder {

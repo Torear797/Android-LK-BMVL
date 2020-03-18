@@ -315,5 +315,7 @@
     <string name="Type_of_research">Тип исследования</string>
     <string name="add_research">Добавить</string>
     <string name="add_sample">Добавить образец</string>
+    <string name="empty_orders">Список заявок пуст!</string>
+    <string name="empty_notify">Список уведомлений пуст!</string>
 
 </resources>

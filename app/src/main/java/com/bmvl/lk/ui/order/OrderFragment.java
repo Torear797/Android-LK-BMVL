@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -32,7 +33,7 @@ import java.util.Objects;
 
 
 public class OrderFragment extends Fragment implements OnBackPressedListener {
-    private List<Orders> Orders = new ArrayList<>();
+    private static List<Orders> Orders = new ArrayList<>();
     public static String[] OrderTypes;
     public static String[] OrderStatuses;
 
@@ -52,16 +53,19 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
         final RecyclerView recyclerView = MyView.findViewById(R.id.list);
         final FloatingActionButton fab = MyView.findViewById(R.id.floatingActionButton);
+        final TextView message =  MyView.findViewById(R.id.empty_msg);
+
+
         fab.setColorFilter(Color.argb(255, 255, 255, 255));
 
         YoYo.with(Techniques.Tada)
                 .duration(700)
                 .playOn(fab);
 
-        SetTestData();
+        if(Orders.size() == 0) SetTestData();
 
         recyclerView.setHasFixedSize(true);
-        OrderSwipeAdapter OrderAdapter = new OrderSwipeAdapter(getContext(), Orders);
+        final OrderSwipeAdapter OrderAdapter = new OrderSwipeAdapter(getContext(), Orders, message);
         (OrderAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(OrderAdapter);
 
@@ -121,11 +125,11 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
     }
 
     private void SetTestData() {
-        Orders.add(new Orders(1, "", 1, 6, 1, "", "", "2019-12-12", "", "", 0.0, 0, 0, 0, ""));
-        Orders.add(new Orders(2, "", 1, 5, 2, "", "", "2019-12-13", "", "", 0.0, 0, 0, 0, ""));
-        Orders.add(new Orders(3, "", 1, 2, 3, "", "", "2019-12-14", "", "", 0.0, 0, 0, 0, ""));
-        Orders.add(new Orders(4, "", 1, 1, 4, "", "", "2019-12-15", "", "", 0.0, 0, 0, 0, ""));
-        Orders.add(new Orders(5, "", 1, 3, 6, "", "", "2019-12-16", "", "", 0.0, 0, 0, 0, ""));
+        Orders.add(new Orders(2, "", 1, 6, 1, "", "", "2019-12-12", "", "", 0.0, 0, 0, 0, ""));
+        Orders.add(new Orders(1, "", 1, 5, 2, "", "", "2019-12-13", "", "", 0.0, 0, 0, 0, ""));
+       // Orders.add(new Orders(3, "", 1, 2, 3, "", "", "2019-12-14", "", "", 0.0, 0, 0, 0, ""));
+      //  Orders.add(new Orders(4, "", 1, 1, 4, "", "", "2019-12-15", "", "", 0.0, 0, 0, 0, ""));
+       // Orders.add(new Orders(5, "", 1, 3, 6, "", "", "2019-12-16", "", "", 0.0, 0, 0, 0, ""));
     }
 
     @Override

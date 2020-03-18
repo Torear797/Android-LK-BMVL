@@ -35,6 +35,13 @@ public class Orders {
         this.act_of_selection = act_of_selection;
     }
 
+    public Orders(int id, int user_id, int type_id, String date) {
+        this.id = id;
+        this.user_id = user_id;
+        this.type_id = type_id;
+        this.date = date;
+    }
+
     public int getId() {
         return id;
     }

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -61,18 +62,26 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
         simpleViewHolder.NumberSample.setText(MessageFormat.format("№ {0}", i + 1));
         simpleViewHolder.Info.setText("Образец");
 
+        simpleViewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "Удаление Образца", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         simpleViewHolder.head.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (simpleViewHolder.SampleList.getVisibility() == View.VISIBLE) {
-                   // simpleViewHolder.swipeLayout.setSwipeEnabled(true);
+                    simpleViewHolder.swipeLayout.setSwipeEnabled(true);
                     simpleViewHolder.SampleList.setVisibility(View.GONE);
-                } else {
-                    //simpleViewHolder.swipeLayout.setSwipeEnabled(false);
+                } else if(simpleViewHolder.swipeLayout.getOpenStatus() == SwipeLayout.Status.Close){
+                    simpleViewHolder.swipeLayout.setSwipeEnabled(false);
                     simpleViewHolder.SampleList.setVisibility(View.VISIBLE);
                 }
             }
         });
+        mItemManger.bindView(simpleViewHolder.itemView, i);
     }
 
     @Override
@@ -88,8 +97,8 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     static class SimpleViewHolder extends RecyclerView.ViewHolder {
         final ConstraintLayout head;
         final TextView NumberSample,Info;
-      //  final SwipeLayout swipeLayout;
-     //   final ImageView buttonDelete;
+        final SwipeLayout swipeLayout;
+        final ImageView buttonDelete;
         final RecyclerView SampleList;
         SimpleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -98,8 +107,8 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
             head = itemView.findViewById(R.id.Header);
             Info = itemView.findViewById(R.id.InfoProb);
 
-            //swipeLayout = itemView.findViewById(R.id.swipe);
-           // buttonDelete = itemView.findViewById(R.id.trash);
+            swipeLayout = itemView.findViewById(R.id.swipe);
+            buttonDelete = itemView.findViewById(R.id.trash);
         }
     }
 

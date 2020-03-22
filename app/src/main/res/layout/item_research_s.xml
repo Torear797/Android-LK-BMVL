@@ -2,33 +2,31 @@
 <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipeResearch"
+    style="@style/ClearFocus"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
-    style="@style/ClearFocus"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:leftEdgeSwipeOffset="0dp"
-    app:rightEdgeSwipeOffset="0dp">
+    app:layout_constraintTop_toTopOf="parent">
 
     <LinearLayout
         android:id="@+id/bottom_wrapper"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:tag="Bottom3"
         android:weightSum="10">
 
         <ImageView
             android:id="@+id/trashResearch"
-            android:layout_width="match_parent"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:background="#FF5534"
-            android:paddingLeft="25dp"
-            android:paddingRight="25dp"
+            android:padding="10dp"
+            android:layout_marginEnd="10dp"
             android:src="@drawable/ic_delete_white_24dp" />
 
     </LinearLayout>
@@ -36,8 +34,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/HeaderResearch"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/linearLayout"

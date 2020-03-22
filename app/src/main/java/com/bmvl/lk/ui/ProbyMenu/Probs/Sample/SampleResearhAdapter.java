@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -46,23 +47,29 @@ class SampleResearhAdapter extends RecyclerSwipeAdapter<SampleResearhAdapter.Res
         researchItemHolder.ResearchList.setAdapter(adapter);
 
         researchItemHolder.NumberResearch.setText(MessageFormat.format("№ {0}", i+1));
-
-        researchItemHolder.slResearh.setShowMode(SwipeLayout.ShowMode.LayDown);
-
-
         researchItemHolder.HeaderInfo.setText(String.format("Цена: %d руб.", 0));
+
+        researchItemHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "Удаление ииследования", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        researchItemHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         researchItemHolder.HeaderResearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (researchItemHolder.ResearchList.getVisibility() == View.VISIBLE) {
-                    //  simpleViewHolder.swipeLayout.setSwipeEnabled(true);
+                    researchItemHolder.swipeLayout.setSwipeEnabled(true);
                     researchItemHolder.ResearchList.setVisibility(View.GONE);
-                } else {
-                    //simpleViewHolder.swipeLayout.setSwipeEnabled(false);
+                } else if(researchItemHolder.swipeLayout.getOpenStatus() == SwipeLayout.Status.Close){
+                    researchItemHolder.swipeLayout.setSwipeEnabled(false);
                     researchItemHolder.ResearchList.setVisibility(View.VISIBLE);
                 }
             }
         });
+        mItemManger.bindView(researchItemHolder.itemView, i);
     }
 
     @Override
@@ -72,7 +79,7 @@ class SampleResearhAdapter extends RecyclerSwipeAdapter<SampleResearhAdapter.Res
 
     @Override
     public int getSwipeLayoutResourceId(int position) {
-        return R.id.swipe;
+        return R.id.swipeResearch;
     }
 
     static class ResearchItemHolder extends RecyclerView.ViewHolder {
@@ -80,7 +87,7 @@ class SampleResearhAdapter extends RecyclerSwipeAdapter<SampleResearhAdapter.Res
         final TextView NumberResearch;
         final TextView HeaderInfo;
         final RecyclerView ResearchList;
-        final SwipeLayout slResearh;
+        final SwipeLayout swipeLayout;
         final ImageView buttonDelete;
          ResearchItemHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,7 +97,7 @@ class SampleResearhAdapter extends RecyclerSwipeAdapter<SampleResearhAdapter.Res
             ResearchList = itemView.findViewById(R.id.ResearchList);
             HeaderInfo = itemView.findViewById(R.id.InfoResearch);
 
-            slResearh = itemView.findViewById(R.id.swipeResearch);
+            swipeLayout = itemView.findViewById(R.id.swipeResearch);
             buttonDelete = itemView.findViewById(R.id.trashResearch);
         }
     }

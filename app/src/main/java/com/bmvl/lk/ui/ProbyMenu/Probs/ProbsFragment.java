@@ -16,6 +16,7 @@ import com.bmvl.lk.models.Samples;
 import com.bmvl.lk.models.SamplesData;
 import com.bmvl.lk.models.SamplesResearch;
 import com.bmvl.lk.ui.Create_Order.Field;
+import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -56,11 +57,13 @@ public class ProbsFragment extends Fragment {
         if (order_id == 0) {
             AddOrderFieldsType0();
             final ProbAdapter adapter = new ProbAdapter(getContext(), ProbList, ProbFields, ResearchFields);
+            (adapter).setMode(Attributes.Mode.Single);
             recyclerView.setAdapter(adapter);
             NewProbListener(AddProbBtn, adapter, recyclerView);
         } else if (order_id == 1) {
             AddOrderFieldsType1();
             final ProbAdapter adapter = new ProbAdapter(getContext(), ProbList, ProbFields, ResearchFields, SampleFields);
+            (adapter).setMode(Attributes.Mode.Single);
             recyclerView.setAdapter(adapter);
             NewProbListener(AddProbBtn, adapter, recyclerView);
         }

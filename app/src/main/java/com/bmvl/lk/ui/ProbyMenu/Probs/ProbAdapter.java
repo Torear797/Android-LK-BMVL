@@ -86,7 +86,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         simpleViewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Deleted !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Удаление пробы", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -97,13 +97,12 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
                 if (simpleViewHolder.ProbList.getVisibility() == View.VISIBLE) {
                     simpleViewHolder.swipeLayout.setSwipeEnabled(true);
                     simpleViewHolder.ProbList.setVisibility(View.GONE);
-                } else {
+                } else if(simpleViewHolder.swipeLayout.getOpenStatus() == SwipeLayout.Status.Close){
                     simpleViewHolder.swipeLayout.setSwipeEnabled(false);
                     simpleViewHolder.ProbList.setVisibility(View.VISIBLE);
                 }
             }
         });
-
         mItemManger.bindView(simpleViewHolder.itemView, i);
     }
 

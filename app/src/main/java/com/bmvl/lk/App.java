@@ -5,9 +5,11 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.bmvl.lk.TestRest.TestUser;
 import com.orhanobut.hawk.Hawk;
 
 public class App extends Application {
+    public static TestUser MyUser;
     @Override
     public void onCreate() {
         super.onCreate();

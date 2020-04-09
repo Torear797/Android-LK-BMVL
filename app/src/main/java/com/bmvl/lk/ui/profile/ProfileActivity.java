@@ -5,10 +5,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,6 +28,8 @@ public class ProfileActivity extends AppCompatActivity {
         final MaterialToolbar toolbar = findViewById(R.id.toolbar);
         final FloatingActionButton fab = findViewById(R.id.fab);
 
+        final TextView FIO = findViewById(R.id.tvName);
+
         toolbar.setTitle(R.string.profile);
         setSupportActionBar(toolbar);
 
@@ -41,7 +45,7 @@ public class ProfileActivity extends AppCompatActivity {
         fab.setColorFilter(Color.argb(255, 255, 255, 255));
 
 
-
+        FIO.setText(App.MyUser.getToken());
 
 
         fab.setOnClickListener(new View.OnClickListener() {

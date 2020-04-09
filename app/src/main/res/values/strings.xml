@@ -6,7 +6,7 @@
     <string name="action_sign_in">Войти</string>
     <string name="action_sign_in_short">Войти</string>
     <string name="welcome">"Добро пожаловать !"</string>
-    <string name="invalid_username">Некорректная почта</string>
+    <string name="invalid_username">Некорректная почта или Телефон</string>
     <string name="invalid_password">Пароль должен содержать минимум 5 символов</string>
     <string name="login_failed">"Некорректный Логин"</string>
     <string name="order">Заказы</string>
@@ -19,7 +19,7 @@
     <string name="s_numer_protocol">Номер протокола</string>
     <string name="ot">Дата от</string>
     <string name="Do">Дата до</string>
-    <string name="email">Email</string>
+    <string name="email">Email или Телефон</string>
     <string name="password">Пароль</string>
     <string name="price_ot">Цена От</string>
     <string name="price_do">Цена До</string>

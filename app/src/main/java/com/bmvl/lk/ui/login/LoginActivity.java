@@ -3,8 +3,10 @@ package com.bmvl.lk.ui.login;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -14,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,9 +24,17 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bmvl.lk.App;
 import com.bmvl.lk.MenuActivity;
 import com.bmvl.lk.R;
+import com.bmvl.lk.TestRest.NetworkService;
+import com.bmvl.lk.TestRest.OutputData;
+import com.bmvl.lk.TestRest.TestUser;
 import com.google.android.material.appbar.MaterialToolbar;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -48,11 +59,12 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.Create);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        final String ANDROID_ID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
+            public void onChanged(@Nullable LoginFormState loginFormState) {        //Меняем состояние кнопки
                 if (loginFormState == null) {
                     return;
                 }
@@ -68,17 +80,21 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
+        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {         //Обрабокта результата
             @Override
             public void onChanged(@Nullable LoginResult loginResult) {
+
                 if (loginResult == null) {
                     return;
                 }
+
                 loadingProgressBar.setVisibility(View.GONE);
 
                 if (loginResult.getError() != null) {
                     showLoginFailed(loginResult.getError());
+                    return;
                 }
+
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser(loginResult.getSuccess());
                 }
@@ -105,15 +121,17 @@ public class LoginActivity extends AppCompatActivity {
                         passwordEditText.getText().toString());
             }
         };
+
         usernameEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
+
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
+                            passwordEditText.getText().toString(), ANDROID_ID);
                 }
                 return false;
             }
@@ -123,21 +141,19 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                loginViewModel.login(usernameEditText.getText().toString(), passwordEditText.getText().toString() , ANDROID_ID);
             }
         });
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
 //        String welcome = getString(R.string.welcome) + model.getDisplayName();
-//        // TODO : initiate successful logged in experience
-//        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), model.getDisplayName(), Toast.LENGTH_LONG).show();
         Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
         startActivity(intent);
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    private void showLoginFailed(String Error) {
+        Toast.makeText(getApplicationContext(), Error, Toast.LENGTH_SHORT).show();
     }
 }

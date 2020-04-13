@@ -1,9 +1,9 @@
-package com.bmvl.lk.TestRest;
+package com.bmvl.lk.Rest;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class RestError {
+public class StandardAnswer {
     @SerializedName("success")
     @Expose
     private boolean success;

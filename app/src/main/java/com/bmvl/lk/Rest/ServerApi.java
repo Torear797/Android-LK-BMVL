@@ -1,4 +1,6 @@
-package com.bmvl.lk.TestRest;
+package com.bmvl.lk.Rest;
+
+import com.bmvl.lk.data.model.LoggedInUser;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -16,9 +18,18 @@ public interface ServerApi {
 //            @Query("device_id") String device_id,
 //            @Query("getToken") boolean getToken);
 
-        Call<TestUser> getTestUser(
+        Call<UserAccess> getTestUser(
           @Field("login") String login,
           @Field("password") String password,
           @Field("device_id") String device_id,
           @Field("getToken") boolean getToken);
+
+
+    @FormUrlEncoded
+    @POST("account/info")
+    Call<UserInfoCall> getUserInfo(@Field("token") String token);
+
+    @FormUrlEncoded
+    @POST("session/logout")
+    Call<StandardAnswer> logout(@Field("token") String token, @Field("device_id") String device_id);
 }

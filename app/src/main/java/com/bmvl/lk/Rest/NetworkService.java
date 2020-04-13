@@ -1,4 +1,4 @@
-package com.bmvl.lk.TestRest;
+package com.bmvl.lk.Rest;
 
 
 import okhttp3.OkHttpClient;
@@ -9,7 +9,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetworkService {
     private static NetworkService mInstance;
     private static final String BASE_URL = "http://192.168.0.69";
-   //private static final String BASE_URL = " https://jsonplaceholder.typicode.com";
     private Retrofit mRetrofit;
 
 

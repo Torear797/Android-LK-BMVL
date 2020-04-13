@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -16,42 +15,31 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.MenuActivity;
 import com.bmvl.lk.R;
-import com.bmvl.lk.TestRest.NetworkService;
-import com.bmvl.lk.TestRest.OutputData;
-import com.bmvl.lk.TestRest.TestUser;
 import com.google.android.material.appbar.MaterialToolbar;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.orhanobut.hawk.Hawk;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private LoginViewModel loginViewModel;
+    public static LoginViewModel loginViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_material_login);
 
+        if (isAuth()) AccessIsObtained();
+
         final MaterialToolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.Login_title);
         setSupportActionBar(toolbar);
-
-
-        //   loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
-        //     .get(LoginViewModel.class);
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
 
@@ -96,7 +84,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
+                    // updateUiWithUser(loginResult.getSuccess());
+                    updateUiWithUser();
                 }
                 setResult(Activity.RESULT_OK);
 
@@ -141,19 +130,34 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(), passwordEditText.getText().toString() , ANDROID_ID);
+                loginViewModel.login(usernameEditText.getText().toString(), passwordEditText.getText().toString(), ANDROID_ID);
             }
         });
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
+    private void updateUiWithUser() {
 //        String welcome = getString(R.string.welcome) + model.getDisplayName();
         //Toast.makeText(getApplicationContext(), model.getDisplayName(), Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
-        startActivity(intent);
+        Hawk.put("UserAccessData", App.UserAccessData);
+        Hawk.put("UserInfo", App.UserInfo);
+
+        AccessIsObtained();
     }
 
     private void showLoginFailed(String Error) {
         Toast.makeText(getApplicationContext(), Error, Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean isAuth() {
+        App.UserInfo = Hawk.get("UserInfo", null);
+        App.UserAccessData = Hawk.get("UserAccessData", null);
+
+        return App.UserInfo != null && App.UserAccessData != null;
+    }
+
+    private void AccessIsObtained() {
+        Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

@@ -4,12 +4,16 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.provider.Settings;
 
-import com.bmvl.lk.TestRest.TestUser;
+import com.bmvl.lk.Rest.UserAccess;
+import com.bmvl.lk.data.model.LoggedInUser;
 import com.orhanobut.hawk.Hawk;
 
 public class App extends Application {
-    public static TestUser MyUser;
+    public static UserAccess UserAccessData = null;
+    public static LoggedInUser UserInfo = null;
+
     @Override
     public void onCreate() {
         super.onCreate();

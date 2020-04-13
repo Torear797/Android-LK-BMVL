@@ -9,11 +9,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
-import com.bmvl.lk.TestRest.NetworkService;
-import com.bmvl.lk.TestRest.TestUser;
-import com.bmvl.lk.data.LoginRepository;
-import com.bmvl.lk.data.Result;
-import com.bmvl.lk.data.model.LoggedInUser;
+import com.bmvl.lk.Rest.NetworkService;
+import com.bmvl.lk.Rest.StandardAnswer;
+import com.bmvl.lk.Rest.UserAccess;
+import com.bmvl.lk.Rest.UserInfoCall;
+import com.orhanobut.hawk.Hawk;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,10 +23,8 @@ public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
 
-    LoginViewModel(LoginRepository loginRepository) {
-        this.loginRepository = loginRepository;
+    LoginViewModel() {
     }
 
     LiveData<LoginFormState> getLoginFormState() {
@@ -38,45 +36,51 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void login(String username, String password, String device_id) {
-        // can be launched in a separate asynchronous job
-        final Result<LoggedInUser> result = loginRepository.login(username, password);
 
-        if (result instanceof Result.Success) {
             NetworkService.getInstance()
                     .getJSONApi()
                     .getTestUser(username, password, device_id, true)
-                    .enqueue(new Callback<TestUser>() {
+                    .enqueue(new Callback<UserAccess>() {
                         @Override
-                        public void onResponse(@NonNull Call<TestUser> call, @NonNull Response<TestUser> response) {
+                        public void onResponse(@NonNull Call<UserAccess> call, @NonNull Response<UserAccess> response) {
                             if (response.isSuccessful()) {
-                                App.MyUser = response.body();
+                                App.UserAccessData = response.body();
+                                if (App.UserAccessData.getUser_id() != null)
+                                    getUserInfo(App.UserAccessData.getToken());
 
-                                if (App.MyUser.getUser_id() != null) {
-
-                                    LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-                                    loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-
-                                } else  { //Пользователь ввел не верный лог/пас
-                                  //  loginResult.setValue(new LoginResult(0));
+                                else  { //Пользователь ввел не верный лог/пас
                                     loginResult.setValue(new LoginResult("Не верный логин/пароль!"));
                                 }
                             } else
                                 loginResult.setValue(new LoginResult("Ошибка авторизации!"));
-                           // loginResult.setValue(new LoginResult(1));
                         }
 
                         @Override
-                        public void onFailure(@NonNull Call<TestUser> call, @NonNull Throwable t) {
-                            loginResult.setValue(new LoginResult("Ошибка авторизации!"));
-                           // loginResult.setValue(new LoginResult(2));
+                        public void onFailure(@NonNull Call<UserAccess> call, @NonNull Throwable t) {
+                            loginResult.setValue(new LoginResult("Сервер не доступен!"));
                         }
                     });
+    }
 
-        } else {
-            loginResult.setValue(new LoginResult("Логин или пароль введены не верно!"));
-          //  loginResult.setValue(new LoginResult(3));
-        }
+    private void getUserInfo(String token){
+        NetworkService.getInstance()
+                .getJSONApi()
+                .getUserInfo(token)
+                .enqueue(new Callback<UserInfoCall>() {
+                    @Override
+                    public void onResponse(@NonNull Call<UserInfoCall> call, @NonNull Response<UserInfoCall> response) {
+                        if (response.isSuccessful()) {
+                            App.UserInfo = response.body().getUserInfo();
+                            loginResult.setValue(new LoginResult(new LoggedInUserView(App.UserInfo.getFIO())));
+                        } else
+                            loginResult.setValue(new LoginResult("Ошибка авторизации!"));
+                    }
 
+                    @Override
+                    public void onFailure(@NonNull Call<UserInfoCall> call, @NonNull Throwable t) {
+                        loginResult.setValue(new LoginResult("Сервер не доступен!"));
+                    }
+                });
     }
 
     public void loginDataChanged(String username, String password) {
@@ -87,6 +91,12 @@ public class LoginViewModel extends ViewModel {
         } else {
             loginFormState.setValue(new LoginFormState(true));
         }
+    }
+
+    public void logout(String device_id){
+        Hawk.deleteAll();
+
+
     }
 
     // A placeholder username validation check

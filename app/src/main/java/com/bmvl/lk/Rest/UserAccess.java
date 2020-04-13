@@ -1,9 +1,9 @@
-package com.bmvl.lk.TestRest;
+package com.bmvl.lk.Rest;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class TestUser {
+public class UserAccess {
     @SerializedName("token")
     @Expose
     private String token;
@@ -16,7 +16,7 @@ public class TestUser {
     @Expose
     private String user_id;
 
-    public TestUser(String token, String exp, String user_id) {
+    public UserAccess(String token, String exp, String user_id) {
         this.token = token;
         this.exp = exp;
         this.user_id = user_id;

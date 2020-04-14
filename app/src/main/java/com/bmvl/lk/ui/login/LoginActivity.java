@@ -57,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         final Button loginButton = findViewById(R.id.Create);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
+       // Hawk.deleteAll();
 
         if (isAuth()) {
             //      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -75,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onResponse(@NonNull Call<UserAccess> call, @NonNull Response<UserAccess> response) {
                             if (response.isSuccessful()) {
                                 UserAccess Upduser = response.body();
-                                if(Upduser.isSuccess()) {
+                                if(Upduser.getStatus() == 200) {
                                     AccessIsObtained();
                                 }
                             }

@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.IntentCompat;
 
 import com.bmvl.lk.App;
+import com.bmvl.lk.MenuActivity;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.StandardAnswer;
@@ -83,22 +85,15 @@ public class ProfileActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
                                 if (response.isSuccessful()) {
-//                            App.UserAccessData = response.body();
-//                            if (App.UserAccessData.getUser_id() != null)
-//                                getUserInfo(App.UserAccessData.getToken());
-//
-////                            else  { //Пользователь ввел не верный лог/пас
-////                                loginResult.setValue(new LoginResult("Не верный логин/пароль!"));
-////                            }
                                     StandardAnswer answer = response.body();
-                                    if(answer.isSuccess()) {
-                                        LoginActivity.loginViewModel.logout(device_id);
-                                        final Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
-                                        intent.addCategory(Intent.CATEGORY_HOME);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    if(answer.getStatus() == 200) {
+                                        LoginActivity.loginViewModel.logout();
+
+                                        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
                                         finish();
-                                    } else        Snackbar.make(view, "Ошибка: " + answer.getError(), Snackbar.LENGTH_LONG)
+                                    } else        Snackbar.make(view, "Ошибка: " + answer.getText(), Snackbar.LENGTH_LONG)
                                             .setAction("Action", null).show();
                                 }
                             }

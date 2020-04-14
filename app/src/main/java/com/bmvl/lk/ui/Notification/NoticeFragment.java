@@ -61,6 +61,15 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
         recyclerView.setAdapter(NotifiAdapter);
 
 
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                swipeRefreshLayout.setRefreshing(true);
+//                List<Notifications> insertlist = new ArrayList<>();
+//                getNotifications(insertlist, false);
+//            }
+//        }, 60000);
+
         return MyView;
     }
     private SwipeRefreshLayout.OnRefreshListener MyRefresh = new SwipeRefreshLayout.OnRefreshListener() {

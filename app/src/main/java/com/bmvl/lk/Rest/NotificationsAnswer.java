@@ -7,9 +7,13 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class NotificationsAnswer {
-    @SerializedName("success")
+    @SerializedName("status")
     @Expose
-    private boolean success;
+    private short  status;
+
+    @SerializedName("text")
+    @Expose
+    private String text;
 
     @SerializedName("notifications")
     @Expose
@@ -18,5 +22,13 @@ public class NotificationsAnswer {
 
     public NotificationsElements getNotifications() {
         return notifications;
+    }
+
+    public short getStatus() {
+        return status;
+    }
+
+    public String getText() {
+        return text;
     }
 }

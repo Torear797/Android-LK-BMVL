@@ -1,5 +1,6 @@
 package com.bmvl.lk.ui.login;
 
+import android.content.Intent;
 import android.util.Patterns;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,8 @@ import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.Rest.UserAccess;
 import com.bmvl.lk.Rest.UserInfoCall;
+import com.bmvl.lk.ui.profile.ProfileActivity;
+import com.google.android.material.snackbar.Snackbar;
 import com.orhanobut.hawk.Hawk;
 
 import retrofit2.Call;
@@ -49,7 +52,7 @@ public class LoginViewModel extends ViewModel {
                                     getUserInfo(App.UserAccessData.getToken());
 
                                 else  { //Пользователь ввел не верный лог/пас
-                                    loginResult.setValue(new LoginResult(App.UserAccessData.getError()));
+                                    loginResult.setValue(new LoginResult(App.UserAccessData.getText()));
                                    // loginResult.setValue(new LoginResult("Не верный логин/пароль!"));
                                 }
                             } else
@@ -94,10 +97,8 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    public void logout(String device_id){
+    public void logout(){
         Hawk.deleteAll();
-
-
     }
 
     // A placeholder username validation check

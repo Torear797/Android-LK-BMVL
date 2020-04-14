@@ -4,19 +4,19 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class StandardAnswer {
-    @SerializedName("success")
+    @SerializedName("status")
     @Expose
-    private boolean success;
+    private short  status;
 
-    @SerializedName("error")
+    @SerializedName("text")
     @Expose
-    private String error;
+    private String text;
 
-    public boolean isSuccess() {
-        return success;
+    public short getStatus() {
+        return status;
     }
 
-    public String getError() {
-        return error;
+    public String getText() {
+        return text;
     }
 }

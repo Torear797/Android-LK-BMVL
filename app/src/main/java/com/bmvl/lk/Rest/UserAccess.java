@@ -4,6 +4,15 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class UserAccess {
+
+    @SerializedName("status")
+    @Expose
+    private short  status;
+
+    @SerializedName("text")
+    @Expose
+    private String text;
+
     @SerializedName("token")
     @Expose
     private String token;
@@ -15,14 +24,6 @@ public class UserAccess {
     @SerializedName("user_id")
     @Expose
     private String user_id;
-
-    @SerializedName("success")
-    @Expose
-    private boolean success;
-
-    @SerializedName("error")
-    @Expose
-    private String error;
 
     public UserAccess(String token, String exp, String user_id) {
         this.token = token;
@@ -54,11 +55,11 @@ public class UserAccess {
         this.user_id = user_id;
     }
 
-    public String getError() {
-        return error;
+    public short getStatus() {
+        return status;
     }
 
-    public boolean isSuccess() {
-        return success;
+    public String getText() {
+        return text;
     }
 }

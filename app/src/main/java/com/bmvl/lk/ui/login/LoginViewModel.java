@@ -49,7 +49,8 @@ public class LoginViewModel extends ViewModel {
                                     getUserInfo(App.UserAccessData.getToken());
 
                                 else  { //Пользователь ввел не верный лог/пас
-                                    loginResult.setValue(new LoginResult("Не верный логин/пароль!"));
+                                    loginResult.setValue(new LoginResult(App.UserAccessData.getError()));
+                                   // loginResult.setValue(new LoginResult("Не верный логин/пароль!"));
                                 }
                             } else
                                 loginResult.setValue(new LoginResult("Ошибка авторизации!"));

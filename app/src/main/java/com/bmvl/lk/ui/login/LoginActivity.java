@@ -3,6 +3,7 @@ package com.bmvl.lk.ui.login;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -23,8 +25,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bmvl.lk.App;
 import com.bmvl.lk.MenuActivity;
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.NetworkService;
+import com.bmvl.lk.Rest.UserAccess;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.orhanobut.hawk.Hawk;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -34,8 +42,9 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_material_login);
+        final String ANDROID_ID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        if (isAuth()) AccessIsObtained();
+        //AccessIsObtained();
 
         final MaterialToolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.Login_title);
@@ -47,7 +56,53 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.Create);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
-        final String ANDROID_ID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+
+
+        if (isAuth()) {
+            //      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+            //     StrictMode.setThreadPolicy(policy);
+
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            loginButton.setVisibility(View.GONE);
+            passwordEditText.setVisibility(View.GONE);
+            usernameEditText.setVisibility(View.GONE);
+            NetworkService.getInstance()
+                    .getJSONApi()
+                    .releaseToken(App.UserAccessData.getToken(),ANDROID_ID)
+                    .enqueue(new Callback<UserAccess>() {
+                        @Override
+                        public void onResponse(@NonNull Call<UserAccess> call, @NonNull Response<UserAccess> response) {
+                            if (response.isSuccessful()) {
+                                UserAccess Upduser = response.body();
+                                if(Upduser.isSuccess()) {
+                                    AccessIsObtained();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<UserAccess> call, @NonNull Throwable t) {
+                        }
+                    });
+
+
+//            try {
+//                Response<UserAccess> response =  NetworkService.getInstance()
+//                        .getJSONApi()
+//                        .releaseToken(App.UserAccessData.getToken(),ANDROID_ID)
+//                        .execute();
+//                UserAccess Upduser = response.body();
+//                if(Upduser.isSuccess()) {
+//                    App.UserAccessData.setExp(Upduser.getExp());
+//                    AccessIsObtained();
+//                }
+//
+//            } catch (Exception ignored){
+//                Toast.makeText(getApplicationContext(), String.valueOf(ignored.getMessage()), Toast.LENGTH_SHORT).show();
+//            }
+
+        }
 
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {

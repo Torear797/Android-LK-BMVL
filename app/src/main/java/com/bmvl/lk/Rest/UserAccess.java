@@ -16,6 +16,14 @@ public class UserAccess {
     @Expose
     private String user_id;
 
+    @SerializedName("success")
+    @Expose
+    private boolean success;
+
+    @SerializedName("error")
+    @Expose
+    private String error;
+
     public UserAccess(String token, String exp, String user_id) {
         this.token = token;
         this.exp = exp;
@@ -44,5 +52,13 @@ public class UserAccess {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public boolean isSuccess() {
+        return success;
     }
 }

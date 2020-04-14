@@ -1,6 +1,7 @@
 package com.bmvl.lk.ui.Notification;
 
 import android.content.Context;
+import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,23 +60,31 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
             j++;
         }
 
-        if(notifi.getStatus() == 0) simpleViewHolder.status.setImageResource(R.drawable.ic_old_notifi);
-        else simpleViewHolder.status.setImageResource(R.drawable.ic_new_notifi);
+        if(notifi.getStatus() == 0) {
+            simpleViewHolder.status.setImageResource(R.drawable.ic_old_notifi);
+            simpleViewHolder.Data.setTextColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
+            simpleViewHolder.Event.setTextColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
+            simpleViewHolder.Order.setTextColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
+        }
+        else {
+            simpleViewHolder.status.setImageResource(R.drawable.ic_new_notifi);
+            simpleViewHolder.Data.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
+            simpleViewHolder.Event.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
+            simpleViewHolder.Order.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
+        }
 
         simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         simpleViewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
             @Override
             public void onOpen(SwipeLayout layout) {
-                YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.trash_notifi));
+                YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.read));
             }
         });
-        simpleViewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+        simpleViewHolder.buttonRead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<Notifications> insertlist = new ArrayList<>(Notifi);
-                insertlist.remove(simpleViewHolder.getLayoutPosition());
-                updateList(insertlist);
-                Snackbar.make(view, "Уведомление удалено!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+                Snackbar.make(view, "Уведомление прочтено!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
 
@@ -85,7 +94,9 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
 
     @Override
     public int getItemCount() {
+       // if(Notifi != null)
         return Notifi.size();
+     //   else return 0;
     }
 
     @Override
@@ -116,7 +127,7 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
 
     class SimpleViewHolder extends RecyclerView.ViewHolder {
         final TextView Data,Event,Order;
-        final ImageView status, buttonDelete;
+        final ImageView status, buttonRead;
         final SwipeLayout swipeLayout;
         SimpleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -126,7 +137,7 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
             status = itemView.findViewById(R.id.status_notifi);
 
             swipeLayout = itemView.findViewById(R.id.swipeNotifi);
-            buttonDelete = itemView.findViewById(R.id.trash_notifi);
+            buttonRead = itemView.findViewById(R.id.read);
         }
     }
 }

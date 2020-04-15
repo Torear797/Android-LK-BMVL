@@ -44,7 +44,9 @@
         <item name="android:focusableInTouchMode">true</item>
     </style>
 
-
+    <style name="SplashTheme" parent="Theme.MaterialComponents.NoActionBar"> //SplashScreen
+        <item name="android:windowBackground">@drawable/background_splash_screen</item>
+    </style>
 
 
 </resources>

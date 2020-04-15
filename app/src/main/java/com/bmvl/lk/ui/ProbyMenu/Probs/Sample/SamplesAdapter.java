@@ -14,12 +14,9 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
-import com.bmvl.lk.models.Proby;
-import com.bmvl.lk.models.Research;
 import com.bmvl.lk.models.Samples;
 import com.bmvl.lk.models.SamplesResearch;
 import com.bmvl.lk.ui.Create_Order.Field;
-import com.bmvl.lk.ui.ProbyMenu.Probs.ProbDiffUtilCallback;
 import com.bmvl.lk.ui.ProbyMenu.Probs.ProbsFragment;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;

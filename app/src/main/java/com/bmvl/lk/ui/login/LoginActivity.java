@@ -3,7 +3,6 @@ package com.bmvl.lk.ui.login;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -44,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_material_login);
         final String ANDROID_ID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        //AccessIsObtained();
 
         final MaterialToolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.Login_title);
@@ -60,10 +58,6 @@ public class LoginActivity extends AppCompatActivity {
        // Hawk.deleteAll();
 
         if (isAuth()) {
-            //      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-            //     StrictMode.setThreadPolicy(policy);
-
             loadingProgressBar.setVisibility(View.VISIBLE);
             loginButton.setVisibility(View.GONE);
             passwordEditText.setVisibility(View.GONE);

@@ -18,8 +18,6 @@ import com.bmvl.lk.models.Research;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
-import com.daimajia.swipe.implments.SwipeItemMangerImpl;
-import com.daimajia.swipe.implments.SwipeItemRecyclerMangerImpl;
 
 import java.text.MessageFormat;
 import java.util.List;

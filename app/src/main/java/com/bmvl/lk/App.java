@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.provider.Settings;
 
 import com.bmvl.lk.Rest.UserAccess;
 import com.bmvl.lk.data.model.LoggedInUser;

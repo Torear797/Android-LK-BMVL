@@ -4,30 +4,22 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
-import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
-import com.bmvl.lk.models.Research;
 import com.bmvl.lk.models.Samples;
 import com.bmvl.lk.models.SamplesResearch;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.bmvl.lk.ui.ProbyMenu.Probs.ProbsFragment;
-import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearchFieldAdapter;
-import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
-import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 

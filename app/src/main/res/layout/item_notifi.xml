@@ -42,11 +42,12 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:background="#FFFFFF"
+        android:clickable="true"
         app:cardElevation="5dp"
         app:cardMaxElevation="8dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="false"
-        >
+        android:focusable="true">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

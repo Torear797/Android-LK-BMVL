@@ -10,10 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.IntentCompat;
 
 import com.bmvl.lk.App;
-import com.bmvl.lk.MenuActivity;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.StandardAnswer;
@@ -21,7 +19,6 @@ import com.bmvl.lk.ui.login.LoginActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.orhanobut.hawk.Hawk;
 
 import java.util.Objects;
 

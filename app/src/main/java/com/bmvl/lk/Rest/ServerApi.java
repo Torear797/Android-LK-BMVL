@@ -36,5 +36,5 @@ public interface ServerApi {
 
     @FormUrlEncoded
     @POST("notifications/get")
-    Call<NotificationsAnswer> getNotifications(@Field("token") String token);
+    Call<NotificationsAnswer> getNotificationsOnPage(@Field("token") String token, @Field("page") byte page);
 }

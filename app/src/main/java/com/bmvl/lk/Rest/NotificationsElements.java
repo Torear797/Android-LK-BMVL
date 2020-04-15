@@ -21,7 +21,7 @@ public class NotificationsElements {
 
     @SerializedName("current")
     @Expose
-    private int current;
+    private byte current;
 
     @SerializedName("last")
     @Expose
@@ -29,11 +29,11 @@ public class NotificationsElements {
 
     @SerializedName("next")
     @Expose
-    private int next;
+    private byte next;
 
     @SerializedName("total_pages")
     @Expose
-    private int total_pages;
+    private byte total_pages;
 
     @SerializedName("total_items")
     @Expose
@@ -45,5 +45,17 @@ public class NotificationsElements {
 
     public List<Notifications> getNotifications() {
         return notifications;
+    }
+
+    public byte getTotal_pages() {
+        return total_pages;
+    }
+
+    public byte getNext() {
+        return next;
+    }
+
+    public byte getCurrent() {
+        return current;
     }
 }

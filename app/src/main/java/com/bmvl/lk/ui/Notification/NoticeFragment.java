@@ -2,7 +2,6 @@ package com.bmvl.lk.ui.Notification;
 
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -33,7 +33,18 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
 
     private static List<Notifications> Notifi = new ArrayList<>();
     private NotifiSwipeAdapter NotifiAdapter;
-    private  SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private boolean loading = true;
+
+    private int pastVisiblesItems;
+    private int visibleItemCount;
+    private int totalItemCount;
+
+    private static byte TotalPage;
+    private static byte CurrentPage = 0;
+
+    private RecyclerView recyclerView;
+
 
     public NoticeFragment() {
         // Required empty public constructor
@@ -47,13 +58,13 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.fragment_notice, container, false);
 
-        final RecyclerView recyclerView = MyView.findViewById(R.id.Notifi_list);
+        recyclerView = MyView.findViewById(R.id.Notifi_list);
         final TextView Message = MyView.findViewById(R.id.msg);
         swipeRefreshLayout = MyView.findViewById(R.id.SwipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(MyRefresh);
 
 
-        if(Notifi.size() == 0) getNotifications(Notifi, true);
+        if (Notifi.size() == 0) InsertNotifications(Notifi, (byte) 0);
 
         recyclerView.setHasFixedSize(true);
         NotifiAdapter = new NotifiSwipeAdapter(getContext(), Notifi, Message);
@@ -70,48 +81,45 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
 //            }
 //        }, 60000);
 
+        RecyclerViewEndLisener();
         return MyView;
     }
-    private SwipeRefreshLayout.OnRefreshListener MyRefresh = new SwipeRefreshLayout.OnRefreshListener() {
 
+    private SwipeRefreshLayout.OnRefreshListener MyRefresh = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
             swipeRefreshLayout.setRefreshing(true);
             List<Notifications> insertlist = new ArrayList<>();
-            getNotifications(insertlist, false);
+            // LoadNotifications(insertlist, false);
+            InsertNotifications(insertlist, (byte) 1);
         }
     };
 
-
-    private void getNotifications(final List<Notifications> NewList, final boolean firstUpdate) {
-    //    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-    //    StrictMode.setThreadPolicy(policy);
-//        try {
-//            Response<NotificationsAnswer> response =  NetworkService.getInstance()
-//                    .getJSONApi()
-//                    .getNotifications(App.UserAccessData.getToken())
-//                    .execute();
-//            test = String.valueOf(response.body().getTotal_pages());
-//            Notifi.addAll(response.body().getNotifi());
-//
-//        } catch (Exception ignored){
-//
-//           // Notifi.add((new Notifications(1, 1, "2019-12-13", 1, 1, "Тест")));
-//        }
-
+    private void InsertNotifications(final List<Notifications> NewList, final byte Type) {
         NetworkService.getInstance()
                 .getJSONApi()
-                .getNotifications(App.UserAccessData.getToken())
+                .getNotificationsOnPage(App.UserAccessData.getToken(), (byte) (CurrentPage + 1))
                 .enqueue(new Callback<NotificationsAnswer>() {
                     @Override
                     public void onResponse(@NonNull Call<NotificationsAnswer> call, @NonNull Response<NotificationsAnswer> response) {
                         if (response.isSuccessful()) {
+                            TotalPage = response.body().getNotifications().getTotal_pages();
+                            CurrentPage = response.body().getNotifications().getCurrent();
                             NewList.addAll(response.body().getNotifications().getNotifications());
-                            if(firstUpdate)
-                            NotifiAdapter.notifyDataSetChanged();
-                            else {
-                                NotifiAdapter.updateList(NewList);
-                                swipeRefreshLayout.setRefreshing(false);
+
+                            switch (Type) {
+                                case 0:
+                                    NotifiAdapter.notifyDataSetChanged();
+                                    break;
+                                case 1:
+                                    NotifiAdapter.updateList(NewList);
+                                    swipeRefreshLayout.setRefreshing(false);
+                                    break;
+                                case 2:
+                                    NotifiAdapter.insertdata(NewList);
+                                    recyclerView.smoothScrollToPosition((CurrentPage - 1) * 10 - 1);
+                                    loading = true;
+                                    break;
                             }
                         }
                     }
@@ -120,6 +128,30 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
                     public void onFailure(@NonNull Call<NotificationsAnswer> call, @NonNull Throwable t) {
                     }
                 });
+    }
+
+    private void RecyclerViewEndLisener() {
+        final RecyclerView.LayoutManager lm = recyclerView.getLayoutManager();
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 && (CurrentPage + 1) <= TotalPage) //check for scroll down
+                {
+                    assert lm != null;
+                    visibleItemCount = lm.getChildCount();
+                    totalItemCount = lm.getItemCount();
+                    pastVisiblesItems = ((LinearLayoutManager) lm).findFirstVisibleItemPosition();
+
+                    if (loading) {
+                        if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
+                            loading = false;
+                            List<Notifications> insertlist = new ArrayList<>();
+                            InsertNotifications(insertlist, (byte) 2);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override

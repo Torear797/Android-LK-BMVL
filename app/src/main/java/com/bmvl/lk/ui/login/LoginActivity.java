@@ -134,8 +134,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 if (loginResult.getSuccess() != null) {
-                    // updateUiWithUser(loginResult.getSuccess());
-                    updateUiWithUser();
+                     updateUiWithUser(loginResult.getSuccess());
+                  //  updateUiWithUser();
                 }
                 setResult(Activity.RESULT_OK);
 
@@ -185,11 +185,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUiWithUser() {
-//        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        //Toast.makeText(getApplicationContext(), model.getDisplayName(), Toast.LENGTH_LONG).show();
-        Hawk.put("UserAccessData", App.UserAccessData);
-        Hawk.put("UserInfo", App.UserInfo);
+    private void updateUiWithUser(LoggedInUserView User) {
+        Hawk.put("UserAccessData", User.getAccessData());
+        Hawk.put("UserInfo", User.getUserInfo());
+
+        App.setUserData(User.getAccessData(), User.getUserInfo());
 
         AccessIsObtained();
     }

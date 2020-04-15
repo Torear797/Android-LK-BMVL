@@ -14,14 +14,18 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
 import com.bmvl.lk.ui.order.OrderFragment;
 import com.google.android.material.checkbox.MaterialCheckBox;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class CreateOrderActivity extends AppCompatActivity {
@@ -46,7 +50,7 @@ public class CreateOrderActivity extends AppCompatActivity {
        // recyclerView.setHasFixedSize(true);
         LoadDefaultFields();
 
-        OrderName.setText(OrderFragment.OrderTypes[order_id]);
+        OrderName.setText(getResources().getStringArray(R.array.order_types)[order_id]);
         //Objects.requireNonNull(getSupportActionBar()).setIcon(R.drawable.logo);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
@@ -54,9 +58,10 @@ public class CreateOrderActivity extends AppCompatActivity {
         mng_layout.setSpanSizeLookup( new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (order_id == 0 && (position == 1 || position == 2 || position == 14 || position == 15))
+                if(position == 1 || position == 2) return 1;
+                if (order_id == 0 && (position == 14 || position == 15))
                     return 1;
-                    if (order_id == 1 && (position == 1 || position == 2 || position == 13 || position == 14))
+                    if (order_id == 1 && (position == 13 || position == 14))
                         return 1;
                 return 2;
             }
@@ -147,14 +152,18 @@ public class CreateOrderActivity extends AppCompatActivity {
     private void LoadDefaultFields() {
         Fields.clear();
         Fields.add(new Field(1,"Общество с ограниченной ответственностью \"БИЗНЕС ФУД СФЕРА\"", false,"Заявитель", InputType.TYPE_NULL));
-        Fields.add(new Field(1,"12-19/Ш0015", false,"Договор №", InputType.TYPE_NULL));
-        Fields.add(new Field(1,"11.01.2019", false,"от", InputType.TYPE_NULL));
-        Fields.add(new Field(1,"308006, Белгородская область, Белгород город, Производственная улица, дом № Дом 4, Этаж/Офис 1/4", false,"Адрес", InputType.TYPE_NULL));
-        Fields.add(new Field(1,"3123427599", false,"ИНН", InputType.TYPE_NULL));
-        Fields.add(new Field(1,"", false,"Телефон", InputType.TYPE_NULL));
-        Fields.add(new Field(1,"user@mail.ru", false,"E-mail", InputType.TYPE_NULL));
-        Fields.add(new Field(1,"Иванов Иван Иванович, Должность, действующий на основании устава", false,"Представитель организации", InputType.TYPE_NULL));
-        Fields.add(new Field(1,String.valueOf(new Date()), false,"Дата протокола", InputType.TYPE_NULL));
+        Fields.add(new Field(1, App.UserInfo.getContract_number(), false,"Договор №", InputType.TYPE_NULL));
+        Fields.add(new Field(1, App.UserInfo.getContract_date(), false,"от", InputType.TYPE_NULL));
+        Fields.add(new Field(1, App.UserInfo.getAdress(), false,"Адрес", InputType.TYPE_NULL));
+        Fields.add(new Field(1, App.UserInfo.getInn(), false,"ИНН", InputType.TYPE_NULL));
+        Fields.add(new Field(1, App.UserInfo.getPhone(), false,"Телефон", InputType.TYPE_NULL));
+        Fields.add(new Field(1, App.UserInfo.getEmail(), false,"E-mail", InputType.TYPE_NULL));
+        Fields.add(new Field(1,App.UserInfo.getFIO() + ", Должность, действующий на основании устава", false,"Представитель организации", InputType.TYPE_NULL));
+
+        Date currentDate = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
+
+        Fields.add(new Field(1, String.valueOf(dateFormat.format(currentDate)), false,"Дата протокола", InputType.TYPE_NULL));
     }
 
     private void loadFragment(Fragment fragment) {

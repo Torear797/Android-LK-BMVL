@@ -37,4 +37,8 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("notifications/get")
     Call<NotificationsAnswer> getNotificationsOnPage(@Field("token") String token, @Field("page") byte page);
+
+    @FormUrlEncoded
+    @POST("/orders")
+    Call<OrdersAnswer> LoadOrders(@Field("token") String token, @Field("page") byte page);
 }

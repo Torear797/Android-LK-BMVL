@@ -12,10 +12,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bmvl.lk.App;
 import com.bmvl.lk.OnBackPressedListener;
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.NetworkService;
+import com.bmvl.lk.Rest.OrdersAnswer;
+import com.bmvl.lk.models.Notifications;
 import com.bmvl.lk.models.Orders;
 import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.daimajia.androidanimations.library.Techniques;
@@ -28,11 +34,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class OrderFragment extends Fragment implements OnBackPressedListener {
     private static List<Orders> Orders = new ArrayList<>();
     public static String[] OrderTypes;
     public static String[] OrderStatuses;
+    private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private OrderSwipeAdapter OrderAdapter;
+    private FloatingActionButton fab;
+
+    private boolean loading = true;
+
+    private int pastVisiblesItems;
+    private int visibleItemCount;
+    private int totalItemCount;
+
+    private static byte TotalPage;
+    private static byte CurrentPage = 0;
 
     public OrderFragment() {
     }
@@ -45,11 +68,13 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.fragment_order, container, false);
 
-        OrderTypes = getResources().getStringArray(R.array.order_types);
+        OrderTypes = getResources().getStringArray(R.array.order_name);
         OrderStatuses = getResources().getStringArray(R.array.order_statuses);
 
-        final RecyclerView recyclerView = MyView.findViewById(R.id.list);
-        final FloatingActionButton fab = MyView.findViewById(R.id.floatingActionButton);
+        recyclerView = MyView.findViewById(R.id.list);
+        swipeRefreshLayout = MyView.findViewById(R.id.SwipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(MyRefresh);
+        fab = MyView.findViewById(R.id.floatingActionButton);
         final TextView message =  MyView.findViewById(R.id.empty_msg);
 
 
@@ -59,14 +84,104 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                 .duration(700)
                 .playOn(fab);
 
-        if(Orders.size() == 0) SetTestData();
+        if(Orders.size() == 0) LoadOrders(Orders, (byte) 0);
 
         recyclerView.setHasFixedSize(true);
-        final OrderSwipeAdapter OrderAdapter = new OrderSwipeAdapter(getContext(), Orders, message);
+        OrderAdapter = new OrderSwipeAdapter(getContext(), Orders, message);
         (OrderAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(OrderAdapter);
 
+        FabLisener();
+        RecyclerViewEndLisener();
+        return MyView;
+    }
 
+    private void LoadOrders(final List<Orders> NewList, final byte Type) {
+        NetworkService.getInstance()
+                .getJSONApi()
+                .LoadOrders(App.UserAccessData.getToken(), (byte) (CurrentPage + 1))
+                .enqueue(new Callback<OrdersAnswer>() {
+                    @Override
+                    public void onResponse(@NonNull Call<OrdersAnswer> call, @NonNull Response<OrdersAnswer> response) {
+                        if (response.isSuccessful()) {
+                            TotalPage = response.body().getOrders().getTotal_pages();
+                            CurrentPage = response.body().getOrders().getCurrent();
+                            NewList.addAll(response.body().getOrders().getOrders());
+
+                            switch (Type) {
+                                case 0:
+                                    OrderAdapter.notifyDataSetChanged();
+                                    break;
+                                case 1:
+                                    OrderAdapter.updateList(NewList);
+                                    swipeRefreshLayout.setRefreshing(false);
+                                    break;
+                                case 2:
+                                    OrderAdapter.insertdata(NewList, false);
+                                    recyclerView.smoothScrollToPosition((CurrentPage - 1) * 10 - 1);
+                                    loading = true;
+                                    break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<OrdersAnswer> call, @NonNull Throwable t) {
+                    }
+                });
+    }
+
+    @Override
+    public void onBackPressed() {
+
+    }
+
+    private SwipeRefreshLayout.OnRefreshListener MyRefresh = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            swipeRefreshLayout.setRefreshing(true);
+            List<Orders> insertlist = new ArrayList<>();
+            LoadOrders(insertlist,(byte) 1);
+        }
+    };
+    private void RecyclerViewEndLisener(){
+        final RecyclerView.LayoutManager lm = recyclerView.getLayoutManager();
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 || dy < 0 && fab.isShown()) {
+                    fab.hide();
+                }
+
+                if (dy > 0 && (CurrentPage + 1) <= TotalPage) //check for scroll down
+                {
+                    assert lm != null;
+                    visibleItemCount = lm.getChildCount();
+                    totalItemCount = lm.getItemCount();
+                    pastVisiblesItems = ((LinearLayoutManager) lm).findFirstVisibleItemPosition();
+
+                    if (loading) {
+                        if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
+                            loading = false;
+                            List<Orders> insertlist = new ArrayList<>();
+                            LoadOrders(insertlist, (byte) 2);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    fab.show();
+                }
+
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+    }
+    private void FabLisener(){
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -99,38 +214,5 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                         .show();
             }
         });
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0 || dy < 0 && fab.isShown()) {
-                    fab.hide();
-                }
-            }
-
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    fab.show();
-                }
-
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
-
-        return MyView;
-    }
-
-    private void SetTestData() {
-        Orders.add(new Orders(2, "", 1, 6, 1, "", "", "2019-12-12", "", "", 0.0, 0, 0, 0, ""));
-        Orders.add(new Orders(1, "", 1, 5, 2, "", "", "2019-12-13", "", "", 0.0, 0, 0, 0, ""));
-       // Orders.add(new Orders(3, "", 1, 2, 3, "", "", "2019-12-14", "", "", 0.0, 0, 0, 0, ""));
-      //  Orders.add(new Orders(4, "", 1, 1, 4, "", "", "2019-12-15", "", "", 0.0, 0, 0, 0, ""));
-       // Orders.add(new Orders(5, "", 1, 3, 6, "", "", "2019-12-16", "", "", 0.0, 0, 0, 0, ""));
-    }
-
-    @Override
-    public void onBackPressed() {
-
     }
 }

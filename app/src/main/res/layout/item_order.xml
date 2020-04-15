@@ -4,12 +4,12 @@
     android:id="@+id/swipe"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     app:leftEdgeSwipeOffset="0dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
     app:rightEdgeSwipeOffset="0dp">
 
     <LinearLayout
@@ -25,47 +25,54 @@
             android:id="@+id/trash"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:src="@drawable/ic_delete_white_24dp"
             android:background="#FF5534"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
-            />
+            android:src="@drawable/ic_delete_white_24dp" />
 
         <ImageView
             android:id="@+id/download"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:src="@drawable/ic_file_download_black_24dp"
             android:background="#18D120"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
-            />
+            android:src="@drawable/ic_file_download_black_24dp" />
+
         <ImageView
             android:id="@+id/edit"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:src="@drawable/ic_edit_black_24dp"
             android:background="#119CDA"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
-            />
+            android:src="@drawable/ic_edit_black_24dp" />
+
         <ImageView
             android:id="@+id/create"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_note_add_black_24dp"
             android:background="#752DF1"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
-            />
+            android:src="@drawable/ic_note_add_black_24dp" />
     </LinearLayout>
 
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#FFFFFF"
-    android:orientation="vertical">
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardElevation="5dp"
+        app:cardMaxElevation="8dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="false">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/nomer"
@@ -175,16 +182,16 @@
                 app:layout_constraintStart_toEndOf="@+id/imageView3"
                 app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/person_status"
-        app:srcCompat="@drawable/ic_date_range_black_24dp" />
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/imageView3"
+                app:layout_constraintTop_toBottomOf="@+id/person_status"
+                app:srcCompat="@drawable/ic_date_range_black_24dp" />
 
             <TextView
                 android:id="@+id/Data"
@@ -196,5 +203,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/imageView4"
                 app:layout_constraintStart_toEndOf="@+id/imageView4"
                 app:layout_constraintTop_toTopOf="@+id/imageView4" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
 </com.daimajia.swipe.SwipeLayout>

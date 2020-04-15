@@ -29,4 +29,9 @@ public class App extends Application {
         }
         return false;
     }
+
+    public static void  setUserData(UserAccess Access, LoggedInUser Data){
+        UserAccessData = Access;
+        UserInfo = Data;
+    }
 }

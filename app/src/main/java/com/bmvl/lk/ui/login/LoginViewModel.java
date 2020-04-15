@@ -47,12 +47,12 @@ public class LoginViewModel extends ViewModel {
                         @Override
                         public void onResponse(@NonNull Call<UserAccess> call, @NonNull Response<UserAccess> response) {
                             if (response.isSuccessful()) {
-                                App.UserAccessData = response.body();
-                                if (App.UserAccessData.getUser_id() != null)
-                                    getUserInfo(App.UserAccessData.getToken());
+                                //App.UserAccessData = response.body();
+                                if (response.body().getUser_id() != null)
+                                    getUserInfo(response.body());
 
                                 else  { //Пользователь ввел не верный лог/пас
-                                    loginResult.setValue(new LoginResult(App.UserAccessData.getText()));
+                                    loginResult.setValue(new LoginResult(response.body().getText()));
                                    // loginResult.setValue(new LoginResult("Не верный логин/пароль!"));
                                 }
                             } else
@@ -66,16 +66,16 @@ public class LoginViewModel extends ViewModel {
                     });
     }
 
-    private void getUserInfo(String token){
+    private void getUserInfo(final UserAccess accessData){
         NetworkService.getInstance()
                 .getJSONApi()
-                .getUserInfo(token)
+                .getUserInfo(accessData.getToken())
                 .enqueue(new Callback<UserInfoCall>() {
                     @Override
                     public void onResponse(@NonNull Call<UserInfoCall> call, @NonNull Response<UserInfoCall> response) {
                         if (response.isSuccessful()) {
-                            App.UserInfo = response.body().getUserInfo();
-                            loginResult.setValue(new LoginResult(new LoggedInUserView(App.UserInfo.getFIO())));
+                          //  App.UserInfo = response.body().getUserInfo();
+                            loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo())));
                         } else
                             loginResult.setValue(new LoginResult("Ошибка авторизации!"));
                     }

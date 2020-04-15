@@ -276,7 +276,7 @@
         <item>Сопроводительное письмо</item>
         <item>Гарантийное письмо</item>
         <item>Информационное письмо</item>
-        <item>Заявка на изменение в протокол</item>
+        <item>Запрос</item>
     </string-array>
 
     <string-array name="order_statuses">

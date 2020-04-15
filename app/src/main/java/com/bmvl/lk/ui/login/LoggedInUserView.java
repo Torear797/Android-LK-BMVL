@@ -1,17 +1,23 @@
 package com.bmvl.lk.ui.login;
 
-/**
- * Class exposing authenticated user details to the UI.
- */
-class LoggedInUserView {
-    private String displayName;
-    //... other data fields that may be accessible to the UI
+import com.bmvl.lk.Rest.UserAccess;
+import com.bmvl.lk.data.model.LoggedInUser;
 
-    LoggedInUserView(String displayName) {
-        this.displayName = displayName;
+class LoggedInUserView {
+
+    private UserAccess AccessData;
+    private LoggedInUser UserInfo;
+
+    public LoggedInUserView(UserAccess accessData, LoggedInUser userInfo) {
+        AccessData = accessData;
+        UserInfo = userInfo;
     }
 
-    String getDisplayName() {
-        return displayName;
+    public UserAccess getAccessData() {
+        return AccessData;
+    }
+
+    public LoggedInUser getUserInfo() {
+        return UserInfo;
     }
 }

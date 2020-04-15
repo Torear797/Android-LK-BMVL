@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.models.Orders;
 import com.daimajia.androidanimations.library.Techniques;
@@ -63,8 +64,8 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
             }
             j++;
         }
-        simpleViewHolder.Adres.setText("г. Белгород, ул. Ленина, д. 1");
-        simpleViewHolder.Person.setText("Иванов Иван Петрович1");
+        simpleViewHolder.Adres.setText(App.UserInfo.getAdress());
+        simpleViewHolder.Person.setText(App.UserInfo.getFIO());
         simpleViewHolder.PersonStatus.setText("Начальник отдела1");
         simpleViewHolder.Data.setText(String.valueOf(Order.getDate()));
 
@@ -157,7 +158,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         else message.setVisibility(View.GONE);
     }
 
-    public void insertdata(List<Orders> insertList,boolean isCopy){
+    public void insertdata(List<Orders> insertList, boolean isCopy){
         OrdersDiffUtilCallback diffUtilCallback = new OrdersDiffUtilCallback(Orders, insertList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
         if(isCopy)

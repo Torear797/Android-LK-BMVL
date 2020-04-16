@@ -59,9 +59,10 @@ public class LoginActivity extends AppCompatActivity {
 
         if (isAuth()) {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            loginButton.setVisibility(View.GONE);
-            passwordEditText.setVisibility(View.GONE);
-            usernameEditText.setVisibility(View.GONE);
+//            loginButton.setVisibility(View.GONE);
+//            passwordEditText.setVisibility(View.GONE);
+//            usernameEditText.setVisibility(View.GONE);
+            EnebledForm(false,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
             NetworkService.getInstance()
                     .getJSONApi()
                     .releaseToken(App.UserAccessData.getToken(),ANDROID_ID)
@@ -72,31 +73,15 @@ public class LoginActivity extends AppCompatActivity {
                                 UserAccess Upduser = response.body();
                                 if(Upduser.getStatus() == 200) {
                                     AccessIsObtained();
-                                }
-                            }
+                                } else EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
+                            } else EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
                         }
 
                         @Override
                         public void onFailure(@NonNull Call<UserAccess> call, @NonNull Throwable t) {
+                            EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
                         }
                     });
-
-
-//            try {
-//                Response<UserAccess> response =  NetworkService.getInstance()
-//                        .getJSONApi()
-//                        .releaseToken(App.UserAccessData.getToken(),ANDROID_ID)
-//                        .execute();
-//                UserAccess Upduser = response.body();
-//                if(Upduser.isSuccess()) {
-//                    App.UserAccessData.setExp(Upduser.getExp());
-//                    AccessIsObtained();
-//                }
-//
-//            } catch (Exception ignored){
-//                Toast.makeText(getApplicationContext(), String.valueOf(ignored.getMessage()), Toast.LENGTH_SHORT).show();
-//            }
-
         }
 
 
@@ -209,5 +194,12 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void EnebledForm(boolean flag, Button loginButton, EditText passwordEditText, EditText usernameEditText, ProgressBar loadingProgressBar){
+        loginButton.setEnabled(flag);
+        passwordEditText.setEnabled(flag);
+        usernameEditText.setEnabled(flag);
+        if(!flag) loadingProgressBar.setVisibility(View.GONE);
     }
 }

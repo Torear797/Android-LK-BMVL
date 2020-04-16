@@ -5,14 +5,16 @@ public class Notifications {
     private int user_id;
     private String date;
     private int order_id;
+    private String order_type;
     private int status;
     private String event;
 
-    public Notifications(int id, int user_id, String date, int order_id, int status, String event) {
+    public Notifications(int id, int user_id, String date, int order_id, String order_type, int status, String event) {
         this.id = id;
         this.user_id = user_id;
         this.date = date;
         this.order_id = order_id;
+        this.order_type = order_type;
         this.status = status;
         this.event = event;
     }
@@ -63,5 +65,9 @@ public class Notifications {
 
     public void setEvent(String event) {
         this.event = event;
+    }
+
+    public String getOrder_type() {
+        return order_type;
     }
 }

@@ -47,15 +47,16 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
         simpleViewHolder.Data.setText(notifi.getDate());
         simpleViewHolder.Event.setText(notifi.getEvent());
 
-        int j = 1; //НЕ ВЕРНО. Уведомление содердит ИД заявки. По ИД надо найти тип.
-        for (String itVar : OrderFragment.OrderTypes)
-        {
-            if(j == notifi.getOrder_id()){
-                simpleViewHolder.Order.setText(itVar);
-                break;
-            }
-            j++;
-        }
+//        int j = 1; //НЕ ВЕРНО. Уведомление содердит ИД заявки. По ИД надо найти тип.
+//        for (String itVar : OrderFragment.OrderTypes)
+//        {
+//            if(j == notifi.getOrder_id()){
+//                simpleViewHolder.Order.setText(itVar);
+//                break;
+//            }
+//            j++;
+//        }
+        simpleViewHolder.Order.setText(notifi.getOrder_type());
 
         if(notifi.getStatus() == 0) {
             simpleViewHolder.status.setImageResource(R.drawable.ic_old_notifi);

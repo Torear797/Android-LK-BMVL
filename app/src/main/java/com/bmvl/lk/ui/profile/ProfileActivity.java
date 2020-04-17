@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bmvl.lk.App;
+import com.bmvl.lk.MenuActivity;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.StandardAnswer;
@@ -86,8 +87,9 @@ public class ProfileActivity extends AppCompatActivity {
                                     if(answer.getStatus() == 200) {
                                         LoginActivity.loginViewModel.logout();
 
-                                        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                                        Intent intent = new Intent(ProfileActivity.this, MenuActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.putExtra("finish", true);
                                         startActivity(intent);
                                         finish();
                                     } else        Snackbar.make(view, "Ошибка: " + answer.getText(), Snackbar.LENGTH_LONG)

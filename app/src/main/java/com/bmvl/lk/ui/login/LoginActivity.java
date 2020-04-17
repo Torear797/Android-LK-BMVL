@@ -42,47 +42,47 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_material_login);
         final String ANDROID_ID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-
-
         final MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
         toolbar.setTitle(R.string.Login_title);
         setSupportActionBar(toolbar);
 
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
-
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.Create);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
-
-       // Hawk.deleteAll();
 
         if (isAuth()) {
             loadingProgressBar.setVisibility(View.VISIBLE);
 //            loginButton.setVisibility(View.GONE);
 //            passwordEditText.setVisibility(View.GONE);
 //            usernameEditText.setVisibility(View.GONE);
-            EnebledForm(false,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
-            NetworkService.getInstance()
-                    .getJSONApi()
-                    .releaseToken(App.UserAccessData.getToken(),ANDROID_ID)
-                    .enqueue(new Callback<UserAccess>() {
-                        @Override
-                        public void onResponse(@NonNull Call<UserAccess> call, @NonNull Response<UserAccess> response) {
-                            if (response.isSuccessful()) {
-                                UserAccess Upduser = response.body();
-                                if(Upduser.getStatus() == 200) {
-                                    AccessIsObtained();
-                                } else EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
-                            } else EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull Call<UserAccess> call, @NonNull Throwable t) {
-                            EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
-                        }
-                    });
+            //  EnebledForm(false,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
+            AccessIsObtained();
+//            NetworkService.getInstance()
+//                    .getJSONApi()
+//                    .releaseToken(App.UserAccessData.getToken(),ANDROID_ID)
+//                    .enqueue(new Callback<UserAccess>() {
+//                        @Override
+//                        public void onResponse(@NonNull Call<UserAccess> call, @NonNull Response<UserAccess> response) {
+//                            if (response.isSuccessful()) {
+//                                UserAccess Upduser = response.body();
+//                                if(Upduser.getStatus() == 200) {
+//                                    AccessIsObtained();
+//                                } else EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
+//                            } else EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
+//                        }
+//
+//                        @Override
+//                        public void onFailure(@NonNull Call<UserAccess> call, @NonNull Throwable t) {
+//                            EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
+//                        }
+//                    });
         }
+
+        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
+
+        final EditText usernameEditText = findViewById(R.id.username);
+        final EditText passwordEditText = findViewById(R.id.password);
+        final Button loginButton = findViewById(R.id.Create);
+
+       // Hawk.deleteAll();
 
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {

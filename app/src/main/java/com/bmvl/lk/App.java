@@ -13,6 +13,8 @@ public class App extends Application {
     public static UserAccess UserAccessData = null;
     public static LoggedInUser UserInfo = null;
 
+  //  App application = (App) getApplication();
+
     @Override
     public void onCreate() {
         super.onCreate();

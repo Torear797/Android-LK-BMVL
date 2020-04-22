@@ -20,6 +20,7 @@ import com.bmvl.lk.ui.login.LoginActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.orhanobut.hawk.Hawk;
 
 import java.util.Objects;
 
@@ -85,7 +86,8 @@ public class ProfileActivity extends AppCompatActivity {
                                 if (response.isSuccessful()) {
                                     StandardAnswer answer = response.body();
                                     if(answer.getStatus() == 200) {
-                                        LoginActivity.loginViewModel.logout();
+                                        Hawk.deleteAll();
+                                        //LoginActivity.loginViewModel.logout();
 
                                         Intent intent = new Intent(ProfileActivity.this, MenuActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -48,33 +48,33 @@ public class LoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        if (isAuth()) {
-            loadingProgressBar.setVisibility(View.VISIBLE);
-//            loginButton.setVisibility(View.GONE);
-//            passwordEditText.setVisibility(View.GONE);
-//            usernameEditText.setVisibility(View.GONE);
-            //  EnebledForm(false,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
-            AccessIsObtained();
-//            NetworkService.getInstance()
-//                    .getJSONApi()
-//                    .releaseToken(App.UserAccessData.getToken(),ANDROID_ID)
-//                    .enqueue(new Callback<UserAccess>() {
-//                        @Override
-//                        public void onResponse(@NonNull Call<UserAccess> call, @NonNull Response<UserAccess> response) {
-//                            if (response.isSuccessful()) {
-//                                UserAccess Upduser = response.body();
-//                                if(Upduser.getStatus() == 200) {
-//                                    AccessIsObtained();
-//                                } else EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
-//                            } else EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
-//                        }
-//
-//                        @Override
-//                        public void onFailure(@NonNull Call<UserAccess> call, @NonNull Throwable t) {
-//                            EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
-//                        }
-//                    });
-        }
+//        if (isAuth()) {
+//            loadingProgressBar.setVisibility(View.VISIBLE);
+////            loginButton.setVisibility(View.GONE);
+////            passwordEditText.setVisibility(View.GONE);
+////            usernameEditText.setVisibility(View.GONE);
+//            //  EnebledForm(false,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
+//            AccessIsObtained();
+////            NetworkService.getInstance()
+////                    .getJSONApi()
+////                    .releaseToken(App.UserAccessData.getToken(),ANDROID_ID)
+////                    .enqueue(new Callback<UserAccess>() {
+////                        @Override
+////                        public void onResponse(@NonNull Call<UserAccess> call, @NonNull Response<UserAccess> response) {
+////                            if (response.isSuccessful()) {
+////                                UserAccess Upduser = response.body();
+////                                if(Upduser.getStatus() == 200) {
+////                                    AccessIsObtained();
+////                                } else EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
+////                            } else EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
+////                        }
+////
+////                        @Override
+////                        public void onFailure(@NonNull Call<UserAccess> call, @NonNull Throwable t) {
+////                            EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
+////                        }
+////                    });
+//        }
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
 

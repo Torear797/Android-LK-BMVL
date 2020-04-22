@@ -4,93 +4,82 @@
     android:id="@+id/swipeNotifi"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:leftEdgeSwipeOffset="0dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginLeft="10dp"
-    app:rightEdgeSwipeOffset="0dp">
+    android:clipToPadding="false">
 
     <LinearLayout
         android:id="@+id/bottom_wrapper"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical"
-        android:tag="Bottom3"
-        android:weightSum="10">
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/read"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_read"
             android:background="#3F51B5"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
-            />
+            android:src="@drawable/ic_read" />
 
     </LinearLayout>
+
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
         android:background="#FFFFFF"
         android:clickable="true"
-        app:cardElevation="5dp"
-        app:cardMaxElevation="8dp"
-        app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="false"
-        android:focusable="true">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:focusable="true"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true">
 
-        <TextView
-            android:id="@+id/Data_notifi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="2019-12-13"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/status_notifi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/Order_name"
-            app:srcCompat="@drawable/ic_new_notifi" />
+            <TextView
+                android:id="@+id/Data_notifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:text="2019-12-13"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/Order_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:paddingEnd="50dp"
-            android:text="Информационное письмо"
-            app:layout_constraintStart_toEndOf="@+id/status_notifi"
-            app:layout_constraintTop_toBottomOf="@+id/Data_notifi" />
+            <ImageView
+                android:id="@+id/status_notifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/Order_name"
+                app:srcCompat="@drawable/ic_new_notifi" />
 
-        <TextView
-            android:id="@+id/event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="Создание заявки"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/Order_name"
-            app:layout_constraintTop_toBottomOf="@+id/Order_name" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/Order_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:paddingEnd="50dp"
+                android:text="Информационное письмо"
+                app:layout_constraintStart_toEndOf="@+id/status_notifi"
+                app:layout_constraintTop_toBottomOf="@+id/Data_notifi" />
+
+            <TextView
+                android:id="@+id/event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="Создание заявки"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/Order_name"
+                app:layout_constraintTop_toBottomOf="@+id/Order_name" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </com.daimajia.swipe.SwipeLayout>

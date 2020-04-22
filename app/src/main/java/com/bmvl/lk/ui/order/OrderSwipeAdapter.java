@@ -136,6 +136,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         final TextView Number,Name,Status,Adres,Person,PersonStatus,Data;
         final SwipeLayout swipeLayout;
         final ImageView buttonDelete,buttonCopy,buttonOpen,buttonDownload;
+
         SimpleViewHolder(@NonNull View itemView) {
             super(itemView);
             Number = itemView.findViewById(R.id.nomer);

@@ -21,6 +21,7 @@ import com.bmvl.lk.OnBackPressedListener;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.OrdersAnswer;
+import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.models.Notifications;
 import com.bmvl.lk.models.Orders;
 import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
@@ -72,6 +73,8 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         OrderStatuses = getResources().getStringArray(R.array.order_statuses);
 
         recyclerView = MyView.findViewById(R.id.list);
+        recyclerView.addItemDecoration(new SpacesItemDecoration(10,10));
+        
         swipeRefreshLayout = MyView.findViewById(R.id.SwipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(MyRefresh);
         fab = MyView.findViewById(R.id.floatingActionButton);

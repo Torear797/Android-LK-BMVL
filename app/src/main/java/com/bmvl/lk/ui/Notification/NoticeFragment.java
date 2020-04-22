@@ -18,6 +18,7 @@ import com.bmvl.lk.OnBackPressedListener;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.NotificationsAnswer;
+import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.models.Notifications;
 import com.daimajia.swipe.util.Attributes;
 
@@ -59,6 +60,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
         View MyView = inflater.inflate(R.layout.fragment_notice, container, false);
 
         recyclerView = MyView.findViewById(R.id.Notifi_list);
+        recyclerView.addItemDecoration(new SpacesItemDecoration(10,10));
         final TextView Message = MyView.findViewById(R.id.msg);
         swipeRefreshLayout = MyView.findViewById(R.id.SwipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(MyRefresh);
@@ -90,6 +92,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
         public void onRefresh() {
             swipeRefreshLayout.setRefreshing(true);
             List<Notifications> insertlist = new ArrayList<>();
+            CurrentPage = 0;
             // LoadNotifications(insertlist, false);
             InsertNotifications(insertlist, (byte) 1);
         }

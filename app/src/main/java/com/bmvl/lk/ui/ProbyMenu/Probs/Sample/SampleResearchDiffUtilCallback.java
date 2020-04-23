@@ -2,7 +2,7 @@ package com.bmvl.lk.ui.ProbyMenu.Probs.Sample;
 
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.bmvl.lk.models.SamplesResearch;
+import com.bmvl.lk.data.models.SamplesResearch;
 
 import java.util.List;
 

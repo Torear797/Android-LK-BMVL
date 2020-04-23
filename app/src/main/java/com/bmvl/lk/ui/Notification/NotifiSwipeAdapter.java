@@ -12,8 +12,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
-import com.bmvl.lk.models.Notifications;
-import com.bmvl.lk.ui.order.OrderFragment;
+import com.bmvl.lk.data.models.Notifications;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.SimpleSwipeListener;

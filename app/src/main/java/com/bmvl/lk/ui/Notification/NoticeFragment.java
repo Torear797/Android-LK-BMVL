@@ -14,13 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bmvl.lk.App;
-import com.bmvl.lk.OnBackPressedListener;
+import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.NotificationsAnswer;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.models.Notifications;
+import com.bmvl.lk.data.models.Notifications;
 import com.daimajia.swipe.util.Attributes;
+import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,9 +59,10 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.fragment_notice, container, false);
+        if(Hawk.contains("NotifyList")) Notifi = Hawk.get("NotifyList");
 
         recyclerView = MyView.findViewById(R.id.Notifi_list);
-        recyclerView.addItemDecoration(new SpacesItemDecoration(10,10));
+        recyclerView.addItemDecoration(new SpacesItemDecoration((byte)10,(byte)10));
         final TextView Message = MyView.findViewById(R.id.msg);
         swipeRefreshLayout = MyView.findViewById(R.id.SwipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(MyRefresh);
@@ -109,7 +111,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
                             TotalPage = response.body().getNotifications().getTotal_pages();
                             CurrentPage = response.body().getNotifications().getCurrent();
                             NewList.addAll(response.body().getNotifications().getNotifications());
-
+                            Hawk.put("NotifyList",NewList);
                             switch (Type) {
                                 case 0:
                                     NotifiAdapter.notifyDataSetChanged();

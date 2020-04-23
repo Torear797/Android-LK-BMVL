@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
-import com.bmvl.lk.models.Proby;
-import com.bmvl.lk.models.Research;
+import com.bmvl.lk.data.models.Proby;
+import com.bmvl.lk.data.models.Research;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;

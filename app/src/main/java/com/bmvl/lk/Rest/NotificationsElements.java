@@ -1,6 +1,6 @@
 package com.bmvl.lk.Rest;
 
-import com.bmvl.lk.models.Notifications;
+import com.bmvl.lk.data.models.Notifications;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

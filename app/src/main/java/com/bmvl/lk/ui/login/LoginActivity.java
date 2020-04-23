@@ -15,23 +15,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bmvl.lk.App;
-import com.bmvl.lk.MenuActivity;
+import com.bmvl.lk.ui.MenuActivity;
 import com.bmvl.lk.R;
-import com.bmvl.lk.Rest.NetworkService;
-import com.bmvl.lk.Rest.UserAccess;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.orhanobut.hawk.Hawk;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 

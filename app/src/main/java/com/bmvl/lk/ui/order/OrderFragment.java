@@ -17,19 +17,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bmvl.lk.App;
-import com.bmvl.lk.OnBackPressedListener;
+import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.OrdersAnswer;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.models.Notifications;
-import com.bmvl.lk.models.Orders;
+import com.bmvl.lk.data.models.Orders;
 import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,12 +68,13 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.fragment_order, container, false);
+        if(Hawk.contains("OrdersList")) Orders = Hawk.get("OrdersList");
 
         OrderTypes = getResources().getStringArray(R.array.order_name);
         OrderStatuses = getResources().getStringArray(R.array.order_statuses);
 
         recyclerView = MyView.findViewById(R.id.list);
-        recyclerView.addItemDecoration(new SpacesItemDecoration(10,10));
+        recyclerView.addItemDecoration(new SpacesItemDecoration( (byte)10,(byte)10));
         
         swipeRefreshLayout = MyView.findViewById(R.id.SwipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(MyRefresh);
@@ -110,7 +111,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                             TotalPage = response.body().getOrders().getTotal_pages();
                             CurrentPage = response.body().getOrders().getCurrent();
                             NewList.addAll(response.body().getOrders().getOrders());
-
+                            Hawk.put("OrdersList",NewList);
                             switch (Type) {
                                 case 0:
                                     OrderAdapter.notifyDataSetChanged();
@@ -196,16 +197,16 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                 byte choce = 0;
                                 switch (which) {
                                     case 1:
-                                        choce = 1;
-                                        break;
-                                    case 2:
-                                        choce = 2;
-                                        break;
-                                    case 3:
                                         choce = 3;
                                         break;
-                                    case 4:
+                                    case 2:
                                         choce = 4;
+                                        break;
+                                    case 3:
+                                        choce = 5;
+                                        break;
+                                    case 4:
+                                        choce = 6;
                                         break;
                                 }
                                 Intent intent = new Intent(getActivity(),CreateOrderActivity.class);

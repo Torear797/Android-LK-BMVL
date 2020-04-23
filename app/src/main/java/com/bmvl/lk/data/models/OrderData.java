@@ -1,17 +1,10 @@
-package com.bmvl.lk.models;
+package com.bmvl.lk.data.models;
 
-public class ProbyData {
+public class OrderData {
     private int id;
-    private int proby_id;
+    private int order_id;
     private int column_id;
     private int value;
-
-    public ProbyData(int id, int proby_id, int column_id, int value) {
-        this.id = id;
-        this.proby_id = proby_id;
-        this.column_id = column_id;
-        this.value = value;
-    }
 
     public int getId() {
         return id;
@@ -21,12 +14,12 @@ public class ProbyData {
         this.id = id;
     }
 
-    public int getProby_id() {
-        return proby_id;
+    public int getOrder_id() {
+        return order_id;
     }
 
-    public void setProby_id(int proby_id) {
-        this.proby_id = proby_id;
+    public void setOrder_id(int order_id) {
+        this.order_id = order_id;
     }
 
     public int getColumn_id() {

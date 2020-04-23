@@ -8,7 +8,7 @@ import java.util.List;
 public class OrdersElements {
     @SerializedName("items")
     @Expose
-    private List<com.bmvl.lk.models.Orders> Orders;
+    private List<com.bmvl.lk.data.models.Orders> Orders;
 
     @SerializedName("first")
     @Expose
@@ -42,7 +42,7 @@ public class OrdersElements {
     @Expose
     private int limit;
 
-    public List<com.bmvl.lk.models.Orders> getOrders() {
+    public List<com.bmvl.lk.data.models.Orders> getOrders() {
         return Orders;
     }
 

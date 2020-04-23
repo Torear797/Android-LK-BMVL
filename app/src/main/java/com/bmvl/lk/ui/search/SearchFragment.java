@@ -2,7 +2,6 @@ package com.bmvl.lk.ui.search;
 
 
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bmvl.lk.OnBackPressedListener;
+import com.bmvl.lk.App;
 import com.bmvl.lk.R;
+import com.bmvl.lk.data.OnBackPressedListener;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -38,12 +38,10 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
         final RecyclerView recyclerView = MyView.findViewById(R.id.recyclerView);
         final Button SearchButton = MyView.findViewById(R.id.search_button);
 
-        CreateSerchFields();
-
         recyclerView.setHasFixedSize(true);
 
         final GridLayoutManager mng_layout = new GridLayoutManager(getContext(), 2);
-        mng_layout.setSpanSizeLookup( new GridLayoutManager.SpanSizeLookup() {
+        mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 if (position == 4 || position == 5) {
@@ -53,6 +51,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
                 }
             }
         });
+
         recyclerView.setLayoutManager(mng_layout);
 
         SearchFieldsAdapter adapter = new SearchFieldsAdapter(getContext());
@@ -65,25 +64,6 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
             }
         });
         return MyView;
-    }
-
-    private void CreateSerchFields() {
-        Fields.clear();
-        Fields.add(new SearchField("", "Номер заявки", InputType.TYPE_CLASS_NUMBER));
-        Fields.add(new SearchField("", "Номер протокола", InputType.TYPE_CLASS_NUMBER));
-
-        Fields.add(new SearchField("", "От", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getContext()).getDrawable(R.drawable.ic_date_range_black_24dp), true));
-        Fields.add(new SearchField("", "До", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getContext()).getDrawable(R.drawable.ic_date_range_black_24dp), true));
-
-        Fields.add(new SearchField("", "Контактное лицо", InputType.TYPE_CLASS_TEXT, true));
-        Fields.add(new SearchField("", "Вид заказа", true, R.array.order_name,true));
-
-        Fields.add(new SearchField("", "От", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getContext()).getDrawable(R.drawable.rub), false));
-        Fields.add(new SearchField("", "До", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getContext()).getDrawable(R.drawable.rub), false));
-
-        Fields.add(new SearchField("", "Статус", true, R.array.order_statuses));
-        Fields.add(new SearchField("", "Порядок сортировки", true, R.array.sort_types));
-
     }
 
     @Override

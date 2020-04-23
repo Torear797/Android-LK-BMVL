@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bmvl.lk.App;
-import com.bmvl.lk.MenuActivity;
+import com.bmvl.lk.ui.MenuActivity;
 import com.bmvl.lk.ui.login.LoginActivity;
 import com.orhanobut.hawk.Hawk;
 

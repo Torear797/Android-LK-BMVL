@@ -1,9 +1,8 @@
-package com.bmvl.lk;
+package com.bmvl.lk.ui;
 
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bmvl.lk.R;
+import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.ui.Notification.NoticeFragment;
 import com.bmvl.lk.ui.login.LoginActivity;
 import com.bmvl.lk.ui.order.OrderFragment;
@@ -116,6 +117,7 @@ public class MenuActivity extends AppCompatActivity {
 
 
 
+
         BottomNavigationView navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -130,4 +132,5 @@ public class MenuActivity extends AppCompatActivity {
     public void CloseMenu(){
         this.finish();
     }
+
 }

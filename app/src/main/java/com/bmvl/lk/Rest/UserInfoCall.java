@@ -1,6 +1,6 @@
 package com.bmvl.lk.Rest;
 
-import com.bmvl.lk.data.model.LoggedInUser;
+import com.bmvl.lk.data.models.LoggedInUser;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

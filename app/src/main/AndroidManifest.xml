@@ -41,7 +41,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".MenuActivity"
+            android:name=".ui.MenuActivity"
             android:screenOrientation="portrait" />
     </application>
 

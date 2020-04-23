@@ -1,8 +1,11 @@
 package com.bmvl.lk.Rest;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 
 public interface ServerApi {
@@ -41,4 +44,12 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("/orders")
     Call<OrdersAnswer> LoadOrders(@Field("token") String token, @Field("page") byte page);
+
+    @FormUrlEncoded
+    @POST("orders/create")
+    Call<AnswerSendOrder> sendOrder(@Field("token") String token, @Field("order") String order);
+
+//    @Headers("Content-Type: application/json")
+//    @POST("orders/create")
+//    Call<AnswerSendOrder> sendOrderTest(@Body BodySendOrder order);
 }

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
-import com.bmvl.lk.models.Orders;
+import com.bmvl.lk.data.models.Orders;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.SimpleSwipeListener;
@@ -66,7 +66,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         }
         simpleViewHolder.Adres.setText(App.UserInfo.getAdress());
         simpleViewHolder.Person.setText(App.UserInfo.getFIO());
-        simpleViewHolder.PersonStatus.setText("Начальник отдела1");
+        simpleViewHolder.PersonStatus.setText(App.UserInfo.getPosition());
         simpleViewHolder.Data.setText(String.valueOf(Order.getDate()));
 
 

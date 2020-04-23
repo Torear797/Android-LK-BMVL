@@ -1,7 +1,7 @@
 package com.bmvl.lk.ui.login;
 
 import com.bmvl.lk.Rest.UserAccess;
-import com.bmvl.lk.data.model.LoggedInUser;
+import com.bmvl.lk.data.models.LoggedInUser;
 
 class LoggedInUserView {
 

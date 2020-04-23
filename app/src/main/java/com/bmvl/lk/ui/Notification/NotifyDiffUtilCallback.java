@@ -2,7 +2,7 @@ package com.bmvl.lk.ui.Notification;
 
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.bmvl.lk.models.Notifications;
+import com.bmvl.lk.data.models.Notifications;
 
 import java.util.List;
 

@@ -2,7 +2,9 @@ package com.bmvl.lk.ui.Create_Order;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +65,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         final Field f = CreateOrderActivity.Fields.get(position);
 
         if (f.getType() == 0) {
@@ -106,6 +108,22 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 ((TextViewHolder) holder).field.setSingleLine(false);
                 ((TextViewHolder) holder).field.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
             }
+
+            ((TextViewHolder) holder).field.addTextChangedListener(new TextWatcher(){
+                @Override
+                public void afterTextChanged(Editable s) {
+                    CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+            });
+
         } else if (f.getType() == 1) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

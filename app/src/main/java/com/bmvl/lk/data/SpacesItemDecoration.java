@@ -6,10 +6,10 @@ import android.view.View;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
-    private int spaceTB;
-    private int spaceRL;
+    private byte spaceTB;
+    private byte spaceRL;
 
-    public SpacesItemDecoration(int spaceTB, int spaceRL)
+    public SpacesItemDecoration(byte spaceTB, byte spaceRL)
     {
         this.spaceTB = spaceTB;
         this.spaceRL = spaceRL;

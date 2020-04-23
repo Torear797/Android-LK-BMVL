@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
-import com.bmvl.lk.models.Research;
+import com.bmvl.lk.data.models.Research;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;

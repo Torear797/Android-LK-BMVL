@@ -1,4 +1,4 @@
-package com.bmvl.lk.data.model;
+package com.bmvl.lk.data.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -24,9 +24,25 @@ public class LoggedInUser {
     @Expose
     private String Adress;
 
+    @SerializedName("clientName")
+    @Expose
+    private String clientName;
+
+    @SerializedName("clientFullName")
+    @Expose
+    private String clientFullName;
+
     @SerializedName("inn")
     @Expose
     private String inn;
+
+    @SerializedName("position")
+    @Expose
+    private String position;
+
+    @SerializedName("basis")
+    @Expose
+    private byte basis;
 
     @SerializedName("bank_details")
     @Expose
@@ -95,5 +111,21 @@ public class LoggedInUser {
 
     public String getTermless_contract() {
         return Termless_contract;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public String getClientFullName() {
+        return clientFullName;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public byte getBasis() {
+        return basis;
     }
 }

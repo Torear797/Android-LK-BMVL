@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import com.bmvl.lk.R;
-import com.bmvl.lk.models.Proby;
+import com.bmvl.lk.data.models.Proby;
 import com.bmvl.lk.ui.Create_Order.Field;
 
 import java.util.ArrayList;

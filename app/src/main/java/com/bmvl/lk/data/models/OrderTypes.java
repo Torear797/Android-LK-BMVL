@@ -1,4 +1,4 @@
-package com.bmvl.lk.models;
+package com.bmvl.lk.data.models;
 
 public class OrderTypes {
     private int id;

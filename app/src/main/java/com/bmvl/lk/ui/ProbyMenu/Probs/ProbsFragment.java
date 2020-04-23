@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
-import com.bmvl.lk.models.Proby;
-import com.bmvl.lk.models.Research;
-import com.bmvl.lk.models.Samples;
-import com.bmvl.lk.models.SamplesData;
-import com.bmvl.lk.models.SamplesResearch;
+import com.bmvl.lk.data.models.Proby;
+import com.bmvl.lk.data.models.Research;
+import com.bmvl.lk.data.models.Samples;
+import com.bmvl.lk.data.models.SamplesData;
+import com.bmvl.lk.data.models.SamplesResearch;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.button.MaterialButton;

@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.ViewHolders.OriginalDocHolder;
 import com.bmvl.lk.ViewHolders.SelectButtonHolder;
@@ -26,6 +28,7 @@ import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -84,7 +87,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 if (f.isData()) {
                     final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                            ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field);
+                            ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field, position);
                         }
                     };
                     ((TextViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
@@ -129,12 +132,44 @@ public class FieldsAdapter extends RecyclerView.Adapter {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             ((SpinerHolder) holder).spiner.setAdapter(adapter);
             ((SpinerHolder) holder).txtHint.setText(f.getHint());
+
+            AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    // Получаем выбранный объект
+                    String item = (String)parent.getItemAtPosition(position);
+                    CreateOrderActivity.Fields.get(position).setValue(String.valueOf(item));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            };
+            ((SpinerHolder) holder).spiner.setOnItemSelectedListener(itemSelectedListener);
+
         } else if (f.getType() == 2) {
 
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             ((OriginalDocHolder) holder).spiner.setAdapter(adapter);
             ((OriginalDocHolder) holder).txtHint.setText(f.getHint());
+
+            switch (App.OrderInfo.getOD_ID()){
+                case 52:
+                    ((OriginalDocHolder) holder).spiner.setSelection(0);
+                    ((OriginalDocHolder) holder).fieldAdres.setText(App.OrderInfo.getOD_Value());
+                    break;
+                case 63:
+                    ((OriginalDocHolder) holder).spiner.setSelection(1);
+                    ((OriginalDocHolder) holder).fieldAdres.setText(App.OrderInfo.getOD_Value());
+                    break;
+                case 64:
+                    ((OriginalDocHolder) holder).spiner.setSelection(2);
+                    ((OriginalDocHolder) holder).fieldEmail.setText(App.OrderInfo.getOD_Value());
+                    break;
+            }
 
             ((OriginalDocHolder) holder).spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parent,
@@ -165,6 +200,12 @@ public class FieldsAdapter extends RecyclerView.Adapter {
         switch (f.getType()) {
             case 3:
                 ((SwitchHolder) holder).switchButton.setText(String.format("%s  ", f.getHint()));
+
+                ((SwitchHolder) holder).switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        CreateOrderActivity.Fields.get(position).setValue(String.valueOf(isChecked));
+                    }
+                });
                 break;
             case 4:
                 ((SelectButtonHolder) holder).hint.setText(f.getHint());
@@ -172,7 +213,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt) {
+    private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt, int position) {
         monthOfYear = monthOfYear + 1;
         dateAndTime.set(Calendar.YEAR, year);
         dateAndTime.set(Calendar.MONTH, monthOfYear);
@@ -188,7 +229,8 @@ public class FieldsAdapter extends RecyclerView.Adapter {
         if (dayOfMonth < 10) {
             formattedDayOfMonth = "0" + dayOfMonth;
         }
-        Edt.setText(formattedDayOfMonth + "-" + formattedMonth + "-" + year);
+        CreateOrderActivity.Fields.get(position).setValue(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, year));
+        Edt.setText(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, year));
     }
 
     @Override

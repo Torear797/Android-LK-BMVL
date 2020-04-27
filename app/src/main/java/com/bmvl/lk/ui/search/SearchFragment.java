@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.data.OnBackPressedListener;
+import com.bmvl.lk.data.SpacesItemDecoration;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
         final RecyclerView recyclerView = MyView.findViewById(R.id.recyclerView);
         final Button SearchButton = MyView.findViewById(R.id.search_button);
 
+        recyclerView.addItemDecoration(new SpacesItemDecoration( (byte)20,(byte)15));
         recyclerView.setHasFixedSize(true);
 
         final GridLayoutManager mng_layout = new GridLayoutManager(getContext(), 2);

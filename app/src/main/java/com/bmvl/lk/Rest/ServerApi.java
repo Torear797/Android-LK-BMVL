@@ -1,11 +1,14 @@
 package com.bmvl.lk.Rest;
 
+import com.bmvl.lk.Rest.Notify.NotificationsAnswer;
+import com.bmvl.lk.Rest.Order.AnswerSendOrder;
+import com.bmvl.lk.Rest.Order.OrdersAnswer;
+import com.bmvl.lk.Rest.UserInfo.UserAccess;
+import com.bmvl.lk.Rest.UserInfo.UserInfoCall;
+
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.Headers;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 
 public interface ServerApi {
@@ -49,7 +52,7 @@ public interface ServerApi {
     @POST("orders/create")
     Call<AnswerSendOrder> sendOrder(@Field("token") String token, @Field("order") String order);
 
-//    @Headers("Content-Type: application/json")
-//    @POST("orders/create")
-//    Call<AnswerSendOrder> sendOrderTest(@Body BodySendOrder order);
+    @FormUrlEncoded
+    @POST("orders/new")
+    Call<AnswerOrderNew> OrderNew(@Field("token") String token);
 }

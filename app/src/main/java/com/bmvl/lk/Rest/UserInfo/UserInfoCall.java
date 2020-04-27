@@ -1,4 +1,4 @@
-package com.bmvl.lk.Rest;
+package com.bmvl.lk.Rest.UserInfo;
 
 import com.bmvl.lk.data.models.LoggedInUser;
 import com.google.gson.annotations.Expose;

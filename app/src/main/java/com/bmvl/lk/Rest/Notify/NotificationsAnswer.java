@@ -1,9 +1,9 @@
-package com.bmvl.lk.Rest;
+package com.bmvl.lk.Rest.Notify;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AnswerSendOrder {
+public class NotificationsAnswer {
     @SerializedName("status")
     @Expose
     private short  status;
@@ -12,11 +12,20 @@ public class AnswerSendOrder {
     @Expose
     private String text;
 
-    @SerializedName("order_id")
+    @SerializedName("notifications")
     @Expose
-    private String order_id;
+    private NotificationsElements notifications;
+
+
+    public NotificationsElements getNotifications() {
+        return notifications;
+    }
 
     public short getStatus() {
         return status;
+    }
+
+    public String getText() {
+        return text;
     }
 }

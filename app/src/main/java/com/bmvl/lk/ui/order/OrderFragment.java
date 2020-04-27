@@ -20,7 +20,7 @@ import com.bmvl.lk.App;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
-import com.bmvl.lk.Rest.OrdersAnswer;
+import com.bmvl.lk.Rest.Order.OrdersAnswer;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Orders;
 import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
@@ -29,6 +29,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
@@ -74,13 +75,14 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         OrderStatuses = getResources().getStringArray(R.array.order_statuses);
 
         recyclerView = MyView.findViewById(R.id.list);
-        recyclerView.addItemDecoration(new SpacesItemDecoration( (byte)10,(byte)10));
+
         
         swipeRefreshLayout = MyView.findViewById(R.id.SwipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(MyRefresh);
         fab = MyView.findViewById(R.id.floatingActionButton);
         final TextView message =  MyView.findViewById(R.id.empty_msg);
 
+        initRecyclerView(message);
 
         fab.setColorFilter(Color.argb(255, 255, 255, 255));
 
@@ -90,10 +92,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
         if(Orders.size() == 0) LoadOrders(Orders, (byte) 0);
 
-        recyclerView.setHasFixedSize(true);
-        OrderAdapter = new OrderSwipeAdapter(getContext(), Orders, message);
-        (OrderAdapter).setMode(Attributes.Mode.Single);
-        recyclerView.setAdapter(OrderAdapter);
+
 
         FabLisener();
         RecyclerViewEndLisener();
@@ -121,8 +120,10 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                     swipeRefreshLayout.setRefreshing(false);
                                     break;
                                 case 2:
-                                    OrderAdapter.insertdata(NewList, false);
-                                    recyclerView.smoothScrollToPosition((CurrentPage - 1) * 10 - 1);
+                                   // OrderAdapter.insertdata(NewList, false);
+                                  //  recyclerView.smoothScrollToPosition((CurrentPage - 1) * 10 - 1);
+                                    Orders.addAll(NewList);
+                                    OrderAdapter.notifyDataSetChanged();
                                     loading = true;
                                     break;
                             }
@@ -133,6 +134,40 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                     public void onFailure(@NonNull Call<OrdersAnswer> call, @NonNull Throwable t) {
                     }
                 });
+    }
+
+    private void initRecyclerView(TextView message){
+        OrderSwipeAdapter.OnOrderClickListener onClickListener = new OrderSwipeAdapter.OnOrderClickListener() {
+
+            @Override
+            public void onDeleteOrder(com.bmvl.lk.data.models.Orders order) {
+                Snackbar.make(Objects.requireNonNull(getView()), "Удаление", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+            }
+
+            @Override
+            public void onCopyOrder(com.bmvl.lk.data.models.Orders order) {
+                Snackbar.make(Objects.requireNonNull(getView()), "Копирвоание", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+            }
+
+            @Override
+            public void onDownloadOrder(com.bmvl.lk.data.models.Orders order) {
+                Snackbar.make(Objects.requireNonNull(getView()), "Загрузка", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+            }
+
+            @Override
+            public void onEditOrder(com.bmvl.lk.data.models.Orders order) {
+                Snackbar.make(Objects.requireNonNull(getView()), "Изменение", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+            }
+        };
+        recyclerView.addItemDecoration(new SpacesItemDecoration( (byte)10,(byte)10));
+        recyclerView.setHasFixedSize(true);
+        OrderAdapter = new OrderSwipeAdapter(getContext(), Orders, message, onClickListener);
+        (OrderAdapter).setMode(Attributes.Mode.Single);
+        recyclerView.setAdapter(OrderAdapter);
     }
 
     @Override

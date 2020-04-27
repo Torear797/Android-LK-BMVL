@@ -8,15 +8,19 @@ import android.text.InputType;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.bmvl.lk.Rest.UserAccess;
+import com.bmvl.lk.Rest.UserInfo.OrderInfo;
+import com.bmvl.lk.Rest.UserInfo.UserAccess;
 import com.bmvl.lk.data.models.LoggedInUser;
 import com.bmvl.lk.ui.search.SearchField;
 import com.bmvl.lk.ui.search.SearchFragment;
 import com.orhanobut.hawk.Hawk;
 
+import java.util.Map;
+
 public class App extends Application {
     public static UserAccess UserAccessData = null;
     public static LoggedInUser UserInfo = null;
+    public static OrderInfo OrderInfo = null;
 
     private GridLayoutManager mng_layout;
     //  App application = (App) getApplication();
@@ -41,9 +45,10 @@ public class App extends Application {
         return false;
     }
 
-    public static void setUserData(UserAccess Access, LoggedInUser Data) {
+    public static void setUserData(UserAccess Access, LoggedInUser Data, OrderInfo Info) {
         UserAccessData = Access;
         UserInfo = Data;
+        OrderInfo = Info;
     }
 
     public void CreateSerchFields() {

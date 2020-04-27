@@ -1,4 +1,4 @@
-package com.bmvl.lk.Rest;
+package com.bmvl.lk.Rest.Notify;
 
 import com.bmvl.lk.data.models.Notifications;
 import com.google.gson.annotations.Expose;

@@ -1,6 +1,6 @@
 package com.bmvl.lk.ui.login;
 
-import android.content.Intent;
+import android.util.Log;
 import android.util.Patterns;
 
 import androidx.annotation.NonNull;
@@ -8,15 +8,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.bmvl.lk.App;
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.AnswerOrderNew;
 import com.bmvl.lk.Rest.NetworkService;
-import com.bmvl.lk.Rest.StandardAnswer;
-import com.bmvl.lk.Rest.UserAccess;
-import com.bmvl.lk.Rest.UserInfoCall;
-import com.bmvl.lk.ui.profile.ProfileActivity;
-import com.google.android.material.snackbar.Snackbar;
-import com.orhanobut.hawk.Hawk;
+import com.bmvl.lk.Rest.UserInfo.OrderInfo;
+import com.bmvl.lk.Rest.UserInfo.UserAccess;
+import com.bmvl.lk.Rest.UserInfo.UserInfoCall;
+import com.bmvl.lk.data.models.LoggedInUser;
+
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,33 +40,33 @@ public class LoginViewModel extends ViewModel {
 
     public void login(String username, String password, String device_id) {
 
-            NetworkService.getInstance()
-                    .getJSONApi()
-                    .getTestUser(username, password, device_id, true)
-                    .enqueue(new Callback<UserAccess>() {
-                        @Override
-                        public void onResponse(@NonNull Call<UserAccess> call, @NonNull Response<UserAccess> response) {
-                            if (response.isSuccessful()) {
-                                //App.UserAccessData = response.body();
-                                if (response.body().getUser_id() != null)
-                                    getUserInfo(response.body());
+        NetworkService.getInstance()
+                .getJSONApi()
+                .getTestUser(username, password, device_id, true)
+                .enqueue(new Callback<UserAccess>() {
+                    @Override
+                    public void onResponse(@NonNull Call<UserAccess> call, @NonNull Response<UserAccess> response) {
+                        if (response.isSuccessful()) {
+                            //App.UserAccessData = response.body();
+                            if (response.body().getUser_id() != null)
+                                getUserInfo(response.body());
 
-                                else  { //Пользователь ввел не верный лог/пас
-                                    loginResult.setValue(new LoginResult(response.body().getText()));
-                                   // loginResult.setValue(new LoginResult("Не верный логин/пароль!"));
-                                }
-                            } else
-                                loginResult.setValue(new LoginResult("Ошибка авторизации!"));
-                        }
+                            else { //Пользователь ввел не верный лог/пас
+                                loginResult.setValue(new LoginResult(response.body().getText()));
+                                // loginResult.setValue(new LoginResult("Не верный логин/пароль!"));
+                            }
+                        } else
+                            loginResult.setValue(new LoginResult("Ошибка авторизации!"));
+                    }
 
-                        @Override
-                        public void onFailure(@NonNull Call<UserAccess> call, @NonNull Throwable t) {
-                            loginResult.setValue(new LoginResult("Сервер не доступен!"));
-                        }
-                    });
+                    @Override
+                    public void onFailure(@NonNull Call<UserAccess> call, @NonNull Throwable t) {
+                        loginResult.setValue(new LoginResult("Сервер не доступен!"));
+                    }
+                });
     }
 
-    private void getUserInfo(final UserAccess accessData){
+    private void getUserInfo(final UserAccess accessData) {
         NetworkService.getInstance()
                 .getJSONApi()
                 .getUserInfo(accessData.getToken())
@@ -74,8 +74,9 @@ public class LoginViewModel extends ViewModel {
                     @Override
                     public void onResponse(@NonNull Call<UserInfoCall> call, @NonNull Response<UserInfoCall> response) {
                         if (response.isSuccessful()) {
-                          //  App.UserInfo = response.body().getUserInfo();
-                            loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo())));
+                            //  App.UserInfo = response.body().getUserInfo();
+                            assert response.body() != null;
+                            getOriginalDocInfo(accessData, response.body().getUserInfo());
                         } else
                             loginResult.setValue(new LoginResult("Ошибка авторизации!"));
                     }
@@ -83,6 +84,45 @@ public class LoginViewModel extends ViewModel {
                     @Override
                     public void onFailure(@NonNull Call<UserInfoCall> call, @NonNull Throwable t) {
                         loginResult.setValue(new LoginResult("Сервер не доступен!"));
+                    }
+                });
+    }
+
+    private void getOriginalDocInfo(final UserAccess accessData, final LoggedInUser UserInfo) {
+        NetworkService.getInstance()
+                .getJSONApi()
+                .OrderNew(accessData.getToken())
+                .enqueue(new Callback<AnswerOrderNew>() {
+                    @Override
+                    public void onResponse(@NonNull Call<AnswerOrderNew> call, @NonNull Response<AnswerOrderNew> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            if (response.body().getStatus() == 200) {
+                               // final List<PairData> defaultFields = response.body().getDefaultFields();
+                                final Map<Short, String> defaultFields = response.body().getDefaultFields();
+
+//                                for (PairData entry : defaultFields) {
+//                                    if (!entry.getData().equals("")) {
+//                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, UserInfo, new OrderInfo(entry.getId(), entry.getData()))));
+//                                        break;
+//                                    }
+//                                }
+
+                                for(Map.Entry<Short, String> entry: defaultFields.entrySet()){
+
+                                    if(!entry.getValue().equals("")){
+                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, UserInfo, new OrderInfo(entry.getKey(), entry.getValue()))));
+                                        break;
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<AnswerOrderNew> call, @NonNull Throwable t) {
+                        loginResult.setValue(new LoginResult("Сервер не доступен2!"));
+                        Log.d("MAX","MSG",t);
                     }
                 });
     }
@@ -95,10 +135,6 @@ public class LoginViewModel extends ViewModel {
         } else {
             loginFormState.setValue(new LoginFormState(true));
         }
-    }
-
-    public void logout(){
-        Hawk.deleteAll();
     }
 
     // A placeholder username validation check

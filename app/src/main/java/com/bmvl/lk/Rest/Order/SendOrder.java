@@ -1,10 +1,8 @@
-package com.bmvl.lk.Rest;
+package com.bmvl.lk.Rest.Order;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,16 +31,16 @@ public class SendOrder {
     @Expose
     private byte pattern;
 
-
-   // private List<String> fields;
-
     @SerializedName("fields")
     @Expose
-  //  private String [] fields;
-    private Map<String, String> fields;
+    private Map<Short, String> fields;
 
-      public SendOrder(byte type_id, Map<String, String> fields) {
-   // public SendOrder(byte type_id, List<String> fields) {
+
+    @SerializedName("proby")
+    @Expose
+    private Map<Short, ProbyRest> proby;
+
+    public SendOrder(byte type_id, Map<Short, String> fields) {
         this.type_id = type_id;
 
         this.ecp = "";

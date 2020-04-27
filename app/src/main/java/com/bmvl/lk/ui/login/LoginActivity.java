@@ -166,21 +166,16 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUiWithUser(LoggedInUserView User) {
         Hawk.put("UserAccessData", User.getAccessData());
         Hawk.put("UserInfo", User.getUserInfo());
+        Hawk.put("OrderInfo", User.getOrderInfo());
 
-        App.setUserData(User.getAccessData(), User.getUserInfo());
+
+        App.setUserData(User.getAccessData(), User.getUserInfo(),User.getOrderInfo());
 
         AccessIsObtained();
     }
 
     private void showLoginFailed(String Error) {
         Toast.makeText(getApplicationContext(), Error, Toast.LENGTH_SHORT).show();
-    }
-
-    private boolean isAuth() {
-        App.UserInfo = Hawk.get("UserInfo", null);
-        App.UserAccessData = Hawk.get("UserAccessData", null);
-
-        return App.UserInfo != null && App.UserAccessData != null;
     }
 
     private void AccessIsObtained() {

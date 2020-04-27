@@ -29,10 +29,20 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
     private LayoutInflater inflater;
     private TextView message;
 
-    OrderSwipeAdapter(Context context, List<Orders> Contents, TextView msg) {
+    private OnOrderClickListener onOrderClickListener;
+
+    OrderSwipeAdapter(Context context, List<Orders> Contents, TextView msg, OnOrderClickListener onOrderClickListener) {
         this.inflater = LayoutInflater.from(context);
         Orders = Contents;
         this.message = msg;
+        this.onOrderClickListener = onOrderClickListener;
+    }
+
+    public interface OnOrderClickListener {
+        void onDeleteOrder(Orders order);
+        void onCopyOrder(Orders order);
+        void onDownloadOrder(Orders order);
+        void onEditOrder(Orders order);
     }
 
     @Override
@@ -85,38 +95,38 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 //            }
 //        });
         //final int id = i;
-        simpleViewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              //  Orders.remove(simpleViewHolder.getLayoutPosition());
-                List<Orders> insertlist = new ArrayList<>(Orders);
-                insertlist.remove(simpleViewHolder.getLayoutPosition());
-                updateList(insertlist);
-              //  simpleViewHolder.swipeLayout.close();
-                Snackbar.make(view, "Заявка удалена!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-            }
-        });
-
-        simpleViewHolder.buttonDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Загрузка!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                //Toast.makeText(view.getContext(), "Загрузка!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        simpleViewHolder.buttonCopy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               /// Orders.add(0,new Orders(Orders.size()+1,Order.getUser_id(),Order.getType_id(),Order.getDate()));
-                List<Orders> insertlist = new ArrayList<>();
-                insertlist.add(new Orders(Orders.get(0).getId()+1,Order.getUser_id(),Order.getType_id(),Order.getDate()));
-                insertdata(insertlist, true);
-                //simpleViewHolder.swipeLayout.close();
-                Snackbar.make(view, "Заявка скопирвоана!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-              //  Toast.makeText(view.getContext(), "Заявка скопирвоана!", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        simpleViewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//              //  Orders.remove(simpleViewHolder.getLayoutPosition());
+//                List<Orders> insertlist = new ArrayList<>(Orders);
+//                insertlist.remove(simpleViewHolder.getLayoutPosition());
+//                updateList(insertlist);
+//              //  simpleViewHolder.swipeLayout.close();
+//                Snackbar.make(view, "Заявка удалена!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+//            }
+//        });
+//
+//        simpleViewHolder.buttonDownload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Загрузка!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+//                //Toast.makeText(view.getContext(), "Загрузка!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        simpleViewHolder.buttonCopy.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//               /// Orders.add(0,new Orders(Orders.size()+1,Order.getUser_id(),Order.getType_id(),Order.getDate()));
+//                List<Orders> insertlist = new ArrayList<>();
+//                insertlist.add(new Orders(Orders.get(0).getId()+1,Order.getUser_id(),Order.getType_id(),Order.getDate()));
+//                insertdata(insertlist, true);
+//                //simpleViewHolder.swipeLayout.close();
+//                Snackbar.make(view, "Заявка скопирвоана!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+//              //  Toast.makeText(view.getContext(), "Заявка скопирвоана!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         mItemManger.bindView(simpleViewHolder.itemView, i);
     }
@@ -131,7 +141,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         return R.id.swipe;
     }
 
-    static class SimpleViewHolder extends RecyclerView.ViewHolder {
+     class SimpleViewHolder extends RecyclerView.ViewHolder {
 
         final TextView Number,Name,Status,Adres,Person,PersonStatus,Data;
         final SwipeLayout swipeLayout;
@@ -148,10 +158,45 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
             Data = itemView.findViewById(R.id.Data);
 
             swipeLayout = itemView.findViewById(R.id.swipe);
+
             buttonDelete = itemView.findViewById(R.id.trash);
             buttonCopy = itemView.findViewById(R.id.create);
             buttonOpen = itemView.findViewById(R.id.edit);
             buttonDownload = itemView.findViewById(R.id.download);
+
+
+            buttonOpen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Orders order = Orders.get(getLayoutPosition());
+                    onOrderClickListener.onEditOrder(order);
+                }
+            });
+
+
+            buttonCopy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Orders order = Orders.get(getLayoutPosition());
+                    onOrderClickListener.onCopyOrder(order);
+                }
+            });
+
+            buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Orders order = Orders.get(getLayoutPosition());
+                    onOrderClickListener.onDeleteOrder(order);
+                }
+            });
+
+            buttonDownload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Orders order = Orders.get(getLayoutPosition());
+                    onOrderClickListener.onDownloadOrder(order);
+                }
+            });
         }
     }
     private void CheckEmpty(){

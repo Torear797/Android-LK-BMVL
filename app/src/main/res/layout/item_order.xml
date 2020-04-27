@@ -18,7 +18,7 @@
         <ImageView
             android:id="@+id/trash"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="50dp"
             android:background="#FF5534"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
@@ -27,7 +27,7 @@
         <ImageView
             android:id="@+id/download"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="50dp"
             android:background="#18D120"
             android:clickable="true"
             android:focusable="true"
@@ -38,7 +38,7 @@
         <ImageView
             android:id="@+id/edit"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="50dp"
             android:background="#119CDA"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"

@@ -17,14 +17,19 @@ import com.bmvl.lk.App;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
-import com.bmvl.lk.Rest.NotificationsAnswer;
+import com.bmvl.lk.Rest.Notify.NotificationsAnswer;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Notifications;
+import com.bmvl.lk.ui.Create_Order.FieldsAdapter;
 import com.daimajia.swipe.util.Attributes;
+import com.google.android.material.snackbar.Snackbar;
 import com.orhanobut.hawk.Hawk;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,7 +47,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
     private int visibleItemCount;
     private int totalItemCount;
 
-    private static byte TotalPage;
+    private static byte TotalPage = 1;
     private static byte CurrentPage = 0;
 
     private RecyclerView recyclerView;
@@ -70,10 +75,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
 
         if (Notifi.size() == 0) InsertNotifications(Notifi, (byte) 0);
 
-        recyclerView.setHasFixedSize(true);
-        NotifiAdapter = new NotifiSwipeAdapter(getContext(), Notifi, Message);
-        (NotifiAdapter).setMode(Attributes.Mode.Single);
-        recyclerView.setAdapter(NotifiAdapter);
+        initRecyclerView(Message);
 
 
 //        new Handler().postDelayed(new Runnable() {
@@ -85,8 +87,24 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
 //            }
 //        }, 60000);
 
+
+
         RecyclerViewEndLisener();
         return MyView;
+    }
+    public void initRecyclerView(TextView Message){
+        NotifiSwipeAdapter.OnNotifyClickListener onClickListener = new NotifiSwipeAdapter.OnNotifyClickListener() {
+
+            @Override
+            public void onNotifyClick(Notifications Notify) {
+                Snackbar.make(Objects.requireNonNull(getView()), "Уведомление прочтено!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
+        };
+
+        recyclerView.setHasFixedSize(true);
+        NotifiAdapter = new NotifiSwipeAdapter(getContext(), Notifi, Message, onClickListener);
+        (NotifiAdapter).setMode(Attributes.Mode.Single);
+        recyclerView.setAdapter(NotifiAdapter);
     }
 
     private SwipeRefreshLayout.OnRefreshListener MyRefresh = new SwipeRefreshLayout.OnRefreshListener() {
@@ -121,8 +139,10 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
                                     swipeRefreshLayout.setRefreshing(false);
                                     break;
                                 case 2:
-                                    NotifiAdapter.insertdata(NewList);
-                                    recyclerView.smoothScrollToPosition((CurrentPage - 1) * 10 - 1);
+                                   // NotifiAdapter.insertdata(NewList);
+                                    //recyclerView.smoothScrollToPosition((CurrentPage - 1) * 10 - 1);
+                                    Notifi.addAll(NewList);
+                                    NotifiAdapter.notifyDataSetChanged();
                                     loading = true;
                                     break;
                             }

@@ -30,6 +30,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     private boolean isAuth() {
         App.UserInfo = Hawk.get("UserInfo", null);
         App.UserAccessData = Hawk.get("UserAccessData", null);
-        return App.UserInfo != null && App.UserAccessData != null;
+        App.OrderInfo = Hawk.get("OrderInfo", null);
+
+        return App.UserInfo != null && App.UserAccessData != null && App.OrderInfo != null;
     }
 }

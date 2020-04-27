@@ -32,12 +32,16 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     private static List<List<Research>> Researchs; //Исследования
     private LayoutInflater inflater;
 
+    private RecyclerView.RecycledViewPool viewPool;
+
     public ProbAdapter(Context context, List<Proby> Contents, List<Field> Fields, List<Field> ResFields) {
         this.inflater = LayoutInflater.from(context);
         Probs = Contents;
         ProbFields = Fields;
         ResearchFields = ResFields;
         Researchs = ProbsFragment.getResearchsList();
+
+        viewPool = new RecyclerView.RecycledViewPool();
     }
 
     ProbAdapter(Context context, List<Proby> Contents, List<Field> Fields, List<Field> ResFields, List<Field> SamFields) {
@@ -46,6 +50,8 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         ProbFields = Fields;
         ResearchFields = ResFields;
         SampleFields = SamFields;
+
+        viewPool = new RecyclerView.RecycledViewPool();
     }
 
     @NonNull
@@ -71,6 +77,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
             }
         });
         simpleViewHolder.ProbList.setLayoutManager(mng_layout);
+        simpleViewHolder.ProbList.setRecycledViewPool(viewPool);
 
         if (Prob.getOrder_id() == 0) {
             final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, i);
@@ -81,28 +88,8 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         }
 
         simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", Prob.getId()));
-
         simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
-        simpleViewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Удаление пробы", Toast.LENGTH_SHORT).show();
-            }
-        });
 
-        simpleViewHolder.head.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (simpleViewHolder.ProbList.getVisibility() == View.VISIBLE) {
-                    simpleViewHolder.swipeLayout.setSwipeEnabled(true);
-                    simpleViewHolder.ProbList.setVisibility(View.GONE);
-                } else if(simpleViewHolder.swipeLayout.getOpenStatus() == SwipeLayout.Status.Close){
-                    simpleViewHolder.swipeLayout.setSwipeEnabled(false);
-                    simpleViewHolder.ProbList.setVisibility(View.VISIBLE);
-                }
-            }
-        });
         mItemManger.bindView(simpleViewHolder.itemView, i);
     }
 
@@ -131,6 +118,27 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 
             swipeLayout = itemView.findViewById(R.id.swipe);
             buttonDelete = itemView.findViewById(R.id.trash);
+
+            head.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (ProbList.getVisibility() == View.VISIBLE) {
+                        swipeLayout.setSwipeEnabled(true);
+                        ProbList.setVisibility(View.GONE);
+                    } else if(swipeLayout.getOpenStatus() == SwipeLayout.Status.Close){
+                        swipeLayout.setSwipeEnabled(false);
+                        ProbList.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+           buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(view.getContext(), "Удаление пробы", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 

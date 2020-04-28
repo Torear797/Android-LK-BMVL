@@ -40,7 +40,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         Probs = Contents;
         ProbFields = Fields;
         ResearchFields = ResFields;
-        Researchs = ProbsFragment.getResearchsList();
+      //  Researchs = ProbsFragment.getResearchsList();
 
         viewPool = new RecyclerView.RecycledViewPool();
     }
@@ -82,8 +82,8 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         simpleViewHolder.ProbList.setRecycledViewPool(viewPool);
 
         if (Prob.getOrder_id() == 0) {
-            final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, i);
-            simpleViewHolder.ProbList.setAdapter(adapter);
+           // final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, i);
+        //    simpleViewHolder.ProbList.setAdapter(adapter);
         } else if (Prob.getOrder_id() == 1) {
             final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, SampleFields, i);
             simpleViewHolder.ProbList.setAdapter(adapter);
@@ -145,18 +145,18 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     }
 
     public void insertdata(List<Proby> insertList) {
-        ProbDiffUtilCallback diffUtilCallback = new ProbDiffUtilCallback(Probs, insertList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
-        Probs.addAll(insertList);
-        diffResult.dispatchUpdatesTo(this);
+//        ProbDiffUtilCallback diffUtilCallback = new ProbDiffUtilCallback(Probs, insertList);
+//        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
+//        Probs.addAll(insertList);
+//        diffResult.dispatchUpdatesTo(this);
 
     }
 
     public void updateList(List<Proby> newList) {
-        ProbDiffUtilCallback diffUtilCallback = new ProbDiffUtilCallback(Probs, newList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
-        Probs.clear();
-        Probs.addAll(newList);
-        diffResult.dispatchUpdatesTo(this);
+//        ProbDiffUtilCallback diffUtilCallback = new ProbDiffUtilCallback(Probs, newList);
+//        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
+//        Probs.clear();
+//        Probs.addAll(newList);
+//        diffResult.dispatchUpdatesTo(this);
     }
 }

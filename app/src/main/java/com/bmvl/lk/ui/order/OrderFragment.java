@@ -178,6 +178,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         public void onRefresh() {
             swipeRefreshLayout.setRefreshing(true);
             List<Orders> insertlist = new ArrayList<>();
+            CurrentPage = 0;
             LoadOrders(insertlist,(byte) 1);
         }
     };

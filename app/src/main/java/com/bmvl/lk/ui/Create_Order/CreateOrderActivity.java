@@ -44,16 +44,20 @@ import retrofit2.Response;
 
 public class CreateOrderActivity extends AppCompatActivity {
 
-    public static List<Field> Fields = new ArrayList<>();
-    private static byte order_id;
+    public static List<Field> Fields = new ArrayList<>(); //Поля заявки
+    public static byte order_id;
     private ProgressBar bar;
+
+    public static SendOrder order;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_order);
 
-        order_id = getIntent().getByteExtra("id", (byte) 0);
+      //  order_id = getIntent().getByteExtra("id", (byte) 0);
+        order = new SendOrder(getIntent().getByteExtra("id", (byte) 0));
+        order_id = order.getType_id();
 
         final TextView OrderName = findViewById(R.id.Order_name);
         final Toolbar toolbar = findViewById(R.id.toolbar);
@@ -232,12 +236,14 @@ public class CreateOrderActivity extends AppCompatActivity {
             if (f.getColumn_id() != -1)
                 fields.put((short)(f.getColumn_id()), f.getValue());
         }
-        Gson gson = new Gson();
-        String order = gson.toJson(new SendOrder((byte) (order_id + 1), fields));
+      //  Gson gson = new Gson();
+
+        order.setFields(fields);
+       // String order = gson.toJson(order);
 
         NetworkService.getInstance()
                 .getJSONApi()
-                .sendOrder(App.UserAccessData.getToken(), order)
+                .sendOrder(App.UserAccessData.getToken(), order.getJsonOrder())
                 .enqueue(new Callback<AnswerSendOrder>() {
                     @Override
                     public void onResponse(@NonNull Call<AnswerSendOrder> call, @NonNull Response<AnswerSendOrder> response) {

@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ResearchFieldAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
-    private static List<Field> Researchs;
+    private List<Field> Researchs;
 
     public ResearchFieldAdapter(Context context, List<Field> Fields) {
         this.inflater = LayoutInflater.from(context);

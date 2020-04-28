@@ -2,15 +2,18 @@ package com.bmvl.lk.ui.ProbyMenu.Probs;
 
 import androidx.recyclerview.widget.DiffUtil;
 
+import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.data.models.Proby;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ProbDiffUtilCallback extends DiffUtil.Callback{
-    private final List<Proby> oldList;
-    private final List<Proby> newList;
+    private final Map<Short, ProbyRest> oldList;
+    private final Map<Short, ProbyRest> newList;
 
-    public ProbDiffUtilCallback(List<Proby> oldList, List<Proby> newList) {
+    public ProbDiffUtilCallback(Map<Short, ProbyRest> oldList, Map<Short, ProbyRest> newList) {
         this.oldList = oldList;
         this.newList = newList;
     }
@@ -27,16 +30,19 @@ public class ProbDiffUtilCallback extends DiffUtil.Callback{
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        Proby oldProduct = oldList.get(oldItemPosition);
-        Proby newProduct = newList.get(newItemPosition);
+        ProbyRest oldProduct = oldList.get(getPositionKey(oldItemPosition,oldList));
+        ProbyRest newProduct = newList.get(getPositionKey(newItemPosition,newList));
         return oldProduct.getId() == newProduct.getId();
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        Proby oldProduct = oldList.get(oldItemPosition);
-        Proby newProduct = newList.get(newItemPosition);
-        return oldProduct.getProtocol().equals(newProduct.getProtocol())
-                && oldProduct.getPrice() == newProduct.getPrice();
+        ProbyRest oldProduct = oldList.get(getPositionKey(oldItemPosition,oldList));
+        ProbyRest newProduct = newList.get(getPositionKey(newItemPosition,newList));
+        return oldProduct.getSamples() == newProduct.getSamples()
+                && oldProduct.getFields() == newProduct.getFields();
+    }
+    private Short getPositionKey(int position, Map<Short, ProbyRest> Probs){
+        return new ArrayList<Short>(Probs.keySet()).get(position);
     }
 }

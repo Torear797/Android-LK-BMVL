@@ -5,34 +5,37 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.Order.ProbyRest;
+import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Proby;
 import com.bmvl.lk.data.models.Research;
 import com.bmvl.lk.data.models.Samples;
 import com.bmvl.lk.data.models.SamplesData;
 import com.bmvl.lk.data.models.SamplesResearch;
+import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.Create_Order.OrderProbs.ProbAdapter2;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 
 public class ProbsFragment extends Fragment {
-    private static byte order_id;
-    private static List<Proby> ProbList = new ArrayList<>();  //Пробы
-    private static List<Field> ProbFields = new ArrayList<>(); //Поля пробы
-    private static List<Field> ResearchFields = new ArrayList<>(); //Поля исследований
-    private static List<Field> SampleFields = new ArrayList<>(); //Поля Образцов
-
-    private static List<List<Research>> Researchs = new ArrayList<>(); //Исследования.
+    private List<Field> ProbFields = new ArrayList<>(); //Поля пробы
+    private List<Field> ResearchFields = new ArrayList<>(); //Поля исследований
+    private List<Field> SampleFields = new ArrayList<>(); //Поля Образцов
 
     private static List<Samples> SamplesList = new ArrayList<>(); //Образцы.
     private static List<List<SamplesResearch>> SamplesResearchs = new ArrayList<>(); //Данные исследований для образцов
@@ -41,8 +44,7 @@ public class ProbsFragment extends Fragment {
     public ProbsFragment() {
     }
 
-    public static ProbsFragment newInstance(byte id) {
-        order_id = id;
+    public static ProbsFragment newInstance() {
         return new ProbsFragment();
     }
 
@@ -56,101 +58,104 @@ public class ProbsFragment extends Fragment {
 
         AddProb();
 
-        if (order_id == 0) {
+        ProbAdapter2.OnProbClickListener onClickListener = new ProbAdapter2.OnProbClickListener() {
+            @Override
+            public void onDeletedProb() {
+                Toast.makeText(getContext(), "Удаление пробы", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCopyProb() {
+                Toast.makeText(getContext(), "Копирование пробы", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        if (CreateOrderActivity.order_id == 0) {
+
             AddOrderFieldsType0();
-            final ProbAdapter adapter = new ProbAdapter(getContext(), ProbList, ProbFields, ResearchFields);
+            // final ProbAdapter adapter = new ProbAdapter(getContext(), ProbList, ProbFields, ResearchFields);
+            final ProbAdapter2 adapter = new ProbAdapter2(getContext(), ProbFields, ResearchFields, onClickListener);
             (adapter).setMode(Attributes.Mode.Single);
             recyclerView.setAdapter(adapter);
+
             NewProbListener(AddProbBtn, adapter, recyclerView);
-        } else if (order_id == 1) {
-            AddOrderFieldsType1();
-            final ProbAdapter adapter = new ProbAdapter(getContext(), ProbList, ProbFields, ResearchFields, SampleFields);
-            (adapter).setMode(Attributes.Mode.Single);
-            recyclerView.setAdapter(adapter);
-            NewProbListener(AddProbBtn, adapter, recyclerView);
+
+        } else if (CreateOrderActivity.order_id == 1) {
+//            AddOrderFieldsType1();
+//            final ProbAdapter adapter = new ProbAdapter(getContext(), ProbList, ProbFields, ResearchFields, SampleFields);
+//            (adapter).setMode(Attributes.Mode.Single);
+//            recyclerView.setAdapter(adapter);
+//            NewProbListener(AddProbBtn, adapter, recyclerView);
         }
 
         return MyView;
     }
 
-    public static List<List<Research>> getResearchsList() {
-        return Researchs;
-    }
-    public static List<Research> getResearchsList(int i) {
-        return Researchs.get(i);
-    }
     public static List<Samples> getSampleList(int i) {
         List<Samples> SamplesForBrobID = new ArrayList<>();
-        for (Samples sam : SamplesList){
-           if(sam.getProby_id() == i) SamplesForBrobID.add(sam);
+        for (Samples sam : SamplesList) {
+            if (sam.getProby_id() == i) SamplesForBrobID.add(sam);
         }
         return SamplesForBrobID;
     }
+
     public static List<Samples> getSampleList() {
         return SamplesList;
     }
 
-   // public stati
-
     public static List<SamplesResearch> getSampleResearchList(int ProbID) {
         return SamplesResearchs.get(ProbID);
     }
+
     public static List<SamplesResearch> getSampleResearchList(int i, int ProbId) {
         List<SamplesResearch> SamplesResearchListForID = new ArrayList<>();
-        for (SamplesResearch sam : SamplesResearchs.get(ProbId)){
-            if(sam.getSample_id() == i) SamplesResearchListForID.add(sam);
+        for (SamplesResearch sam : SamplesResearchs.get(ProbId)) {
+            if (sam.getSample_id() == i) SamplesResearchListForID.add(sam);
         }
         return SamplesResearchListForID;
     }
 
-    private void NewProbListener(final MaterialButton AddProbBtn, final ProbAdapter adapter, final RecyclerView recyclerView) {
+    private void NewProbListener(final MaterialButton AddProbBtn, final ProbAdapter2 adapter, final RecyclerView recyclerView) {
         AddProbBtn.setVisibility(View.VISIBLE);
         AddProbBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<Proby> insertlist = new ArrayList<>();
-              //  ProbList.add(new Proby(ProbList.size() + 1, "", order_id, 0));
-                insertlist.add(new Proby(ProbList.size() + 1, "", order_id, 0));
+                Map<Short, ProbyRest> insertlist = new HashMap<>();
+                insertlist.put((short) (CreateOrderActivity.order.getProby().size() + 1), new ProbyRest((short) (CreateOrderActivity.order.getProby().size())));
                 adapter.insertdata(insertlist);
+
+               // CreateOrderActivity.order.addProb((short) (CreateOrderActivity.order.getProby().size() + 1), new ProbyRest((short) (CreateOrderActivity.order.getProby().size())));
+
+              //  adapter.notifyDataSetChanged();
                 recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
-
-                if(order_id == 0) {
-                    List<Research> ResItems = new ArrayList<>();
-                    ResItems.add(new Research());
-                    Researchs.add(ResItems);
-                } else {
-                    SamplesList.add(new Samples(ProbList.size()-1, 1));
-
-                    List<SamplesResearch> ResItems = new ArrayList<>();
-                    ResItems.add(new SamplesResearch(SamplesResearchs.get(ProbList.size()-2).size()-1, SamplesList.size()-1));
-                    SamplesResearchs.add(ResItems);
-
-                    SamplesData.add(new SamplesData(SamplesData.size()-1, SamplesList.size()-1));
-                }
             }
         });
     }
 
     private void AddProb() {
-        ProbList.clear();
-        ProbList.add(new Proby(1, "", order_id, 0));
 
-        Researchs.clear();
+        CreateOrderActivity.order.addProb((short) 1, new ProbyRest((short) 0));
+       // CreateOrderActivity.order.setEnableNotifications((byte)5);
 
-        SamplesList.clear();
-        SamplesResearchs.clear();
-        SamplesData.clear();
 
-        if(order_id == 0) {
-            List<Research> ResItems = new ArrayList<>();
-            ResItems.add(new Research());
-            Researchs.add(ResItems);
+        //    ProbList.clear();
+        //   ProbList.add(new Proby(1, "", CreateOrderActivity.order_id, 0));
+
+        //   Researchs.clear();
+//        SamplesList.clear();
+//        SamplesResearchs.clear();
+//        SamplesData.clear();
+
+        if (CreateOrderActivity.order_id == 0) {
+//            List<Research> ResItems = new ArrayList<>();
+//            ResItems.add(new Research());
+            //    Researchs.add(ResItems);
         } else {
-            SamplesList.add(new Samples(ProbList.size()-1, 1));
-            List<SamplesResearch> ResItems = new ArrayList<>();
-            ResItems.add(new SamplesResearch(0, SamplesList.size()-1));
-            SamplesResearchs.add(ResItems);
-            SamplesData.add(new SamplesData(SamplesData.size()-1, SamplesList.size()-1));
+//            SamplesList.add(new Samples(ProbList.size()-1, 1));
+//            List<SamplesResearch> ResItems = new ArrayList<>();
+//            ResItems.add(new SamplesResearch(0, SamplesList.size()-1));
+//            SamplesResearchs.add(ResItems);
+//            SamplesData.add(new SamplesData(SamplesData.size()-1, SamplesList.size()-1));
         }
     }
 

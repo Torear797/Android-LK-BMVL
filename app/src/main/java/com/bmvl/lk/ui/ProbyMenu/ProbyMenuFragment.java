@@ -17,13 +17,13 @@ import java.util.Objects;
 
 public class ProbyMenuFragment extends Fragment {
 
-    private static byte order_id;
+   //private static byte order_id;
     public ProbyMenuFragment() {
 
     }
 
     public static ProbyMenuFragment newInstance(byte id) {
-        order_id = id;
+       // order_id = id;
         return new ProbyMenuFragment();
     }
 
@@ -56,6 +56,6 @@ public class ProbyMenuFragment extends Fragment {
     }
 
     private FragmentPagerAdapter createAdapter() {
-        return new FragmentPagerAdapter(Objects.requireNonNull(getActivity()),order_id);
+        return new FragmentPagerAdapter(Objects.requireNonNull(getActivity()));
     }
 }

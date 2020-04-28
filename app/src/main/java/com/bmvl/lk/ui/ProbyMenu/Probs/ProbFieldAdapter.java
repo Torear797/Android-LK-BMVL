@@ -13,6 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.Order.ProbyRest;
+import com.bmvl.lk.Rest.Order.ResearchRest;
+import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.ViewHolders.MultiSpinerHolder;
 import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
 import com.bmvl.lk.ViewHolders.SamplesPanelHolder;
@@ -20,9 +23,12 @@ import com.bmvl.lk.ViewHolders.SelectButtonHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
+import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Research;
 import com.bmvl.lk.data.models.Samples;
+import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.Create_Order.OrderProbs.ResearhAdapter2;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
 import com.daimajia.swipe.util.Attributes;
@@ -31,26 +37,27 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 public class ProbFieldAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private static Calendar dateAndTime = Calendar.getInstance();
-    private static List<Field> ProbFields;
-    private static List<Field> ResearchFields;
-    private static List<Field> SampleFields; //Поля Образцов
-    //private List<Research> Researchs; //Исследования конкретной пробы
+    private  List<Field> ProbFields;
+    private  List<Field> ResearchFields;
+    private  List<Field> SampleFields; //Поля Образцов
+    private RecyclerView.RecycledViewPool viewPool;
 
-    private int ProbID;
+    private ProbyRest CurrentProb;
 
-    //  private static List<Samples> Samples = new ArrayList<>();
-
-    ProbFieldAdapter(Context context, List<Field> Fields, List<Field> ResFields, int id) {
+    public ProbFieldAdapter(Context context, List<Field> Fields, List<Field> ResFields, ProbyRest prob) {
         this.inflater = LayoutInflater.from(context);
         ProbFields = Fields;
         ResearchFields = ResFields;
-        ProbID = id;
+        CurrentProb = prob;
     }
 
     ProbFieldAdapter(Context context, List<Field> probFields, List<Field> researchFields, List<Field> sampleFields, int id) {
@@ -58,7 +65,6 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
         ProbFields = probFields;
         ResearchFields = researchFields;
         SampleFields = sampleFields;
-        ProbID = id;
     }
 
     @Override
@@ -97,7 +103,6 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         final Field f = ProbFields.get(position);
-        // final Field f = ProbsFragment.ProbFields.get(position);
         if (f.getType() == 0) {
 
             ((TextViewHolder) holder).Layout.setHint(f.getHint());
@@ -160,22 +165,21 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
             case 6:
-                //  Researchs = ProbsFragment.getResearchsList(ProbID);
-                // ((ViewHolderResearchPanel) holder).ResearchList.setHasFixedSize(true);
+                if(!CurrentProb.getSamples().containsKey((short)1))
+                CurrentProb.addSample((short)1, new SamplesRest((short)0));
 
-                final ResearhAdapter Adapter = new ResearhAdapter(inflater.getContext(), ProbsFragment.getResearchsList(ProbID), ResearchFields);
+                final ResearhAdapter2 Adapter = new ResearhAdapter2(inflater.getContext(), ResearchFields,CurrentProb.getSamples().get((short)1).getResearches());
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
+                ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
+                ((ResearchPanelHolder) holder).ResearchList.setRecycledViewPool(viewPool);
 
-                ((ResearchPanelHolder) holder).btnAddReserch.setText("Добавить исследование ");
                 ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //((ResearchPanelHolder) holder).btnAddReserch.setText("Добавить исследование " + ProbID);
-                        List<Research> insertlist = new ArrayList<>();
-                        //insertlist.add(new Research());
-                        ProbsFragment.getResearchsList(ProbID).add(new Research());
-                        // Adapter.notifyDataSetChanged();
+                        short size = (short) CurrentProb.getSamples().get((short)1).getResearches().size();
+                        Map<Short, ResearchRest> insertlist = new HashMap<>();
+                        insertlist.put((short)(size + 1), new ResearchRest(size));
                         Adapter.insertdata(insertlist);
                         ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
                     }
@@ -184,9 +188,9 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 break;
             case 7:
                 // Samples.add(new Samples(0, Samples.size()));
-                final List<Samples> Sample = ProbsFragment.getSampleList(ProbID);
+                final List<Samples> Sample = ProbsFragment.getSampleList(CurrentProb.getId());
 
-                final SamplesAdapter SamAdapter = new SamplesAdapter(inflater.getContext(), ProbsFragment.getSampleResearchList(ProbID), ResearchFields, Sample, SampleFields, ProbID);
+                final SamplesAdapter SamAdapter = new SamplesAdapter(inflater.getContext(), ProbsFragment.getSampleResearchList(CurrentProb.getId()), ResearchFields, Sample, SampleFields, CurrentProb.getId());
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
 
@@ -195,7 +199,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     @Override
                     public void onClick(View v) {
                         List<Samples> insertlist = new ArrayList<>();
-                        insertlist.add(new Samples(ProbID, Sample.size() + 1));
+                        insertlist.add(new Samples(CurrentProb.getId(), Sample.size() + 1));
                       //  Sample.add(new Samples(ProbID, Sample.size() + 1));
                        // ProbsFragment.getSampleList().add(new Samples(ProbID, Sample.size() + 1));
                         SamAdapter.insertdata(insertlist);

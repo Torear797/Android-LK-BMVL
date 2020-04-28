@@ -1,4 +1,4 @@
-package com.bmvl.lk.ui.ProbyMenu.Probs.Research;
+package com.bmvl.lk.ui.Create_Order.OrderProbs;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,25 +14,31 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.data.models.Research;
 import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearchDiffUtilCallback;
+import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearchFieldAdapter;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.ResearchItemHolder> {
+public class ResearhAdapter2  extends RecyclerSwipeAdapter<ResearhAdapter2.ResearchItemHolder> {
     private LayoutInflater inflater;
-    private List<Research> Researchs;
-    private static List<Field> ResearchField;
-    RecyclerView.RecycledViewPool viewPool;
+    private RecyclerView.RecycledViewPool viewPool;
+    private List<Field> ResearchField; //Поля Исследований
+    private TreeMap<Short, ResearchRest> researches; //Исследования
 
-    public ResearhAdapter(Context context, List<Research> ResearchList, List<Field> Fields) {
+
+    public ResearhAdapter2(Context context, List<Field> Fields, TreeMap<Short, ResearchRest> ResearchesLise) {
         this.inflater = LayoutInflater.from(context);
-        Researchs = ResearchList;
         ResearchField = Fields;
+        researches = ResearchesLise;
     }
 
     @NonNull
@@ -43,31 +49,25 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     }
 
     @Override
-    public void onBindViewHolder(final ResearchItemHolder ResearchItemHolder, int i) {
-
+    public void onBindViewHolder(ResearchItemHolder researchItemHolder, int i) {
+       // final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
         final ResearchFieldAdapter adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchField);
-        ResearchItemHolder.ResearchList.setAdapter(adapter);
-        ResearchItemHolder.ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
-        ResearchItemHolder.ResearchList.setRecycledViewPool(viewPool);
+        researchItemHolder.ResearchList.setAdapter(adapter);
+        researchItemHolder.ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
+        researchItemHolder.ResearchList.setRecycledViewPool(viewPool);
 
-        ResearchItemHolder.NumberResearch.setText(MessageFormat.format("№ {0}", i + 1));
-
-        ResearchItemHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
-//        ResearchItemHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(view.getContext(), "Удаление ииследования", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-        ResearchItemHolder.HeaderInfo.setText(String.format("Цена: %d руб.", 0));
-
-        mItemManger.bindView(ResearchItemHolder.itemView, i);
+        researchItemHolder.NumberResearch.setText(MessageFormat.format("№ {0}", getPositionKey(i)));
+        researchItemHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+        researchItemHolder.HeaderInfo.setText(String.format("Цена: %d руб.", 0));
+        mItemManger.bindView(researchItemHolder.itemView, i);
+    }
+    private Short getPositionKey(int position){
+        return new ArrayList<Short>(researches.keySet()).get(position);
     }
 
     @Override
     public int getItemCount() {
-        return Researchs.size();
+        return researches.size();
     }
 
     @Override
@@ -75,14 +75,14 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
         return R.id.swipe;
     }
 
-    public static class ResearchItemHolder extends RecyclerView.ViewHolder {
+    class ResearchItemHolder extends RecyclerView.ViewHolder {
         final ConstraintLayout HeaderResearch;
         final TextView NumberResearch, HeaderInfo;
         final RecyclerView ResearchList;
         final SwipeLayout swipeLayout;
         final ImageView buttonDelete, ignorBtn;
 
-        public ResearchItemHolder(@NonNull View itemView) {
+         ResearchItemHolder(@NonNull View itemView) {
             super(itemView);
             HeaderResearch = itemView.findViewById(R.id.Header);
             NumberResearch = itemView.findViewById(R.id.NumberProb);
@@ -96,7 +96,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
             ignorBtn.setVisibility(View.GONE);
 
 
-          HeaderResearch.setOnClickListener(new View.OnClickListener() {
+            HeaderResearch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (ResearchList.getVisibility() == View.VISIBLE) {
@@ -108,21 +108,21 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
                     }
                 }
             });
+
+            buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "Удаление ииследования", Toast.LENGTH_SHORT).show();
+            }
+        });
         }
     }
 
-    public void insertdata(List<Research> insertList) {
-//        ResearchDiffUtilCallback diffUtilCallback = new ResearchDiffUtilCallback(Researchs, insertList);
-//        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback, false);
-//        Researchs.addAll(insertList);
-//        diffResult.dispatchUpdatesTo(this);
+    public void insertdata(Map<Short, ResearchRest> insertList) {
+        ResearchDiffUtilCallback diffUtilCallback = new ResearchDiffUtilCallback(researches, insertList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
+        researches.putAll(insertList);
+        diffResult.dispatchUpdatesTo(this);
     }
 
-    public void updateList(List<Research> newList) {
-//        ResearchDiffUtilCallback diffUtilCallback = new ResearchDiffUtilCallback(Researchs, newList);
-//        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
-//        Researchs.clear();
-//        Researchs.addAll(newList);
-//        diffResult.dispatchUpdatesTo(this);
-    }
 }

@@ -17,4 +17,20 @@ public class ResearchRest {
     @SerializedName("researches")
     @Expose
     private Map<Short, ResearchRest> researches;
+
+    public ResearchRest(short id) {
+        this.id = id;
+    }
+
+    public short getId() {
+        return id;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public Map<Short, ResearchRest> getResearches() {
+        return researches;
+    }
 }

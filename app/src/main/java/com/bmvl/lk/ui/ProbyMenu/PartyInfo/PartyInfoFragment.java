@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.Create_Order.Field;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class PartyInfoFragment extends Fragment {
         View MyView = inflater.inflate(R.layout.fragment_recyclerview, container, false);
 
         final RecyclerView recyclerView = MyView.findViewById(R.id.List);
+        recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
         recyclerView.setHasFixedSize(true);
 
         if (TypeTabs == 2) {

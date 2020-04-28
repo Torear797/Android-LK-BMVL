@@ -5,8 +5,6 @@
     style="@style/ClearFocus"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
@@ -16,9 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:tag="Bottom3"
-        android:weightSum="10">
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/trash"
@@ -26,6 +22,8 @@
             android:layout_height="match_parent"
             android:background="#FF5534"
             android:padding="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:src="@drawable/ic_delete_white_24dp" />
 
         <ImageView
@@ -34,7 +32,6 @@
             android:layout_height="match_parent"
             android:background="#752DF1"
             android:padding="10dp"
-            android:layout_marginEnd="10dp"
             android:src="@drawable/ic_note_add_black_24dp" />
     </LinearLayout>
 
@@ -47,8 +44,6 @@
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:background="@drawable/prob_bg"
             android:gravity="center"
             android:minHeight="50dp"
@@ -72,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Вид материала: не выбран Образцов: 0 шт. Цена: 0 руб."
+                android:text="Вид материала: не выбран Образцов: 0 шт."
                 android:textColor="@color/White" />
         </LinearLayout>
 

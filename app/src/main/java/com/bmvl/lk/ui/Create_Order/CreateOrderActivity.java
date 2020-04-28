@@ -61,18 +61,14 @@ public class CreateOrderActivity extends AppCompatActivity {
         final MaterialCheckBox cbox = findViewById(R.id.AcceptcheckBox);
         final FrameLayout Frame = findViewById(R.id.Menu_proby_fragment);
         bar = findViewById(R.id.ProgressBar);
-        //  final MaterialButton sendButton = findViewById(R.id.Create);
         toolbar.setTitle(R.string.new_order);
         setSupportActionBar(toolbar);
 
 
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
-        // recyclerView.setHasFixedSize(true);
-      //  getOriginalDocInfo();
         LoadDefaultFields();
 
         OrderName.setText(getResources().getStringArray(R.array.order_name)[order_id]);
-        //Objects.requireNonNull(getSupportActionBar()).setIcon(R.drawable.logo);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         final GridLayoutManager mng_layout = new GridLayoutManager(this, 2);

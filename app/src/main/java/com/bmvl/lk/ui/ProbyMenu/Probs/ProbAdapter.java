@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Proby;
 import com.bmvl.lk.data.models.Research;
 import com.bmvl.lk.ui.Create_Order.Field;
@@ -77,6 +78,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
             }
         });
         simpleViewHolder.ProbList.setLayoutManager(mng_layout);
+        simpleViewHolder.ProbList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
         simpleViewHolder.ProbList.setRecycledViewPool(viewPool);
 
         if (Prob.getOrder_id() == 0) {

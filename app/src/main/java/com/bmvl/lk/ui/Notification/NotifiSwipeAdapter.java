@@ -24,13 +24,11 @@ import java.util.List;
 class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleViewHolder> {
     private static List<Notifications> Notifi;
     private LayoutInflater inflater;
-    private TextView Message;
 
     private OnNotifyClickListener onNotifyClickListener;
 
-    NotifiSwipeAdapter(Context context, List<Notifications> notifi, TextView msg, OnNotifyClickListener onNotifyClickListener) {
+    NotifiSwipeAdapter(Context context, List<Notifications> notifi, OnNotifyClickListener onNotifyClickListener) {
         this.inflater = LayoutInflater.from(context);
-        this.Message = msg;
         this.onNotifyClickListener = onNotifyClickListener;
         Notifi = notifi;
     }
@@ -89,16 +87,16 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
         return R.id.swipeNotifi;
     }
 
-    private void CheckEmpty() {
-        if (Notifi.size() == 0) Message.setVisibility(View.VISIBLE);
-        else Message.setVisibility(View.GONE);
-    }
+//    private void CheckEmpty() {
+//        if (Notifi.size() == 0) Message.setVisibility(View.VISIBLE);
+//        else Message.setVisibility(View.GONE);
+//    }
 
     public void insertdata(List<Notifications> insertList) {
         NotifyDiffUtilCallback diffUtilCallback = new NotifyDiffUtilCallback(Notifi, insertList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback, false);
         Notifi.addAll(insertList);
-        CheckEmpty();
+       // CheckEmpty();
         diffResult.dispatchUpdatesTo(this);
     }
 
@@ -107,7 +105,7 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback, false);
         Notifi.clear();
         Notifi.addAll(newList);
-        CheckEmpty();
+      //  CheckEmpty();
         diffResult.dispatchUpdatesTo(this);
     }
 

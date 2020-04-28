@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Research;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.daimajia.swipe.SwipeLayout;
@@ -26,6 +27,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     private LayoutInflater inflater;
     private List<Research> Researchs;
     private static List<Field> ResearchField;
+    private RecyclerView.RecycledViewPool viewPool;
 
     public ResearhAdapter(Context context, List<Research> ResearchList, List<Field> Fields) {
         this.inflater = LayoutInflater.from(context);
@@ -36,7 +38,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     @NonNull
     @Override
     public ResearchItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_research_s, parent, false);
+        View view = inflater.inflate(R.layout.item_prob, parent, false);
         return new ResearchItemHolder(view);
     }
 
@@ -45,32 +47,21 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
 
         final ResearchFieldAdapter adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchField);
         ResearchItemHolder.ResearchList.setAdapter(adapter);
+        ResearchItemHolder.ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
+        ResearchItemHolder.ResearchList.setRecycledViewPool(viewPool);
 
         ResearchItemHolder.NumberResearch.setText(MessageFormat.format("№ {0}", i + 1));
 
         ResearchItemHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
-        ResearchItemHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Удаление ииследования", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        ResearchItemHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(view.getContext(), "Удаление ииследования", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         ResearchItemHolder.HeaderInfo.setText(String.format("Цена: %d руб.", 0));
-        ResearchItemHolder.HeaderResearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ResearchItemHolder.ResearchList.getVisibility() == View.VISIBLE) {
-                    ResearchItemHolder.swipeLayout.setSwipeEnabled(true);
-                    ResearchItemHolder.ResearchList.setVisibility(View.GONE);
-                } else if(ResearchItemHolder.swipeLayout.getOpenStatus() == SwipeLayout.Status.Close){
-                    ResearchItemHolder.swipeLayout.setSwipeEnabled(false);
-                    ResearchItemHolder.ResearchList.setVisibility(View.VISIBLE);
-                }
-            }
-        });
 
-       // SwipeItemRecyclerMangerImpl mItemManger2 = new SwipeItemRecyclerMangerImpl(this);
         mItemManger.bindView(ResearchItemHolder.itemView, i);
     }
 
@@ -81,7 +72,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
 
     @Override
     public int getSwipeLayoutResourceId(int position) {
-        return R.id.swipeResearch;
+        return R.id.swipe;
     }
 
     public static class ResearchItemHolder extends RecyclerView.ViewHolder {
@@ -89,17 +80,34 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
         final TextView NumberResearch, HeaderInfo;
         final RecyclerView ResearchList;
         final SwipeLayout swipeLayout;
-        final ImageView buttonDelete;
+        final ImageView buttonDelete, ignorBtn;
 
         public ResearchItemHolder(@NonNull View itemView) {
             super(itemView);
-            HeaderResearch = itemView.findViewById(R.id.HeaderResearch);
-            NumberResearch = itemView.findViewById(R.id.NumberResearch);
-            ResearchList = itemView.findViewById(R.id.ResearchList);
-            HeaderInfo = itemView.findViewById(R.id.InfoResearch);
+            HeaderResearch = itemView.findViewById(R.id.Header);
+            NumberResearch = itemView.findViewById(R.id.NumberProb);
+            ResearchList = itemView.findViewById(R.id.ProbFields);
+            HeaderInfo = itemView.findViewById(R.id.InfoProb);
 
-            swipeLayout = itemView.findViewById(R.id.swipeResearch);
-            buttonDelete = itemView.findViewById(R.id.trashResearch);
+            swipeLayout = itemView.findViewById(R.id.swipe);
+            buttonDelete = itemView.findViewById(R.id.trash);
+            ignorBtn = itemView.findViewById(R.id.create);
+
+            ignorBtn.setVisibility(View.GONE);
+
+
+          HeaderResearch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (ResearchList.getVisibility() == View.VISIBLE) {
+                        swipeLayout.setSwipeEnabled(true);
+                        ResearchList.setVisibility(View.GONE);
+                    } else if(swipeLayout.getOpenStatus() == SwipeLayout.Status.Close){
+                        swipeLayout.setSwipeEnabled(false);
+                        ResearchList.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
         }
     }
 

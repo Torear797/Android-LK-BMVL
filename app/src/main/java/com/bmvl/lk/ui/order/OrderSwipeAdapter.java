@@ -19,29 +19,29 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.SimpleViewHolder> {
     private static List<Orders> Orders;
     private LayoutInflater inflater;
-    private TextView message;
+
 
     private OnOrderClickListener onOrderClickListener;
 
-    OrderSwipeAdapter(Context context, List<Orders> Contents, TextView msg, OnOrderClickListener onOrderClickListener) {
+    OrderSwipeAdapter(Context context, List<Orders> Contents, OnOrderClickListener onOrderClickListener) {
         this.inflater = LayoutInflater.from(context);
         Orders = Contents;
-        this.message = msg;
         this.onOrderClickListener = onOrderClickListener;
     }
 
     public interface OnOrderClickListener {
         void onDeleteOrder(Orders order);
+
         void onCopyOrder(Orders order);
+
         void onDownloadOrder(Orders order);
+
         void onEditOrder(Orders order);
     }
 
@@ -57,18 +57,16 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         simpleViewHolder.Number.setText("№ " + Order.getId());
 
         int j = 1;
-        for (String itVar : OrderFragment.OrderTypes)
-        {
-            if(j == Order.getType_id()){
+        for (String itVar : OrderFragment.OrderTypes) {
+            if (j == Order.getType_id()) {
                 simpleViewHolder.Name.setText(itVar);
                 break;
             }
             j++;
         }
         j = 1;
-        for (String itVar : OrderFragment.OrderStatuses)
-        {
-            if(j == Order.getStatus_id()){
+        for (String itVar : OrderFragment.OrderStatuses) {
+            if (j == Order.getStatus_id()) {
                 simpleViewHolder.Status.setText(itVar);
                 break;
             }
@@ -141,11 +139,11 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         return R.id.swipe;
     }
 
-     class SimpleViewHolder extends RecyclerView.ViewHolder {
+    class SimpleViewHolder extends RecyclerView.ViewHolder {
 
-        final TextView Number,Name,Status,Adres,Person,PersonStatus,Data;
+        final TextView Number, Name, Status, Adres, Person, PersonStatus, Data;
         final SwipeLayout swipeLayout;
-        final ImageView buttonDelete,buttonCopy,buttonOpen,buttonDownload;
+        final ImageView buttonDelete, buttonCopy, buttonOpen, buttonDownload;
 
         SimpleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -199,26 +197,27 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
             });
         }
     }
-    private void CheckEmpty(){
-        if(Orders.size() == 0) message.setVisibility(View.VISIBLE);
-        else message.setVisibility(View.GONE);
-    }
+//    private void CheckEmpty(){
+//        if(Orders.size() == 0) message.setVisibility(View.VISIBLE);
+//        else message.setVisibility(View.GONE);
+//    }
 
-    public void insertdata(List<Orders> insertList, boolean isCopy){
+    public void insertdata(List<Orders> insertList, boolean isCopy) {
         OrdersDiffUtilCallback diffUtilCallback = new OrdersDiffUtilCallback(Orders, insertList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
-        if(isCopy)
-        Orders.addAll(0, insertList);
-        else  Orders.addAll(insertList);
-        CheckEmpty();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback, false);
+        if (isCopy)
+            Orders.addAll(0, insertList);
+        else Orders.addAll(insertList);
+        //  CheckEmpty();
         diffResult.dispatchUpdatesTo(this);
     }
-    public void updateList(List<Orders> newList){
+
+    public void updateList(List<Orders> newList) {
         OrdersDiffUtilCallback diffUtilCallback = new OrdersDiffUtilCallback(Orders, newList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback, false);
         Orders.clear();
         Orders.addAll(newList);
-        CheckEmpty();
+      //  CheckEmpty();
         diffResult.dispatchUpdatesTo(this);
     }
 }

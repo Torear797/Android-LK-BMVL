@@ -92,8 +92,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
         if(Orders.size() == 0) LoadOrders(Orders, (byte) 0);
 
-
-
         FabLisener();
         RecyclerViewEndLisener();
         return MyView;
@@ -165,7 +163,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         };
         recyclerView.addItemDecoration(new SpacesItemDecoration( (byte)10,(byte)10));
         recyclerView.setHasFixedSize(true);
-        OrderAdapter = new OrderSwipeAdapter(getContext(), Orders, message, onClickListener);
+        OrderAdapter = new OrderSwipeAdapter(getContext(), Orders, onClickListener);
         (OrderAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(OrderAdapter);
     }

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Proby;
 import com.bmvl.lk.data.models.Research;
 import com.bmvl.lk.data.models.Samples;
@@ -50,6 +51,7 @@ public class ProbsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.fragment_recyclerview, container, false);
         final RecyclerView recyclerView = MyView.findViewById(R.id.List);
+        recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
         final MaterialButton AddProbBtn = MyView.findViewById(R.id.addProb);
 
         AddProb();

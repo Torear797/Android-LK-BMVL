@@ -24,15 +24,9 @@ import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.data.models.Research;
-import com.bmvl.lk.data.models.Samples;
-import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.bmvl.lk.ui.Create_Order.OrderProbs.ResearhAdapter2;
 import com.bmvl.lk.ui.Create_Order.OrderProbs.SamplesAdapter2;
-import com.bmvl.lk.ui.Create_Order.OrderProbs.SamplesFieldAdapter2;
-import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
-import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -43,7 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.TreeMap;
 
 public class ProbFieldAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;

@@ -34,7 +34,7 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
     }
 
     public interface OnNotifyClickListener {
-        void onNotifyClick(Notifications Notify);
+        void onNotifyClick(int id);
     }
 
     @NonNull
@@ -128,7 +128,10 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
                 @Override
                 public void onClick(View v) {
                     Notifications Notify = Notifi.get(getLayoutPosition());
-                    onNotifyClickListener.onNotifyClick(Notify);
+                   // Notify.setStatus(0);
+                    swipeLayout.close();
+                    if(Notify.getStatus() == 1)
+                    onNotifyClickListener.onNotifyClick(Notify.getId());
                 }
             });
 

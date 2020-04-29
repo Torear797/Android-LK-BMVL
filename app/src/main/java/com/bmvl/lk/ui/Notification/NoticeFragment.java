@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bmvl.lk.App;
+import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
@@ -74,6 +75,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
 
 
         if (Notifi.size() == 0) InsertNotifications(Notifi, (byte) 0);
+        else UpdateNotify();
 
         initRecyclerView(Message);
 
@@ -94,10 +96,25 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
     }
     public void initRecyclerView(TextView Message){
         NotifiSwipeAdapter.OnNotifyClickListener onClickListener = new NotifiSwipeAdapter.OnNotifyClickListener() {
-
             @Override
-            public void onNotifyClick(Notifications Notify) {
-                Snackbar.make(Objects.requireNonNull(getView()), "Уведомление прочтено!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            public void onNotifyClick(int id) {
+                NetworkService.getInstance()
+                        .getJSONApi()
+                        .HideNotify(App.UserAccessData.getToken(), id)
+                        .enqueue(new Callback<StandardAnswer>() {
+                            @Override
+                            public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
+                                if (response.isSuccessful()) {
+                                    NotifiAdapter.closeAllItems();
+                                    UpdateNotify();
+                                    Snackbar.make(Objects.requireNonNull(getView()), "Уведомление прочтено!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
+                            }
+                        });
             }
         };
 
@@ -106,6 +123,11 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
         (NotifiAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(NotifiAdapter);
     }
+    private void UpdateNotify(){
+        List<Notifications> insertlist = new ArrayList<>();
+        CurrentPage = 0;
+        InsertNotifications(insertlist, (byte) 1);
+    }
 
     private SwipeRefreshLayout.OnRefreshListener MyRefresh = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
@@ -113,7 +135,6 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
             swipeRefreshLayout.setRefreshing(true);
             List<Notifications> insertlist = new ArrayList<>();
             CurrentPage = 0;
-            // LoadNotifications(insertlist, false);
             InsertNotifications(insertlist, (byte) 1);
         }
     };

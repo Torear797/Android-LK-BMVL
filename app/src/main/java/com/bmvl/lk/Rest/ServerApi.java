@@ -55,4 +55,16 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("orders/new")
     Call<AnswerOrderNew> OrderNew(@Field("token") String token);
+
+    @FormUrlEncoded
+    @POST("notifications/hide")
+    Call<StandardAnswer> HideNotify(@Field("token") String token, @Field("id") int id);
+
+    @FormUrlEncoded
+    @POST("orders/delete")
+    Call<StandardAnswer> DeleteOrder(@Field("token") String token, @Field("id") int id);
+
+    @FormUrlEncoded
+    @POST("orders/copyOrder")
+    Call<AnswerCopyOrder> CopyOrder(@Field("token") String token, @Field("id") int id);
 }

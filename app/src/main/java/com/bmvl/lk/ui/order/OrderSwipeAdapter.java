@@ -36,7 +36,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
     }
 
     public interface OnOrderClickListener {
-        void onDeleteOrder(Orders order);
+        void onDeleteOrder(int id, int position);
 
         void onCopyOrder(Orders order);
 
@@ -167,6 +167,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
                 @Override
                 public void onClick(View view) {
                     Orders order = Orders.get(getLayoutPosition());
+                    swipeLayout.close();
                     onOrderClickListener.onEditOrder(order);
                 }
             });
@@ -176,6 +177,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
                 @Override
                 public void onClick(View view) {
                     Orders order = Orders.get(getLayoutPosition());
+                    swipeLayout.close();
                     onOrderClickListener.onCopyOrder(order);
                 }
             });
@@ -184,7 +186,8 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
                 @Override
                 public void onClick(View view) {
                     Orders order = Orders.get(getLayoutPosition());
-                    onOrderClickListener.onDeleteOrder(order);
+                    swipeLayout.close();
+                    onOrderClickListener.onDeleteOrder(order.getId(), getLayoutPosition());
                 }
             });
 
@@ -192,6 +195,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
                 @Override
                 public void onClick(View view) {
                     Orders order = Orders.get(getLayoutPosition());
+                    swipeLayout.close();
                     onOrderClickListener.onDownloadOrder(order);
                 }
             });

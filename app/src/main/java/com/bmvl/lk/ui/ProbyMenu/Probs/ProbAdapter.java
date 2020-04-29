@@ -85,8 +85,8 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
            // final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, i);
         //    simpleViewHolder.ProbList.setAdapter(adapter);
         } else if (Prob.getOrder_id() == 1) {
-            final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, SampleFields, i);
-            simpleViewHolder.ProbList.setAdapter(adapter);
+//            final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, SampleFields, i);
+//            simpleViewHolder.ProbList.setAdapter(adapter);
         }
 
         simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", Prob.getId()));

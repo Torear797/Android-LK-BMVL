@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.ProbyRest;
+import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Proby;
@@ -70,22 +71,24 @@ public class ProbsFragment extends Fragment {
             }
         };
 
-        if (CreateOrderActivity.order_id == 0) {
-
-            AddOrderFieldsType0();
-            // final ProbAdapter adapter = new ProbAdapter(getContext(), ProbList, ProbFields, ResearchFields);
-            final ProbAdapter2 adapter = new ProbAdapter2(getContext(), ProbFields, ResearchFields, onClickListener);
-            (adapter).setMode(Attributes.Mode.Single);
-            recyclerView.setAdapter(adapter);
-
-            NewProbListener(AddProbBtn, adapter, recyclerView);
-
-        } else if (CreateOrderActivity.order_id == 1) {
-//            AddOrderFieldsType1();
-//            final ProbAdapter adapter = new ProbAdapter(getContext(), ProbList, ProbFields, ResearchFields, SampleFields);
-//            (adapter).setMode(Attributes.Mode.Single);
-//            recyclerView.setAdapter(adapter);
-//            NewProbListener(AddProbBtn, adapter, recyclerView);
+        switch (CreateOrderActivity.order_id){
+            case 0:
+                AddOrderFieldsType0();
+              //   final ProbAdapter adapter = new ProbAdapter(getContext(), ProbList, ProbFields, ResearchFields);
+                final ProbAdapter2 adapter = new ProbAdapter2(getContext(), ProbFields, ResearchFields, onClickListener);
+                (adapter).setMode(Attributes.Mode.Single);
+                recyclerView.setAdapter(adapter);
+                NewProbListener(AddProbBtn, adapter, recyclerView);
+                break;
+            case 2:
+                break;
+            case 3:
+                AddOrderFieldsType2();
+                final ProbAdapter2 adapter2 = new ProbAdapter2(getContext(), ProbFields, ResearchFields, SampleFields, onClickListener);
+                (adapter2).setMode(Attributes.Mode.Single);
+                recyclerView.setAdapter(adapter2);
+                NewProbListener(AddProbBtn, adapter2, recyclerView);
+                break;
         }
 
         return MyView;
@@ -121,20 +124,22 @@ public class ProbsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Map<Short, ProbyRest> insertlist = new HashMap<>();
-                insertlist.put((short) (CreateOrderActivity.order.getProby().size() + 1), new ProbyRest((short) (CreateOrderActivity.order.getProby().size())));
+                short newid = getPositionKey(CreateOrderActivity.order.getProby().size() - 1, CreateOrderActivity.order.getProby());
+                insertlist.put((short) (newid + 1), new ProbyRest(newid));
                 adapter.insertdata(insertlist);
-
-               // CreateOrderActivity.order.addProb((short) (CreateOrderActivity.order.getProby().size() + 1), new ProbyRest((short) (CreateOrderActivity.order.getProby().size())));
-
-              //  adapter.notifyDataSetChanged();
+                CreateOrderActivity.order.getProby().get((short) (newid + 1)).addSample((short)1, new SamplesRest((short)0));
                 recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
             }
         });
     }
 
+    private Short getPositionKey(int position, Map<Short, ProbyRest> Probs){
+        return new ArrayList<Short>(Probs.keySet()).get(position);
+    }
     private void AddProb() {
 
         CreateOrderActivity.order.addProb((short) 1, new ProbyRest((short) 0));
+        CreateOrderActivity.order.getProby().get((short) (1)).addSample((short)1, new SamplesRest((short)0));
        // CreateOrderActivity.order.setEnableNotifications((byte)5);
 
 
@@ -213,7 +218,7 @@ public class ProbsFragment extends Fragment {
         AddResearchFields();
     }
 
-    private void AddOrderFieldsType1() {
+    private void AddOrderFieldsType2() {
         ProbFields.clear();
         ProbFields.add(new Field((byte) 1, R.array.type_material, 0, "", "Вид материала"));
         ProbFields.add(new Field((byte) 5, R.array.documents, 0, "", "На соответствие требованиям"));

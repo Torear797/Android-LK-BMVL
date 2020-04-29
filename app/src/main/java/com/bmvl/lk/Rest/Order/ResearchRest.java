@@ -3,34 +3,97 @@ package com.bmvl.lk.Rest.Order;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Map;
-
 public class ResearchRest {
-    @SerializedName("id")
+
+    @SerializedName("indicatorId")
     @Expose
-    private short id;
+    private short indicatorId;
+
+    @SerializedName("indicatorNd")
+    @Expose
+    private String indicatorNd;
+
+    @SerializedName("indicatorNdId")
+    @Expose
+    private short indicatorNdId;
+
+    @SerializedName("methodId")
+    @Expose
+    private short methodId;
+
+    @SerializedName("methodNd")
+    @Expose
+    private String methodNd;
+
+    @SerializedName("methodNdId")
+    @Expose
+    private short methodNdId;
+
+    @SerializedName("typeId")
+    @Expose
+    private short typeId;
+
+    @SerializedName("indicatorVal")
+    @Expose
+    private String indicatorVal;
+
+    @SerializedName("methodVal")
+    @Expose
+    private String methodVal;
 
     @SerializedName("price")
     @Expose
-    private String price;
+    private double price;
 
-    @SerializedName("researches")
+    @SerializedName("id")
     @Expose
-    private Map<Short, ResearchRest> researches;
+    private Short id;
 
-    public ResearchRest(short id) {
+    public ResearchRest(Short id) {
         this.id = id;
     }
 
-    public short getId() {
-        return id;
+    public short getIndicatorId() {
+        return indicatorId;
     }
 
-    public String getPrice() {
+    public String getIndicatorNd() {
+        return indicatorNd;
+    }
+
+    public short getIndicatorNdId() {
+        return indicatorNdId;
+    }
+
+    public short getMethodId() {
+        return methodId;
+    }
+
+    public String getMethodNd() {
+        return methodNd;
+    }
+
+    public short getMethodNdId() {
+        return methodNdId;
+    }
+
+    public short getTypeId() {
+        return typeId;
+    }
+
+    public String getIndicatorVal() {
+        return indicatorVal;
+    }
+
+    public String getMethodVal() {
+        return methodVal;
+    }
+
+    public double getPrice() {
         return price;
     }
 
-    public Map<Short, ResearchRest> getResearches() {
-        return researches;
+    public Short getId() {
+        return id;
     }
 }

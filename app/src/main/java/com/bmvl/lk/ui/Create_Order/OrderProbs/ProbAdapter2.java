@@ -33,8 +33,9 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
     private LayoutInflater inflater;
     private RecyclerView.RecycledViewPool viewPool;
 
-    private  List<Field> ProbFields; //Поля пробы
-    private  List<Field> ResearchFields; //Поля исследований
+    private List<Field> ProbFields; //Поля пробы
+    private List<Field> ResearchFields; //Поля исследований
+    private List<Field> SampleFields; //Поля Образцов
 
     private OnProbClickListener OnProbClickListener; //Слушатель нажатий кнопок
 
@@ -46,6 +47,17 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
 
         ProbFields = Fields;
         ResearchFields = ResFields;
+    }
+
+    public ProbAdapter2(Context context, List<Field> Fields, List<Field> ResFields, List<Field> sampleFields, OnProbClickListener Listener) {
+        this.inflater = LayoutInflater.from(context);
+        Probs = CreateOrderActivity.order.getProby();
+        this.OnProbClickListener = Listener;
+        viewPool = new RecyclerView.RecycledViewPool();
+
+        ProbFields = Fields;
+        ResearchFields = ResFields;
+        SampleFields = sampleFields;
     }
 
     public interface OnProbClickListener {
@@ -77,7 +89,7 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
         return Probs.size();
     }
 
-    private Short getPositionKey(int position){
+    private Short getPositionKey(int position) {
         return new ArrayList<Short>(Probs.keySet()).get(position);
     }
 
@@ -93,7 +105,7 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
             public int getSpanSize(int position) {
                 if (CreateOrderActivity.order_id == 0 && (position >= 4 && position <= 7 || position == 22 || position == 23))
                     return 1;
-                if (CreateOrderActivity.order_id == 1 && (position >= 4 && position <= 7))
+                if (CreateOrderActivity.order_id == 3 && (position >= 4 && position <= 7))
                     return 1;
                 return 2;
             }
@@ -109,9 +121,9 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
                 final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, CurrentProb);
                 simpleViewHolder.ProbList.setAdapter(adapter);
                 break;
-            case 1:
-//                final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, SampleFields, CurrentProb.getId());
-//                simpleViewHolder.ProbList.setAdapter(adapter);
+            case 3:
+                final ProbFieldAdapter adapter2 = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, SampleFields, CurrentProb);
+                simpleViewHolder.ProbList.setAdapter(adapter2);
                 break;
         }
     }

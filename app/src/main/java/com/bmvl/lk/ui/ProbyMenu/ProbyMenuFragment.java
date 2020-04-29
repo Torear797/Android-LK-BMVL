@@ -17,13 +17,11 @@ import java.util.Objects;
 
 public class ProbyMenuFragment extends Fragment {
 
-   //private static byte order_id;
     public ProbyMenuFragment() {
 
     }
 
-    public static ProbyMenuFragment newInstance(byte id) {
-       // order_id = id;
+    public static ProbyMenuFragment newInstance() {
         return new ProbyMenuFragment();
     }
 

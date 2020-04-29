@@ -92,19 +92,18 @@ public class CreateOrderActivity extends AppCompatActivity {
         final FieldsAdapter adapter = new FieldsAdapter(this);
         recyclerView.setAdapter(adapter);
 
-
         switch (order_id) {
             case 0:
                 addFieldOrderType0();
                 cbox.setVisibility(View.VISIBLE);
                 Frame.setVisibility(View.VISIBLE);
-                loadFragment(ProbyMenuFragment.newInstance(order_id));
+                loadFragment(ProbyMenuFragment.newInstance());
                 break;
             case 3:
                 addFieldOrderType1();
                 cbox.setVisibility(View.VISIBLE);
                 Frame.setVisibility(View.VISIBLE);
-                loadFragment(ProbyMenuFragment.newInstance(order_id));
+                loadFragment(ProbyMenuFragment.newInstance());
                 break;
             case 4:
                 addFieldOrderType2();
@@ -207,9 +206,11 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     public void sendAction(View view) {
-        view.setEnabled(false);
-        bar.setVisibility(View.VISIBLE);
-        SendOrder(view);
+//        view.setEnabled(false);
+//        bar.setVisibility(View.VISIBLE);
+//        SendOrder(view);
+
+        Toast.makeText(getApplicationContext(), "test: " + order_id, Toast.LENGTH_SHORT).show();
     }
 
     private String getBasisString() {

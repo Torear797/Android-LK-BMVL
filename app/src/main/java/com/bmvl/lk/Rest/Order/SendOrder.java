@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -39,16 +38,15 @@ public class SendOrder {
 
     @SerializedName("proby")
     @Expose
-   // private Map<Short, ProbyRest> proby = new HashMap<>();
     private TreeMap<Short, ProbyRest> proby = new TreeMap<>();
 
-    public void addProb(Short key, ProbyRest newProb){
+    public void addProb(Short key, ProbyRest newProb) {
         this.proby.put(key, newProb);
     }
 
 
     public SendOrder(byte type_id) {
-        this.type_id = (byte)(type_id + 1);
+        this.type_id = (byte) (type_id + 1);
 
         this.ecp = "";
         this.id = 0;
@@ -58,14 +56,14 @@ public class SendOrder {
     }
 
     public byte getType_id() {
-        return (byte)(type_id - 1);
+        return (byte) (type_id - 1);
     }
 
     public void setFields(Map<Short, String> fields) {
         this.fields = fields;
     }
 
-    public String getJsonOrder(){
+    public String getJsonOrder() {
         Gson gson = new Gson();
         return gson.toJson(this);
     }

@@ -20,5 +20,7 @@ public class SamplesPanelHolder extends RecyclerView.ViewHolder {
         SamplePrice = itemView.findViewById(R.id.Price);
         Header = itemView.findViewById(R.id.HeaderRecyclerview);
         Header.setText("Образцы");
+
+       btnAddSample.setText("Добавить образец");
     }
 }

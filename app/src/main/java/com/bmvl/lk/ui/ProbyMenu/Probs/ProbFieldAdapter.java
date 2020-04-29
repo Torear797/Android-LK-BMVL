@@ -29,6 +29,8 @@ import com.bmvl.lk.data.models.Samples;
 import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.bmvl.lk.ui.Create_Order.OrderProbs.ResearhAdapter2;
+import com.bmvl.lk.ui.Create_Order.OrderProbs.SamplesAdapter2;
+import com.bmvl.lk.ui.Create_Order.OrderProbs.SamplesFieldAdapter2;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
 import com.daimajia.swipe.util.Attributes;
@@ -60,11 +62,13 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
         CurrentProb = prob;
     }
 
-    ProbFieldAdapter(Context context, List<Field> probFields, List<Field> researchFields, List<Field> sampleFields, int id) {
+    public ProbFieldAdapter(Context context, List<Field> probFields, List<Field> researchFields, List<Field> sampleFields , ProbyRest prob) {
         this.inflater = LayoutInflater.from(context);
         ProbFields = probFields;
         ResearchFields = researchFields;
         SampleFields = sampleFields;
+
+        CurrentProb = prob;
     }
 
     @Override
@@ -165,21 +169,23 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
             case 6:
-                if(!CurrentProb.getSamples().containsKey((short)1))
-                CurrentProb.addSample((short)1, new SamplesRest((short)0));
-
                 final ResearhAdapter2 Adapter = new ResearhAdapter2(inflater.getContext(), ResearchFields,CurrentProb.getSamples().get((short)1).getResearches());
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
                 ((ResearchPanelHolder) holder).ResearchList.setRecycledViewPool(viewPool);
 
+
+                //Добавляет исследование
                 ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         short size = (short) CurrentProb.getSamples().get((short)1).getResearches().size();
+                        short newid = 0;
+                        if(size > 0) newid = getPositionKeyR(size - 1, CurrentProb.getSamples().get((short)1).getResearches());
+
                         Map<Short, ResearchRest> insertlist = new HashMap<>();
-                        insertlist.put((short)(size + 1), new ResearchRest(size));
+                        insertlist.put((short)(newid + 1), new ResearchRest(newid));
                         Adapter.insertdata(insertlist);
                         ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
                     }
@@ -187,21 +193,22 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 break;
             case 7:
-                // Samples.add(new Samples(0, Samples.size()));
-                final List<Samples> Sample = ProbsFragment.getSampleList(CurrentProb.getId());
-
-                final SamplesAdapter SamAdapter = new SamplesAdapter(inflater.getContext(), ProbsFragment.getSampleResearchList(CurrentProb.getId()), ResearchFields, Sample, SampleFields, CurrentProb.getId());
+               final SamplesAdapter2 SamAdapter = new SamplesAdapter2(inflater.getContext(),ResearchFields, SampleFields, CurrentProb.getSamples());
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
+                ((SamplesPanelHolder) holder).SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
+                ((SamplesPanelHolder) holder).SampleList.setRecycledViewPool(viewPool);
 
-                ((SamplesPanelHolder) holder).btnAddSample.setText("Добавить образец");
+
+                //Добавление образца
                 ((SamplesPanelHolder) holder).btnAddSample.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        List<Samples> insertlist = new ArrayList<>();
-                        insertlist.add(new Samples(CurrentProb.getId(), Sample.size() + 1));
-                      //  Sample.add(new Samples(ProbID, Sample.size() + 1));
-                       // ProbsFragment.getSampleList().add(new Samples(ProbID, Sample.size() + 1));
+                      //  List<Samples> insertlist = new ArrayList<>();
+                        short newid = getPositionKey(CurrentProb.getSamples().size() - 1, CurrentProb.getSamples());
+                        Map<Short, SamplesRest> insertlist = new HashMap<>();
+                       // insertlist.add(new Samples(CurrentProb.getId(), Sample.size() + 1));
+                        insertlist.put((short) (newid + 1),new SamplesRest(newid));
                         SamAdapter.insertdata(insertlist);
                         ((SamplesPanelHolder) holder).SampleList.smoothScrollToPosition(SamAdapter.getItemCount() - 1);
                     }
@@ -209,6 +216,12 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 break;
         }
+    }
+    private Short getPositionKey(int position, Map<Short, SamplesRest> Samples){
+        return new ArrayList<Short>(Samples.keySet()).get(position);
+    }
+    private Short getPositionKeyR(int position, Map<Short, ResearchRest> List){
+        return new ArrayList<Short>(List.keySet()).get(position);
     }
 
     private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt) {

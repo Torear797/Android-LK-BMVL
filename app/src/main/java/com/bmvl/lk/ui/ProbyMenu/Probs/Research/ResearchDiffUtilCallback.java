@@ -40,7 +40,7 @@ public class ResearchDiffUtilCallback extends DiffUtil.Callback {
         ResearchRest oldProduct = oldList.get(getPositionKey(oldItemPosition,oldList));
         ResearchRest newProduct = newList.get(getPositionKey(newItemPosition,newList));
         return oldProduct.getPrice() == newProduct.getPrice()
-                && oldProduct.getResearches() == newProduct.getResearches() ;
+                && oldProduct.getTypeId() == newProduct.getTypeId() ;
     }
     private Short getPositionKey(int position, Map<Short, ResearchRest> Research){
         return new ArrayList<Short>(Research.keySet()).get(position);

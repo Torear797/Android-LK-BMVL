@@ -22,6 +22,7 @@ import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleViewHolder> {
@@ -81,6 +82,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
         mItemManger.bindView(simpleViewHolder.itemView, i);
     }
 
+
     @Override
     public int getItemCount() {
         return Samples.size();
@@ -110,19 +112,19 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     }
 
     public void insertdata(List<Samples> insertList) {
-        SamplesDiffUtilCallback diffUtilCallback = new SamplesDiffUtilCallback(Samples, insertList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
-        Samples.addAll(insertList);
-        ProbsFragment.getSampleList().addAll(insertList);
-        diffResult.dispatchUpdatesTo(this);
+//        SamplesDiffUtilCallback diffUtilCallback = new SamplesDiffUtilCallback(Samples, insertList);
+//        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
+//        Samples.addAll(insertList);
+//        ProbsFragment.getSampleList().addAll(insertList);
+//        diffResult.dispatchUpdatesTo(this);
 
     }
 
     public void updateList(List<Samples> newList) {
-        SamplesDiffUtilCallback diffUtilCallback = new SamplesDiffUtilCallback(Samples, newList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
-        Samples.clear();
-        Samples.addAll(newList);
-        diffResult.dispatchUpdatesTo(this);
+//        SamplesDiffUtilCallback diffUtilCallback = new SamplesDiffUtilCallback(Samples, newList);
+//        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
+//        Samples.clear();
+//        Samples.addAll(newList);
+//        diffResult.dispatchUpdatesTo(this);
     }
 }

@@ -3,7 +3,6 @@ package com.bmvl.lk.Rest.Order;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -18,12 +17,10 @@ public class ProbyRest {
 
     @SerializedName("samples")
     @Expose
-   // private Map<Short, SamplesRest> samples = new HashMap<>();
     private TreeMap<Short, SamplesRest> samples = new TreeMap<>();
 
-
-    public void addSample(Short key, SamplesRest newSample){
-        this.samples.put(key,newSample);
+    public void addSample(Short key, SamplesRest newSample) {
+        this.samples.put(key, newSample);
     }
 
     public ProbyRest(short id) {
@@ -38,7 +35,7 @@ public class ProbyRest {
         return id;
     }
 
-    public Map<Short, SamplesRest> getSamples() {
+    public TreeMap<Short, SamplesRest> getSamples() {
         return this.samples;
     }
 

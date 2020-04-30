@@ -3,6 +3,7 @@ package com.bmvl.lk.Rest.Order;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -17,7 +18,7 @@ public class SamplesRest {
 
     @SerializedName("fields")
     @Expose
-    private Map<Short, String> fields;
+    private Map<Short, String> fields  = new HashMap<>();
 
     @SerializedName("researches")
     @Expose

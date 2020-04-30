@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class MultiSpinner extends androidx.appcompat.widget.AppCompatSpinner implements DialogInterface.OnMultiChoiceClickListener, DialogInterface.OnCancelListener {
@@ -30,10 +31,7 @@ public class MultiSpinner extends androidx.appcompat.widget.AppCompatSpinner imp
 
     @Override
     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-        if (isChecked)
-            selected[which] = true;
-        else
-            selected[which] = false;
+        selected[which] = isChecked;
     }
 
     @Override
@@ -41,6 +39,8 @@ public class MultiSpinner extends androidx.appcompat.widget.AppCompatSpinner imp
         // refresh text on spinner
         StringBuffer spinnerBuffer = new StringBuffer();
         boolean someUnselected = false;
+
+
         for (int i = 0; i < items.size(); i++) {
             if (selected[i]) {
                 spinnerBuffer.append(items.get(i));
@@ -49,6 +49,7 @@ public class MultiSpinner extends androidx.appcompat.widget.AppCompatSpinner imp
                 someUnselected = true;
             }
         }
+
         String spinnerText;
         if (someUnselected) {
             spinnerText = spinnerBuffer.toString();
@@ -61,7 +62,7 @@ public class MultiSpinner extends androidx.appcompat.widget.AppCompatSpinner imp
                 android.R.layout.simple_spinner_item,
                 new String[] { spinnerText });
         setAdapter(adapter);
-        listener.onItemsSelected(selected);
+        listener.onItemsSelected(selected, spinnerBuffer.toString());
     }
 
     @Override
@@ -85,18 +86,40 @@ public class MultiSpinner extends androidx.appcompat.widget.AppCompatSpinner imp
         this.defaultText = allText;
         this.listener = listener;
 
+        String[] strArr = allText.split(", ");
+        int[] numArr = new int[strArr.length];
+        int index;
+        if(!allText.equals(""))
+        for (int i = 0; i < strArr.length; i++) {
+            //numArr[i] = Integer.parseInt(strArr[i]);
+            index = 0;
+            for (String name: items) {
+                if(name.equals(strArr[i]))
+                    numArr[i] = index;
+                index++;
+            }
+        }
+
         // all selected by default
         selected = new boolean[items.size()];
-        for (int i = 0; i < selected.length; i++)
+        for (int i = 0; i < selected.length; i++) {
             selected[i] = false;
+            if(!allText.equals(""))
+            for(int j = 0; j < numArr.length; j++){
+                if(i == numArr[j]) {
+                    selected[i] = true;
+                    break;
+                }
+            }
+        }
+
 
         // all text on the spinner
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item, new String[] { allText });
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, new String[] { allText });
         setAdapter(adapter);
     }
 
     public interface MultiSpinnerListener {
-        public void onItemsSelected(boolean[] selected);
+        public void onItemsSelected(boolean[] selected, String selectedID);
     }
 }

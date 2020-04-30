@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -34,7 +35,7 @@ public class SendOrder {
 
     @SerializedName("fields")
     @Expose
-    private Map<Short, String> fields;
+    private Map<Short, String> fields = new HashMap<>();
 
     @SerializedName("proby")
     @Expose
@@ -74,5 +75,13 @@ public class SendOrder {
 
     public void setEnableNotifications(byte enableNotifications) {
         this.enableNotifications = enableNotifications;
+    }
+
+    public Map<Short, String> getFields() {
+        return fields;
+    }
+
+    public byte getId() {
+        return id;
     }
 }

@@ -172,6 +172,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     } //Запрос
 
     private void LoadDefaultFields() {
+        //Заполнение полей на форме
         Fields.clear();
         Fields.add(new Field(135, App.UserInfo.getClientName(), false, "Заявитель", InputType.TYPE_NULL));
         Fields.add(new Field(136, App.UserInfo.getContract_number(), false, "Договор №", InputType.TYPE_NULL));
@@ -186,6 +187,20 @@ public class CreateOrderActivity extends AppCompatActivity {
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
 
         Fields.add(new Field(-1, dateFormat.format(currentDate), false, "Дата создания заявки", InputType.TYPE_NULL));
+
+
+        //Заполнение отправляемого объекта
+        order.getFields().put((short)135, App.UserInfo.getClientName());
+        order.getFields().put((short)136, App.UserInfo.getContract_number());
+        order.getFields().put((short)137, App.UserInfo.getContract_date());
+        order.getFields().put((short)138, App.UserInfo.getAdress());
+        order.getFields().put((short)139, App.UserInfo.getInn());
+        order.getFields().put((short)140, App.UserInfo.getPhone());
+        order.getFields().put((short)141, App.UserInfo.getEmail());
+        order.getFields().put((short)142, App.UserInfo.getFIO() + ", " + App.UserInfo.getPosition() + ", действующий на основании " + getBasisString());
+
+
+
     } //Базовые поля
 
     private void loadFragment(Fragment fragment) {
@@ -210,7 +225,7 @@ public class CreateOrderActivity extends AppCompatActivity {
 //        bar.setVisibility(View.VISIBLE);
 //        SendOrder(view);
 
-        Toast.makeText(getApplicationContext(), "test: " + order_id, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "test: " + order.getId(), Toast.LENGTH_SHORT).show();
     }
 
     private String getBasisString() {
@@ -231,16 +246,16 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private void SendOrder(final View view) {
-        Map<Short, String> fields = new HashMap<>();   //Поля заявки
+    //    Map<Short, String> fields = new HashMap<>();   //Поля заявки
 
-        for (Field f : Fields) {
-            if (f.getColumn_id() != -1)
-                fields.put((short)(f.getColumn_id()), f.getValue());
-        }
+//        for (Field f : Fields) {
+//            if (f.getColumn_id() != -1)
+//                fields.put((short)(f.getColumn_id()), f.getValue());
+//        }
       //  Gson gson = new Gson();
 
-        order.setFields(fields);
-       // String order = gson.toJson(order);
+    //    order.setFields(fields);
+        //String Jsonorder = gson.toJson(order);
 
         NetworkService.getInstance()
                 .getJSONApi()

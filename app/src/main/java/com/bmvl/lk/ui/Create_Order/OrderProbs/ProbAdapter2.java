@@ -79,6 +79,11 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
         initRecyclerView(simpleViewHolder, CurrentProb, getPositionKey(i));
 
         simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", getPositionKey(i)));
+        String nameMaterial = "не выбран";
+        assert CurrentProb != null;
+        if(CurrentProb.getFields().containsKey((short)5))
+            nameMaterial = CurrentProb.getFields().get((short)5);
+        simpleViewHolder.infoProb.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", nameMaterial, CurrentProb.getSamples().size()));
         simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
 
         mItemManger.bindView(simpleViewHolder.itemView, i);
@@ -118,11 +123,24 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
 
         switch (CreateOrderActivity.order_id) {
             case 0:
-                final ProbFieldAdapter adapter = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, CurrentProb);
+                final ProbFieldAdapter adapter = new ProbFieldAdapter(
+                        inflater.getContext(),
+                        ProbFields,
+                        ResearchFields,
+                        CurrentProb,
+                        simpleViewHolder.infoProb
+                );
                 simpleViewHolder.ProbList.setAdapter(adapter);
                 break;
             case 3:
-                final ProbFieldAdapter adapter2 = new ProbFieldAdapter(inflater.getContext(), ProbFields, ResearchFields, SampleFields, CurrentProb);
+                final ProbFieldAdapter adapter2 = new ProbFieldAdapter(
+                        inflater.getContext(),
+                        ProbFields,
+                        ResearchFields,
+                        SampleFields,
+                        CurrentProb,
+                        simpleViewHolder.infoProb
+                );
                 simpleViewHolder.ProbList.setAdapter(adapter2);
                 break;
         }
@@ -130,7 +148,7 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
 
     public class SimpleViewHolder extends RecyclerView.ViewHolder {
         final ConstraintLayout head;
-        final TextView NameProb;
+        final TextView NameProb, infoProb;
         final SwipeLayout swipeLayout;
         final ImageView buttonDelete, buttonCopy;
         final RecyclerView ProbList;
@@ -138,6 +156,7 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
         SimpleViewHolder(@NonNull View itemView) {
             super(itemView);
             NameProb = itemView.findViewById(R.id.NumberProb);
+            infoProb = itemView.findViewById(R.id.InfoProb);
             ProbList = itemView.findViewById(R.id.ProbFields);
             head = itemView.findViewById(R.id.Header);
 

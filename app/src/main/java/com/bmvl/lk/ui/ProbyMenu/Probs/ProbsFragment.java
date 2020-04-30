@@ -13,13 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
-import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.data.models.Proby;
-import com.bmvl.lk.data.models.Research;
-import com.bmvl.lk.data.models.Samples;
-import com.bmvl.lk.data.models.SamplesData;
-import com.bmvl.lk.data.models.SamplesResearch;
 import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.bmvl.lk.ui.Create_Order.OrderProbs.ProbAdapter2;
@@ -32,15 +26,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-
 public class ProbsFragment extends Fragment {
     private List<Field> ProbFields = new ArrayList<>(); //Поля пробы
     private List<Field> ResearchFields = new ArrayList<>(); //Поля исследований
     private List<Field> SampleFields = new ArrayList<>(); //Поля Образцов
-
-    private static List<Samples> SamplesList = new ArrayList<>(); //Образцы.
-    private static List<List<SamplesResearch>> SamplesResearchs = new ArrayList<>(); //Данные исследований для образцов
-    private static List<SamplesData> SamplesData = new ArrayList<>(); //Данные полей образцов.
 
     public ProbsFragment() {
     }
@@ -71,10 +60,9 @@ public class ProbsFragment extends Fragment {
             }
         };
 
-        switch (CreateOrderActivity.order_id){
+        switch (CreateOrderActivity.order_id) {
             case 0:
-                AddOrderFieldsType0();
-              //   final ProbAdapter adapter = new ProbAdapter(getContext(), ProbList, ProbFields, ResearchFields);
+                AddProbFieldsType0();
                 final ProbAdapter2 adapter = new ProbAdapter2(getContext(), ProbFields, ResearchFields, onClickListener);
                 (adapter).setMode(Attributes.Mode.Single);
                 recyclerView.setAdapter(adapter);
@@ -83,7 +71,7 @@ public class ProbsFragment extends Fragment {
             case 2:
                 break;
             case 3:
-                AddOrderFieldsType2();
+                AddProbFieldsType2();
                 final ProbAdapter2 adapter2 = new ProbAdapter2(getContext(), ProbFields, ResearchFields, SampleFields, onClickListener);
                 (adapter2).setMode(Attributes.Mode.Single);
                 recyclerView.setAdapter(adapter2);
@@ -92,30 +80,6 @@ public class ProbsFragment extends Fragment {
         }
 
         return MyView;
-    }
-
-    public static List<Samples> getSampleList(int i) {
-        List<Samples> SamplesForBrobID = new ArrayList<>();
-        for (Samples sam : SamplesList) {
-            if (sam.getProby_id() == i) SamplesForBrobID.add(sam);
-        }
-        return SamplesForBrobID;
-    }
-
-    public static List<Samples> getSampleList() {
-        return SamplesList;
-    }
-
-    public static List<SamplesResearch> getSampleResearchList(int ProbID) {
-        return SamplesResearchs.get(ProbID);
-    }
-
-    public static List<SamplesResearch> getSampleResearchList(int i, int ProbId) {
-        List<SamplesResearch> SamplesResearchListForID = new ArrayList<>();
-        for (SamplesResearch sam : SamplesResearchs.get(ProbId)) {
-            if (sam.getSample_id() == i) SamplesResearchListForID.add(sam);
-        }
-        return SamplesResearchListForID;
     }
 
     private void NewProbListener(final MaterialButton AddProbBtn, final ProbAdapter2 adapter, final RecyclerView recyclerView) {
@@ -127,42 +91,20 @@ public class ProbsFragment extends Fragment {
                 short newid = getPositionKey(CreateOrderActivity.order.getProby().size() - 1, CreateOrderActivity.order.getProby());
                 insertlist.put((short) (newid + 1), new ProbyRest(newid));
                 adapter.insertdata(insertlist);
-                CreateOrderActivity.order.getProby().get((short) (newid + 1)).addSample((short)1, new SamplesRest((short)0));
+                CreateOrderActivity.order.getProby().get((short) (newid + 1)).addSample((short) 1, new SamplesRest((short) 0));
                 recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
             }
         });
     }
 
-    private Short getPositionKey(int position, Map<Short, ProbyRest> Probs){
+    private Short getPositionKey(int position, Map<Short, ProbyRest> Probs) {
         return new ArrayList<Short>(Probs.keySet()).get(position);
     }
+
     private void AddProb() {
-
         CreateOrderActivity.order.addProb((short) 1, new ProbyRest((short) 0));
-        CreateOrderActivity.order.getProby().get((short) (1)).addSample((short)1, new SamplesRest((short)0));
-       // CreateOrderActivity.order.setEnableNotifications((byte)5);
-
-
-        //    ProbList.clear();
-        //   ProbList.add(new Proby(1, "", CreateOrderActivity.order_id, 0));
-
-        //   Researchs.clear();
-//        SamplesList.clear();
-//        SamplesResearchs.clear();
-//        SamplesData.clear();
-
-        if (CreateOrderActivity.order_id == 0) {
-//            List<Research> ResItems = new ArrayList<>();
-//            ResItems.add(new Research());
-            //    Researchs.add(ResItems);
-        } else {
-//            SamplesList.add(new Samples(ProbList.size()-1, 1));
-//            List<SamplesResearch> ResItems = new ArrayList<>();
-//            ResItems.add(new SamplesResearch(0, SamplesList.size()-1));
-//            SamplesResearchs.add(ResItems);
-//            SamplesData.add(new SamplesData(SamplesData.size()-1, SamplesList.size()-1));
-        }
-    }
+        CreateOrderActivity.order.getProby().get((short) (1)).addSample((short) 1, new SamplesRest((short) 0));
+    } //Создает первую пробу
 
     private void AddSampleFields() {
         SampleFields.clear();
@@ -174,74 +116,78 @@ public class ProbsFragment extends Fragment {
         SampleFields.add(new Field(1, "", "Вакцинация поголовья", InputType.TYPE_CLASS_TEXT));
         SampleFields.add(new Field((byte) 6, 0, "", ""));
         AddResearchFields();
-    }
+    } //Поля образцов
 
     private void AddResearchFields() {
         ResearchFields.clear();
         ResearchFields.add(new Field((byte) 1, R.array.documents, 0, "", "Показатель"));
         ResearchFields.add(new Field((byte) 1, R.array.documents, 0, "", "Метод испытаний"));
         ResearchFields.add(new Field((byte) 1, R.array.documents, 0, "", "Тип исследования"));
-    }
+    } //Поля исследвоаний
 
-    private void AddOrderFieldsType0() {
+    private void AddProbFieldsType0() {
         ProbFields.clear();
-        ProbFields.add(new Field((byte) 1, R.array.type_material, 0, "", "Вид материала"));
-        ProbFields.add(new Field((byte) 5, R.array.documents, 0, "", "На соответствие требованиям"));
-        ProbFields.add(new Field(1, "", "Номер сейф пакета", InputType.TYPE_CLASS_NUMBER));
-        ProbFields.add(new Field((byte) 1, R.array.sample_states, 0, "", "Состояние образца"));
-        ProbFields.add(new Field((byte) 1, R.array.transport, 0, "", "Транспорт"));
-        ProbFields.add(new Field(1, "", "", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Широта", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Долгота", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field((byte) 1, R.array.packaging_type, 0, "", "Вид упаковки, наличие маркировки"));
-        ProbFields.add(new Field(1, "", "Наименование организации, проводившей отбор проб", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Адрес организации, проводившей отбор проб", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Страна отбора", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Регион отбора", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Район отбора", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Место отбора", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "План и метод отбора образца", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Должность лица,проводившего отбор", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "ФИО лица, проводившего отбор", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "В присутствии", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Дата и время отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field((byte) 1, R.array.type_material, 5, "", "Вид материала"));
+        ProbFields.add(new Field((byte) 5, R.array.documents, 116, "", "На соответствие требованиям"));
+        ProbFields.add(new Field(15, "", "Номер сейф пакета", InputType.TYPE_CLASS_NUMBER));
+        ProbFields.add(new Field((byte) 1, R.array.sample_states, 32, "", "Состояние образца"));
+        ProbFields.add(new Field((byte) 1, R.array.transport, 60, "", "Транспорт"));
+        ProbFields.add(new Field(61, "", "", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(54, "", "Широта", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(55, "", "Долгота", InputType.TYPE_CLASS_TEXT));
 
-        ProbFields.add(new Field(1, "", "Наименование образца, термическое состояние", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Дата выработки", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getActivity()).getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        ProbFields.add(new Field((byte) 1, R.array.packaging_type, 25, "", "Вид упаковки, наличие маркировки"));
 
-        ProbFields.add(new Field(1, "", "Масса/объем образца", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field((byte) 1, R.array.units_of_measure, 0, "", " "));
+        ProbFields.add(new Field(74, "", "Наименование организации, проводившей отбор проб", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(75, "", "Адрес организации, проводившей отбор проб", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(27, "", "Страна отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(28, "", "Регион отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(57, "", "Район отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(21, "", "Место отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(18, "", "План и метод отбора образца", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(125, "", "Должность лица,проводившего отбор", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(126, "", "ФИО лица, проводившего отбор", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(17, "", "В присутствии", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(12, "", "Дата и время отбора", InputType.TYPE_CLASS_TEXT));
 
-        ProbFields.add(new Field((byte) 5, R.array.documents, 0, "", "НД на продукцию"));
+        ProbFields.add(new Field(6, "", "Наименование образца, термическое состояние", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(22, "", "Дата выработки", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getActivity()).getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        ProbFields.add(new Field(40, "", "Масса/объем образца", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field((byte) 1, R.array.units_of_measure, 41, "", " "));
+        ProbFields.add(new Field((byte) 5, R.array.documents, 19, "", "НД на продукцию"));
+
         ProbFields.add(new Field((byte) 6));
 
         AddResearchFields();
-    }
+    } //Поля пробы на исследование пищевых продуктов
 
-    private void AddOrderFieldsType2() {
+    private void AddProbFieldsType2() {
         ProbFields.clear();
-        ProbFields.add(new Field((byte) 1, R.array.type_material, 0, "", "Вид материала"));
-        ProbFields.add(new Field((byte) 5, R.array.documents, 0, "", "На соответствие требованиям"));
-        ProbFields.add(new Field(1, "", "Номер сейф пакета", InputType.TYPE_CLASS_NUMBER));
-        ProbFields.add(new Field((byte) 1, R.array.sample_states, 0, "", "Состояние образца"));
-        ProbFields.add(new Field((byte) 1, R.array.transport, 0, "", "Транспорт"));
-        ProbFields.add(new Field(1, "", "", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Широта", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Долгота", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Вид животного", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field((byte) 1, R.array.packaging_type, 0, "", "Пробы упакованы"));
-        ProbFields.add(new Field(1, "", "Наименование организации, проводившей отбор проб", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Адрес организации, проводившей отбор проб", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Страна отбора", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Регион отбора", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Район отбора", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Место отбора", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "План и метод отбора образца", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Должность лица,проводившего отбор", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "ФИО лица, проводившего отбор", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "В присутствии", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(1, "", "Дата и время отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field((byte) 1, R.array.type_material, 5, "", "Вид материала"));
+        ProbFields.add(new Field((byte) 5, R.array.documents, 116, "", "На соответствие требованиям"));
+        ProbFields.add(new Field(15, "", "Номер сейф пакета", InputType.TYPE_CLASS_NUMBER));
+        ProbFields.add(new Field((byte) 1, R.array.sample_states, 32, "", "Состояние образца"));
+        ProbFields.add(new Field((byte) 1, R.array.transport, 60, "", "Транспорт"));
+        ProbFields.add(new Field(61, "", "", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(54, "", "Широта", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(55, "", "Долгота", InputType.TYPE_CLASS_TEXT));
+
+        ProbFields.add(new Field(131, "", "Вид животного", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field((byte) 1, R.array.packaging_type, 25, "", "Пробы упакованы"));
+
+        ProbFields.add(new Field(74, "", "Наименование организации, проводившей отбор проб", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(75, "", "Адрес организации, проводившей отбор проб", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(27, "", "Страна отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(28, "", "Регион отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(57, "", "Район отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(21, "", "Место отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(18, "", "План и метод отбора образца", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(125, "", "Должность лица,проводившего отбор", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(126, "", "ФИО лица, проводившего отбор", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(17, "", "В присутствии", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field(12, "", "Дата и время отбора", InputType.TYPE_CLASS_TEXT));
+
         ProbFields.add(new Field((byte) 7));
         AddSampleFields();
-    }
+    } //Поля пробы сопроводительного письма
 }

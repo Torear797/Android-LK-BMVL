@@ -116,6 +116,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 @Override
                 public void afterTextChanged(Editable s) {
                     CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
+                    CreateOrderActivity.order.getFields().put((short)f.getColumn_id(), String.valueOf(s));
                 }
 
                 @Override
@@ -132,6 +133,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             ((SpinerHolder) holder).spiner.setAdapter(adapter);
             ((SpinerHolder) holder).txtHint.setText(f.getHint());
+            CreateOrderActivity.order.getFields().put((short)f.getColumn_id(), String.valueOf(((SpinerHolder) holder).spiner.getSelectedItem()));
 
             AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -140,6 +142,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                     // Получаем выбранный объект
                     String item = (String)parent.getItemAtPosition(position);
                     CreateOrderActivity.Fields.get(position).setValue(String.valueOf(item));
+                    CreateOrderActivity.order.getFields().put((short)f.getColumn_id(), String.valueOf(item));
                 }
 
                 @Override
@@ -155,6 +158,8 @@ public class FieldsAdapter extends RecyclerView.Adapter {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             ((OriginalDocHolder) holder).spiner.setAdapter(adapter);
             ((OriginalDocHolder) holder).txtHint.setText(f.getHint());
+
+            CreateOrderActivity.order.getFields().put(App.OrderInfo.getOD_ID(), String.valueOf(App.OrderInfo.getOD_Value()));
 
             switch (App.OrderInfo.getOD_ID()){
                 case 52:
@@ -172,27 +177,65 @@ public class FieldsAdapter extends RecyclerView.Adapter {
             }
 
             ((OriginalDocHolder) holder).spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                public void onItemSelected(AdapterView<?> parent,
-                                           View itemSelected, int selectedItemPosition, long selectedId) {
+                public void onItemSelected(AdapterView<?> parent, View itemSelected, int selectedItemPosition, long selectedId) {
 
                     if (selectedItemPosition == 0 || selectedItemPosition == 1) {
                         ((OriginalDocHolder) holder).fieldEmail.setVisibility(View.GONE);
                         ((OriginalDocHolder) holder).LayoutEmail.setVisibility(View.GONE);
-
-                        if (selectedItemPosition == 0)
-                            ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.Doc_Face));
-                        else
-                            ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.adres));
-
-                    } else {
-                        ((OriginalDocHolder) holder).fieldEmail.setVisibility(View.VISIBLE);
-                        ((OriginalDocHolder) holder).LayoutEmail.setVisibility(View.VISIBLE);
-                        ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.adres));
                     }
 
+                    switch (selectedItemPosition){
+                        case 0:
+                            ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.Doc_Face));
+                            f.setColumn_id(52);
+                            break;
+                        case 1:
+                            ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.adres));
+                            f.setColumn_id(63);
+                            break;
+                        case 2:
+                            ((OriginalDocHolder) holder).fieldEmail.setVisibility(View.VISIBLE);
+                            ((OriginalDocHolder) holder).LayoutEmail.setVisibility(View.VISIBLE);
+                            ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.adres));
+                            f.setColumn_id(64);
+                            break;
+                    }
                 }
 
                 public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+
+
+            ((OriginalDocHolder) holder).fieldEmail.addTextChangedListener(new TextWatcher(){
+                @Override
+                public void afterTextChanged(Editable s) {
+                    CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
+                    CreateOrderActivity.order.getFields().put((short)f.getColumn_id(), String.valueOf(s));
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+            });
+
+            ((OriginalDocHolder) holder).fieldAdres.addTextChangedListener(new TextWatcher(){
+                @Override
+                public void afterTextChanged(Editable s) {
+                    CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
+                    CreateOrderActivity.order.getFields().put((short)f.getColumn_id(), String.valueOf(s));
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
                 }
             });
         }
@@ -200,14 +243,16 @@ public class FieldsAdapter extends RecyclerView.Adapter {
         switch (f.getType()) {
             case 3:
                 ((SwitchHolder) holder).switchButton.setText(String.format("%s  ", f.getHint()));
+                CreateOrderActivity.order.getFields().put((short)f.getColumn_id(), String.valueOf(((SwitchHolder) holder).switchButton.isChecked()));
 
                 ((SwitchHolder) holder).switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         CreateOrderActivity.Fields.get(position).setValue(String.valueOf(isChecked));
+                        CreateOrderActivity.order.getFields().put((short)f.getColumn_id(), String.valueOf(isChecked));
                     }
                 });
                 break;
-            case 4:
+            case 4: //Акт
                 ((SelectButtonHolder) holder).hint.setText(f.getHint());
                 break;
         }

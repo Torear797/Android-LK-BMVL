@@ -2,12 +2,17 @@ package com.bmvl.lk.ui.ProbyMenu.Probs;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,12 +29,14 @@ import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.bmvl.lk.ui.Create_Order.OrderProbs.ResearhAdapter2;
 import com.bmvl.lk.ui.Create_Order.OrderProbs.SamplesAdapter2;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -41,22 +48,25 @@ import java.util.Objects;
 public class ProbFieldAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private static Calendar dateAndTime = Calendar.getInstance();
-    private  List<Field> ProbFields;
-    private  List<Field> ResearchFields;
-    private  List<Field> SampleFields; //Поля Образцов
+    private List<Field> ProbFields;
+    private List<Field> ResearchFields;
+    private List<Field> SampleFields; //Поля Образцов
     private RecyclerView.RecycledViewPool viewPool;
+    private TextView ProbHeader;
 
     private ProbyRest CurrentProb;
 
-    public ProbFieldAdapter(Context context, List<Field> Fields, List<Field> ResFields, ProbyRest prob) {
+    public ProbFieldAdapter(Context context, List<Field> Fields, List<Field> ResFields, ProbyRest prob, TextView header) {
         this.inflater = LayoutInflater.from(context);
+        this.ProbHeader = header;
         ProbFields = Fields;
         ResearchFields = ResFields;
         CurrentProb = prob;
     }
 
-    public ProbFieldAdapter(Context context, List<Field> probFields, List<Field> researchFields, List<Field> sampleFields , ProbyRest prob) {
+    public ProbFieldAdapter(Context context, List<Field> probFields, List<Field> researchFields, List<Field> sampleFields, ProbyRest prob, TextView header) {
         this.inflater = LayoutInflater.from(context);
+        this.ProbHeader = header;
         ProbFields = probFields;
         ResearchFields = researchFields;
         SampleFields = sampleFields;
@@ -98,13 +108,16 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         final Field f = ProbFields.get(position);
         if (f.getType() == 0) {
 
             ((TextViewHolder) holder).Layout.setHint(f.getHint());
             ((TextViewHolder) holder).field.setInputType(f.getInputType());
-            ((TextViewHolder) holder).field.setText(f.getValue());
+            // ((TextViewHolder) holder).field.setText(f.getValue());
+
+            ((TextViewHolder) holder).field.setText(CurrentProb.getFields().get((short) f.getColumn_id()));
+            //  CurrentProb.getFields().put((short) f.getColumn_id(), String.valueOf(s));
 
             if (f.getIcon() != null) {
                 ((TextViewHolder) holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
@@ -113,7 +126,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 if (f.isData()) {
                     final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                            ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field);
+                            ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field, f);
                         }
                     };
                     ((TextViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
@@ -130,39 +143,104 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 }
             }
 
-//            if (f.isDoubleSize()) {
-//                ((TextViewHolder) holder).field.setGravity(Gravity.START | Gravity.TOP);
-//                ((TextViewHolder) holder).field.setMinLines(4);
-//                ((TextViewHolder) holder).field.setLines(6);
-//                ((TextViewHolder) holder).field.setSingleLine(false);
-//                ((TextViewHolder) holder).field.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-//            }
+            ((TextViewHolder) holder).field.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void afterTextChanged(Editable s) {
+                    CurrentProb.getFields().put((short) f.getColumn_id(), String.valueOf(s));
+                    //ProbFields.get(position).setValue(String.valueOf(s));
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+            });
         } else if (f.getType() == 1) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             ((SpinerHolder) holder).spiner.setAdapter(adapter);
             ((SpinerHolder) holder).txtHint.setText(f.getHint());
+
+            if (f.getColumn_id() == 5)
+                ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", ((SpinerHolder) holder).spiner.getSelectedItem(), CurrentProb.getSamples().size()));
+
+
+            if (CurrentProb.getFields().containsKey((short) f.getColumn_id())) {
+
+                String[] id = inflater.getContext().getResources().getStringArray(f.getEntries());
+                int CurrentID = 0;
+                for (String name : id) {
+                    if (name.equals(CurrentProb.getFields().get((short) f.getColumn_id()))) break;
+                    CurrentID++;
+                }
+
+                ((SpinerHolder) holder).spiner.setSelection(CurrentID,true);
+            }
+
+
+            AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String item = (String) parent.getItemAtPosition(position);
+                    CurrentProb.getFields().put((short) f.getColumn_id(), String.valueOf(item));
+                    ProbFields.get(position).setValue(String.valueOf(position));
+
+                    if (f.getColumn_id() == 5)
+                        ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", item, CurrentProb.getSamples().size()));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            };
+            ((SpinerHolder) holder).spiner.setOnItemSelectedListener(itemSelectedListener);
         }
 
         switch (f.getType()) {
             case 3:
                 ((SwitchHolder) holder).switchButton.setText(String.format("%s  ", f.getHint()));
+
+                // CurrentProb.getFields().put((short) f.getColumn_id(), String.valueOf(((SwitchHolder) holder).switchButton.isChecked()));
+                if (CurrentProb.getFields().containsKey((short) f.getColumn_id()))
+                    ((SwitchHolder) holder).switchButton.setEnabled(Boolean.parseBoolean(CurrentProb.getFields().get((short) f.getColumn_id())));
+                else ((SwitchHolder) holder).switchButton.setEnabled(false);
+
+                ((SwitchHolder) holder).switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        CurrentProb.getFields().put((short) f.getColumn_id(), String.valueOf(isChecked));
+                        ProbFields.get(position).setValue(String.valueOf(isChecked));
+                    }
+                });
                 break;
             case 4:
                 ((SelectButtonHolder) holder).hint.setText(f.getHint());
                 break;
             case 5:
-                List<String> items = Arrays.asList(inflater.getContext().getResources().getStringArray(f.getEntries()));
+                final List<String> items = Arrays.asList(inflater.getContext().getResources().getStringArray(f.getEntries()));
                 MultiSpinner.MultiSpinnerListener onSelectedListener = new MultiSpinner.MultiSpinnerListener() {
-                    public void onItemsSelected(boolean[] selected) {
-                        // Do something here with the selected items
+                    public void onItemsSelected(boolean[] selected, String id) {
+                        CurrentProb.getFields().put((short) f.getColumn_id(), id);
                     }
                 };
-                ((MultiSpinerHolder) holder).spiner.setItems(items, inflater.getContext().getString(R.string.for_all), onSelectedListener);
+                String selected = "";
+                if (CurrentProb.getFields().containsKey((short) f.getColumn_id()))
+                    selected = CurrentProb.getFields().get((short) f.getColumn_id());
+
+                ((MultiSpinerHolder) holder).spiner.setItems(
+                        items,
+                        //inflater.getContext().getString(R.string.for_all),
+                        selected,
+                        onSelectedListener
+                );
+
                 ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
             case 6:
-                final ResearhAdapter2 Adapter = new ResearhAdapter2(inflater.getContext(), ResearchFields,CurrentProb.getSamples().get((short)1).getResearches());
+                final ResearhAdapter2 Adapter = new ResearhAdapter2(inflater.getContext(), ResearchFields, CurrentProb.getSamples().get((short) 1).getResearches());
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
@@ -173,12 +251,13 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        short size = (short) CurrentProb.getSamples().get((short)1).getResearches().size();
+                        short size = (short) CurrentProb.getSamples().get((short) 1).getResearches().size();
                         short newid = 0;
-                        if(size > 0) newid = getPositionKeyR(size - 1, CurrentProb.getSamples().get((short)1).getResearches());
+                        if (size > 0)
+                            newid = getPositionKeyR(size - 1, CurrentProb.getSamples().get((short) 1).getResearches());
 
                         Map<Short, ResearchRest> insertlist = new HashMap<>();
-                        insertlist.put((short)(newid + 1), new ResearchRest(newid));
+                        insertlist.put((short) (newid + 1), new ResearchRest(newid));
                         Adapter.insertdata(insertlist);
                         ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
                     }
@@ -186,7 +265,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 break;
             case 7:
-               final SamplesAdapter2 SamAdapter = new SamplesAdapter2(inflater.getContext(),ResearchFields, SampleFields, CurrentProb.getSamples());
+                final SamplesAdapter2 SamAdapter = new SamplesAdapter2(inflater.getContext(), ResearchFields, SampleFields, CurrentProb.getSamples());
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
                 ((SamplesPanelHolder) holder).SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
@@ -197,11 +276,11 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 ((SamplesPanelHolder) holder).btnAddSample.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                      //  List<Samples> insertlist = new ArrayList<>();
+                        //  List<Samples> insertlist = new ArrayList<>();
                         short newid = getPositionKey(CurrentProb.getSamples().size() - 1, CurrentProb.getSamples());
                         Map<Short, SamplesRest> insertlist = new HashMap<>();
-                       // insertlist.add(new Samples(CurrentProb.getId(), Sample.size() + 1));
-                        insertlist.put((short) (newid + 1),new SamplesRest(newid));
+                        // insertlist.add(new Samples(CurrentProb.getId(), Sample.size() + 1));
+                        insertlist.put((short) (newid + 1), new SamplesRest(newid));
                         SamAdapter.insertdata(insertlist);
                         ((SamplesPanelHolder) holder).SampleList.smoothScrollToPosition(SamAdapter.getItemCount() - 1);
                     }
@@ -210,14 +289,16 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 break;
         }
     }
-    private Short getPositionKey(int position, Map<Short, SamplesRest> Samples){
+
+    private Short getPositionKey(int position, Map<Short, SamplesRest> Samples) {
         return new ArrayList<Short>(Samples.keySet()).get(position);
     }
-    private Short getPositionKeyR(int position, Map<Short, ResearchRest> List){
+
+    private Short getPositionKeyR(int position, Map<Short, ResearchRest> List) {
         return new ArrayList<Short>(List.keySet()).get(position);
     }
 
-    private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt) {
+    private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt, Field f) {
         monthOfYear = monthOfYear + 1;
         dateAndTime.set(Calendar.YEAR, year);
         dateAndTime.set(Calendar.MONTH, monthOfYear);
@@ -233,6 +314,8 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
         if (dayOfMonth < 10) {
             formattedDayOfMonth = "0" + dayOfMonth;
         }
+
+        CurrentProb.getFields().put((short) f.getColumn_id(), formattedDayOfMonth + "-" + formattedMonth + "-" + year);
         Edt.setText(formattedDayOfMonth + "-" + formattedMonth + "-" + year);
     }
 

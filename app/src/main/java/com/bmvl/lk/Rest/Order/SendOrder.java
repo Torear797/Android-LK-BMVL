@@ -47,7 +47,7 @@ public class SendOrder {
 
 
     public SendOrder(byte type_id) {
-        this.type_id = (byte) (type_id + 1);
+        this.type_id = type_id;
 
         this.ecp = "";
         this.id = 0;
@@ -57,7 +57,7 @@ public class SendOrder {
     }
 
     public byte getType_id() {
-        return (byte) (type_id - 1);
+        return type_id;
     }
 
     public void setFields(Map<Short, String> fields) {
@@ -71,10 +71,6 @@ public class SendOrder {
 
     public TreeMap<Short, ProbyRest> getProby() {
         return this.proby;
-    }
-
-    public void setEnableNotifications(byte enableNotifications) {
-        this.enableNotifications = enableNotifications;
     }
 
     public Map<Short, String> getFields() {

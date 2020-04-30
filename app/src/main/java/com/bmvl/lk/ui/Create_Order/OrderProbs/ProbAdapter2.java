@@ -108,7 +108,7 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
         mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (CreateOrderActivity.order_id == 0 && (position >= 4 && position <= 7 || position == 22 || position == 23))
+                if (CreateOrderActivity.order_id == 1 && (position >= 4 && position <= 7 || position == 22 || position == 23))
                     return 1;
                 if (CreateOrderActivity.order_id == 3 && (position >= 4 && position <= 7))
                     return 1;
@@ -122,7 +122,7 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
 
 
         switch (CreateOrderActivity.order_id) {
-            case 0:
+            case 1:
                 final ProbFieldAdapter adapter = new ProbFieldAdapter(
                         inflater.getContext(),
                         ProbFields,

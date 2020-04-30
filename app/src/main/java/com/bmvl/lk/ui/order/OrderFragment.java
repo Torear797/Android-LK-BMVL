@@ -284,8 +284,11 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                         .setItems(R.array.order_types, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                byte choce = 0;
+                                byte choce = 1;
                                 switch (which) {
+                                    case 0:
+                                        choce = 1;
+                                        break;
                                     case 1:
                                         choce = 3;
                                         break;

@@ -61,7 +61,7 @@ public class ProbsFragment extends Fragment {
         };
 
         switch (CreateOrderActivity.order_id) {
-            case 0:
+            case 1:
                 AddProbFieldsType0();
                 final ProbAdapter2 adapter = new ProbAdapter2(getContext(), ProbFields, ResearchFields, onClickListener);
                 (adapter).setMode(Attributes.Mode.Single);

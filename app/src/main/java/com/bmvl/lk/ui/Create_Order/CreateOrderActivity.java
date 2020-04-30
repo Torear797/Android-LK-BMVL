@@ -55,8 +55,8 @@ public class CreateOrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_order);
 
-      //  order_id = getIntent().getByteExtra("id", (byte) 0);
-        order = new SendOrder(getIntent().getByteExtra("id", (byte) 0));
+        //  order_id = getIntent().getByteExtra("id", (byte) 0);
+        order = new SendOrder(getIntent().getByteExtra("id", (byte) 1));
         order_id = order.getType_id();
 
         final TextView OrderName = findViewById(R.id.Order_name);
@@ -72,7 +72,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
         LoadDefaultFields();
 
-        OrderName.setText(getResources().getStringArray(R.array.order_name)[order_id]);
+        OrderName.setText(getResources().getStringArray(R.array.order_name)[order_id - 1]);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         final GridLayoutManager mng_layout = new GridLayoutManager(this, 2);
@@ -80,9 +80,9 @@ public class CreateOrderActivity extends AppCompatActivity {
             @Override
             public int getSpanSize(int position) {
                 if (position == 1 || position == 2) return 1;
-                if (order_id == 0 && (position == 14 || position == 15))
+                if (order_id == 1 && (position == 14 || position == 15))
                     return 1;
-                if (order_id == 1 && (position == 13 || position == 14))
+                if (order_id == 3 && (position == 13 || position == 14))
                     return 1;
                 return 2;
             }
@@ -93,7 +93,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         switch (order_id) {
-            case 0:
+            case 1:
                 addFieldOrderType0();
                 cbox.setVisibility(View.VISIBLE);
                 Frame.setVisibility(View.VISIBLE);
@@ -190,15 +190,14 @@ public class CreateOrderActivity extends AppCompatActivity {
 
 
         //Заполнение отправляемого объекта
-        order.getFields().put((short)135, App.UserInfo.getClientName());
-        order.getFields().put((short)136, App.UserInfo.getContract_number());
-        order.getFields().put((short)137, App.UserInfo.getContract_date());
-        order.getFields().put((short)138, App.UserInfo.getAdress());
-        order.getFields().put((short)139, App.UserInfo.getInn());
-        order.getFields().put((short)140, App.UserInfo.getPhone());
-        order.getFields().put((short)141, App.UserInfo.getEmail());
-        order.getFields().put((short)142, App.UserInfo.getFIO() + ", " + App.UserInfo.getPosition() + ", действующий на основании " + getBasisString());
-
+        order.getFields().put((short) 135, App.UserInfo.getClientName());
+        order.getFields().put((short) 136, App.UserInfo.getContract_number());
+        order.getFields().put((short) 137, App.UserInfo.getContract_date());
+        order.getFields().put((short) 138, App.UserInfo.getAdress());
+        order.getFields().put((short) 139, App.UserInfo.getInn());
+        order.getFields().put((short) 140, App.UserInfo.getPhone());
+        order.getFields().put((short) 141, App.UserInfo.getEmail());
+        order.getFields().put((short) 142, App.UserInfo.getFIO() + ", " + App.UserInfo.getPosition() + ", действующий на основании " + getBasisString());
 
 
     } //Базовые поля
@@ -246,15 +245,15 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private void SendOrder(final View view) {
-    //    Map<Short, String> fields = new HashMap<>();   //Поля заявки
+        //    Map<Short, String> fields = new HashMap<>();   //Поля заявки
 
 //        for (Field f : Fields) {
 //            if (f.getColumn_id() != -1)
 //                fields.put((short)(f.getColumn_id()), f.getValue());
 //        }
-      //  Gson gson = new Gson();
+        //  Gson gson = new Gson();
 
-    //    order.setFields(fields);
+        //    order.setFields(fields);
         //String Jsonorder = gson.toJson(order);
 
         NetworkService.getInstance()

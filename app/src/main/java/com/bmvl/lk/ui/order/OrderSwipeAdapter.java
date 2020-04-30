@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -93,39 +94,16 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 //            }
 //        });
         //final int id = i;
-//        simpleViewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//              //  Orders.remove(simpleViewHolder.getLayoutPosition());
-//                List<Orders> insertlist = new ArrayList<>(Orders);
-//                insertlist.remove(simpleViewHolder.getLayoutPosition());
-//                updateList(insertlist);
-//              //  simpleViewHolder.swipeLayout.close();
-//                Snackbar.make(view, "Заявка удалена!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-//            }
-//        });
-//
-//        simpleViewHolder.buttonDownload.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Загрузка!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-//                //Toast.makeText(view.getContext(), "Загрузка!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        simpleViewHolder.buttonCopy.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//               /// Orders.add(0,new Orders(Orders.size()+1,Order.getUser_id(),Order.getType_id(),Order.getDate()));
-//                List<Orders> insertlist = new ArrayList<>();
-//                insertlist.add(new Orders(Orders.get(0).getId()+1,Order.getUser_id(),Order.getType_id(),Order.getDate()));
-//                insertdata(insertlist, true);
-//                //simpleViewHolder.swipeLayout.close();
-//                Snackbar.make(view, "Заявка скопирвоана!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-//              //  Toast.makeText(view.getContext(), "Заявка скопирвоана!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
 
+
+        if (Order.getType_id() != 1 && Order.getType_id() != 2 && Order.getType_id() != 3) {
+            simpleViewHolder.buttonDownload.setVisibility(View.GONE);
+
+            final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) simpleViewHolder.buttonDelete.getLayoutParams(); // получаем параметры
+            params.height = 130;
+            simpleViewHolder.buttonDelete.setLayoutParams(params);
+            simpleViewHolder.buttonOpen.setLayoutParams(params);
+        }
         mItemManger.bindView(simpleViewHolder.itemView, i);
     }
 
@@ -221,7 +199,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback, false);
         Orders.clear();
         Orders.addAll(newList);
-      //  CheckEmpty();
+        //  CheckEmpty();
         diffResult.dispatchUpdatesTo(this);
     }
 }

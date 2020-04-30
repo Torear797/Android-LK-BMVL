@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        app:tabMaxWidth="150dp"
-        app:tabMode="scrollable">
+        app:tabGravity="fill"
+        app:tabMode="fixed">
 
     </com.google.android.material.tabs.TabLayout>
 

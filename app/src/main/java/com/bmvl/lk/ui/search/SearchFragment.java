@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
@@ -19,7 +18,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class SearchFragment extends Fragment implements OnBackPressedListener {
 
@@ -39,7 +37,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
         final RecyclerView recyclerView = MyView.findViewById(R.id.recyclerView);
         final Button SearchButton = MyView.findViewById(R.id.search_button);
 
-        recyclerView.addItemDecoration(new SpacesItemDecoration( (byte)20,(byte)15));
+        recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
         recyclerView.setHasFixedSize(true);
 
         final GridLayoutManager mng_layout = new GridLayoutManager(getContext(), 2);
@@ -56,7 +54,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
 
         recyclerView.setLayoutManager(mng_layout);
 
-        SearchFieldsAdapter adapter = new SearchFieldsAdapter(getContext());
+        final SearchFieldsAdapter adapter = new SearchFieldsAdapter(getContext());
         recyclerView.setAdapter(adapter);
 
         SearchButton.setOnClickListener(new View.OnClickListener() {

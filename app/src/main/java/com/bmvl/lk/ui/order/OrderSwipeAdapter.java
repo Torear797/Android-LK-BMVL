@@ -21,6 +21,7 @@ import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.SimpleViewHolder> {
@@ -55,24 +56,9 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
     @Override
     public void onBindViewHolder(final SimpleViewHolder simpleViewHolder, int i) {
         final Orders Order = Orders.get(i);
-        simpleViewHolder.Number.setText("№ " + Order.getId());
-
-        int j = 1;
-        for (String itVar : OrderFragment.OrderTypes) {
-            if (j == Order.getType_id()) {
-                simpleViewHolder.Name.setText(itVar);
-                break;
-            }
-            j++;
-        }
-        j = 1;
-        for (String itVar : OrderFragment.OrderStatuses) {
-            if (j == Order.getStatus_id()) {
-                simpleViewHolder.Status.setText(itVar);
-                break;
-            }
-            j++;
-        }
+        simpleViewHolder.Number.setText(MessageFormat.format("№ {0}", Order.getId()));
+        simpleViewHolder.Name.setText(inflater.getContext().getResources().getStringArray(R.array.order_name)[Order.getType_id() - 1]);
+        simpleViewHolder.Status.setText(inflater.getContext().getResources().getStringArray(R.array.order_statuses)[Order.getStatus_id() - 1]);
         simpleViewHolder.Adres.setText(App.UserInfo.getAdress());
         simpleViewHolder.Person.setText(App.UserInfo.getFIO());
         simpleViewHolder.PersonStatus.setText(App.UserInfo.getPosition());
@@ -93,7 +79,6 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 //                Toast.makeText(MyContext, "DoubleClick", Toast.LENGTH_SHORT).show();
 //            }
 //        });
-        //final int id = i;
 
 
         if (Order.getType_id() != 1 && Order.getType_id() != 2 && Order.getType_id() != 3) {

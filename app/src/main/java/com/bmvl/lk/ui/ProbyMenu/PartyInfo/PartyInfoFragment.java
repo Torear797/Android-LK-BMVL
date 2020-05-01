@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +24,34 @@ public class PartyInfoFragment extends Fragment {
     private static List<Field> OriginFields = new ArrayList<>();
     private static byte TypeTabs;
 
+    private GridLayoutManager mng_layout; //Задает табличную разметку
+
+    private PartyInfoAdapter adapter;
+    private OriginAdapter adapter2;
+
     public PartyInfoFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (TypeTabs == 2) {
+            AddPartyInfoFields();
+            mng_layout = new GridLayoutManager(getContext(), 2);
+            mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if (position == 0 || position == 1 || position == 3 || position == 4 || position == 5 || position == 6)
+                        return 1;
+                    return 2;
+                }
+            });
+            adapter = new PartyInfoAdapter(getContext(), PartyInfoFields);
+        } else {
+            AddOriginField();
+            adapter2 = new OriginAdapter(getContext(), OriginFields);
+        }
     }
 
     public static PartyInfoFragment newInstance(byte Type) {
@@ -41,24 +69,10 @@ public class PartyInfoFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         if (TypeTabs == 2) {
-            AddPartyInfoFields();
-            final GridLayoutManager mng_layout = new GridLayoutManager(getContext(), 2);
-            mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    if (position == 0 || position == 1 || position == 3 || position == 4 || position == 5 || position == 6)
-                        return 1;
-                    return 2;
-                }
-            });
             recyclerView.setLayoutManager(mng_layout);
-            final PartyInfoAdapter adapter = new PartyInfoAdapter(getContext(), PartyInfoFields);
             recyclerView.setAdapter(adapter);
-        } else {
-            AddOriginField();
-            final OriginAdapter adapter2 = new OriginAdapter(getContext(), OriginFields);
+        } else
             recyclerView.setAdapter(adapter2);
-        }
 
         return MyView;
     }

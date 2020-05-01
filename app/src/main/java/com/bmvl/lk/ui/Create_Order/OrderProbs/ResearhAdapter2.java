@@ -28,12 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ResearhAdapter2  extends RecyclerSwipeAdapter<ResearhAdapter2.ResearchItemHolder> {
+public class ResearhAdapter2 extends RecyclerSwipeAdapter<ResearhAdapter2.ResearchItemHolder> {
     private LayoutInflater inflater;
     private RecyclerView.RecycledViewPool viewPool;
     private List<Field> ResearchField; //Поля Исследований
     private TreeMap<Short, ResearchRest> researches; //Исследования
-
 
     public ResearhAdapter2(Context context, List<Field> Fields, TreeMap<Short, ResearchRest> ResearchesLise) {
         this.inflater = LayoutInflater.from(context);
@@ -50,7 +49,7 @@ public class ResearhAdapter2  extends RecyclerSwipeAdapter<ResearhAdapter2.Resea
 
     @Override
     public void onBindViewHolder(ResearchItemHolder researchItemHolder, int i) {
-       // final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
+        // final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
         final ResearchFieldAdapter adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchField);
         researchItemHolder.ResearchList.setAdapter(adapter);
         researchItemHolder.ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
@@ -61,7 +60,8 @@ public class ResearhAdapter2  extends RecyclerSwipeAdapter<ResearhAdapter2.Resea
         researchItemHolder.HeaderInfo.setText(String.format("Цена: %d руб.", 0));
         mItemManger.bindView(researchItemHolder.itemView, i);
     }
-    private Short getPositionKey(int position){
+
+    private Short getPositionKey(int position) {
         return new ArrayList<Short>(researches.keySet()).get(position);
     }
 
@@ -82,7 +82,7 @@ public class ResearhAdapter2  extends RecyclerSwipeAdapter<ResearhAdapter2.Resea
         final SwipeLayout swipeLayout;
         final ImageView buttonDelete, ignorBtn;
 
-         ResearchItemHolder(@NonNull View itemView) {
+        ResearchItemHolder(@NonNull View itemView) {
             super(itemView);
             HeaderResearch = itemView.findViewById(R.id.Header);
             NumberResearch = itemView.findViewById(R.id.NumberProb);
@@ -99,22 +99,20 @@ public class ResearhAdapter2  extends RecyclerSwipeAdapter<ResearhAdapter2.Resea
             HeaderResearch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (ResearchList.getVisibility() == View.VISIBLE) {
+                    if (ResearchList.getVisibility() == View.VISIBLE)
                         swipeLayout.setSwipeEnabled(true);
-                        ResearchList.setVisibility(View.GONE);
-                    } else if(swipeLayout.getOpenStatus() == SwipeLayout.Status.Close){
+                    else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close)
                         swipeLayout.setSwipeEnabled(false);
-                        ResearchList.setVisibility(View.VISIBLE);
-                    }
+                    ResearchList.setVisibility(ResearchList.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 }
             });
 
             buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Удаление ииследования", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(view.getContext(), "Удаление ииследования", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 

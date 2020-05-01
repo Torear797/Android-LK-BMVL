@@ -82,7 +82,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                 if (position == 1 || position == 2) return 1;
                 if (order_id == 1 && (position == 14 || position == 15))
                     return 1;
-                if (order_id == 3 && (position == 13 || position == 14))
+                if (order_id == 4 && (position == 13 || position == 14))
                     return 1;
                 return 2;
             }
@@ -99,19 +99,19 @@ public class CreateOrderActivity extends AppCompatActivity {
                 Frame.setVisibility(View.VISIBLE);
                 loadFragment(ProbyMenuFragment.newInstance());
                 break;
-            case 3:
+            case 4:
                 addFieldOrderType1();
                 cbox.setVisibility(View.VISIBLE);
                 Frame.setVisibility(View.VISIBLE);
                 loadFragment(ProbyMenuFragment.newInstance());
                 break;
-            case 4:
+            case 5:
                 addFieldOrderType2();
                 break;
-            case 5:
+            case 6:
                 addFieldOrderType3();
                 break;
-            case 6:
+            case 7:
                 addFieldOrderType4();
                 break;
         }

@@ -10,9 +10,10 @@ import com.bmvl.lk.R;
 import com.google.android.material.button.MaterialButton;
 
 public class SamplesPanelHolder extends RecyclerView.ViewHolder {
-    final public MaterialButton btnAddSample;
-    final public RecyclerView SampleList;
-    final public TextView SamplePrice, Header;
+    public final MaterialButton btnAddSample;
+    public final RecyclerView SampleList;
+    public final TextView SamplePrice, Header;
+
     public SamplesPanelHolder(@NonNull View itemView) {
         super(itemView);
         btnAddSample = itemView.findViewById(R.id.addBtn);
@@ -21,6 +22,6 @@ public class SamplesPanelHolder extends RecyclerView.ViewHolder {
         Header = itemView.findViewById(R.id.HeaderRecyclerview);
         Header.setText("Образцы");
 
-       btnAddSample.setText("Добавить образец");
+        btnAddSample.setText("Добавить образец");
     }
 }

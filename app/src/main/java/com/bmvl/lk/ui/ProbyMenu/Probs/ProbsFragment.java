@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,20 +32,15 @@ public class ProbsFragment extends Fragment {
     private List<Field> ResearchFields = new ArrayList<>(); //Поля исследований
     private List<Field> SampleFields = new ArrayList<>(); //Поля Образцов
 
+    private ProbAdapter2 adapter;
+    private RecyclerView recyclerView;
+
     public ProbsFragment() {
     }
 
-    public static ProbsFragment newInstance() {
-        return new ProbsFragment();
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View MyView = inflater.inflate(R.layout.fragment_recyclerview, container, false);
-        final RecyclerView recyclerView = MyView.findViewById(R.id.List);
-        recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
-        final MaterialButton AddProbBtn = MyView.findViewById(R.id.addProb);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         AddProb();
 
@@ -63,21 +59,32 @@ public class ProbsFragment extends Fragment {
         switch (CreateOrderActivity.order_id) {
             case 1:
                 AddProbFieldsType0();
-                final ProbAdapter2 adapter = new ProbAdapter2(getContext(), ProbFields, ResearchFields, onClickListener);
-                (adapter).setMode(Attributes.Mode.Single);
-                recyclerView.setAdapter(adapter);
-                NewProbListener(AddProbBtn, adapter, recyclerView);
+                adapter = new ProbAdapter2(getContext(), ProbFields, ResearchFields, onClickListener);
                 break;
             case 2:
                 break;
-            case 3:
+            case 4:
                 AddProbFieldsType2();
-                final ProbAdapter2 adapter2 = new ProbAdapter2(getContext(), ProbFields, ResearchFields, SampleFields, onClickListener);
-                (adapter2).setMode(Attributes.Mode.Single);
-                recyclerView.setAdapter(adapter2);
-                NewProbListener(AddProbBtn, adapter2, recyclerView);
+                adapter = new ProbAdapter2(getContext(), ProbFields, ResearchFields, SampleFields, onClickListener);
                 break;
         }
+        (adapter).setMode(Attributes.Mode.Single);
+    }
+
+    public static ProbsFragment newInstance() {
+        return new ProbsFragment();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View MyView = inflater.inflate(R.layout.fragment_recyclerview, container, false);
+        recyclerView = MyView.findViewById(R.id.List);
+        recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
+        final MaterialButton AddProbBtn = MyView.findViewById(R.id.addProb);
+
+        recyclerView.setAdapter(adapter);
+        NewProbListener(AddProbBtn, adapter, recyclerView);
 
         return MyView;
     }

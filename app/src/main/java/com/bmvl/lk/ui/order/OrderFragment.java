@@ -50,7 +50,6 @@ import retrofit2.Response;
 
 public class OrderFragment extends Fragment implements OnBackPressedListener {
     private static List<Orders> Orders = new ArrayList<>();
-    public static String[] OrderTypes;
     public static String[] OrderStatuses;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -78,7 +77,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         View MyView = inflater.inflate(R.layout.fragment_order, container, false);
         if (Hawk.contains("OrdersList")) Orders = Hawk.get("OrdersList");
 
-        OrderTypes = getResources().getStringArray(R.array.order_name);
+      //  OrderTypes = getResources().getStringArray(R.array.order_name);
         OrderStatuses = getResources().getStringArray(R.array.order_statuses);
 
         recyclerView = MyView.findViewById(R.id.list);
@@ -186,7 +185,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                         List<Orders> insertlist = new ArrayList<>();
                                         Date currentDate = new Date();
                                         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
-                                        insertlist.add(new Orders(response.body().getOrderId(),order.getUser_id(),order.getType_id(), dateFormat.format(currentDate)));
+                                        insertlist.add(new Orders(response.body().getOrderId(),order.getUser_id(),order.getType_id(),order.getStatus_id(), dateFormat.format(currentDate)));
                                         OrderAdapter.insertdata(insertlist, true);
                                         Snackbar.make(Objects.requireNonNull(getView()), "Заявка скопирована!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                     }
@@ -290,16 +289,16 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                         choce = 1;
                                         break;
                                     case 1:
-                                        choce = 3;
-                                        break;
-                                    case 2:
                                         choce = 4;
                                         break;
-                                    case 3:
+                                    case 2:
                                         choce = 5;
                                         break;
-                                    case 4:
+                                    case 3:
                                         choce = 6;
+                                        break;
+                                    case 4:
+                                        choce = 7;
                                         break;
                                 }
                                 Intent intent = new Intent(getActivity(), CreateOrderActivity.class);

@@ -71,184 +71,181 @@ public class FieldsAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         final Field f = CreateOrderActivity.Fields.get(position);
 
-        if (f.getType() == 0) {
-            if (f.getInputType() == InputType.TYPE_NULL) {
-                ((TextViewHolder) holder).Layout.setBoxBackgroundColor(inflater.getContext().getResources().getColor(R.color.field_inactive));
-            }
-
-            ((TextViewHolder) holder).Layout.setHint(f.getHint());
-            ((TextViewHolder) holder).field.setInputType(f.getInputType());
-            ((TextViewHolder) holder).field.setText(f.getValue());
-
-            if (f.getIcon() != null) {
-                ((TextViewHolder) holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
-                ((TextViewHolder) holder).Layout.setEndIconDrawable(f.getIcon());
-
-                if (f.isData()) {
-                    final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
-                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                            ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field, position);
-                        }
-                    };
-                    ((TextViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
-                                    dateAndTime.get(Calendar.YEAR),
-                                    dateAndTime.get(Calendar.MONTH),
-                                    dateAndTime.get(Calendar.DAY_OF_MONTH))
-                                    .show();
-                        }
-                    });
-
-                }
-            }
-
-            if (f.isDoubleSize()) {
-                ((TextViewHolder) holder).field.setGravity(Gravity.START | Gravity.TOP);
-                ((TextViewHolder) holder).field.setMinLines(4);
-                ((TextViewHolder) holder).field.setLines(6);
-                ((TextViewHolder) holder).field.setSingleLine(false);
-                ((TextViewHolder) holder).field.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-            }
-
-            ((TextViewHolder) holder).field.addTextChangedListener(new TextWatcher(){
-                @Override
-                public void afterTextChanged(Editable s) {
-                    CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
-                    CreateOrderActivity.order.getFields().put((short)f.getColumn_id(), String.valueOf(s));
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-            });
-
-        } else if (f.getType() == 1) {
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            ((SpinerHolder) holder).spiner.setAdapter(adapter);
-            ((SpinerHolder) holder).txtHint.setText(f.getHint());
-            CreateOrderActivity.order.getFields().put((short)f.getColumn_id(), String.valueOf(((SpinerHolder) holder).spiner.getSelectedItem()));
-
-            AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                    // Получаем выбранный объект
-                    String item = (String)parent.getItemAtPosition(position);
-                    CreateOrderActivity.Fields.get(position).setValue(String.valueOf(item));
-                    CreateOrderActivity.order.getFields().put((short)f.getColumn_id(), String.valueOf(item));
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            };
-            ((SpinerHolder) holder).spiner.setOnItemSelectedListener(itemSelectedListener);
-
-        } else if (f.getType() == 2) {
-
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            ((OriginalDocHolder) holder).spiner.setAdapter(adapter);
-            ((OriginalDocHolder) holder).txtHint.setText(f.getHint());
-
-            CreateOrderActivity.order.getFields().put(App.OrderInfo.getOD_ID(), String.valueOf(App.OrderInfo.getOD_Value()));
-
-            switch (App.OrderInfo.getOD_ID()){
-                case 52:
-                    ((OriginalDocHolder) holder).spiner.setSelection(0);
-                    ((OriginalDocHolder) holder).fieldAdres.setText(App.OrderInfo.getOD_Value());
-                    break;
-                case 63:
-                    ((OriginalDocHolder) holder).spiner.setSelection(1);
-                    ((OriginalDocHolder) holder).fieldAdres.setText(App.OrderInfo.getOD_Value());
-                    break;
-                case 64:
-                    ((OriginalDocHolder) holder).spiner.setSelection(2);
-                    ((OriginalDocHolder) holder).fieldEmail.setText(App.OrderInfo.getOD_Value());
-                    break;
-            }
-
-            ((OriginalDocHolder) holder).spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                public void onItemSelected(AdapterView<?> parent, View itemSelected, int selectedItemPosition, long selectedId) {
-
-                    if (selectedItemPosition == 0 || selectedItemPosition == 1) {
-                        ((OriginalDocHolder) holder).fieldEmail.setVisibility(View.GONE);
-                        ((OriginalDocHolder) holder).LayoutEmail.setVisibility(View.GONE);
-                    }
-
-                    switch (selectedItemPosition){
-                        case 0:
-                            ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.Doc_Face));
-                            f.setColumn_id(52);
-                            break;
-                        case 1:
-                            ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.adres));
-                            f.setColumn_id(63);
-                            break;
-                        case 2:
-                            ((OriginalDocHolder) holder).fieldEmail.setVisibility(View.VISIBLE);
-                            ((OriginalDocHolder) holder).LayoutEmail.setVisibility(View.VISIBLE);
-                            ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.adres));
-                            f.setColumn_id(64);
-                            break;
-                    }
-                }
-
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });
-
-
-            ((OriginalDocHolder) holder).fieldEmail.addTextChangedListener(new TextWatcher(){
-                @Override
-                public void afterTextChanged(Editable s) {
-                    CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
-                    CreateOrderActivity.order.getFields().put((short)f.getColumn_id(), String.valueOf(s));
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-            });
-
-            ((OriginalDocHolder) holder).fieldAdres.addTextChangedListener(new TextWatcher(){
-                @Override
-                public void afterTextChanged(Editable s) {
-                    CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
-                    CreateOrderActivity.order.getFields().put((short)f.getColumn_id(), String.valueOf(s));
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-            });
-        }
-
         switch (f.getType()) {
-            case 3:
+            case 0://Текстовое поле
+                if (f.getInputType() == InputType.TYPE_NULL)
+                    ((TextViewHolder) holder).Layout.setBoxBackgroundColor(inflater.getContext().getResources().getColor(R.color.field_inactive));
+
+                ((TextViewHolder) holder).Layout.setHint(f.getHint());
+                ((TextViewHolder) holder).field.setInputType(f.getInputType());
+                ((TextViewHolder) holder).field.setText(f.getValue());
+
+                if (f.getIcon() != null) {
+                    ((TextViewHolder) holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
+                    ((TextViewHolder) holder).Layout.setEndIconDrawable(f.getIcon());
+
+                    if (f.isData()) {
+                        final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field, position);
+                            }
+                        };
+                        ((TextViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
+                                        dateAndTime.get(Calendar.YEAR),
+                                        dateAndTime.get(Calendar.MONTH),
+                                        dateAndTime.get(Calendar.DAY_OF_MONTH))
+                                        .show();
+                            }
+                        });
+
+                    }
+                }
+
+                if (f.isDoubleSize()) {
+                    ((TextViewHolder) holder).field.setGravity(Gravity.START | Gravity.TOP);
+                    ((TextViewHolder) holder).field.setMinLines(4);
+                    ((TextViewHolder) holder).field.setLines(6);
+                    ((TextViewHolder) holder).field.setSingleLine(false);
+                    ((TextViewHolder) holder).field.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+                }
+
+                ((TextViewHolder) holder).field.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
+                        CreateOrderActivity.order.getFields().put((short) f.getColumn_id(), String.valueOf(s));
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
+                break;
+            case 1: //Одиночный спинер
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ((SpinerHolder) holder).spiner.setAdapter(adapter);
+                ((SpinerHolder) holder).txtHint.setText(f.getHint());
+                CreateOrderActivity.order.getFields().put((short) f.getColumn_id(), String.valueOf(((SpinerHolder) holder).spiner.getSelectedItem()));
+
+                AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        // Получаем выбранный объект
+                        String item = (String) parent.getItemAtPosition(position);
+                        CreateOrderActivity.Fields.get(position).setValue(String.valueOf(item));
+                        CreateOrderActivity.order.getFields().put((short) f.getColumn_id(), String.valueOf(item));
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                };
+                ((SpinerHolder) holder).spiner.setOnItemSelectedListener(itemSelectedListener);
+                break;
+            case 2: //Оригиналы документов
+                ArrayAdapter<CharSequence> adapterOriginalDoc = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
+                adapterOriginalDoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ((OriginalDocHolder) holder).spiner.setAdapter(adapterOriginalDoc);
+                ((OriginalDocHolder) holder).txtHint.setText(f.getHint());
+
+                CreateOrderActivity.order.getFields().put(App.OrderInfo.getOD_ID(), String.valueOf(App.OrderInfo.getOD_Value()));
+
+                switch (App.OrderInfo.getOD_ID()) {
+                    case 52:
+                        ((OriginalDocHolder) holder).spiner.setSelection(0);
+                        ((OriginalDocHolder) holder).fieldAdres.setText(App.OrderInfo.getOD_Value());
+                        break;
+                    case 63:
+                        ((OriginalDocHolder) holder).spiner.setSelection(1);
+                        ((OriginalDocHolder) holder).fieldAdres.setText(App.OrderInfo.getOD_Value());
+                        break;
+                    case 64:
+                        ((OriginalDocHolder) holder).spiner.setSelection(2);
+                        ((OriginalDocHolder) holder).fieldEmail.setText(App.OrderInfo.getOD_Value());
+                        break;
+                }
+
+                ((OriginalDocHolder) holder).spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    public void onItemSelected(AdapterView<?> parent, View itemSelected, int selectedItemPosition, long selectedId) {
+
+                        if (selectedItemPosition == 0 || selectedItemPosition == 1) {
+                            ((OriginalDocHolder) holder).fieldEmail.setVisibility(View.GONE);
+                            ((OriginalDocHolder) holder).LayoutEmail.setVisibility(View.GONE);
+                        }
+
+                        switch (selectedItemPosition) {
+                            case 0:
+                                ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.Doc_Face));
+                                f.setColumn_id(52);
+                                break;
+                            case 1:
+                                ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.adres));
+                                f.setColumn_id(63);
+                                break;
+                            case 2:
+                                ((OriginalDocHolder) holder).fieldEmail.setVisibility(View.VISIBLE);
+                                ((OriginalDocHolder) holder).LayoutEmail.setVisibility(View.VISIBLE);
+                                ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.adres));
+                                f.setColumn_id(64);
+                                break;
+                        }
+                    }
+
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
+
+
+                ((OriginalDocHolder) holder).fieldEmail.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
+                        CreateOrderActivity.order.getFields().put((short) f.getColumn_id(), String.valueOf(s));
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
+
+                ((OriginalDocHolder) holder).fieldAdres.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
+                        CreateOrderActivity.order.getFields().put((short) f.getColumn_id(), String.valueOf(s));
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
+                break;
+            case 3: //Свич
                 ((SwitchHolder) holder).switchButton.setText(String.format("%s  ", f.getHint()));
-                CreateOrderActivity.order.getFields().put((short)f.getColumn_id(), String.valueOf(((SwitchHolder) holder).switchButton.isChecked()));
+                CreateOrderActivity.order.getFields().put((short) f.getColumn_id(), String.valueOf(((SwitchHolder) holder).switchButton.isChecked()));
 
                 ((SwitchHolder) holder).switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        CreateOrderActivity.Fields.get(position).setValue(String.valueOf(isChecked));
-                        CreateOrderActivity.order.getFields().put((short)f.getColumn_id(), String.valueOf(isChecked));
+                     //   CreateOrderActivity.Fields.get(position).setValue(String.valueOf(isChecked));
+                        CreateOrderActivity.order.getFields().put((short) f.getColumn_id(), String.valueOf(isChecked));
                     }
                 });
                 break;

@@ -100,13 +100,11 @@ public class SamplesAdapter2 extends RecyclerSwipeAdapter<SamplesAdapter2.Simple
             head.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (SampleList.getVisibility() == View.VISIBLE) {
+                    if (SampleList.getVisibility() == View.VISIBLE)
                         swipeLayout.setSwipeEnabled(true);
-                        SampleList.setVisibility(View.GONE);
-                    } else if(swipeLayout.getOpenStatus() == SwipeLayout.Status.Close){
+                    else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close)
                         swipeLayout.setSwipeEnabled(false);
-                        SampleList.setVisibility(View.VISIBLE);
-                    }
+                    SampleList.setVisibility(SampleList.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 }
             });
 
@@ -121,7 +119,7 @@ public class SamplesAdapter2 extends RecyclerSwipeAdapter<SamplesAdapter2.Simple
 
     public void insertdata(Map<Short, SamplesRest> insertList) {
         SamplesDiffUtilCallback diffUtilCallback = new SamplesDiffUtilCallback(Samples, insertList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback,false);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
         Samples.putAll(insertList);
         diffResult.dispatchUpdatesTo(this);
 

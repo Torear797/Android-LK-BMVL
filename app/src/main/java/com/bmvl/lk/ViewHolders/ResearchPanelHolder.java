@@ -15,9 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ResearchPanelHolder extends RecyclerView.ViewHolder {
-     public final MaterialButton btnAddReserch;
-     public final RecyclerView ResearchList;
-     public final TextView Header;
+    public final MaterialButton btnAddReserch;
+    public final RecyclerView ResearchList;
+    public final TextView Header;
+
     public ResearchPanelHolder(@NonNull View itemView) {
         super(itemView);
         btnAddReserch = itemView.findViewById(R.id.addBtn);

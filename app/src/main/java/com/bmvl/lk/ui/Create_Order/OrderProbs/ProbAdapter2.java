@@ -1,9 +1,13 @@
 package com.bmvl.lk.ui.Create_Order.OrderProbs;
 
 import android.content.Context;
+import android.transition.Fade;
+import android.transition.Transition;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -81,8 +85,8 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
         simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", getPositionKey(i)));
         String nameMaterial = "не выбран";
         assert CurrentProb != null;
-        if(CurrentProb.getFields().containsKey((short)5))
-            nameMaterial = CurrentProb.getFields().get((short)5);
+        if (CurrentProb.getFields().containsKey((short) 5))
+            nameMaterial = CurrentProb.getFields().get((short) 5);
         simpleViewHolder.infoProb.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", nameMaterial, CurrentProb.getSamples().size()));
         simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
 
@@ -110,7 +114,7 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
             public int getSpanSize(int position) {
                 if (CreateOrderActivity.order_id == 1 && (position >= 4 && position <= 7 || position == 22 || position == 23))
                     return 1;
-                if (CreateOrderActivity.order_id == 3 && (position >= 4 && position <= 7))
+                if (CreateOrderActivity.order_id == 4 && (position >= 4 && position <= 7))
                     return 1;
                 return 2;
             }
@@ -132,7 +136,7 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
                 );
                 simpleViewHolder.ProbList.setAdapter(adapter);
                 break;
-            case 3:
+            case 4:
                 final ProbFieldAdapter adapter2 = new ProbFieldAdapter(
                         inflater.getContext(),
                         ProbFields,
@@ -167,14 +171,12 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
             head.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    if (ProbList.getVisibility() == View.VISIBLE) {
+                    if (ProbList.getVisibility() == View.VISIBLE)
                         swipeLayout.setSwipeEnabled(true);
-                        ProbList.setVisibility(View.GONE);
-                    } else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close) {
+                    else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close)
                         swipeLayout.setSwipeEnabled(false);
-                        ProbList.setVisibility(View.VISIBLE);
-                    }
+
+                    ProbList.setVisibility(ProbList.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 }
             });
 

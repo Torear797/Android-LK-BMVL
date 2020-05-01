@@ -1,7 +1,5 @@
 package com.bmvl.lk.ui.ProbyMenu;
 
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +13,11 @@ import com.bmvl.lk.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class ProbyMenuFragment extends Fragment {
 
     public ProbyMenuFragment() {
-
     }
 
     public static ProbyMenuFragment newInstance() {
@@ -35,10 +31,7 @@ public class ProbyMenuFragment extends Fragment {
 
         final ViewPager2 viewPager = MyView.findViewById(R.id.viewPager);
         final TabLayout tabLayout = MyView.findViewById(R.id.tabLayout);
-        //final String[] tabTitles = getResources().getStringArray(R.array.Menu_proby);
-        //final int[] tabIcon
-
-        final int[] myImageList = new int[]{R.drawable.ic_prob, R.drawable.ic_origin,R.drawable.ic_info_black_24dp, R.drawable.ic_security_black_24dp};
+        final int[] myImageList = new int[]{R.drawable.ic_prob, R.drawable.ic_origin, R.drawable.ic_info_black_24dp, R.drawable.ic_security_black_24dp};
 
         viewPager.setAdapter(createAdapter());
 
@@ -51,11 +44,12 @@ public class ProbyMenuFragment extends Fragment {
                     }
                 }).attach();
 
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            public void onPageSelected(int position) {
-                Objects.requireNonNull(viewPager.getAdapter()).notifyDataSetChanged();
-            }
-        });
+        viewPager.setOffscreenPageLimit(4);
+//        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+//            public void onPageSelected(int position) {
+//                Objects.requireNonNull(viewPager.getAdapter()).notifyDataSetChanged();
+//            }
+//        });
 
         return MyView;
     }

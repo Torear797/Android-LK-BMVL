@@ -1,13 +1,9 @@
-package com.bmvl.lk.ui.Create_Order.OrderProbs;
+package com.bmvl.lk.ui.ProbyMenu.Probs;
 
 import android.content.Context;
-import android.transition.Fade;
-import android.transition.Transition;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,8 +18,6 @@ import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.bmvl.lk.ui.Create_Order.Field;
-import com.bmvl.lk.ui.ProbyMenu.Probs.ProbDiffUtilCallback;
-import com.bmvl.lk.ui.ProbyMenu.Probs.ProbFieldAdapter;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -32,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHolder> {
+public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHolder> {
     private static Map<Short, ProbyRest> Probs; //Пробы
     private LayoutInflater inflater;
     private RecyclerView.RecycledViewPool viewPool;
@@ -43,7 +37,7 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
 
     private OnProbClickListener OnProbClickListener; //Слушатель нажатий кнопок
 
-    public ProbAdapter2(Context context, List<Field> Fields, List<Field> ResFields, OnProbClickListener Listener) {
+    public ProbAdapter(Context context, List<Field> Fields, List<Field> ResFields, OnProbClickListener Listener) {
         this.inflater = LayoutInflater.from(context);
         Probs = CreateOrderActivity.order.getProby();
         this.OnProbClickListener = Listener;
@@ -53,7 +47,7 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
         ResearchFields = ResFields;
     }
 
-    public ProbAdapter2(Context context, List<Field> Fields, List<Field> ResFields, List<Field> sampleFields, OnProbClickListener Listener) {
+    public ProbAdapter(Context context, List<Field> Fields, List<Field> ResFields, List<Field> sampleFields, OnProbClickListener Listener) {
         this.inflater = LayoutInflater.from(context);
         Probs = CreateOrderActivity.order.getProby();
         this.OnProbClickListener = Listener;
@@ -65,7 +59,7 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
     }
 
     public interface OnProbClickListener {
-        void onDeletedProb();
+        void onDeletedProb(short id);
 
         void onCopyProb();
     }
@@ -73,7 +67,7 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_prob, parent, false);
-        return new ProbAdapter2.SimpleViewHolder(view);
+        return new ProbAdapter.SimpleViewHolder(view);
     }
 
     @Override
@@ -99,7 +93,9 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
     }
 
     private Short getPositionKey(int position) {
+        if(Probs.size() > 0)
         return new ArrayList<Short>(Probs.keySet()).get(position);
+        else return 0;
     }
 
     @Override
@@ -183,16 +179,18 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    OnProbClickListener.onDeletedProb();
+                    swipeLayout.close();
+                    OnProbClickListener.onDeletedProb(getPositionKey(getLayoutPosition()));
                 }
             });
 
-            buttonCopy.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    OnProbClickListener.onCopyProb();
-                }
-            });
+//            buttonCopy.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    OnProbClickListener.onCopyProb();
+//                }
+//            });
+            buttonCopy.setVisibility(View.GONE);
         }
     }
 
@@ -200,6 +198,14 @@ public class ProbAdapter2 extends RecyclerSwipeAdapter<ProbAdapter2.SimpleViewHo
         ProbDiffUtilCallback diffUtilCallback = new ProbDiffUtilCallback(Probs, insertList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
         Probs.putAll(insertList);
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    public void updateList(Map<Short, ProbyRest> newList) {
+        ProbDiffUtilCallback diffUtilCallback = new ProbDiffUtilCallback(Probs, newList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
+        Probs.clear();
+        Probs.putAll(newList);
         diffResult.dispatchUpdatesTo(this);
     }
 }

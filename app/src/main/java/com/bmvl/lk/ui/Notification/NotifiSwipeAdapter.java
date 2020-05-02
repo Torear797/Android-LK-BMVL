@@ -58,12 +58,9 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
             simpleViewHolder.Data.setTextColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
             simpleViewHolder.Event.setTextColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
             simpleViewHolder.Order.setTextColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
-        } else {
-            simpleViewHolder.status.setImageResource(R.drawable.ic_new_notifi);
-            simpleViewHolder.Data.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
-            simpleViewHolder.Event.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
-            simpleViewHolder.Order.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
-        }
+        } else
+            setNotifiIsRead(simpleViewHolder);
+
 
         simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         simpleViewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
@@ -76,6 +73,12 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
         mItemManger.bindView(simpleViewHolder.itemView, i);
     }
 
+    private void setNotifiIsRead(NotifiSwipeAdapter.SimpleViewHolder simpleViewHolder){
+        simpleViewHolder.status.setImageResource(R.drawable.ic_new_notifi);
+        simpleViewHolder.Data.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
+        simpleViewHolder.Event.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
+        simpleViewHolder.Order.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
+    }
 
     @Override
     public int getItemCount() {
@@ -128,7 +131,6 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
                 @Override
                 public void onClick(View v) {
                     Notifications Notify = Notifi.get(getLayoutPosition());
-                   // Notify.setStatus(0);
                     swipeLayout.close();
                     if(Notify.getStatus() == 1)
                     onNotifyClickListener.onNotifyClick(Notify.getId());

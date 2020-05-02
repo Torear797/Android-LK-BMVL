@@ -67,4 +67,8 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("orders/copyOrder")
     Call<AnswerCopyOrder> CopyOrder(@Field("token") String token, @Field("id") int id);
+
+    @FormUrlEncoded
+    @POST("orders/phpWord")
+    Call<AnswerDownloadOrder> DOWNLOAD_ORDER_CALL(@Field("token") String token, @Field("id") int id);
 }

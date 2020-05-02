@@ -17,22 +17,23 @@ import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.bmvl.lk.ui.Create_Order.Field;
-import com.bmvl.lk.ui.Create_Order.OrderProbs.ProbAdapter2;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 public class ProbsFragment extends Fragment {
     private List<Field> ProbFields = new ArrayList<>(); //Поля пробы
     private List<Field> ResearchFields = new ArrayList<>(); //Поля исследований
     private List<Field> SampleFields = new ArrayList<>(); //Поля Образцов
 
-    private ProbAdapter2 adapter;
+    private ProbAdapter adapter;
     private RecyclerView recyclerView;
 
     public ProbsFragment() {
@@ -44,10 +45,15 @@ public class ProbsFragment extends Fragment {
 
         AddProb();
 
-        ProbAdapter2.OnProbClickListener onClickListener = new ProbAdapter2.OnProbClickListener() {
+        ProbAdapter.OnProbClickListener onClickListener = new ProbAdapter.OnProbClickListener() {
             @Override
-            public void onDeletedProb() {
-                Toast.makeText(getContext(), "Удаление пробы", Toast.LENGTH_SHORT).show();
+            public void onDeletedProb(short id) {
+                adapter.closeAllItems();
+                TreeMap<Short, ProbyRest> insertlist = new TreeMap<>(CreateOrderActivity.order.getProby());
+                insertlist.remove(id);
+                adapter.updateList(insertlist);
+               // Snackbar.make(Objects.requireNonNull(getView()), "Проба №"+id+" удалена!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
             }
 
             @Override
@@ -59,13 +65,13 @@ public class ProbsFragment extends Fragment {
         switch (CreateOrderActivity.order_id) {
             case 1:
                 AddProbFieldsType0();
-                adapter = new ProbAdapter2(getContext(), ProbFields, ResearchFields, onClickListener);
+                adapter = new ProbAdapter(getContext(), ProbFields, ResearchFields, onClickListener);
                 break;
             case 2:
                 break;
             case 4:
                 AddProbFieldsType2();
-                adapter = new ProbAdapter2(getContext(), ProbFields, ResearchFields, SampleFields, onClickListener);
+                adapter = new ProbAdapter(getContext(), ProbFields, ResearchFields, SampleFields, onClickListener);
                 break;
         }
         (adapter).setMode(Attributes.Mode.Single);
@@ -89,7 +95,7 @@ public class ProbsFragment extends Fragment {
         return MyView;
     }
 
-    private void NewProbListener(final MaterialButton AddProbBtn, final ProbAdapter2 adapter, final RecyclerView recyclerView) {
+    private void NewProbListener(final MaterialButton AddProbBtn, final ProbAdapter adapter, final RecyclerView recyclerView) {
         AddProbBtn.setVisibility(View.VISIBLE);
         AddProbBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +111,9 @@ public class ProbsFragment extends Fragment {
     }
 
     private Short getPositionKey(int position, Map<Short, ProbyRest> Probs) {
+        if(Probs.size() > 0)
         return new ArrayList<Short>(Probs.keySet()).get(position);
+        else return 0;
     }
 
     private void AddProb() {

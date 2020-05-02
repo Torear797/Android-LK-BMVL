@@ -29,10 +29,9 @@ import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.bmvl.lk.ui.Create_Order.Field;
-import com.bmvl.lk.ui.Create_Order.OrderProbs.ResearhAdapter2;
-import com.bmvl.lk.ui.Create_Order.OrderProbs.SamplesAdapter2;
+import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
+import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -235,7 +234,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
             case 6:
-                final ResearhAdapter2 Adapter = new ResearhAdapter2(inflater.getContext(), ResearchFields, CurrentProb.getSamples().get((short) 1).getResearches());
+                final ResearhAdapter Adapter = new ResearhAdapter(inflater.getContext(), ResearchFields, CurrentProb.getSamples().get((short) 1).getResearches());
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
@@ -260,7 +259,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 break;
             case 7:
-                final SamplesAdapter2 SamAdapter = new SamplesAdapter2(inflater.getContext(), ResearchFields, SampleFields, CurrentProb.getSamples());
+                final SamplesAdapter SamAdapter = new SamplesAdapter(inflater.getContext(), ResearchFields, SampleFields, CurrentProb.getSamples());
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
                 ((SamplesPanelHolder) holder).SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
@@ -284,7 +283,9 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     }
 
     private Short getPositionKey(int position, Map<Short, SamplesRest> Samples) {
+        if(Samples.size() > 0)
         return new ArrayList<Short>(Samples.keySet()).get(position);
+        else return 0;
     }
 
     private Short getPositionKeyR(int position, Map<Short, ResearchRest> List) {

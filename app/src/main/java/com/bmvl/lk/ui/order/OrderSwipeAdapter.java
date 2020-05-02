@@ -42,7 +42,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 
         void onCopyOrder(Orders order);
 
-        void onDownloadOrder(Orders order);
+        void onDownloadOrder(int id);
 
         void onEditOrder(Orders order);
     }
@@ -159,7 +159,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
                 public void onClick(View view) {
                     Orders order = Orders.get(getLayoutPosition());
                     swipeLayout.close();
-                    onOrderClickListener.onDownloadOrder(order);
+                    onOrderClickListener.onDownloadOrder(order.getId());
                 }
             });
         }
@@ -171,7 +171,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 
     public void insertdata(List<Orders> insertList, boolean isCopy) {
         OrdersDiffUtilCallback diffUtilCallback = new OrdersDiffUtilCallback(Orders, insertList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback, false);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
         if (isCopy)
             Orders.addAll(0, insertList);
         else Orders.addAll(insertList);
@@ -181,7 +181,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 
     public void updateList(List<Orders> newList) {
         OrdersDiffUtilCallback diffUtilCallback = new OrdersDiffUtilCallback(Orders, newList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback, false);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
         Orders.clear();
         Orders.addAll(newList);
         //  CheckEmpty();

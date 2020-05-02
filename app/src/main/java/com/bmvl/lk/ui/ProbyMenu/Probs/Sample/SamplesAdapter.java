@@ -1,4 +1,4 @@
-package com.bmvl.lk.ui.Create_Order.OrderProbs;
+package com.bmvl.lk.ui.ProbyMenu.Probs.Sample;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,7 +17,6 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.Create_Order.Field;
-import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesDiffUtilCallback;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -27,16 +26,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class SamplesAdapter2 extends RecyclerSwipeAdapter<SamplesAdapter2.SimpleViewHolder> {
+public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleViewHolder> {
     private LayoutInflater inflater;
     private TreeMap<Short, SamplesRest> Samples; //Образцы
-
     private List<Field> ResearchsField; //Поля исследований
     private List<Field> SamplesField; //Поля образцов
-
     private RecyclerView.RecycledViewPool viewPool;
 
-    public SamplesAdapter2(Context context, List<Field> Researchs, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList ) {
+    public SamplesAdapter(Context context, List<Field> Researchs, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList ) {
         this.inflater = LayoutInflater.from(context);
         ResearchsField = Researchs;
         SamplesField = Samples;
@@ -53,13 +50,15 @@ public class SamplesAdapter2 extends RecyclerSwipeAdapter<SamplesAdapter2.Simple
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final SamplesRest CurrentSample = Samples.get(getPositionKey(i));
 
-        final SamplesFieldAdapter2 adapter = new SamplesFieldAdapter2(inflater.getContext(), ResearchsField, SamplesField, CurrentSample);
+        final SamplesFieldAdapter adapter = new SamplesFieldAdapter(inflater.getContext(), ResearchsField, SamplesField, CurrentSample);
         simpleViewHolder.SampleList.setAdapter(adapter);
         simpleViewHolder.SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
         simpleViewHolder.SampleList.setRecycledViewPool(viewPool);
 
         simpleViewHolder.NumberSample.setText(MessageFormat.format("№ {0}", getPositionKey(i)));
         simpleViewHolder.Info.setText("Образец");
+
+        simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         mItemManger.bindView(simpleViewHolder.itemView, i);
     }
 
@@ -74,10 +73,12 @@ public class SamplesAdapter2 extends RecyclerSwipeAdapter<SamplesAdapter2.Simple
     }
 
     private Short getPositionKey(int position) {
+        if(Samples.size() > 0)
         return new ArrayList<Short>(Samples.keySet()).get(position);
+        else return 0;
     }
 
-    static class SimpleViewHolder extends RecyclerView.ViewHolder {
+     class SimpleViewHolder extends RecyclerView.ViewHolder {
         final ConstraintLayout head;
         final TextView NumberSample, Info;
         final SwipeLayout swipeLayout;
@@ -95,8 +96,6 @@ public class SamplesAdapter2 extends RecyclerSwipeAdapter<SamplesAdapter2.Simple
             buttonDelete = itemView.findViewById(R.id.trash);
             createBtn = itemView.findViewById(R.id.create);
 
-            createBtn.setVisibility(View.GONE);
-
             head.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -111,7 +110,19 @@ public class SamplesAdapter2 extends RecyclerSwipeAdapter<SamplesAdapter2.Simple
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(view.getContext(), "Удаление Образца", Toast.LENGTH_SHORT).show();
+                    swipeLayout.close();
+                    TreeMap<Short, SamplesRest> insertlist = new TreeMap<>(Samples);
+                    insertlist.remove(getPositionKey(getLayoutPosition()));
+                    updateList(insertlist);
+                  //  Toast.makeText(view.getContext(), "Удаление Образца", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            createBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    swipeLayout.close();
+                    Toast.makeText(view.getContext(), "Копирование Образца", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -122,6 +133,13 @@ public class SamplesAdapter2 extends RecyclerSwipeAdapter<SamplesAdapter2.Simple
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
         Samples.putAll(insertList);
         diffResult.dispatchUpdatesTo(this);
+    }
 
+    public void updateList(Map<Short, SamplesRest> newList) {
+        SamplesDiffUtilCallback diffUtilCallback = new SamplesDiffUtilCallback(Samples, newList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
+        Samples.clear();
+        Samples.putAll(newList);
+        diffResult.dispatchUpdatesTo(this);
     }
 }

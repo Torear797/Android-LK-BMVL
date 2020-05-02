@@ -305,7 +305,7 @@
     <string name="adres">Адрес</string>
     <string name="Select_btn">Обзор…</string>
     <string name="file_no_select">Файл не выбран</string>
-    <string name="accept">Согласен с условиями</string>
+    <string name="accept">Согласен с <a href="http://192.168.0.69/terms">условиями</a></string>
 
     <string name="add_prob">Добавить пробу</string>
     <string name="for_all" />

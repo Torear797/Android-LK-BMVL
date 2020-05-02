@@ -1,4 +1,4 @@
-package com.bmvl.lk.ui.Create_Order.OrderProbs;
+package com.bmvl.lk.ui.ProbyMenu.Probs.Sample;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,6 +15,7 @@ import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
 import com.daimajia.swipe.util.Attributes;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SamplesFieldAdapter2 extends RecyclerView.Adapter {
+public class SamplesFieldAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private RecyclerView.RecycledViewPool viewPool;
     private List<Field> ResearchsField; //Поля исследвоаний
@@ -30,7 +31,7 @@ public class SamplesFieldAdapter2 extends RecyclerView.Adapter {
 
     private SamplesRest CurrentSample;
 
-    public SamplesFieldAdapter2(Context context, List<Field> ResFields, List<Field> SamFields, SamplesRest Sample) {
+    public SamplesFieldAdapter(Context context, List<Field> ResFields, List<Field> SamFields, SamplesRest Sample) {
         this.inflater = LayoutInflater.from(context);
         ResearchsField = ResFields;
         SamplesField = SamFields;
@@ -63,7 +64,7 @@ public class SamplesFieldAdapter2 extends RecyclerView.Adapter {
                 ((TextViewHolder) holder).field.setText(f.getValue());
                 break;
             case 6:
-                final ResearhAdapter2 Adapter = new ResearhAdapter2(inflater.getContext(), ResearchsField, CurrentSample.getResearches());
+                final ResearhAdapter Adapter = new ResearhAdapter(inflater.getContext(), ResearchsField, CurrentSample.getResearches());
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));

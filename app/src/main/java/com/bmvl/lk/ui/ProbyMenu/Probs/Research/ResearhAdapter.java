@@ -1,4 +1,4 @@
-package com.bmvl.lk.ui.Create_Order.OrderProbs;
+package com.bmvl.lk.ui.ProbyMenu.Probs.Research;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -17,8 +16,6 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.Create_Order.Field;
-import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearchDiffUtilCallback;
-import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearchFieldAdapter;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -28,13 +25,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ResearhAdapter2 extends RecyclerSwipeAdapter<ResearhAdapter2.ResearchItemHolder> {
+public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.ResearchItemHolder> {
     private LayoutInflater inflater;
-    private RecyclerView.RecycledViewPool viewPool;
-    private List<Field> ResearchField; //Поля Исследований
     private TreeMap<Short, ResearchRest> researches; //Исследования
+    private List<Field> ResearchField; //Поля Исследований
+    private RecyclerView.RecycledViewPool viewPool;
 
-    public ResearhAdapter2(Context context, List<Field> Fields, TreeMap<Short, ResearchRest> ResearchesLise) {
+    public ResearhAdapter(Context context, List<Field> Fields, TreeMap<Short, ResearchRest> ResearchesLise) {
         this.inflater = LayoutInflater.from(context);
         ResearchField = Fields;
         researches = ResearchesLise;
@@ -56,13 +53,16 @@ public class ResearhAdapter2 extends RecyclerSwipeAdapter<ResearhAdapter2.Resear
         researchItemHolder.ResearchList.setRecycledViewPool(viewPool);
 
         researchItemHolder.NumberResearch.setText(MessageFormat.format("№ {0}", getPositionKey(i)));
-        researchItemHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         researchItemHolder.HeaderInfo.setText(String.format("Цена: %d руб.", 0));
+        
+        researchItemHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         mItemManger.bindView(researchItemHolder.itemView, i);
     }
 
     private Short getPositionKey(int position) {
+        if(researches.size() > 0)
         return new ArrayList<Short>(researches.keySet()).get(position);
+        else return 0;
     }
 
     @Override
@@ -95,7 +95,6 @@ public class ResearhAdapter2 extends RecyclerSwipeAdapter<ResearhAdapter2.Resear
 
             ignorBtn.setVisibility(View.GONE);
 
-
             HeaderResearch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -110,7 +109,11 @@ public class ResearhAdapter2 extends RecyclerSwipeAdapter<ResearhAdapter2.Resear
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(view.getContext(), "Удаление ииследования", Toast.LENGTH_SHORT).show();
+                    swipeLayout.close();
+                    TreeMap<Short, ResearchRest> insertlist = new TreeMap<>(researches);
+                    insertlist.remove(getPositionKey(getLayoutPosition()));
+                    updateList(insertlist);
+                   // Toast.makeText(view.getContext(), "Удаление ииследования", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -120,6 +123,14 @@ public class ResearhAdapter2 extends RecyclerSwipeAdapter<ResearhAdapter2.Resear
         ResearchDiffUtilCallback diffUtilCallback = new ResearchDiffUtilCallback(researches, insertList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
         researches.putAll(insertList);
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    public void updateList(Map<Short, ResearchRest> newList) {
+        ResearchDiffUtilCallback diffUtilCallback = new ResearchDiffUtilCallback(researches, newList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
+        researches.clear();
+        researches.putAll(newList);
         diffResult.dispatchUpdatesTo(this);
     }
 

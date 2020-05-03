@@ -18,7 +18,7 @@ public class SamplesRest {
 
     @SerializedName("fields")
     @Expose
-    private Map<Short, String> fields  = new HashMap<>();
+    private Map<Short, String> fields = new HashMap<>();
 
     @SerializedName("researches")
     @Expose
@@ -42,5 +42,10 @@ public class SamplesRest {
 
     public Map<Short, String> getFields() {
         return fields;
+    }
+
+    public void setData(Map<Short, String> fields, TreeMap<Short, ResearchRest> researches) {
+        this.fields = fields;
+        this.researches = researches;
     }
 }

@@ -32,12 +32,18 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     private List<Field> ResearchsField; //Поля исследований
     private List<Field> SamplesField; //Поля образцов
     private RecyclerView.RecycledViewPool viewPool;
+    private OnSamplesClickListener onSamplesClickListener;
 
-    public SamplesAdapter(Context context, List<Field> Researchs, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList ) {
+    public SamplesAdapter(Context context, List<Field> Researchs, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList,OnSamplesClickListener Listener ) {
         this.inflater = LayoutInflater.from(context);
         ResearchsField = Researchs;
         SamplesField = Samples;
         this.Samples = SamplesList;
+        this.onSamplesClickListener = Listener;
+    }
+
+    public interface OnSamplesClickListener {
+        void onUpdateSamples();
     }
 
     @Override
@@ -111,6 +117,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
                 @Override
                 public void onClick(View view) {
                     swipeLayout.close();
+                    onSamplesClickListener.onUpdateSamples();
                     TreeMap<Short, SamplesRest> insertlist = new TreeMap<>(Samples);
                     insertlist.remove(getPositionKey(getLayoutPosition()));
                     updateList(insertlist);
@@ -122,7 +129,18 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
                 @Override
                 public void onClick(View view) {
                     swipeLayout.close();
-                    Toast.makeText(view.getContext(), "Копирование Образца", Toast.LENGTH_SHORT).show();
+                    onSamplesClickListener.onUpdateSamples();
+                    TreeMap<Short, SamplesRest> insertlist = new TreeMap<>();
+                    short newid = getPositionKey(Samples.size() - 1);
+                    SamplesRest insertSample = new SamplesRest(newid);
+
+                    insertSample.setData(Samples.get(getPositionKey(getLayoutPosition())).getFields(),Samples.get(getPositionKey(getLayoutPosition())).getResearches());
+
+                    insertlist.put((short)(newid + 1), insertSample);
+                    insertdata(insertlist);
+
+
+                   // Toast.makeText(view.getContext(), "Копирование Образца", Toast.LENGTH_SHORT).show();
                 }
             });
         }

@@ -88,24 +88,10 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:visibility="gone"
+                android:text="@string/accept"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/Menu_proby_fragment" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:autoLink="web"
-                android:clickable="true"
-                android:focusable="true"
-                android:visibility="gone"
-                android:linksClickable="true"
-                android:text="@string/accept"
-                app:layout_constraintBottom_toBottomOf="@+id/AcceptcheckBox"
-                app:layout_constraintStart_toEndOf="@+id/AcceptcheckBox"
-                app:layout_constraintTop_toTopOf="@+id/AcceptcheckBox"
-                />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

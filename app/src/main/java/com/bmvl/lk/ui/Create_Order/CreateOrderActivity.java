@@ -2,6 +2,7 @@ package com.bmvl.lk.ui.Create_Order;
 
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -96,12 +97,14 @@ public class CreateOrderActivity extends AppCompatActivity {
             case 1:
                 addFieldOrderType0();
                 cbox.setVisibility(View.VISIBLE);
+                cbox.setMovementMethod(LinkMovementMethod.getInstance());
                 Frame.setVisibility(View.VISIBLE);
                 loadFragment(ProbyMenuFragment.newInstance());
                 break;
             case 4:
                 addFieldOrderType1();
                 cbox.setVisibility(View.VISIBLE);
+                cbox.setMovementMethod(LinkMovementMethod.getInstance());
                 Frame.setVisibility(View.VISIBLE);
                 loadFragment(ProbyMenuFragment.newInstance());
                 break;

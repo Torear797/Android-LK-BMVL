@@ -1,6 +1,8 @@
 package com.bmvl.lk.ui.ProbyMenu.Probs.Sample;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +31,8 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
     private List<Field> ResearchsField; //Поля исследвоаний
     private List<Field> SamplesField; //Поля образцов
 
-    private SamplesRest CurrentSample;
+    private SamplesRest CurrentSample; //Текущий образец
+    private ResearhAdapter Adapter;
 
     public SamplesFieldAdapter(Context context, List<Field> ResFields, List<Field> SamFields, SamplesRest Sample) {
         this.inflater = LayoutInflater.from(context);
@@ -61,10 +64,27 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
             case 0:
                 ((TextViewHolder) holder).Layout.setHint(f.getHint());
                 ((TextViewHolder) holder).field.setInputType(f.getInputType());
-                ((TextViewHolder) holder).field.setText(f.getValue());
+
+                if(CurrentSample.getFields().containsKey((short)f.getColumn_id()))
+                ((TextViewHolder) holder).field.setText(CurrentSample.getFields().get((short)f.getColumn_id()));
+
+                ((TextViewHolder) holder).field.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        CurrentSample.getFields().put((short) f.getColumn_id(), String.valueOf(s));
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
                 break;
             case 6:
-                final ResearhAdapter Adapter = new ResearhAdapter(inflater.getContext(), ResearchsField, CurrentSample.getResearches());
+                Adapter = new ResearhAdapter(inflater.getContext(), ResearchsField, CurrentSample.getResearches(), Listener);
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
@@ -89,9 +109,18 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 break;
         }
     }
+    ResearhAdapter.OnResearchClickListener Listener = new ResearhAdapter.OnResearchClickListener(){
+
+        @Override
+        public void onUpdateResearch() {
+            Adapter.closeAllItems();
+        }
+    };
 
     private Short getPositionKeyR(int position, Map<Short, ResearchRest> List) {
+        if(List.size() > 0)
         return new ArrayList<Short>(List.keySet()).get(position);
+        else return 0;
     }
 
     @Override

@@ -123,12 +123,12 @@ public class ProbsFragment extends Fragment {
 
     private void AddSampleFields() {
         SampleFields.clear();
-        SampleFields.add(new Field(1, "", "Наименование доставленного биоматериала", InputType.TYPE_CLASS_TEXT));
-        SampleFields.add(new Field(1, "", "Инвентарный номер животного, кличка и т.д.", InputType.TYPE_CLASS_TEXT));
-        SampleFields.add(new Field(1, "", "Группа", InputType.TYPE_CLASS_TEXT));
-        SampleFields.add(new Field(1, "", "Возраст, масть", InputType.TYPE_CLASS_TEXT));
-        SampleFields.add(new Field(1, "", "Номер корпуса", InputType.TYPE_CLASS_TEXT));
-        SampleFields.add(new Field(1, "", "Вакцинация поголовья", InputType.TYPE_CLASS_TEXT));
+        SampleFields.add(new Field(6, "", "Наименование доставленного биоматериала", InputType.TYPE_CLASS_TEXT));
+        SampleFields.add(new Field(112, "", "Инвентарный номер животного, кличка и т.д.", InputType.TYPE_CLASS_TEXT));
+        SampleFields.add(new Field(113, "", "Группа", InputType.TYPE_CLASS_TEXT));
+        SampleFields.add(new Field(114, "", "Возраст, масть", InputType.TYPE_CLASS_TEXT));
+        SampleFields.add(new Field(115, "", "Номер корпуса", InputType.TYPE_CLASS_TEXT));
+        SampleFields.add(new Field(102, "", "Вакцинация поголовья", InputType.TYPE_CLASS_TEXT));
         SampleFields.add(new Field((byte) 6, 0, "", ""));
         AddResearchFields();
     } //Поля образцов

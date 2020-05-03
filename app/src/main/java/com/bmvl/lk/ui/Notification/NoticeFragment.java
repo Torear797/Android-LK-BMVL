@@ -68,16 +68,14 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
         if(Hawk.contains("NotifyList")) Notifi = Hawk.get("NotifyList");
 
         recyclerView = MyView.findViewById(R.id.Notifi_list);
-        recyclerView.addItemDecoration(new SpacesItemDecoration((byte)10,(byte)10));
-        final TextView Message = MyView.findViewById(R.id.msg);
         swipeRefreshLayout = MyView.findViewById(R.id.SwipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(MyRefresh);
+       // final TextView Message = MyView.findViewById(R.id.msg);
 
+        initRecyclerView();
 
         if (Notifi.size() == 0) InsertNotifications(Notifi, (byte) 0);
         else UpdateNotify();
-
-        initRecyclerView(Message);
 
 
 //        new Handler().postDelayed(new Runnable() {
@@ -89,15 +87,15 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
 //            }
 //        }, 60000);
 
-
-
         RecyclerViewEndLisener();
         return MyView;
     }
-    public void initRecyclerView(TextView Message){
+    public void initRecyclerView(){
         NotifiSwipeAdapter.OnNotifyClickListener onClickListener = new NotifiSwipeAdapter.OnNotifyClickListener() {
             @Override
-            public void onNotifyClick(int id) {
+            public void onNotifyClick(final int id) {
+                NotifiAdapter.closeAllItems();
+                NotifiAdapter.notifyItemChanged(id);
                 NetworkService.getInstance()
                         .getJSONApi()
                         .HideNotify(App.UserAccessData.getToken(), id)
@@ -105,8 +103,9 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
                             @Override
                             public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
                                 if (response.isSuccessful()) {
-                                    NotifiAdapter.closeAllItems();
-                                    UpdateNotify();
+                                   // NotifiAdapter.closeAllItems();
+                                   // UpdateNotify();
+                                   // NotifiAdapter.notifyItemChanged(id);
                                     Snackbar.make(Objects.requireNonNull(getView()), "Уведомление прочтено!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                 }
                             }
@@ -118,6 +117,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
             }
         };
 
+        recyclerView.addItemDecoration(new SpacesItemDecoration((byte)10,(byte)10));
         recyclerView.setHasFixedSize(true);
         NotifiAdapter = new NotifiSwipeAdapter(getContext(), Notifi, onClickListener);
         (NotifiAdapter).setMode(Attributes.Mode.Single);
@@ -172,6 +172,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
 
                     @Override
                     public void onFailure(@NonNull Call<NotificationsAnswer> call, @NonNull Throwable t) {
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 });
     }

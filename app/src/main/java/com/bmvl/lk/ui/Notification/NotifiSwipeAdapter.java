@@ -18,8 +18,10 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
+import java.util.Objects;
 
 class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleViewHolder> {
     private static List<Notifications> Notifi;
@@ -45,9 +47,9 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final NotifiSwipeAdapter.SimpleViewHolder simpleViewHolder, int i) {
+    public void onBindViewHolder(@NonNull NotifiSwipeAdapter.SimpleViewHolder simpleViewHolder, int i) {
 
-        Notifications notifi = Notifi.get(i);
+        final Notifications notifi = Notifi.get(i);
         simpleViewHolder.Data.setText(notifi.getDate());
         simpleViewHolder.Event.setText(notifi.getEvent());
 
@@ -59,7 +61,12 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
             simpleViewHolder.Event.setTextColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
             simpleViewHolder.Order.setTextColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
         } else
-            setNotifiIsRead(simpleViewHolder);
+            {
+                simpleViewHolder.status.setImageResource(R.drawable.ic_new_notifi);
+                simpleViewHolder.Data.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
+                simpleViewHolder.Event.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
+                simpleViewHolder.Order.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
+            }
 
 
         simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
@@ -73,13 +80,6 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
         mItemManger.bindView(simpleViewHolder.itemView, i);
     }
 
-    private void setNotifiIsRead(NotifiSwipeAdapter.SimpleViewHolder simpleViewHolder){
-        simpleViewHolder.status.setImageResource(R.drawable.ic_new_notifi);
-        simpleViewHolder.Data.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
-        simpleViewHolder.Event.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
-        simpleViewHolder.Order.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
-    }
-
     @Override
     public int getItemCount() {
         return Notifi.size();
@@ -89,11 +89,6 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
     public int getSwipeLayoutResourceId(int position) {
         return R.id.swipeNotifi;
     }
-
-//    private void CheckEmpty() {
-//        if (Notifi.size() == 0) Message.setVisibility(View.VISIBLE);
-//        else Message.setVisibility(View.GONE);
-//    }
 
     public void insertdata(List<Notifications> insertList) {
         NotifyDiffUtilCallback diffUtilCallback = new NotifyDiffUtilCallback(Notifi, insertList);
@@ -108,7 +103,6 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback, false);
         Notifi.clear();
         Notifi.addAll(newList);
-      //  CheckEmpty();
         diffResult.dispatchUpdatesTo(this);
     }
 
@@ -132,8 +126,10 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
                 public void onClick(View v) {
                     Notifications Notify = Notifi.get(getLayoutPosition());
                     swipeLayout.close();
-                    if(Notify.getStatus() == 1)
-                    onNotifyClickListener.onNotifyClick(Notify.getId());
+                    if(Notify.getStatus() == 1) {
+                        Notify.setStatus(0);
+                        onNotifyClickListener.onNotifyClick(getLayoutPosition());
+                    }
                 }
             });
 

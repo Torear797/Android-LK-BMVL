@@ -55,6 +55,9 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
     private ProbyRest CurrentProb;
 
+    private ResearhAdapter Adapter;
+    private SamplesAdapter SamAdapter;
+
     public ProbFieldAdapter(Context context, List<Field> Fields, List<Field> ResFields, ProbyRest prob, TextView header) {
         this.inflater = LayoutInflater.from(context);
         this.ProbHeader = header;
@@ -234,7 +237,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
             case 6:
-                final ResearhAdapter Adapter = new ResearhAdapter(inflater.getContext(), ResearchFields, CurrentProb.getSamples().get((short) 1).getResearches());
+                 Adapter = new ResearhAdapter(inflater.getContext(), ResearchFields, CurrentProb.getSamples().get((short) 1).getResearches(),Listener);
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
@@ -259,7 +262,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 break;
             case 7:
-                final SamplesAdapter SamAdapter = new SamplesAdapter(inflater.getContext(), ResearchFields, SampleFields, CurrentProb.getSamples());
+                 SamAdapter = new SamplesAdapter(inflater.getContext(), ResearchFields, SampleFields, CurrentProb.getSamples(),SamListener);
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
                 ((SamplesPanelHolder) holder).SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
@@ -281,6 +284,20 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 break;
         }
     }
+    ResearhAdapter.OnResearchClickListener Listener = new ResearhAdapter.OnResearchClickListener(){
+
+        @Override
+        public void onUpdateResearch() {
+            Adapter.closeAllItems();
+        }
+    };
+    SamplesAdapter.OnSamplesClickListener SamListener = new SamplesAdapter.OnSamplesClickListener(){
+
+        @Override
+        public void onUpdateSamples() {
+            SamAdapter.closeAllItems();
+        }
+    };
 
     private Short getPositionKey(int position, Map<Short, SamplesRest> Samples) {
         if(Samples.size() > 0)

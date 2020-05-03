@@ -28,7 +28,6 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
     private static List<Orders> Orders;
     private LayoutInflater inflater;
 
-
     private OnOrderClickListener onOrderClickListener;
 
     OrderSwipeAdapter(Context context, List<Orders> Contents, OnOrderClickListener onOrderClickListener) {

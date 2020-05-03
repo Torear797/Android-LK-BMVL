@@ -42,11 +42,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,10 +55,6 @@ import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.content.Context.MODE_PRIVATE;
-import static android.os.ParcelFileDescriptor.MODE_READ_WRITE;
-import static android.os.ParcelFileDescriptor.MODE_WORLD_WRITEABLE;
 
 
 public class OrderFragment extends Fragment implements OnBackPressedListener {
@@ -139,7 +132,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                     break;
                                 case 2:
                                     // OrderAdapter.insertdata(NewList, false);
-                                    //  recyclerView.smoothScrollToPosition((CurrentPage - 1) * 10 - 1);
                                     Orders.addAll(NewList);
                                     OrderAdapter.notifyDataSetChanged();
                                     loading = true;
@@ -150,6 +142,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
                     @Override
                     public void onFailure(@NonNull Call<OrdersAnswer> call, @NonNull Throwable t) {
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 });
     }
@@ -159,6 +152,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
             @Override
             public void onDeleteOrder(int id, final int position) {
+                OrderAdapter.closeAllItems();
                 NetworkService.getInstance()
                         .getJSONApi()
                         .DeleteOrder(App.UserAccessData.getToken(), id)
@@ -168,7 +162,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                 if (response.isSuccessful() && response.body() != null) {
                                     if (response.body().getStatus() == 200) {
                                         // UpdateOrders();
-                                        OrderAdapter.closeAllItems();
                                         List<Orders> insertlist = new ArrayList<>(Orders);
                                         insertlist.remove(position);
                                         OrderAdapter.updateList(insertlist);
@@ -185,6 +178,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
             @Override
             public void onCopyOrder(final com.bmvl.lk.data.models.Orders order) {
+                OrderAdapter.closeAllItems();
                 NetworkService.getInstance()
                         .getJSONApi()
                         .CopyOrder(App.UserAccessData.getToken(), order.getId())
@@ -193,7 +187,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                             public void onResponse(@NonNull Call<AnswerCopyOrder> call, @NonNull Response<AnswerCopyOrder> response) {
                                 if (response.isSuccessful() && response.body() != null) {
                                     if (response.body().getStatus() == 200) {
-                                        OrderAdapter.closeAllItems();
                                         // UpdateOrders();
                                         List<Orders> insertlist = new ArrayList<>();
                                         Date currentDate = new Date();
@@ -213,6 +206,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
             @Override
             public void onDownloadOrder(final int id) {
+                OrderAdapter.closeAllItems();
                 if(ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()),Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     NetworkService.getInstance()
                             .getJSONApi()

@@ -30,11 +30,17 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     private TreeMap<Short, ResearchRest> researches; //Исследования
     private List<Field> ResearchField; //Поля Исследований
     private RecyclerView.RecycledViewPool viewPool;
+    private OnResearchClickListener onResearchClickListener;
 
-    public ResearhAdapter(Context context, List<Field> Fields, TreeMap<Short, ResearchRest> ResearchesLise) {
+    public ResearhAdapter(Context context, List<Field> Fields, TreeMap<Short, ResearchRest> ResearchesLise, OnResearchClickListener Listener) {
         this.inflater = LayoutInflater.from(context);
+        this.onResearchClickListener = Listener;
         ResearchField = Fields;
         researches = ResearchesLise;
+    }
+
+    public interface OnResearchClickListener {
+        void onUpdateResearch();
     }
 
     @NonNull
@@ -110,6 +116,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
                 @Override
                 public void onClick(View view) {
                     swipeLayout.close();
+                    onResearchClickListener.onUpdateResearch();
                     TreeMap<Short, ResearchRest> insertlist = new TreeMap<>(researches);
                     insertlist.remove(getPositionKey(getLayoutPosition()));
                     updateList(insertlist);

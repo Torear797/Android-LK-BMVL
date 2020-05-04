@@ -36,6 +36,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     private List<Field> SampleFields; //Поля Образцов
 
     private OnProbClickListener OnProbClickListener; //Слушатель нажатий кнопок
+    private GridLayoutManager mng_layout;
 
     public ProbAdapter(Context context, List<Field> Fields, List<Field> ResFields, OnProbClickListener Listener) {
         this.inflater = LayoutInflater.from(context);
@@ -66,6 +67,18 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        mng_layout = new GridLayoutManager(inflater.getContext(), 2);
+        mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (CreateOrderActivity.order_id == 1 && (position >= 4 && position <= 7 || position == 22 || position == 23))
+                    return 1;
+                if (CreateOrderActivity.order_id == 4 && (position >= 4 && position <= 7))
+                    return 1;
+                return 2;
+            }
+        });
+
         View view = inflater.inflate(R.layout.item_prob, parent, false);
         return new ProbAdapter.SimpleViewHolder(view);
     }
@@ -74,10 +87,10 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final ProbyRest CurrentProb = Probs.get(getPositionKey(i));
 
-        initRecyclerView(simpleViewHolder, CurrentProb, getPositionKey(i));
+        initRecyclerView(simpleViewHolder, CurrentProb);
 
         simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", getPositionKey(i)));
-        String nameMaterial = "не выбран";
+        String nameMaterial = "Молоко сырое";
         assert CurrentProb != null;
         if (CurrentProb.getFields().containsKey((short) 5))
             nameMaterial = CurrentProb.getFields().get((short) 5);
@@ -93,8 +106,8 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     }
 
     private Short getPositionKey(int position) {
-        if(Probs.size() > 0)
-        return new ArrayList<Short>(Probs.keySet()).get(position);
+        if (Probs.size() > 0)
+            return new ArrayList<Short>(Probs.keySet()).get(position);
         else return 0;
     }
 
@@ -103,19 +116,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         return R.id.swipe;
     }
 
-    private void initRecyclerView(SimpleViewHolder simpleViewHolder, ProbyRest CurrentProb, Short sam_id) {
-        final GridLayoutManager mng_layout = new GridLayoutManager(inflater.getContext(), 2);
-        mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                if (CreateOrderActivity.order_id == 1 && (position >= 4 && position <= 7 || position == 22 || position == 23))
-                    return 1;
-                if (CreateOrderActivity.order_id == 4 && (position >= 4 && position <= 7))
-                    return 1;
-                return 2;
-            }
-        });
-
+    private void initRecyclerView(SimpleViewHolder simpleViewHolder, ProbyRest CurrentProb) {
         simpleViewHolder.ProbList.setLayoutManager(mng_layout);
         simpleViewHolder.ProbList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
         simpleViewHolder.ProbList.setRecycledViewPool(viewPool);
@@ -146,7 +147,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         }
     }
 
-    public class SimpleViewHolder extends RecyclerView.ViewHolder {
+    class SimpleViewHolder extends RecyclerView.ViewHolder {
         final ConstraintLayout head;
         final TextView NameProb, infoProb;
         final SwipeLayout swipeLayout;

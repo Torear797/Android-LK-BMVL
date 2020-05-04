@@ -19,9 +19,14 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private List<Field> Researchs;
 
-    public ResearchFieldAdapter(Context context, List<Field> Fields) {
+    private String[] Indicators;
+    private String[] Methods;
+    private String[] Types;
+
+    public ResearchFieldAdapter(Context context, List<Field> Fields, String[] ind) {
         this.inflater = LayoutInflater.from(context);
         Researchs = Fields;
+        this.Indicators = ind;
     }
 
     @NonNull
@@ -35,10 +40,31 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final Field f = Researchs.get(position);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ((SpinerHolder) holder).spiner.setAdapter(adapter);
+       // String[] cities = {"Москва", "Самара", "Вологда", "Волгоград", "Саратов", "Воронеж"};
+       // ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
+
+        switch (f.getColumn_id()){
+            case 0:
+                InitAdapter(Indicators, holder);
+                break;
+            case 1:
+                InitAdapter(Methods, holder);
+                break;
+            case 2:
+                InitAdapter(Types, holder);
+                break;
+        }
+
+
+
         ((SpinerHolder) holder).txtHint.setText(f.getHint());
+    }
+    private void InitAdapter(String[] mass, RecyclerView.ViewHolder holder ){
+        if(mass != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(inflater.getContext(), android.R.layout.simple_spinner_item, Indicators);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ((SpinerHolder) holder).spiner.setAdapter(adapter);
+        }
     }
 
     @Override

@@ -71,4 +71,8 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("orders/phpWord")
     Call<AnswerDownloadOrder> DOWNLOAD_ORDER_CALL(@Field("token") String token, @Field("id") int id);
+
+    @FormUrlEncoded
+    @POST("ajax/getIndicators")
+    Call<AnswerIndicators> getIndicators(@Field("materialId") int materialId);
 }

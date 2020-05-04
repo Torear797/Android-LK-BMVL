@@ -26,6 +26,7 @@ public class SamplesRest {
 
     public SamplesRest(short id) {
         this.id = id;
+        this.price = "0";
     }
 
     public TreeMap<Short, ResearchRest> getResearches() {

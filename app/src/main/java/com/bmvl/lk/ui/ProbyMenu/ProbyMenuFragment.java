@@ -44,10 +44,10 @@ public class ProbyMenuFragment extends Fragment {
                     }
                 }).attach();
 
-      //  viewPager.setOffscreenPageLimit(4);
+
 //        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 //            public void onPageSelected(int position) {
-//                Objects.requireNonNull(viewPager.getAdapter()).notifyDataSetChanged();
+//                viewPager.setOffscreenPageLimit(position+1);
 //            }
 //        });
 

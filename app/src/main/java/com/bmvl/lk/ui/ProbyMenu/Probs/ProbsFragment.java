@@ -135,9 +135,9 @@ public class ProbsFragment extends Fragment {
 
     private void AddResearchFields() {
         ResearchFields.clear();
-        ResearchFields.add(new Field((byte) 1, R.array.documents, 0, "", "Показатель"));
-        ResearchFields.add(new Field((byte) 1, R.array.documents, 0, "", "Метод испытаний"));
-        ResearchFields.add(new Field((byte) 1, R.array.documents, 0, "", "Тип исследования"));
+        ResearchFields.add(new Field((byte) 1, 0, "", "Показатель"));
+        ResearchFields.add(new Field((byte) 1, 1, "", "Метод испытаний"));
+        ResearchFields.add(new Field((byte) 1, 2, "", "Тип исследования"));
     } //Поля исследвоаний
 
     private void AddProbFieldsType0() {

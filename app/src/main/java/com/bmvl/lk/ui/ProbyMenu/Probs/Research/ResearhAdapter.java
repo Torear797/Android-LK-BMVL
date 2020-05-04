@@ -32,11 +32,14 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     private RecyclerView.RecycledViewPool viewPool;
     private OnResearchClickListener onResearchClickListener;
 
-    public ResearhAdapter(Context context, List<Field> Fields, TreeMap<Short, ResearchRest> ResearchesLise, OnResearchClickListener Listener) {
+    private String[] Indicators;
+
+    public ResearhAdapter(Context context, List<Field> Fields, TreeMap<Short, ResearchRest> ResearchesLise, OnResearchClickListener Listener, String[] ind) {
         this.inflater = LayoutInflater.from(context);
         this.onResearchClickListener = Listener;
         ResearchField = Fields;
         researches = ResearchesLise;
+        this.Indicators = ind;
     }
 
     public interface OnResearchClickListener {
@@ -52,17 +55,35 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
 
     @Override
     public void onBindViewHolder(ResearchItemHolder researchItemHolder, int i) {
-        // final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
-        final ResearchFieldAdapter adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchField);
+        final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
+        final ResearchFieldAdapter adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchField, Indicators);
         researchItemHolder.ResearchList.setAdapter(adapter);
         researchItemHolder.ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
         researchItemHolder.ResearchList.setRecycledViewPool(viewPool);
+
+        setTestResearchData(CurrentResearch);
 
         researchItemHolder.NumberResearch.setText(MessageFormat.format("№ {0}", getPositionKey(i)));
         researchItemHolder.HeaderInfo.setText(String.format("Цена: %d руб.", 0));
         
         researchItemHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         mItemManger.bindView(researchItemHolder.itemView, i);
+    }
+
+    private void setTestResearchData(ResearchRest CurrentResearch){
+        CurrentResearch.setIndicatorId((short)499);
+        CurrentResearch.setIndicatorNd("ГОСТ  Р 520");
+        CurrentResearch.setIndicatorNdId((short)682);
+
+        CurrentResearch.setMethodId((short)53);
+        CurrentResearch.setMethodNd("ГОСТ  Р 520");
+        CurrentResearch.setMethodNdId((short)682);
+
+        CurrentResearch.setTypeId((short)3);
+
+        CurrentResearch.setIndicatorVal("Консистенция");
+        CurrentResearch.setMethodVal("Органолептический");
+        CurrentResearch.setTypeVal("Классика");
     }
 
     private Short getPositionKey(int position) {

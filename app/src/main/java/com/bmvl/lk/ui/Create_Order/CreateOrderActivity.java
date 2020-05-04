@@ -20,24 +20,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
-import com.bmvl.lk.Rest.AnswerOrderNew;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.AnswerSendOrder;
+import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
 import com.google.android.material.checkbox.MaterialCheckBox;
-import com.google.gson.Gson;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,6 +46,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     public static List<Field> Fields = new ArrayList<>(); //Поля заявки
     public static byte order_id;
     private ProgressBar bar;
+    private MaterialCheckBox cbox;
 
     public static SendOrder order;
 
@@ -56,19 +55,17 @@ public class CreateOrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_order);
 
-        //  order_id = getIntent().getByteExtra("id", (byte) 0);
         order = new SendOrder(getIntent().getByteExtra("id", (byte) 1));
         order_id = order.getType_id();
 
         final TextView OrderName = findViewById(R.id.Order_name);
         final Toolbar toolbar = findViewById(R.id.toolbar);
         final RecyclerView recyclerView = findViewById(R.id.FieldList);
-        final MaterialCheckBox cbox = findViewById(R.id.AcceptcheckBox);
+        cbox = findViewById(R.id.AcceptcheckBox);
         final FrameLayout Frame = findViewById(R.id.Menu_proby_fragment);
         bar = findViewById(R.id.ProgressBar);
         toolbar.setTitle(R.string.new_order);
         setSupportActionBar(toolbar);
-
 
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
         LoadDefaultFields();
@@ -222,12 +219,31 @@ public class CreateOrderActivity extends AppCompatActivity {
         }
     }
 
-    public void sendAction(View view) {
-//        view.setEnabled(false);
-//        bar.setVisibility(View.VISIBLE);
-//        SendOrder(view);
+    private boolean isFieldCorrect() {
+        if (cbox.getVisibility() == View.VISIBLE && !cbox.isChecked()) {
+            Toast.makeText(getApplicationContext(), "Для сохранения заявки вы должны согласиться с условиям.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
-        Toast.makeText(getApplicationContext(), "test: " + order.getId(), Toast.LENGTH_SHORT).show();
+        for (TreeMap.Entry<Short, ProbyRest> prob : order.getProby().entrySet()) {
+            if (!prob.getValue().isResearchCorrect()) {
+                Toast.makeText(getApplicationContext(), "У образца должно быть заполено хотя бы одно исследование.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void sendAction(View view) {
+        if (isFieldCorrect()) {
+        view.setEnabled(false);
+        bar.setVisibility(View.VISIBLE);
+        SendOrder(view);
+
+       //     String json = order.getJsonOrder();
+//            Toast.makeText(getApplicationContext(), "test: " + order.getId(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private String getBasisString() {
@@ -258,6 +274,7 @@ public class CreateOrderActivity extends AppCompatActivity {
 
         //    order.setFields(fields);
         //String Jsonorder = gson.toJson(order);
+        String json = order.getJsonOrder();
 
         NetworkService.getInstance()
                 .getJSONApi()

@@ -41,6 +41,10 @@ public class ResearchRest {
     @Expose
     private String methodVal;
 
+    @SerializedName("typeVal")
+    @Expose
+    private String typeVal;
+
     @SerializedName("price")
     @Expose
     private double price;
@@ -95,5 +99,49 @@ public class ResearchRest {
 
     public Short getId() {
         return id;
+    }
+
+    public void setIndicatorId(short indicatorId) {
+        this.indicatorId = indicatorId;
+    }
+
+    public void setIndicatorNd(String indicatorNd) {
+        this.indicatorNd = indicatorNd;
+    }
+
+    public void setIndicatorNdId(short indicatorNdId) {
+        this.indicatorNdId = indicatorNdId;
+    }
+
+    public void setMethodId(short methodId) {
+        this.methodId = methodId;
+    }
+
+    public void setMethodNd(String methodNd) {
+        this.methodNd = methodNd;
+    }
+
+    public void setMethodNdId(short methodNdId) {
+        this.methodNdId = methodNdId;
+    }
+
+    public void setTypeId(short typeId) {
+        this.typeId = typeId;
+    }
+
+    public void setIndicatorVal(String indicatorVal) {
+        this.indicatorVal = indicatorVal;
+    }
+
+    public void setMethodVal(String methodVal) {
+        this.methodVal = methodVal;
+    }
+
+    public void setId(Short id) {
+        this.id = id;
+    }
+
+    public void setTypeVal(String typeVal) {
+        this.typeVal = typeVal;
     }
 }

@@ -87,7 +87,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                     if (f.isData()) {
                         final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field, position);
+                                ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field, f.getColumn_id());
                             }
                         };
                         ((TextViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
@@ -115,7 +115,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 ((TextViewHolder) holder).field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
+                       // CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
                         CreateOrderActivity.order.getFields().put((short) f.getColumn_id(), String.valueOf(s));
                     }
 
@@ -141,7 +141,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
 
                         // Получаем выбранный объект
                         String item = (String) parent.getItemAtPosition(position);
-                        CreateOrderActivity.Fields.get(position).setValue(String.valueOf(item));
+                       // CreateOrderActivity.Fields.get(position).setValue(String.valueOf(item));
                         CreateOrderActivity.order.getFields().put((short) f.getColumn_id(), String.valueOf(item));
                     }
 
@@ -209,7 +209,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 ((OriginalDocHolder) holder).fieldEmail.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
+                     //   CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
                         CreateOrderActivity.order.getFields().put((short) f.getColumn_id(), String.valueOf(s));
                     }
 
@@ -225,7 +225,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 ((OriginalDocHolder) holder).fieldAdres.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
+                       // CreateOrderActivity.Fields.get(position).setValue(String.valueOf(s));
                         CreateOrderActivity.order.getFields().put((short) f.getColumn_id(), String.valueOf(s));
                     }
 
@@ -271,7 +271,8 @@ public class FieldsAdapter extends RecyclerView.Adapter {
         if (dayOfMonth < 10) {
             formattedDayOfMonth = "0" + dayOfMonth;
         }
-        CreateOrderActivity.Fields.get(position).setValue(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, year));
+        CreateOrderActivity.order.getFields().put((short) position, MessageFormat.format("{0}.{1}.{2}", formattedDayOfMonth, formattedMonth, year));
+        //CreateOrderActivity.Fields.get(position).setValue(MessageFormat.format("{0}.{1}.{2}", formattedDayOfMonth, formattedMonth, year));
         Edt.setText(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, year));
     }
 

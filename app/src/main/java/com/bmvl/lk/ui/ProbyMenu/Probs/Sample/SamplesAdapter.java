@@ -34,12 +34,15 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     private RecyclerView.RecycledViewPool viewPool;
     private OnSamplesClickListener onSamplesClickListener;
 
-    public SamplesAdapter(Context context, List<Field> Researchs, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList,OnSamplesClickListener Listener ) {
+    private String[] Indicators;
+
+    public SamplesAdapter(Context context, List<Field> Researchs, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList,OnSamplesClickListener Listener, String[] ind) {
         this.inflater = LayoutInflater.from(context);
         ResearchsField = Researchs;
         SamplesField = Samples;
         this.Samples = SamplesList;
         this.onSamplesClickListener = Listener;
+        this.Indicators = ind;
     }
 
     public interface OnSamplesClickListener {
@@ -56,7 +59,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final SamplesRest CurrentSample = Samples.get(getPositionKey(i));
 
-        final SamplesFieldAdapter adapter = new SamplesFieldAdapter(inflater.getContext(), ResearchsField, SamplesField, CurrentSample);
+        final SamplesFieldAdapter adapter = new SamplesFieldAdapter(inflater.getContext(), ResearchsField, SamplesField, CurrentSample,Indicators);
         simpleViewHolder.SampleList.setAdapter(adapter);
         simpleViewHolder.SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
         simpleViewHolder.SampleList.setRecycledViewPool(viewPool);

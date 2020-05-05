@@ -30,7 +30,7 @@ import java.util.TreeMap;
 
 public class ProbsFragment extends Fragment {
     private List<Field> ProbFields = new ArrayList<>(); //Поля пробы
-    private List<Field> ResearchFields = new ArrayList<>(); //Поля исследований
+ //   private List<Field> ResearchFields = new ArrayList<>(); //Поля исследований
     private List<Field> SampleFields = new ArrayList<>(); //Поля Образцов
 
     private ProbAdapter adapter;
@@ -65,13 +65,13 @@ public class ProbsFragment extends Fragment {
         switch (CreateOrderActivity.order_id) {
             case 1:
                 AddProbFieldsType0();
-                adapter = new ProbAdapter(getContext(), ProbFields, ResearchFields, onClickListener);
+                adapter = new ProbAdapter(getContext(), ProbFields, onClickListener);
                 break;
             case 2:
                 break;
             case 4:
                 AddProbFieldsType2();
-                adapter = new ProbAdapter(getContext(), ProbFields, ResearchFields, SampleFields, onClickListener);
+                adapter = new ProbAdapter(getContext(), ProbFields, SampleFields, onClickListener);
                 break;
         }
         (adapter).setMode(Attributes.Mode.Single);
@@ -130,15 +130,15 @@ public class ProbsFragment extends Fragment {
         SampleFields.add(new Field(115, "", "Номер корпуса", InputType.TYPE_CLASS_TEXT));
         SampleFields.add(new Field(102, "", "Вакцинация поголовья", InputType.TYPE_CLASS_TEXT));
         SampleFields.add(new Field((byte) 6, 0, "", ""));
-        AddResearchFields();
+      //  AddResearchFields();
     } //Поля образцов
 
-    private void AddResearchFields() {
-        ResearchFields.clear();
-        ResearchFields.add(new Field((byte) 1, 0, "", "Показатель"));
-        ResearchFields.add(new Field((byte) 1, 1, "", "Метод испытаний"));
-        ResearchFields.add(new Field((byte) 1, 2, "", "Тип исследования"));
-    } //Поля исследвоаний
+//    private void AddResearchFields() {
+//        ResearchFields.clear();
+//        ResearchFields.add(new Field((byte) 1, 0, "", "Показатель"));
+//        ResearchFields.add(new Field((byte) 1, 1, "", "Метод испытаний"));
+//        ResearchFields.add(new Field((byte) 1, 2, "", "Тип исследования"));
+//    } //Поля исследвоаний
 
     private void AddProbFieldsType0() {
         ProbFields.clear();
@@ -173,7 +173,7 @@ public class ProbsFragment extends Fragment {
 
         ProbFields.add(new Field((byte) 6));
 
-        AddResearchFields();
+     //   AddResearchFields();
     } //Поля пробы на исследование пищевых продуктов
 
     private void AddProbFieldsType2() {

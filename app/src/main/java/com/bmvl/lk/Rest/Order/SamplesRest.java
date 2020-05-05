@@ -28,6 +28,9 @@ public class SamplesRest {
         this.id = id;
         this.price = "0";
     }
+    public void DeleteSamplesFields(){
+        this.fields = null;
+    }
 
     public TreeMap<Short, ResearchRest> getResearches() {
         return this.researches;

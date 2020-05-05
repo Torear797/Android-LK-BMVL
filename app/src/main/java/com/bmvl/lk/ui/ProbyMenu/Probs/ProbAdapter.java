@@ -32,30 +32,30 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     private RecyclerView.RecycledViewPool viewPool;
 
     private List<Field> ProbFields; //Поля пробы
-    private List<Field> ResearchFields; //Поля исследований
+  //  private List<Field> ResearchFields; //Поля исследований
     private List<Field> SampleFields; //Поля Образцов
 
     private OnProbClickListener OnProbClickListener; //Слушатель нажатий кнопок
     private GridLayoutManager mng_layout;
 
-    public ProbAdapter(Context context, List<Field> Fields, List<Field> ResFields, OnProbClickListener Listener) {
+    public ProbAdapter(Context context, List<Field> Fields, OnProbClickListener Listener) {
         this.inflater = LayoutInflater.from(context);
         Probs = CreateOrderActivity.order.getProby();
         this.OnProbClickListener = Listener;
         viewPool = new RecyclerView.RecycledViewPool();
 
         ProbFields = Fields;
-        ResearchFields = ResFields;
+       // ResearchFields = ResFields;
     }
 
-    public ProbAdapter(Context context, List<Field> Fields, List<Field> ResFields, List<Field> sampleFields, OnProbClickListener Listener) {
+    public ProbAdapter(Context context, List<Field> Fields, List<Field> sampleFields, OnProbClickListener Listener) {
         this.inflater = LayoutInflater.from(context);
         Probs = CreateOrderActivity.order.getProby();
         this.OnProbClickListener = Listener;
         viewPool = new RecyclerView.RecycledViewPool();
 
         ProbFields = Fields;
-        ResearchFields = ResFields;
+       // ResearchFields = ResFields;
         SampleFields = sampleFields;
     }
 
@@ -127,7 +127,6 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
                 final ProbFieldAdapter adapter = new ProbFieldAdapter(
                         inflater.getContext(),
                         ProbFields,
-                        ResearchFields,
                         CurrentProb,
                         simpleViewHolder.infoProb
                 );
@@ -137,7 +136,6 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
                 final ProbFieldAdapter adapter2 = new ProbFieldAdapter(
                         inflater.getContext(),
                         ProbFields,
-                        ResearchFields,
                         SampleFields,
                         CurrentProb,
                         simpleViewHolder.infoProb

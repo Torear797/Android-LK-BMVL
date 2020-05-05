@@ -4,15 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/Price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:text="Итого: 0 руб."
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/List" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/List"
@@ -31,11 +22,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:text="@string/add_research"
         app:cornerRadius="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Price"
+        app:layout_constraintTop_toBottomOf="@+id/List"
         app:strokeColor="@color/accent"
         app:strokeWidth="1dp" />
 
@@ -43,7 +35,7 @@
         android:id="@+id/HeaderRecyclerview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -29,16 +29,16 @@ import java.util.TreeMap;
 public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleViewHolder> {
     private LayoutInflater inflater;
     private TreeMap<Short, SamplesRest> Samples; //Образцы
-    private List<Field> ResearchsField; //Поля исследований
+   // private List<Field> ResearchsField; //Поля исследований
     private List<Field> SamplesField; //Поля образцов
     private RecyclerView.RecycledViewPool viewPool;
     private OnSamplesClickListener onSamplesClickListener;
 
     private String[] Indicators;
 
-    public SamplesAdapter(Context context, List<Field> Researchs, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList,OnSamplesClickListener Listener, String[] ind) {
+    public SamplesAdapter(Context context, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList,OnSamplesClickListener Listener, String[] ind) {
         this.inflater = LayoutInflater.from(context);
-        ResearchsField = Researchs;
+  //      ResearchsField = Researchs;
         SamplesField = Samples;
         this.Samples = SamplesList;
         this.onSamplesClickListener = Listener;
@@ -59,7 +59,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final SamplesRest CurrentSample = Samples.get(getPositionKey(i));
 
-        final SamplesFieldAdapter adapter = new SamplesFieldAdapter(inflater.getContext(), ResearchsField, SamplesField, CurrentSample,Indicators);
+        final SamplesFieldAdapter adapter = new SamplesFieldAdapter(inflater.getContext(), SamplesField, CurrentSample,Indicators);
         simpleViewHolder.SampleList.setAdapter(adapter);
         simpleViewHolder.SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
         simpleViewHolder.SampleList.setRecycledViewPool(viewPool);

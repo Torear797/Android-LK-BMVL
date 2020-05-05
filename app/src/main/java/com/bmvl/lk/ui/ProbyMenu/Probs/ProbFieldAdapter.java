@@ -55,7 +55,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private static Calendar dateAndTime = Calendar.getInstance();
     private List<Field> ProbFields;
-    private List<Field> ResearchFields;
+  //  private List<Field> ResearchFields;
     private List<Field> SampleFields; //Поля Образцов
     private RecyclerView.RecycledViewPool viewPool;
     private TextView ProbHeader;
@@ -66,19 +66,19 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     private SamplesAdapter SamAdapter;
     private String[] Indicators;
 
-    public ProbFieldAdapter(Context context, List<Field> Fields, List<Field> ResFields, ProbyRest prob, TextView header) {
+    public ProbFieldAdapter(Context context, List<Field> Fields, ProbyRest prob, TextView header) {
         this.inflater = LayoutInflater.from(context);
         this.ProbHeader = header;
         ProbFields = Fields;
-        ResearchFields = ResFields;
+      //  ResearchFields = ResFields;
         CurrentProb = prob;
     }
 
-    public ProbFieldAdapter(Context context, List<Field> probFields, List<Field> researchFields, List<Field> sampleFields, ProbyRest prob, TextView header) {
+    public ProbFieldAdapter(Context context, List<Field> probFields, List<Field> sampleFields, ProbyRest prob, TextView header) {
         this.inflater = LayoutInflater.from(context);
         this.ProbHeader = header;
         ProbFields = probFields;
-        ResearchFields = researchFields;
+      //  ResearchFields = researchFields;
         SampleFields = sampleFields;
 
         CurrentProb = prob;
@@ -248,7 +248,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
             case 6:
-                 Adapter = new ResearhAdapter(inflater.getContext(), ResearchFields, CurrentProb.getSamples().get((short) 1).getResearches(),Listener, Indicators);
+                 Adapter = new ResearhAdapter(inflater.getContext(), CurrentProb.getSamples().get((short) 1).getResearches(),Listener, Indicators);
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
@@ -273,7 +273,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 break;
             case 7:
-                 SamAdapter = new SamplesAdapter(inflater.getContext(), ResearchFields, SampleFields, CurrentProb.getSamples(),SamListener, Indicators);
+                 SamAdapter = new SamplesAdapter(inflater.getContext(), SampleFields, CurrentProb.getSamples(),SamListener, Indicators);
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
                 ((SamplesPanelHolder) holder).SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
@@ -337,8 +337,8 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             formattedDayOfMonth = "0" + dayOfMonth;
         }
 
-        CurrentProb.getFields().put((short) f.getColumn_id(), formattedDayOfMonth + "-" + formattedMonth + "-" + year);
-        Edt.setText(MessageFormat.format("{0}-{1}-{2}", formattedDayOfMonth, formattedMonth, year));
+        CurrentProb.getFields().put((short) f.getColumn_id(), MessageFormat.format("{0}.{1}.{2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
+        Edt.setText(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
     }
 
     @Override

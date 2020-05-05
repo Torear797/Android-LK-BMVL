@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,16 +29,16 @@ import java.util.TreeMap;
 public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.ResearchItemHolder> {
     private LayoutInflater inflater;
     private TreeMap<Short, ResearchRest> researches; //Исследования
-    private List<Field> ResearchField; //Поля Исследований
+   // private List<Field> ResearchField; //Поля Исследований
     private RecyclerView.RecycledViewPool viewPool;
     private OnResearchClickListener onResearchClickListener;
 
     private String[] Indicators;
 
-    public ResearhAdapter(Context context, List<Field> Fields, TreeMap<Short, ResearchRest> ResearchesLise, OnResearchClickListener Listener, String[] ind) {
+    public ResearhAdapter(Context context, TreeMap<Short, ResearchRest> ResearchesLise, OnResearchClickListener Listener, String[] ind) {
         this.inflater = LayoutInflater.from(context);
         this.onResearchClickListener = Listener;
-        ResearchField = Fields;
+    //    ResearchField = Fields;
         researches = ResearchesLise;
         this.Indicators = ind;
     }
@@ -49,22 +50,21 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     @NonNull
     @Override
     public ResearchItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_prob, parent, false);
+        View view = inflater.inflate(R.layout.item_research, parent, false);
         return new ResearchItemHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ResearchItemHolder researchItemHolder, int i) {
         final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
-        final ResearchFieldAdapter adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchField, Indicators);
-        researchItemHolder.ResearchList.setAdapter(adapter);
-        researchItemHolder.ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
-        researchItemHolder.ResearchList.setRecycledViewPool(viewPool);
+       // final ResearchFieldAdapter adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchField, Indicators);
+       // researchItemHolder.ResearchList.setAdapter(adapter);
+      //  researchItemHolder.ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
+       // researchItemHolder.ResearchList.setRecycledViewPool(viewPool);
 
         setTestResearchData(CurrentResearch);
 
         researchItemHolder.NumberResearch.setText(MessageFormat.format("№ {0}", getPositionKey(i)));
-        researchItemHolder.HeaderInfo.setText(String.format("Цена: %d руб.", 0));
         
         researchItemHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         mItemManger.bindView(researchItemHolder.itemView, i);
@@ -103,18 +103,17 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     }
 
     class ResearchItemHolder extends RecyclerView.ViewHolder {
-        final ConstraintLayout HeaderResearch;
-        final TextView NumberResearch, HeaderInfo;
-        final RecyclerView ResearchList;
+        final ConstraintLayout HeaderResearch, Content;
+        final TextView NumberResearch;
         final SwipeLayout swipeLayout;
         final ImageView buttonDelete, ignorBtn;
+        final Spinner Indicators, Methods, Types;
 
         ResearchItemHolder(@NonNull View itemView) {
             super(itemView);
             HeaderResearch = itemView.findViewById(R.id.Header);
             NumberResearch = itemView.findViewById(R.id.NumberProb);
-            ResearchList = itemView.findViewById(R.id.ProbFields);
-            HeaderInfo = itemView.findViewById(R.id.InfoProb);
+            Content = itemView.findViewById(R.id.Content);
 
             swipeLayout = itemView.findViewById(R.id.swipe);
             buttonDelete = itemView.findViewById(R.id.trash);
@@ -122,14 +121,19 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
 
             ignorBtn.setVisibility(View.GONE);
 
+            //Spiners
+            Indicators = itemView.findViewById(R.id.Indicator);
+            Methods = itemView.findViewById(R.id.Method);
+            Types = itemView.findViewById(R.id.Type);
+
             HeaderResearch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (ResearchList.getVisibility() == View.VISIBLE)
+                    if (Content.getVisibility() == View.VISIBLE)
                         swipeLayout.setSwipeEnabled(true);
                     else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close)
                         swipeLayout.setSwipeEnabled(false);
-                    ResearchList.setVisibility(ResearchList.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                    Content.setVisibility(Content.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 }
             });
 

@@ -45,6 +45,10 @@ public class SendOrder {
         this.proby.put(key, newProb);
     }
 
+    public void DeleteProb(){
+        this.proby = null;
+    }
+
 
     public SendOrder(byte type_id) {
         this.type_id = type_id;

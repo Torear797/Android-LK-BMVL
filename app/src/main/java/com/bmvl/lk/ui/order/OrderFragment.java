@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -59,7 +60,7 @@ import retrofit2.Response;
 
 public class OrderFragment extends Fragment implements OnBackPressedListener {
     private static List<Orders> Orders = new ArrayList<>();
-   // public static String[] OrderStatuses;
+
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private OrderSwipeAdapter OrderAdapter;
@@ -75,6 +76,12 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
     private static byte CurrentPage = 0;
 
     public OrderFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestMultiplePermissions(); //Запрос разрешений
     }
 
     public static OrderFragment newInstance() {
@@ -93,6 +100,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
        // final TextView message = MyView.findViewById(R.id.empty_msg);
 
         initRecyclerView();
+        recyclerView.scrollToPosition(0);
 
         fab.setColorFilter(Color.argb(255, 255, 255, 255));
 
@@ -102,8 +110,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
         if (Orders.size() == 0) LoadOrders(Orders, (byte) 0);
         else UpdateOrders();
-
-        requestMultiplePermissions(); //Запрос разрешений
 
         FabLisener(); //Слушатель для скрытия кнопки при скролинге
         RecyclerViewEndLisener(); //Слушатель конца списка
@@ -117,7 +123,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                 .enqueue(new Callback<OrdersAnswer>() {
                     @Override
                     public void onResponse(@NonNull Call<OrdersAnswer> call, @NonNull Response<OrdersAnswer> response) {
-                        if (response.isSuccessful()) {
+                        if (response.isSuccessful() && response.body() != null) {
                             TotalPage = response.body().getOrders().getTotal_pages();
                             CurrentPage = response.body().getOrders().getCurrent();
                             NewList.addAll(response.body().getOrders().getOrders());
@@ -125,10 +131,12 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                             switch (Type) {
                                 case 0:
                                     OrderAdapter.notifyDataSetChanged();
+                                    recyclerView.scrollToPosition(0);
                                     break;
                                 case 1:
                                     OrderAdapter.updateList(NewList);
                                     swipeRefreshLayout.setRefreshing(false);
+                                    recyclerView.scrollToPosition(0);
                                     break;
                                 case 2:
                                     // OrderAdapter.insertdata(NewList, false);
@@ -137,7 +145,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                     loading = true;
                                     break;
                             }
-                        }
+                        } else swipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
@@ -369,15 +377,4 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
             }
         });
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-//                                           @NonNull int[] grantResults) {
-//        if (requestCode == 0 && grantResults.length == 1) {
-//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//               // showExtDirFilesCount();
-//            }
-//        }
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//    }
 }

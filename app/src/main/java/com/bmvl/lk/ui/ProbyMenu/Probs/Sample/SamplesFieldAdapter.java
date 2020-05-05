@@ -28,16 +28,16 @@ import java.util.Map;
 public class SamplesFieldAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private RecyclerView.RecycledViewPool viewPool;
-    private List<Field> ResearchsField; //Поля исследвоаний
+   // private List<Field> ResearchsField; //Поля исследвоаний
     private List<Field> SamplesField; //Поля образцов
 
     private SamplesRest CurrentSample; //Текущий образец
     private ResearhAdapter Adapter;
     private String[] Indicators;
 
-    public SamplesFieldAdapter(Context context, List<Field> ResFields, List<Field> SamFields, SamplesRest Sample, String[] ind) {
+    public SamplesFieldAdapter(Context context, List<Field> SamFields, SamplesRest Sample, String[] ind) {
         this.inflater = LayoutInflater.from(context);
-        ResearchsField = ResFields;
+      //  ResearchsField = ResFields;
         SamplesField = SamFields;
         CurrentSample = Sample;
         this.Indicators = ind;
@@ -86,7 +86,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 });
                 break;
             case 6:
-                Adapter = new ResearhAdapter(inflater.getContext(), ResearchsField, CurrentSample.getResearches(), Listener, Indicators);
+                Adapter = new ResearhAdapter(inflater.getContext(), CurrentSample.getResearches(), Listener, Indicators);
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));

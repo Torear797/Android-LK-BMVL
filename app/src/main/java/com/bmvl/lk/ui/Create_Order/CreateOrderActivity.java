@@ -3,6 +3,7 @@ package com.bmvl.lk.ui.Create_Order;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -23,6 +24,7 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.AnswerSendOrder;
 import com.bmvl.lk.Rest.Order.ProbyRest;
+import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
@@ -237,12 +240,9 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     public void sendAction(View view) {
         if (isFieldCorrect()) {
-        view.setEnabled(false);
-        bar.setVisibility(View.VISIBLE);
-        SendOrder(view);
-
-       //     String json = order.getJsonOrder();
-//            Toast.makeText(getApplicationContext(), "test: " + order.getId(), Toast.LENGTH_SHORT).show();
+            view.setEnabled(false);
+            bar.setVisibility(View.VISIBLE);
+            SendOrder(view);
         }
     }
 
@@ -263,44 +263,69 @@ public class CreateOrderActivity extends AppCompatActivity {
         }
     }
 
+    private Short getPositionKeySamples(int position, int prob) {
+        if(order.getProby().get(getPositionKeyProbs(prob)).getSamples().size() > 0)
+            return new ArrayList<Short>(order.getProby().get(getPositionKeyProbs(prob)).getSamples().keySet()).get(position);
+        else return 0;
+    }
+    private Short getPositionKeyProbs(int position) {
+        if(order.getProby().size() > 0)
+            return new ArrayList<Short>(order.getProby().keySet()).get(position);
+        else return 0;
+    }
+
+    private void DeleteEmptyFields() {
+        final int ProbSize = order.getProby().size();
+        int SamplesSize;
+        for (int i = 0; i < ProbSize; i++) {
+            SamplesSize = order.getProby().get(getPositionKeyProbs((short)i)).getSamples().size();
+            for (int j = 0; j < SamplesSize; j++) {
+                if (order.getProby().get(getPositionKeyProbs((short)i)).getSamples().get(getPositionKeySamples(j,i)).getFields().size() <= 0) {
+                    order.getProby().get(getPositionKeyProbs((short)i)).getSamples().get(getPositionKeySamples(j,i)).DeleteSamplesFields();
+                    break;
+                }
+            }
+        }
+
+        if (order.getProby().size() <= 0) {
+            order.DeleteProb();
+        }
+    }
+
     private void SendOrder(final View view) {
-        //    Map<Short, String> fields = new HashMap<>();   //Поля заявки
-
-//        for (Field f : Fields) {
-//            if (f.getColumn_id() != -1)
-//                fields.put((short)(f.getColumn_id()), f.getValue());
-//        }
-        //  Gson gson = new Gson();
-
-        //    order.setFields(fields);
-        //String Jsonorder = gson.toJson(order);
+        DeleteEmptyFields();
         String json = order.getJsonOrder();
+        Log.d("JSON", json);
 
-        NetworkService.getInstance()
-                .getJSONApi()
-                .sendOrder(App.UserAccessData.getToken(), order.getJsonOrder())
-                .enqueue(new Callback<AnswerSendOrder>() {
-                    @Override
-                    public void onResponse(@NonNull Call<AnswerSendOrder> call, @NonNull Response<AnswerSendOrder> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            if (response.body().getStatus() == 200) {
-                                Toast.makeText(view.getContext(), "Заказ успешно создан!", Toast.LENGTH_SHORT).show();
-                                CreateOrderActivity.this.finish();
-                            }
-                        } else {
-                            view.setEnabled(true);
-                            bar.setVisibility(View.GONE);
-                            Toast.makeText(view.getContext(), "Ошибка 1", Toast.LENGTH_SHORT).show();
-                        }
-                    }
+        view.setEnabled(true);
+        bar.setVisibility(View.GONE);
 
-                    @Override
-                    public void onFailure(@NonNull Call<AnswerSendOrder> call, @NonNull Throwable t) {
-                        view.setEnabled(true);
-                        bar.setVisibility(View.GONE);
-                        Toast.makeText(view.getContext(), "Ошибка 2", Toast.LENGTH_SHORT).show();
-                    }
-                });
+//        NetworkService.getInstance()
+//                .getJSONApi()
+//                .sendOrder(App.UserAccessData.getToken(), order.getJsonOrder())
+//                .enqueue(new Callback<AnswerSendOrder>() {
+//                    @Override
+//                    public void onResponse(@NonNull Call<AnswerSendOrder> call, @NonNull Response<AnswerSendOrder> response) {
+//                        if (response.isSuccessful() && response.body() != null) {
+//                            if (response.body().getStatus() == 200) {
+//                                Toast.makeText(view.getContext(), "Заказ успешно создан!", Toast.LENGTH_SHORT).show();
+//                                CreateOrderActivity.this.finish();
+//                            }
+//                        } else {
+//                            view.setEnabled(true);
+//                            bar.setVisibility(View.GONE);
+//                            Toast.makeText(view.getContext(), "Ошибка 1", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(@NonNull Call<AnswerSendOrder> call, @NonNull Throwable t) {
+//                        view.setEnabled(true);
+//                        bar.setVisibility(View.GONE);
+//                        Toast.makeText(view.getContext(), "Ошибка 2", Toast.LENGTH_SHORT).show();
+//                        Log.d("Проблема в ", String.valueOf(t));
+//                    }
+//                });
     }
 
 }

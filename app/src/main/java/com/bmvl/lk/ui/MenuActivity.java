@@ -96,32 +96,27 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         if (getIntent().getBooleanExtra("finish", false)) {
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
+        } else {
+
+            setContentView(R.layout.activity_menu);
+
+            MenuToolbar = findViewById(R.id.toolbar);
+            if (MenuToolbar != null) {
+                MenuToolbar.setTitle(R.string.order);
+                setSupportActionBar(MenuToolbar);
+            }
+
+            BottomNavigationView navigation = findViewById(R.id.nav_view);
+            navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+            loadFragment(OrderFragment.newInstance());
         }
-
-        setContentView(R.layout.activity_menu);
-
-        MenuToolbar = findViewById(R.id.toolbar);
-        if(MenuToolbar != null) {
-            MenuToolbar.setTitle(R.string.order);
-            setSupportActionBar(MenuToolbar);
-            //getSupportActionBar().setDisplayShowTitleEnabled(true);
-
-        }
-
-
-
-
-
-        BottomNavigationView navigation = findViewById(R.id.nav_view);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        loadFragment(OrderFragment.newInstance());
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

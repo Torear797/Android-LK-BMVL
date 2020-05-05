@@ -271,9 +271,9 @@ public class FieldsAdapter extends RecyclerView.Adapter {
         if (dayOfMonth < 10) {
             formattedDayOfMonth = "0" + dayOfMonth;
         }
-        CreateOrderActivity.order.getFields().put((short) position, MessageFormat.format("{0}.{1}.{2}", formattedDayOfMonth, formattedMonth, year));
+        CreateOrderActivity.order.getFields().put((short) position, MessageFormat.format("{0}.{1}.{2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
         //CreateOrderActivity.Fields.get(position).setValue(MessageFormat.format("{0}.{1}.{2}", formattedDayOfMonth, formattedMonth, year));
-        Edt.setText(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, year));
+        Edt.setText(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
     }
 
     @Override

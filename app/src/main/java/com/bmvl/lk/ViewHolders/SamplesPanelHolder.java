@@ -12,13 +12,12 @@ import com.google.android.material.button.MaterialButton;
 public class SamplesPanelHolder extends RecyclerView.ViewHolder {
     public final MaterialButton btnAddSample;
     public final RecyclerView SampleList;
-    public final TextView SamplePrice, Header;
+    public final TextView Header;
 
     public SamplesPanelHolder(@NonNull View itemView) {
         super(itemView);
         btnAddSample = itemView.findViewById(R.id.addBtn);
         SampleList = itemView.findViewById(R.id.List);
-        SamplePrice = itemView.findViewById(R.id.Price);
         Header = itemView.findViewById(R.id.HeaderRecyclerview);
         Header.setText("Образцы");
 

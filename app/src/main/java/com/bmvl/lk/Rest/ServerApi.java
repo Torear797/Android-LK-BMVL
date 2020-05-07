@@ -75,4 +75,8 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("ajax/getIndicators")
     Call<AnswerIndicators> getIndicators(@Field("materialId") int materialId);
+
+    @FormUrlEncoded
+    @POST("orders/edit")
+    Call<AnswerOrderEdit> getOrderInfo(@Field("token") String token, @Field("id") int id);
 }

@@ -82,6 +82,14 @@ public class Field {
         InputType = inputType;
     }
 
+    public Field(int column_id, boolean DoubleSize, String hint, int inputType) {
+        this.Type = 0;
+        this.column_id = column_id;
+        Doublesize = DoubleSize;
+        Hint = hint;
+        InputType = inputType;
+    }
+
     public Field(int column_id, String value, String hint, int inputType) {
         this.Type = 0;
         this.column_id = column_id;

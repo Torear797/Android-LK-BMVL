@@ -26,6 +26,7 @@
     <string name="Login_title">Авторизация</string>
     <string name="new_order_title">Выберите тип заявки</string>
     <string name="new_order">Новая заявка</string>
+    <string name="edit_order">Редактирование заявки</string>
     <string name="Doc_Face">Доверянное лицо</string>
 
     <string-array name="DocList">

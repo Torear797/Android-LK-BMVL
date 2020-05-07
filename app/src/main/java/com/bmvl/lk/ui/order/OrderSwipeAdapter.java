@@ -128,9 +128,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
             buttonOpen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Orders order = Orders.get(getLayoutPosition());
-                    swipeLayout.close();
-                    onOrderClickListener.onEditOrder(order);
+                    onOrderClickListener.onEditOrder(Orders.get(getLayoutPosition()));
                 }
             });
 
@@ -138,27 +136,24 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
             buttonCopy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Orders order = Orders.get(getLayoutPosition());
                     swipeLayout.close();
-                    onOrderClickListener.onCopyOrder(order);
+                    onOrderClickListener.onCopyOrder(Orders.get(getLayoutPosition()));
                 }
             });
 
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Orders order = Orders.get(getLayoutPosition());
                     swipeLayout.close();
-                    onOrderClickListener.onDeleteOrder(order.getId(), getLayoutPosition());
+                    onOrderClickListener.onDeleteOrder(Orders.get(getLayoutPosition()).getId(), getLayoutPosition());
                 }
             });
 
             buttonDownload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Orders order = Orders.get(getLayoutPosition());
                     swipeLayout.close();
-                    onOrderClickListener.onDownloadOrder(order.getId());
+                    onOrderClickListener.onDownloadOrder(Orders.get(getLayoutPosition()).getId());
                 }
             });
         }

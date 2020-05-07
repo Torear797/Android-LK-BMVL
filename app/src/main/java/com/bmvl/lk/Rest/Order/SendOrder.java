@@ -4,11 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class SendOrder {
+public class SendOrder implements Serializable{
     @SerializedName("ecp")
     @Expose
     private String ecp;
@@ -19,7 +20,7 @@ public class SendOrder {
 
     @SerializedName("id")
     @Expose
-    private byte id;
+    private int id;
 
     @SerializedName("enableNotifications")
     @Expose
@@ -81,7 +82,15 @@ public class SendOrder {
         return fields;
     }
 
-    public byte getId() {
+    public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setProby(TreeMap<Short, ProbyRest> proby) {
+        this.proby = proby;
     }
 }

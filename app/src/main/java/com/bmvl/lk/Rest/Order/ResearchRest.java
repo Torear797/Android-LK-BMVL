@@ -3,7 +3,9 @@ package com.bmvl.lk.Rest.Order;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ResearchRest {
+import java.io.Serializable;
+
+public class ResearchRest implements Serializable {
 
     @SerializedName("indicatorId")
     @Expose
@@ -143,5 +145,9 @@ public class ResearchRest {
 
     public void setTypeVal(String typeVal) {
         this.typeVal = typeVal;
+    }
+
+    public String getTypeVal() {
+        return typeVal;
     }
 }

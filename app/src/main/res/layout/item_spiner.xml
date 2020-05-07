@@ -8,7 +8,7 @@
         android:id="@+id/spinner"
         style="@style/MySpinner"
         android:layout_width="match_parent"
-        android:layout_height="62dp"
+        android:layout_height="61.5dp"
         android:paddingTop="5dp"
         android:spinnerMode="dialog"
         app:layout_constraintEnd_toEndOf="parent"

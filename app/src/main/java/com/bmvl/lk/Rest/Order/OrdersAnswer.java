@@ -19,4 +19,8 @@ public class OrdersAnswer {
     public OrdersElements getOrders() {
         return orders;
     }
+
+    public short getStatus() {
+        return status;
+    }
 }

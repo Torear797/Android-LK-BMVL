@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.ResearchRest;
+import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.daimajia.swipe.SwipeLayout;
@@ -29,16 +31,16 @@ import java.util.TreeMap;
 public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.ResearchItemHolder> {
     private LayoutInflater inflater;
     private TreeMap<Short, ResearchRest> researches; //Исследования
-   // private List<Field> ResearchField; //Поля Исследований
+    // private List<Field> ResearchField; //Поля Исследований
     private RecyclerView.RecycledViewPool viewPool;
     private OnResearchClickListener onResearchClickListener;
 
-    private String[] Indicators;
+    private String[] Methods, Types, Indicators;
 
     public ResearhAdapter(Context context, TreeMap<Short, ResearchRest> ResearchesLise, OnResearchClickListener Listener, String[] ind) {
         this.inflater = LayoutInflater.from(context);
         this.onResearchClickListener = Listener;
-    //    ResearchField = Fields;
+        //    ResearchField = Fields;
         researches = ResearchesLise;
         this.Indicators = ind;
     }
@@ -57,38 +59,62 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     @Override
     public void onBindViewHolder(ResearchItemHolder researchItemHolder, int i) {
         final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
-       // final ResearchFieldAdapter adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchField, Indicators);
-       // researchItemHolder.ResearchList.setAdapter(adapter);
-      //  researchItemHolder.ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
-       // researchItemHolder.ResearchList.setRecycledViewPool(viewPool);
+        // final ResearchFieldAdapter adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchField, Indicators);
+        // researchItemHolder.ResearchList.setAdapter(adapter);
+        //  researchItemHolder.ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
+        // researchItemHolder.ResearchList.setRecycledViewPool(viewPool);
 
-        setTestResearchData(CurrentResearch);
+        // String[] NewIndicators = new String[response.body().getSuggestions().size()];
 
-        researchItemHolder.NumberResearch.setText(MessageFormat.format("№ {0}", getPositionKey(i)));
-        
+        //setTestResearchData(CurrentResearch);
+        if (CurrentResearch.getIndicatorVal() != null && CurrentResearch.getMethodVal() != null && CurrentResearch.getTypeVal() != null) {
+            Indicators = new String[1];
+            Methods = new String[1];
+            Types = new String[1];
+
+            Indicators[0] = CurrentResearch.getIndicatorVal();
+            Methods[0] = CurrentResearch.getMethodVal();
+            Types[0] = CurrentResearch.getTypeVal();
+
+            InitAdapter(Indicators, researchItemHolder.Indicators);
+            InitAdapter(Methods, researchItemHolder.Methods);
+            InitAdapter(Types, researchItemHolder.Types);
+        }
+
+
+        researchItemHolder.NumberResearch.setText(MessageFormat.format("№ {0}", i + 1));
+
         researchItemHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         mItemManger.bindView(researchItemHolder.itemView, i);
     }
 
-    private void setTestResearchData(ResearchRest CurrentResearch){
-        CurrentResearch.setIndicatorId((short)499);
+    private void setTestResearchData(ResearchRest CurrentResearch) {
+        CurrentResearch.setIndicatorId((short) 499);
         CurrentResearch.setIndicatorNd("ГОСТ  Р 520");
-        CurrentResearch.setIndicatorNdId((short)682);
+        CurrentResearch.setIndicatorNdId((short) 682);
 
-        CurrentResearch.setMethodId((short)53);
+        CurrentResearch.setMethodId((short) 53);
         CurrentResearch.setMethodNd("ГОСТ  Р 520");
-        CurrentResearch.setMethodNdId((short)682);
+        CurrentResearch.setMethodNdId((short) 682);
 
-        CurrentResearch.setTypeId((short)3);
+        CurrentResearch.setTypeId((short) 3);
 
         CurrentResearch.setIndicatorVal("Консистенция");
         CurrentResearch.setMethodVal("Органолептический");
         CurrentResearch.setTypeVal("Классика");
     }
 
+    private void InitAdapter(String[] mass, Spinner spiner) {
+        if (mass != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(inflater.getContext(), android.R.layout.simple_spinner_item, mass);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spiner.setAdapter(adapter);
+        }
+    }
+
     private Short getPositionKey(int position) {
-        if(researches.size() > 0)
-        return new ArrayList<Short>(researches.keySet()).get(position);
+        if (researches.size() > 0)
+            return new ArrayList<Short>(researches.keySet()).get(position);
         else return 0;
     }
 
@@ -145,7 +171,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
                     TreeMap<Short, ResearchRest> insertlist = new TreeMap<>(researches);
                     insertlist.remove(getPositionKey(getLayoutPosition()));
                     updateList(insertlist);
-                   // Toast.makeText(view.getContext(), "Удаление ииследования", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(view.getContext(), "Удаление ииследования", Toast.LENGTH_SHORT).show();
                 }
             });
         }

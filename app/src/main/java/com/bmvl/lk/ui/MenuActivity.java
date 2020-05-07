@@ -123,9 +123,4 @@ public class MenuActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.ab_buttons, menu);
         return true;
     }
-
-    public void CloseMenu(){
-        this.finish();
-    }
-
 }

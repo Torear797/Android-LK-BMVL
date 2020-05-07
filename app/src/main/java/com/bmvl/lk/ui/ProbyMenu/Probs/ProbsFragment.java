@@ -43,6 +43,7 @@ public class ProbsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if(CreateOrderActivity.order.getProby().size() == 0)
         AddProb();
 
         ProbAdapter.OnProbClickListener onClickListener = new ProbAdapter.OnProbClickListener() {
@@ -65,15 +66,16 @@ public class ProbsFragment extends Fragment {
         switch (CreateOrderActivity.order_id) {
             case 1:
                 AddProbFieldsType0();
-                adapter = new ProbAdapter(getContext(), ProbFields, onClickListener);
+              //  adapter = new ProbAdapter(getContext(), ProbFields, onClickListener);
                 break;
             case 2:
                 break;
             case 4:
                 AddProbFieldsType2();
-                adapter = new ProbAdapter(getContext(), ProbFields, SampleFields, onClickListener);
+              //  adapter = new ProbAdapter(getContext(), ProbFields, SampleFields, onClickListener);
                 break;
         }
+        adapter = new ProbAdapter(getContext(), ProbFields, SampleFields, onClickListener);
         (adapter).setMode(Attributes.Mode.Single);
     }
 
@@ -139,6 +141,14 @@ public class ProbsFragment extends Fragment {
 //        ResearchFields.add(new Field((byte) 1, 1, "", "Метод испытаний"));
 //        ResearchFields.add(new Field((byte) 1, 2, "", "Тип исследования"));
 //    } //Поля исследвоаний
+    private void AddSamplesForType0(){
+        SampleFields.add(new Field(6, "", "Наименование образца, термическое состояние", InputType.TYPE_CLASS_TEXT));
+        SampleFields.add(new Field(22, "", "Дата выработки", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getActivity()).getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        SampleFields.add(new Field(40, "", "Масса/объем образца", InputType.TYPE_CLASS_TEXT));
+        SampleFields.add(new Field((byte) 1, R.array.units_of_measure, 41, "", " "));
+        SampleFields.add(new Field((byte) 5, R.array.documents, 19, "", "НД на продукцию"));
+        SampleFields.add(new Field((byte) 6, 0, "", ""));
+    }
 
     private void AddProbFieldsType0() {
         ProbFields.clear();
@@ -165,13 +175,9 @@ public class ProbsFragment extends Fragment {
         ProbFields.add(new Field(17, "", "В присутствии", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(12, "", "Дата и время отбора", InputType.TYPE_CLASS_TEXT));
 
-        ProbFields.add(new Field(6, "", "Наименование образца, термическое состояние", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(22, "", "Дата выработки", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getActivity()).getDrawable(R.drawable.ic_date_range_black_24dp), true));
-        ProbFields.add(new Field(40, "", "Масса/объем образца", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field((byte) 1, R.array.units_of_measure, 41, "", " "));
-        ProbFields.add(new Field((byte) 5, R.array.documents, 19, "", "НД на продукцию"));
 
-        ProbFields.add(new Field((byte) 6));
+        AddSamplesForType0();
+        ProbFields.add(new Field((byte) 7));
 
      //   AddResearchFields();
     } //Поля пробы на исследование пищевых продуктов

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.AnswerOrderEdit;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.AnswerSendOrder;
 import com.bmvl.lk.Rest.Order.ProbyRest;
@@ -28,6 +29,7 @@ import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.text.DateFormat;
@@ -52,14 +54,12 @@ public class CreateOrderActivity extends AppCompatActivity {
     private MaterialCheckBox cbox;
 
     public static SendOrder order;
+    private boolean Edit; //Флаг, истина - заявка редактируется.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_order);
-
-        order = new SendOrder(getIntent().getByteExtra("id", (byte) 1));
-        order_id = order.getType_id();
 
         final TextView OrderName = findViewById(R.id.Order_name);
         final Toolbar toolbar = findViewById(R.id.toolbar);
@@ -67,7 +67,20 @@ public class CreateOrderActivity extends AppCompatActivity {
         cbox = findViewById(R.id.AcceptcheckBox);
         final FrameLayout Frame = findViewById(R.id.Menu_proby_fragment);
         bar = findViewById(R.id.ProgressBar);
-        toolbar.setTitle(R.string.new_order);
+
+        Edit = getIntent().getBooleanExtra("isEdit", false);
+        if (!Edit) {
+            order = new SendOrder(getIntent().getByteExtra("type_id",(byte)1));
+            toolbar.setTitle(R.string.new_order);
+        }
+        else {
+            order = (SendOrder) getIntent().getSerializableExtra(SendOrder.class.getSimpleName());
+            toolbar.setTitle(R.string.edit_order);
+            final MaterialButton btn = findViewById(R.id.Create);
+            btn.setText("Сохранить");
+        }
+        order_id = order.getType_id();
+
         setSupportActionBar(toolbar);
 
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
@@ -177,20 +190,15 @@ public class CreateOrderActivity extends AppCompatActivity {
     private void LoadDefaultFields() {
         //Заполнение полей на форме
         Fields.clear();
-        Fields.add(new Field(135, App.UserInfo.getClientName(), false, "Заявитель", InputType.TYPE_NULL));
-        Fields.add(new Field(136, App.UserInfo.getContract_number(), false, "Договор №", InputType.TYPE_NULL));
-        Fields.add(new Field(137, App.UserInfo.getContract_date(), false, "от", InputType.TYPE_NULL));
-        Fields.add(new Field(138, App.UserInfo.getAdress(), false, "Адрес", InputType.TYPE_NULL));
-        Fields.add(new Field(139, App.UserInfo.getInn(), false, "ИНН", InputType.TYPE_NULL));
-        Fields.add(new Field(140, App.UserInfo.getPhone(), false, "Телефон", InputType.TYPE_NULL));
-        Fields.add(new Field(141, App.UserInfo.getEmail(), false, "E-mail", InputType.TYPE_NULL));
-        Fields.add(new Field(142, App.UserInfo.getFIO() + ", " + App.UserInfo.getPosition() + ", действующий на основании " + getBasisString(), false, "Представитель организации", InputType.TYPE_NULL));
-
-        Date currentDate = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
-
-        Fields.add(new Field(-1, dateFormat.format(currentDate), false, "Дата создания заявки", InputType.TYPE_NULL));
-
+        Fields.add(new Field(135,false, "Заявитель", InputType.TYPE_NULL));
+        Fields.add(new Field(136,false, "Договор №", InputType.TYPE_NULL));
+        Fields.add(new Field(137,false, "от", InputType.TYPE_NULL));
+        Fields.add(new Field(138,false, "Адрес", InputType.TYPE_NULL));
+        Fields.add(new Field(139,false, "ИНН", InputType.TYPE_NULL));
+        Fields.add(new Field(140,false, "Телефон", InputType.TYPE_NULL));
+        Fields.add(new Field(141,false, "E-mail", InputType.TYPE_NULL));
+        Fields.add(new Field(142,false, "Представитель организации", InputType.TYPE_NULL));
+        Fields.add(new Field(-1, new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(new Date()), false, "Дата создания заявки", InputType.TYPE_NULL));
 
         //Заполнение отправляемого объекта
         order.getFields().put((short) 135, App.UserInfo.getClientName());
@@ -201,7 +209,6 @@ public class CreateOrderActivity extends AppCompatActivity {
         order.getFields().put((short) 140, App.UserInfo.getPhone());
         order.getFields().put((short) 141, App.UserInfo.getEmail());
         order.getFields().put((short) 142, App.UserInfo.getFIO() + ", " + App.UserInfo.getPosition() + ", действующий на основании " + getBasisString());
-
 
     } //Базовые поля
 
@@ -242,8 +249,16 @@ public class CreateOrderActivity extends AppCompatActivity {
         if (isFieldCorrect()) {
             view.setEnabled(false);
             bar.setVisibility(View.VISIBLE);
-            SendOrder(view);
+            DeleteEmptyFields();
+            if (!Edit)
+                SendOrder(view);
+            else
+                SaveOrder(view);
         }
+    }
+
+    private void SaveOrder(final View view) {
+
     }
 
     private String getBasisString() {
@@ -264,12 +279,13 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private Short getPositionKeySamples(int position, int prob) {
-        if(order.getProby().get(getPositionKeyProbs(prob)).getSamples().size() > 0)
+        if (order.getProby().get(getPositionKeyProbs(prob)).getSamples().size() > 0)
             return new ArrayList<Short>(order.getProby().get(getPositionKeyProbs(prob)).getSamples().keySet()).get(position);
         else return 0;
     }
+
     private Short getPositionKeyProbs(int position) {
-        if(order.getProby().size() > 0)
+        if (order.getProby().size() > 0)
             return new ArrayList<Short>(order.getProby().keySet()).get(position);
         else return 0;
     }
@@ -278,10 +294,10 @@ public class CreateOrderActivity extends AppCompatActivity {
         final int ProbSize = order.getProby().size();
         int SamplesSize;
         for (int i = 0; i < ProbSize; i++) {
-            SamplesSize = order.getProby().get(getPositionKeyProbs((short)i)).getSamples().size();
+            SamplesSize = order.getProby().get(getPositionKeyProbs((short) i)).getSamples().size();
             for (int j = 0; j < SamplesSize; j++) {
-                if (order.getProby().get(getPositionKeyProbs((short)i)).getSamples().get(getPositionKeySamples(j,i)).getFields().size() <= 0) {
-                    order.getProby().get(getPositionKeyProbs((short)i)).getSamples().get(getPositionKeySamples(j,i)).DeleteSamplesFields();
+                if (order.getProby().get(getPositionKeyProbs((short) i)).getSamples().get(getPositionKeySamples(j, i)).getFields().size() <= 0) {
+                    order.getProby().get(getPositionKeyProbs((short) i)).getSamples().get(getPositionKeySamples(j, i)).DeleteSamplesFields();
                     break;
                 }
             }
@@ -293,7 +309,6 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private void SendOrder(final View view) {
-        DeleteEmptyFields();
         String json = order.getJsonOrder();
         Log.d("JSON", json);
 

@@ -5,17 +5,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
@@ -61,11 +64,27 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
 
         final SamplesFieldAdapter adapter = new SamplesFieldAdapter(inflater.getContext(), SamplesField, CurrentSample,Indicators);
         simpleViewHolder.SampleList.setAdapter(adapter);
-        simpleViewHolder.SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
+        simpleViewHolder.SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
         simpleViewHolder.SampleList.setRecycledViewPool(viewPool);
 
-        simpleViewHolder.NumberSample.setText(MessageFormat.format("№ {0}", getPositionKey(i)));
-        simpleViewHolder.Info.setText("Образец");
+        if(CreateOrderActivity.order_id != 1) {
+            simpleViewHolder.NumberSample.setText(MessageFormat.format("№ {0}", getPositionKey(i)));
+            simpleViewHolder.Info.setText("Образец");
+        } else {
+            simpleViewHolder.GreenHeader.setVisibility(View.GONE);
+            simpleViewHolder.SampleList.setVisibility(View.VISIBLE);
+            simpleViewHolder.swipeLayout.setSwipeEnabled(false);
+
+            final GridLayoutManager mng_layout = new GridLayoutManager(inflater.getContext(), 2);
+            mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if (position == 2 || position == 3) return 1;
+                    return 2;
+                }
+            });
+            simpleViewHolder.SampleList.setLayoutManager(mng_layout);
+        }
 
         simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         mItemManger.bindView(simpleViewHolder.itemView, i);
@@ -89,6 +108,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
 
      class SimpleViewHolder extends RecyclerView.ViewHolder {
         final ConstraintLayout head;
+        final LinearLayout GreenHeader;
         final TextView NumberSample, Info;
         final SwipeLayout swipeLayout;
         final ImageView buttonDelete, createBtn;
@@ -100,6 +120,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
             SampleList = itemView.findViewById(R.id.ProbFields);
             head = itemView.findViewById(R.id.Header);
             Info = itemView.findViewById(R.id.InfoProb);
+            GreenHeader = itemView.findViewById(R.id.linearLayout);
 
             swipeLayout = itemView.findViewById(R.id.swipe);
             buttonDelete = itemView.findViewById(R.id.trash);

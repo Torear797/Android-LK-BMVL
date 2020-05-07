@@ -44,7 +44,7 @@ public class MultiSpinner extends androidx.appcompat.widget.AppCompatSpinner imp
         for (int i = 0; i < items.size(); i++) {
             if (selected[i]) {
                 spinnerBuffer.append(items.get(i));
-                spinnerBuffer.append(", ");
+                spinnerBuffer.append(",");
             } else {
                 someUnselected = true;
             }
@@ -53,8 +53,8 @@ public class MultiSpinner extends androidx.appcompat.widget.AppCompatSpinner imp
         String spinnerText;
         if (someUnselected) {
             spinnerText = spinnerBuffer.toString();
-            if (spinnerText.length() > 2)
-                spinnerText = spinnerText.substring(0, spinnerText.length() - 2);
+            if (spinnerText.length() > 1)
+                spinnerText = spinnerText.substring(0, spinnerText.length() - 1);
         } else {
             spinnerText = defaultText;
         }
@@ -62,7 +62,7 @@ public class MultiSpinner extends androidx.appcompat.widget.AppCompatSpinner imp
                 android.R.layout.simple_spinner_item,
                 new String[] { spinnerText });
         setAdapter(adapter);
-        listener.onItemsSelected(selected, spinnerBuffer.toString());
+        listener.onItemsSelected(selected, spinnerText);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class MultiSpinner extends androidx.appcompat.widget.AppCompatSpinner imp
         this.defaultText = allText;
         this.listener = listener;
 
-        String[] strArr = allText.split(", ");
+        String[] strArr = allText.split(",");
         int[] numArr = new int[strArr.length];
         int index;
         if(!allText.equals(""))

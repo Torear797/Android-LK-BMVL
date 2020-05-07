@@ -3,19 +3,20 @@ package com.bmvl.lk.Rest.Order;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ProbyRest {
+public class ProbyRest implements Serializable {
     @SerializedName("id")
     @Expose
     private short id;
 
     @SerializedName("fields")
     @Expose
-    private Map<Short, String> fields  = new HashMap<>();
+    private Map<String, String> fields  = new HashMap<>();
 
     @SerializedName("samples")
     @Expose
@@ -29,7 +30,7 @@ public class ProbyRest {
         this.id = id;
     }
 
-    public void setFields(Map<Short, String> fields) {
+    public void setFields(Map<String, String> fields) {
         this.fields = fields;
     }
 
@@ -41,7 +42,7 @@ public class ProbyRest {
         return this.samples;
     }
 
-    public Map<Short, String> getFields() {
+    public Map<String, String> getFields() {
         return fields;
     }
 

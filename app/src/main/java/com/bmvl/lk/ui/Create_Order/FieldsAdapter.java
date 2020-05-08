@@ -220,65 +220,65 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                         break;
                 }
 
-                ((OriginalDocHolder) holder).spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    public void onItemSelected(AdapterView<?> parent, View itemSelected, int selectedItemPosition, long selectedId) {
+//                ((OriginalDocHolder) holder).spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                    public void onItemSelected(AdapterView<?> parent, View itemSelected, int selectedItemPosition, long selectedId) {
+//
+//                        if (selectedItemPosition == 0 || selectedItemPosition == 1) {
+//                            ((OriginalDocHolder) holder).fieldEmail.setVisibility(View.GONE);
+//                            ((OriginalDocHolder) holder).LayoutEmail.setVisibility(View.GONE);
+//                        }
+//
+//                        switch (selectedItemPosition) {
+//                            case 0:
+//                                ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.Doc_Face));
+//                                f.setColumn_id(52);
+//                                break;
+//                            case 1:
+//                                ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.adres));
+//                                f.setColumn_id(63);
+//                                break;
+//                            case 2:
+//                                ((OriginalDocHolder) holder).fieldEmail.setVisibility(View.VISIBLE);
+//                                ((OriginalDocHolder) holder).LayoutEmail.setVisibility(View.VISIBLE);
+//                                ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.adres));
+//                                f.setColumn_id(64);
+//                                break;
+//                        }
+//                    }
+//
+//                    public void onNothingSelected(AdapterView<?> parent) {
+//                    }
+//                });
 
-                        if (selectedItemPosition == 0 || selectedItemPosition == 1) {
-                            ((OriginalDocHolder) holder).fieldEmail.setVisibility(View.GONE);
-                            ((OriginalDocHolder) holder).LayoutEmail.setVisibility(View.GONE);
-                        }
-
-                        switch (selectedItemPosition) {
-                            case 0:
-                                ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.Doc_Face));
-                                f.setColumn_id(52);
-                                break;
-                            case 1:
-                                ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.adres));
-                                f.setColumn_id(63);
-                                break;
-                            case 2:
-                                ((OriginalDocHolder) holder).fieldEmail.setVisibility(View.VISIBLE);
-                                ((OriginalDocHolder) holder).LayoutEmail.setVisibility(View.VISIBLE);
-                                ((OriginalDocHolder) holder).LayoutAdres.setHint(inflater.getContext().getResources().getString(R.string.adres));
-                                f.setColumn_id(64);
-                                break;
-                        }
-                    }
-
-                    public void onNothingSelected(AdapterView<?> parent) {
-                    }
-                });
-
-                ((OriginalDocHolder) holder).fieldEmail.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        OrderFields.put((short) f.getColumn_id(), String.valueOf(s));
-                    }
-
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-                });
-
-                ((OriginalDocHolder) holder).fieldAdres.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        OrderFields.put((short) f.getColumn_id(), String.valueOf(s));
-                    }
-
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-                });
+//                ((OriginalDocHolder) holder).fieldEmail.addTextChangedListener(new TextWatcher() {
+//                    @Override
+//                    public void afterTextChanged(Editable s) {
+//                        OrderFields.put((short) f.getColumn_id(), String.valueOf(s));
+//                    }
+//
+//                    @Override
+//                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                    }
+//
+//                    @Override
+//                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                    }
+//                });
+//
+//                ((OriginalDocHolder) holder).fieldAdres.addTextChangedListener(new TextWatcher() {
+//                    @Override
+//                    public void afterTextChanged(Editable s) {
+//                        OrderFields.put((short) f.getColumn_id(), String.valueOf(s));
+//                    }
+//
+//                    @Override
+//                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                    }
+//
+//                    @Override
+//                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                    }
+//                });
                 break;
             } //Оригиналы документов
             case 3: {

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -79,6 +80,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
     private static byte TotalPage;
     private static byte CurrentPage = 0;
+    private TextView message;
 
     @Override
     public void onResume() {
@@ -115,7 +117,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         swipeRefreshLayout = MyView.findViewById(R.id.SwipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(MyRefresh);
         fab = MyView.findViewById(R.id.floatingActionButton);
-        // final TextView message = MyView.findViewById(R.id.empty_msg);
+        message = MyView.findViewById(R.id.empty_msg);
 
         initRecyclerView();
         recyclerView.scrollToPosition(0);
@@ -161,6 +163,8 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                         loading = true;
                                         break;
                                 }
+                                if(Orders.size() == 0) message.setVisibility(View.VISIBLE);
+                                else message.setVisibility(View.GONE);
                             } else {
                                 Hawk.deleteAll();
                                 Intent intent = new Intent(getContext(), LoginActivity.class);
@@ -317,21 +321,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         recyclerView.setAdapter(OrderAdapter);
     }
 
-//    private void requestMultiplePermissions() {
-//        ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
-//                new String[]{
-//                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                        Manifest.permission.READ_EXTERNAL_STORAGE
-//                },
-//                0);
-//
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            if (ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                    != PackageManager.PERMISSION_GRANTED) {
-//                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.INTERNET}, 1);
-//            }
-//        }
-//    }
     private boolean checkPermissions() {
         int result;
         String[] permissions = new String[]{

@@ -79,4 +79,8 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("orders/edit")
     Call<AnswerOrderEdit> getOrderInfo(@Field("token") String token, @Field("id") int id);
+
+    @FormUrlEncoded
+    @POST("orders/save")
+    Call<StandardAnswer> SaveOrder(@Field("token") String token, @Field("order") String order);
 }

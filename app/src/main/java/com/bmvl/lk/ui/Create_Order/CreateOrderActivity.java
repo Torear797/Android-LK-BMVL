@@ -27,10 +27,12 @@ import com.bmvl.lk.Rest.Order.AnswerSendOrder;
 import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Order.SendOrder;
+import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.orhanobut.hawk.Hawk;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -108,67 +110,71 @@ public class CreateOrderActivity extends AppCompatActivity {
 
         switch (order_id) {
             case 1:
-                addFieldOrderType0();
-                cbox.setVisibility(View.VISIBLE);
-                cbox.setMovementMethod(LinkMovementMethod.getInstance());
-                Frame.setVisibility(View.VISIBLE);
-                loadFragment(ProbyMenuFragment.newInstance());
-                break;
-            case 4:
                 addFieldOrderType1();
                 cbox.setVisibility(View.VISIBLE);
                 cbox.setMovementMethod(LinkMovementMethod.getInstance());
                 Frame.setVisibility(View.VISIBLE);
                 loadFragment(ProbyMenuFragment.newInstance());
                 break;
+            case 4:
+                addFieldOrderType4();
+                cbox.setVisibility(View.VISIBLE);
+                cbox.setMovementMethod(LinkMovementMethod.getInstance());
+                Frame.setVisibility(View.VISIBLE);
+                loadFragment(ProbyMenuFragment.newInstance());
+                break;
             case 5:
-                addFieldOrderType2();
+                addFieldOrderType5();
                 break;
             case 6:
-                addFieldOrderType3();
+                addFieldOrderType6();
                 break;
             case 7:
-                addFieldOrderType4();
+                addFieldOrderType7();
                 break;
         }
     }
-
-    private void addFieldOrderType0() {
+    private void StandartFieldPart1(){
         Fields.add(new Field((byte) 1, R.array.target_research, 3, "", "Цель исследования/категория"));
         Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), App.OrderInfo.getOD_Value(), "Оригиналы документов предоставлять")); //52. 63. 64
         Fields.add(new Field((byte) 3, 66, "", "Возврат образцов"));
         Fields.add(new Field((byte) 4, 0, "", "Акт отбора"));
-        Fields.add(new Field((byte) 3, 59, "", "Контрольный образец"));
+        Fields.add(new Field((byte) 5, 59, "", "Контрольный образец"));
         Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
         Fields.add(new Field(10, "", "№", InputType.TYPE_CLASS_TEXT));
+    }
+
+    private void addFieldOrderType1() {
+        StandartFieldPart1();
         Fields.add(new Field(49, "", "Площадка", InputType.TYPE_CLASS_TEXT));
     } //Заявка на исследования пищевых продуктов
 
-    private void addFieldOrderType1() {
-        Fields.add(new Field((byte) 1, R.array.target_research2, 0, "", "Цель исследования/категория"));
-        Fields.add(new Field((byte) 2, R.array.DocList, 0, "", "Оригиналы документов предоставлять"));
-        Fields.add(new Field((byte) 1, R.array.Reserch_start, 0, "", "Исследование проводится"));
+    private void addFieldOrderType4() {
+        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "", "Цель исследования/категория"));
+        Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), App.OrderInfo.getOD_Value(), "Оригиналы документов предоставлять")); //52. 63. 64
+        Fields.add(new Field((byte) 1, R.array.Reserch_start, 97, "", "Исследование проводится")); //act_of_selection
         Fields.add(new Field((byte) 4, 0, "", "Акт отбора"));
-        Fields.add(new Field(1, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
-        Fields.add(new Field(1, "", "№", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        Fields.add(new Field(10, "", "№", InputType.TYPE_CLASS_TEXT));
 
-        Fields.add(new Field(1, "", "Сопроводительный документ", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field(1, "", "Владелец образцов", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field(1, "", "Площадка", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field(1, "", "Количество проб", InputType.TYPE_NULL));
-        Fields.add(new Field(1, "", "Общее поголовье", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field(1, "", "Дата предыдущего исследоваия", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
-        Fields.add(new Field(1, "", "Результат предыдущего исследования", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field((byte) 1, R.array.hoz_zab, 0, "", "Хозяйство по вышеуказанному заболеванию"));
-        Fields.add(new Field(1, "", "Дата заболевания животного(ных)", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
-        Fields.add(new Field(1, "", "Дата падежа", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
-        Fields.add(new Field(1, "", "Клиническая картина", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field(1, "", "Данные патологического вскрытия", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field(1, "", "Предположительный диагноз", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(24, "", "Сопроводительный документ", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(9, "", "Владелец образцов", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(49, "", "Площадка", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(7, "", "Количество проб", InputType.TYPE_NULL));
+        order.getFields().put((short)7,"1");
+        Fields.add(new Field(93, "", "Общее поголовье", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(98, "", "Дата предыдущего исследоваия", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        Fields.add(new Field(99, "", "Результат предыдущего исследования", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field((byte) 1, R.array.hoz_zab, 97, "", "Хозяйство по вышеуказанному заболеванию"));
+        Fields.add(new Field(106, "", "Дата заболевания животного(ных)", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        Fields.add(new Field(107, "", "Дата падежа", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        Fields.add(new Field(108, "", "Клиническая картина", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(109, "", "Данные патологического вскрытия", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(110, "", "Предположительный диагноз", InputType.TYPE_CLASS_TEXT));
 
     } //Сопроводительное письмо
 
-    private void addFieldOrderType2() {
+    private void addFieldOrderType5() {
         Fields.add(new Field(123, "", "Сумма долга (руб)", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.rub)));
         Fields.add(new Field(117, "", "Номер заявки", InputType.TYPE_CLASS_NUMBER));
         Fields.add(new Field(134, "", "Счет на оплату №", InputType.TYPE_CLASS_TEXT));
@@ -176,12 +182,12 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field(119, "", true, "Текст", InputType.TYPE_TEXT_FLAG_MULTI_LINE));
     } //Гарантийное письмо
 
-    private void addFieldOrderType3() {
+    private void addFieldOrderType6() {
         Fields.add(new Field(118, "", "Заголовок", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(119, "", true, "Текст", InputType.TYPE_TEXT_FLAG_MULTI_LINE));
     } //Информационное письмо
 
-    private void addFieldOrderType4() { //Запрос
+    private void addFieldOrderType7() { //Запрос
         Fields.add(new Field(117, "", "Номер заявки", InputType.TYPE_CLASS_NUMBER));
         Fields.add(new Field(118, "", "Заголовок", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(119, "", true, "Текст", InputType.TYPE_TEXT_FLAG_MULTI_LINE));
@@ -258,7 +264,36 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private void SaveOrder(final View view) {
+        //String json = order.getJsonOrder();
+     //   Hawk.put("obraz",json);
+        Log.d("JSON", order.getJsonOrder());
 
+        NetworkService.getInstance()
+                .getJSONApi()
+                .SaveOrder(App.UserAccessData.getToken(), order.getJsonOrder())
+                .enqueue(new Callback<StandardAnswer>() {
+                    @Override
+                    public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            if (response.body().getStatus() == 200) {
+                                Toast.makeText(view.getContext(), "Заказ успешно изменен!", Toast.LENGTH_SHORT).show();
+                                CreateOrderActivity.this.finish();
+                            }
+                        } else {
+                            view.setEnabled(true);
+                            bar.setVisibility(View.GONE);
+                            Toast.makeText(view.getContext(), "Ошибка 1", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
+                        view.setEnabled(true);
+                        bar.setVisibility(View.GONE);
+                        Toast.makeText(view.getContext(), "Ошибка 2", Toast.LENGTH_SHORT).show();
+                        Log.d("Проблема в ", String.valueOf(t));
+                    }
+                });
     }
 
     private String getBasisString() {
@@ -309,38 +344,38 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private void SendOrder(final View view) {
-        String json = order.getJsonOrder();
-        Log.d("JSON", json);
+       // String json = Hawk.get("obraz");
+        Log.d("JSON", order.getJsonOrder());
 
-        view.setEnabled(true);
-        bar.setVisibility(View.GONE);
+     //   view.setEnabled(true);
+      //  bar.setVisibility(View.GONE);
 
-//        NetworkService.getInstance()
-//                .getJSONApi()
-//                .sendOrder(App.UserAccessData.getToken(), order.getJsonOrder())
-//                .enqueue(new Callback<AnswerSendOrder>() {
-//                    @Override
-//                    public void onResponse(@NonNull Call<AnswerSendOrder> call, @NonNull Response<AnswerSendOrder> response) {
-//                        if (response.isSuccessful() && response.body() != null) {
-//                            if (response.body().getStatus() == 200) {
-//                                Toast.makeText(view.getContext(), "Заказ успешно создан!", Toast.LENGTH_SHORT).show();
-//                                CreateOrderActivity.this.finish();
-//                            }
-//                        } else {
-//                            view.setEnabled(true);
-//                            bar.setVisibility(View.GONE);
-//                            Toast.makeText(view.getContext(), "Ошибка 1", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Call<AnswerSendOrder> call, @NonNull Throwable t) {
-//                        view.setEnabled(true);
-//                        bar.setVisibility(View.GONE);
-//                        Toast.makeText(view.getContext(), "Ошибка 2", Toast.LENGTH_SHORT).show();
-//                        Log.d("Проблема в ", String.valueOf(t));
-//                    }
-//                });
+        NetworkService.getInstance()
+                .getJSONApi()
+                .sendOrder(App.UserAccessData.getToken(), order.getJsonOrder())
+                .enqueue(new Callback<AnswerSendOrder>() {
+                    @Override
+                    public void onResponse(@NonNull Call<AnswerSendOrder> call, @NonNull Response<AnswerSendOrder> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            if (response.body().getStatus() == 200) {
+                                Toast.makeText(view.getContext(), "Заказ успешно создан!", Toast.LENGTH_SHORT).show();
+                                CreateOrderActivity.this.finish();
+                            }
+                        } else {
+                            view.setEnabled(true);
+                            bar.setVisibility(View.GONE);
+                            Toast.makeText(view.getContext(), "Ошибка 1", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<AnswerSendOrder> call, @NonNull Throwable t) {
+                        view.setEnabled(true);
+                        bar.setVisibility(View.GONE);
+                        Toast.makeText(view.getContext(), "Ошибка 2", Toast.LENGTH_SHORT).show();
+                        Log.d("Проблема в ", String.valueOf(t));
+                    }
+                });
     }
 
 }

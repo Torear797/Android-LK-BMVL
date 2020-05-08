@@ -107,6 +107,7 @@ public class ProbsFragment extends Fragment {
                 insertlist.put((short) (newid + 1), new ProbyRest(newid));
                 adapter.insertdata(insertlist);
                 CreateOrderActivity.order.getProby().get((short) (newid + 1)).addSample((short) 1, new SamplesRest((short) 0));
+                CreateOrderActivity.order.getFields().put((short)7, String.valueOf(CreateOrderActivity.order.getProby().size()));
                 recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
             }
         });

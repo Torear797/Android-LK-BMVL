@@ -66,7 +66,8 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
 
         // String[] NewIndicators = new String[response.body().getSuggestions().size()];
 
-        //setTestResearchData(CurrentResearch);
+        researchItemHolder.NumberResearch.setText(MessageFormat.format("№ {0}", i + 1));
+
         if (CurrentResearch.getIndicatorVal() != null && CurrentResearch.getMethodVal() != null && CurrentResearch.getTypeVal() != null) {
             Indicators = new String[1];
             Methods = new String[1];
@@ -79,28 +80,30 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
             InitAdapter(Indicators, researchItemHolder.Indicators);
             InitAdapter(Methods, researchItemHolder.Methods);
             InitAdapter(Types, researchItemHolder.Types);
-        }
+        } else
+            setTestResearchData(CurrentResearch);
 
 
-        researchItemHolder.NumberResearch.setText(MessageFormat.format("№ {0}", i + 1));
 
         researchItemHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         mItemManger.bindView(researchItemHolder.itemView, i);
     }
 
     private void setTestResearchData(ResearchRest CurrentResearch) {
+
         CurrentResearch.setIndicatorId((short) 499);
-        CurrentResearch.setIndicatorNd("ГОСТ  Р 520");
+        CurrentResearch.setIndicatorVal("Консистенция");
+        CurrentResearch.setIndicatorNd("ГОСТ Р\\n52054-2003");
         CurrentResearch.setIndicatorNdId((short) 682);
 
+
         CurrentResearch.setMethodId((short) 53);
-        CurrentResearch.setMethodNd("ГОСТ  Р 520");
+        CurrentResearch.setMethodVal("органолептический");
+        CurrentResearch.setMethodNd("ГОСТ Р\\n52054-2003");
         CurrentResearch.setMethodNdId((short) 682);
 
         CurrentResearch.setTypeId((short) 3);
 
-        CurrentResearch.setIndicatorVal("Консистенция");
-        CurrentResearch.setMethodVal("Органолептический");
         CurrentResearch.setTypeVal("Классика");
     }
 

@@ -1,6 +1,7 @@
 package com.bmvl.lk.ui;
 
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -21,6 +23,8 @@ import com.bmvl.lk.ui.profile.ProfileActivity;
 import com.bmvl.lk.ui.search.SearchFragment;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Objects;
 
 
 public class MenuActivity extends AppCompatActivity {
@@ -65,9 +69,6 @@ public class MenuActivity extends AppCompatActivity {
             }
             return true;
     }
-    public void End(){
-        finish();
-    }
 
     @Override
     public void onBackPressed() {
@@ -103,6 +104,7 @@ public class MenuActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
+        //    requestMultiplePermissions(); //Запрос разрешений
 
             setContentView(R.layout.activity_menu);
 
@@ -122,5 +124,14 @@ public class MenuActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.ab_buttons, menu);
         return true;
+    }
+
+    private void requestMultiplePermissions() {
+        ActivityCompat.requestPermissions(Objects.requireNonNull(this),
+                new String[]{
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                },
+                0);
     }
 }

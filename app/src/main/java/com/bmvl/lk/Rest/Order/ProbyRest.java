@@ -16,7 +16,7 @@ public class ProbyRest implements Serializable {
 
     @SerializedName("fields")
     @Expose
-    private Map<String, String> fields  = new HashMap<>();
+    private Map<String, String> fields = new HashMap<>();
 
     @SerializedName("samples")
     @Expose
@@ -50,18 +50,29 @@ public class ProbyRest implements Serializable {
         this.samples = samples;
     }
 
-    public boolean isResearchCorrect(){
-       //if(samples.size() <=0 || samples.get(sample_id).getResearches().size() <=0) return false;
+    public boolean isResearchCorrect() {
+        //if(samples.size() <=0 || samples.get(sample_id).getResearches().size() <=0) return false;
         int sampleCount = samples.size();
-        if(sampleCount <= 0) return false;
-        for(short i = 0; i < sampleCount; i++){
-            if(samples.get(getPositionKey(i)).getResearches().size() <=0) return false;
+        int ResearchSize;
+        if (sampleCount <= 0) return false;
+        for (short i = 0; i < sampleCount; i++) {
+            ResearchSize = samples.get(getPositionKey(i)).getResearches().size();
+            if (ResearchSize <= 0) return false;
+            for (int j = 0; j < ResearchSize; j++) {
+                if (samples.get(getPositionKey(i)).getResearches().get(getPositionKeyR(i, j)).getTypeVal() == null)
+                    return false;
+            }
         }
         return true;
     }
+
     private Short getPositionKey(int position) {
-        if(samples.size() > 0)
+        if (samples.size() > 0)
             return new ArrayList<Short>(samples.keySet()).get(position);
         else return 0;
+    }
+
+    private Short getPositionKeyR(int i, int j) {
+        return new ArrayList<Short>(samples.get(getPositionKey(i)).getResearches().keySet()).get(j);
     }
 }

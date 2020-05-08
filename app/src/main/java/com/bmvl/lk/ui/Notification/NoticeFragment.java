@@ -14,19 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bmvl.lk.App;
-import com.bmvl.lk.Rest.StandardAnswer;
-import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Notify.NotificationsAnswer;
+import com.bmvl.lk.Rest.StandardAnswer;
+import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Notifications;
-import com.bmvl.lk.ui.Create_Order.FieldsAdapter;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.snackbar.Snackbar;
 import com.orhanobut.hawk.Hawk;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +49,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
     private static byte CurrentPage = 0;
 
     private RecyclerView recyclerView;
+    private TextView Message;
 
 
     public NoticeFragment() {
@@ -65,17 +63,14 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.fragment_notice, container, false);
-        if(Hawk.contains("NotifyList")) Notifi = Hawk.get("NotifyList");
+        if (Hawk.contains("NotifyList")) Notifi = Hawk.get("NotifyList");
 
         recyclerView = MyView.findViewById(R.id.Notifi_list);
         swipeRefreshLayout = MyView.findViewById(R.id.SwipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(MyRefresh);
-       // final TextView Message = MyView.findViewById(R.id.msg);
+        Message = MyView.findViewById(R.id.msg);
 
         initRecyclerView();
-
-        if (Notifi.size() == 0) InsertNotifications(Notifi, (byte) 0);
-        else UpdateNotify();
 
 
 //        new Handler().postDelayed(new Runnable() {
@@ -90,23 +85,31 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
         RecyclerViewEndLisener();
         return MyView;
     }
-    public void initRecyclerView(){
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Notifi.size() == 0) InsertNotifications(Notifi, (byte) 0);
+        else UpdateNotify();
+        // Toast.makeText(getContext(), "123", Toast.LENGTH_SHORT).show();
+    }
+
+    public void initRecyclerView() {
         NotifiSwipeAdapter.OnNotifyClickListener onClickListener = new NotifiSwipeAdapter.OnNotifyClickListener() {
             @Override
-            public void onNotifyClick(final int id) {
+            public void onNotifyClick(final int pos, final int id) {
                 NotifiAdapter.closeAllItems();
-                NotifiAdapter.notifyItemChanged(id);
+                NotifiAdapter.notifyItemChanged(pos);
                 NetworkService.getInstance()
                         .getJSONApi()
                         .HideNotify(App.UserAccessData.getToken(), id)
                         .enqueue(new Callback<StandardAnswer>() {
                             @Override
                             public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
-                                if (response.isSuccessful()) {
-                                   // NotifiAdapter.closeAllItems();
-                                   // UpdateNotify();
-                                   // NotifiAdapter.notifyItemChanged(id);
-                                    Snackbar.make(Objects.requireNonNull(getView()), "Уведомление прочтено!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                if (response.isSuccessful() && response.body() != null) {
+
+                                    if (response.body().getStatus() == 200)
+                                        Snackbar.make(Objects.requireNonNull(getView()), "Уведомление прочтено!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                 }
                             }
 
@@ -117,13 +120,14 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
             }
         };
 
-        recyclerView.addItemDecoration(new SpacesItemDecoration((byte)10,(byte)10));
+        recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 10, (byte) 10));
         recyclerView.setHasFixedSize(true);
         NotifiAdapter = new NotifiSwipeAdapter(getContext(), Notifi, onClickListener);
         (NotifiAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(NotifiAdapter);
     }
-    private void UpdateNotify(){
+
+    private void UpdateNotify() {
         List<Notifications> insertlist = new ArrayList<>();
         CurrentPage = 0;
         InsertNotifications(insertlist, (byte) 1);
@@ -150,7 +154,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
                             TotalPage = response.body().getNotifications().getTotal_pages();
                             CurrentPage = response.body().getNotifications().getCurrent();
                             NewList.addAll(response.body().getNotifications().getNotifications());
-                            Hawk.put("NotifyList",NewList);
+                            Hawk.put("NotifyList", NewList);
                             switch (Type) {
                                 case 0:
                                     NotifiAdapter.notifyDataSetChanged();
@@ -160,13 +164,15 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
                                     swipeRefreshLayout.setRefreshing(false);
                                     break;
                                 case 2:
-                                   // NotifiAdapter.insertdata(NewList);
+                                    // NotifiAdapter.insertdata(NewList);
                                     //recyclerView.smoothScrollToPosition((CurrentPage - 1) * 10 - 1);
                                     Notifi.addAll(NewList);
                                     NotifiAdapter.notifyDataSetChanged();
                                     loading = true;
                                     break;
                             }
+                            if (Notifi.size() == 0) Message.setVisibility(View.VISIBLE);
+                            else Message.setVisibility(View.GONE);
                         }
                     }
 
@@ -203,6 +209,5 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
 
     @Override
     public void onBackPressed() {
-
     }
 }

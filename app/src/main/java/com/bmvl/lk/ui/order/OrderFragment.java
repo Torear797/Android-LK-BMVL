@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
@@ -79,17 +80,30 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
     private static byte TotalPage;
     private static byte CurrentPage = 0;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+     //    Toast.makeText(getContext(), "123", Toast.LENGTH_SHORT).show();
+        if (Orders.size() == 0) LoadOrders(Orders, (byte) 0);
+        else UpdateOrders();
+    }
+
     public OrderFragment() {
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestMultiplePermissions(); //Запрос разрешений
+        checkPermissions(); //Запрос разрешений
     }
 
     public static OrderFragment newInstance() {
         return new OrderFragment();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -111,9 +125,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         YoYo.with(Techniques.Tada)
                 .duration(700)
                 .playOn(fab);
-
-        if (Orders.size() == 0) LoadOrders(Orders, (byte) 0);
-        else UpdateOrders();
 
         FabLisener(); //Слушатель для скрытия кнопки при скролинге
         RecyclerViewEndLisener(); //Слушатель конца списка
@@ -306,13 +317,41 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         recyclerView.setAdapter(OrderAdapter);
     }
 
-    private void requestMultiplePermissions() {
-        ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
-                new String[]{
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                },
-                0);
+//    private void requestMultiplePermissions() {
+//        ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+//                new String[]{
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                        Manifest.permission.READ_EXTERNAL_STORAGE
+//                },
+//                0);
+//
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            if (ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                    != PackageManager.PERMISSION_GRANTED) {
+//                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.INTERNET}, 1);
+//            }
+//        }
+//    }
+    private boolean checkPermissions() {
+        int result;
+        String[] permissions = new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.INTERNET,
+                Manifest.permission.ACCESS_NETWORK_STATE}; // Here i used multiple permission check
+
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        for (String p : permissions) {
+            result = ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), p);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p);
+            }
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 0);
+            return false;
+        }
+        return true;
     }
 
     private boolean SavePhpWordFile(String base64String, int id) {

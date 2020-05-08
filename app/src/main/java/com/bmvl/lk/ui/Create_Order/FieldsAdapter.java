@@ -26,6 +26,8 @@ import com.bmvl.lk.ViewHolders.SelectButtonHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.MessageFormat;
@@ -89,6 +91,9 @@ public class FieldsAdapter extends RecyclerView.Adapter {
             case 4:
                 View view4 = inflater.inflate(R.layout.item_button_select, parent, false);
                 return new SelectButtonHolder(view4);
+            case 5:
+                View view5 = inflater.inflate(R.layout.item_box_text, parent, false);
+                return new BoxAndTextHolder(view5);
             default:
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_field, parent, false);
                 final TextViewHolder holder = new TextViewHolder(view);
@@ -96,8 +101,11 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if(CreateOrderActivity.Fields.get(holder.getLayoutPosition()).getInputType() != InputType.TYPE_NULL && !String.valueOf(s).equals(""))
+                        if((CreateOrderActivity.Fields.get(holder.getLayoutPosition()).getInputType() != InputType.TYPE_NULL
+                                || CreateOrderActivity.Fields.get(holder.getLayoutPosition()).getColumn_id() == 7)
+                                && !String.valueOf(s).equals(""))
                         OrderFields.put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
+
                     }
 
                     @Override
@@ -181,6 +189,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                             break;
                         CurrentID++;
                     }
+                    if(CurrentID < id.length)
                     ((SpinerHolder) holder).spiner.setSelection(CurrentID, true);
                 }
                 //else
@@ -310,5 +319,41 @@ public class FieldsAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         return CreateOrderActivity.Fields.size();
+    }
+
+    private class BoxAndTextHolder extends RecyclerView.ViewHolder {
+        final public SwitchMaterial switchButton;
+        public TextInputEditText field;
+        public final TextInputLayout Layout;
+        public BoxAndTextHolder(View view5) {
+            super(view5);
+            switchButton = itemView.findViewById(R.id.my_switch);
+            field = itemView.findViewById(R.id.TextInput);
+            Layout = itemView.findViewById(R.id.TextLayout);
+
+            switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    OrderFields.put(GetColumn_id(getLayoutPosition()), String.valueOf(isChecked));
+                    if(isChecked)Layout.setVisibility(View.VISIBLE);
+                    else Layout.setVisibility(View.GONE);
+                }
+            });
+
+            field.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if(!String.valueOf(s).equals("") && Layout.getVisibility() == View.VISIBLE)
+                        OrderFields.put((short)67, String.valueOf(s));
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+            });
+        }
     }
 }

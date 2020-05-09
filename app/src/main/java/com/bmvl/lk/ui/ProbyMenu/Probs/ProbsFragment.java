@@ -30,11 +30,9 @@ import java.util.TreeMap;
 
 public class ProbsFragment extends Fragment {
     private List<Field> ProbFields = new ArrayList<>(); //Поля пробы
- //   private List<Field> ResearchFields = new ArrayList<>(); //Поля исследований
     private List<Field> SampleFields = new ArrayList<>(); //Поля Образцов
 
     private ProbAdapter adapter;
-    private RecyclerView recyclerView;
 
     public ProbsFragment() {
     }
@@ -53,8 +51,11 @@ public class ProbsFragment extends Fragment {
                 TreeMap<Short, ProbyRest> insertlist = new TreeMap<>(CreateOrderActivity.order.getProby());
                 insertlist.remove(id);
                 adapter.updateList(insertlist);
-               // Snackbar.make(Objects.requireNonNull(getView()), "Проба №"+id+" удалена!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
+                if(CreateOrderActivity.order_id == 4) {
+                    CreateOrderActivity.order.getFields().put((short) 7, String.valueOf(CreateOrderActivity.order.getProby().size()));
+                    CreateOrderActivity.adapter.notifyItemChanged(18);
+                }
             }
 
             @Override
@@ -87,7 +88,7 @@ public class ProbsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.fragment_recyclerview, container, false);
-        recyclerView = MyView.findViewById(R.id.List);
+        final RecyclerView recyclerView = MyView.findViewById(R.id.List);
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
         final MaterialButton AddProbBtn = MyView.findViewById(R.id.addProb);
 
@@ -103,11 +104,16 @@ public class ProbsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Map<Short, ProbyRest> insertlist = new HashMap<>();
-                short newid = getPositionKey(CreateOrderActivity.order.getProby().size() - 1, CreateOrderActivity.order.getProby());
+                final short newid = getPositionKey(CreateOrderActivity.order.getProby().size() - 1, CreateOrderActivity.order.getProby());
                 insertlist.put((short) (newid + 1), new ProbyRest(newid));
                 adapter.insertdata(insertlist);
                 CreateOrderActivity.order.getProby().get((short) (newid + 1)).addSample((short) 1, new SamplesRest((short) 0));
-                CreateOrderActivity.order.getFields().put((short)7, String.valueOf(CreateOrderActivity.order.getProby().size()));
+
+                if(CreateOrderActivity.order_id == 4) {
+                    CreateOrderActivity.order.getFields().put((short) 7, String.valueOf(CreateOrderActivity.order.getProby().size()));
+                    CreateOrderActivity.adapter.notifyItemChanged(18);
+                }
+
                 recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
             }
         });

@@ -68,6 +68,5 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
 
     @Override
     public void onBackPressed() {
-
     }
 }

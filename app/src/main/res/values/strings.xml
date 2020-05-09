@@ -25,6 +25,7 @@
     <string name="price_do">Цена До</string>
     <string name="Login_title">Авторизация</string>
     <string name="new_order_title">Выберите тип заявки</string>
+    <string name="new_pattern_title">Выберите тип шаблона</string>
     <string name="new_order">Новая заявка</string>
     <string name="edit_order">Редактирование заявки</string>
     <string name="Doc_Face">Доверянное лицо</string>
@@ -270,6 +271,12 @@
         <item>Запрос</item>
     </string-array>
 
+    <string-array name="menu_patterns">
+        <item>Шаблон заявки на исследование пищевых продуктов и ...</item>
+        <item>Шаблон сопроводительного письма (заявка на исследо...</item>
+        <item>Шаблон заявки на исследование семян, почв, удобрен...</item>
+    </string-array>
+
     <string-array name="order_name">
         <item>Заявка на исследование пищевых продуктов и кормов</item>
         <item>Заявка на фитосанитарное заключение</item>
@@ -278,6 +285,9 @@
         <item>Гарантийное письмо</item>
         <item>Информационное письмо</item>
         <item>Запрос</item>
+        <item>Шаблон заявки на исследование пищевых продуктов и ...</item>
+        <item>Шаблон сопроводительного письма (заявка на исследо...</item>
+        <item>Шаблон заявки на исследование семян, почв, удобрен...</item>
     </string-array>
 
     <string-array name="order_statuses">
@@ -318,5 +328,6 @@
     <string name="add_sample">Добавить образец</string>
     <string name="empty_orders">Список заявок пуст!</string>
     <string name="empty_notify">Список уведомлений пуст!</string>
+    <string name="menu_patterns">Шаблоны</string>
 
 </resources>

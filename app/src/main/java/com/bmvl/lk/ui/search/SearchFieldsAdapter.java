@@ -14,10 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.ViewHolders.SpinerHolder;
+import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
 
+import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -30,10 +33,8 @@ class SearchFieldsAdapter extends RecyclerView.Adapter{
 
     @Override
     public int getItemViewType(int position) {
-         final SearchField sf = SearchFragment.Fields.get(position);
-         if(sf.isSpener()){
-             return 0;
-         } else return 1;
+         if(SearchFragment.Fields.get(position).isSpener()) return 0;
+          else return 1;
     }
 
     @NonNull
@@ -41,10 +42,10 @@ class SearchFieldsAdapter extends RecyclerView.Adapter{
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
          if(viewType == 0){
              View view = inflater.inflate(R.layout.item_spiner, parent, false);
-             return new SearchFieldsAdapter.SpinerViewHolder(view);
+             return new SpinerHolder(view);
          } else {
              View view = inflater.inflate(R.layout.item_field, parent, false);
-             return new SearchFieldsAdapter.EditTextViewHolder(view);
+             return new TextViewHolder(view);
          }
     }
 
@@ -54,25 +55,25 @@ class SearchFieldsAdapter extends RecyclerView.Adapter{
        if(f.isSpener()){
            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-           ((SpinerViewHolder)holder).spiner.setAdapter(adapter);
-           ((SpinerViewHolder)holder).txtHint.setText(f.getHint());
+           ((SpinerHolder)holder).spiner.setAdapter(adapter);
+           ((SpinerHolder)holder).txtHint.setText(f.getHint());
        } else  {
 
-           ((EditTextViewHolder)holder).Layout.setHint(f.getHint());
-           ((EditTextViewHolder)holder).field.setInputType(f.getInputType());
-           ((EditTextViewHolder)holder).field.setText(f.getValue());
+           ((TextViewHolder)holder).Layout.setHint(f.getHint());
+           ((TextViewHolder)holder).field.setInputType(f.getInputType());
+           ((TextViewHolder)holder).field.setText(f.getValue());
 
            if(f.getIcon() != null){
-               ((EditTextViewHolder)holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
-               ((EditTextViewHolder)holder).Layout.setEndIconDrawable(f.getIcon());
+               ((TextViewHolder)holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
+               ((TextViewHolder)holder).Layout.setEndIconDrawable(f.getIcon());
 
                if(f.isData()){
                    final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                           ChangeData(year,monthOfYear,dayOfMonth,  ((EditTextViewHolder)holder).field);
+                           ChangeData(year,monthOfYear,dayOfMonth,  ((TextViewHolder)holder).field);
                        }
                    };
-                   ((EditTextViewHolder)holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
+                   ((TextViewHolder)holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
                        @Override
                        public void onClick(View v) {
                            new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
@@ -104,31 +105,11 @@ class SearchFieldsAdapter extends RecyclerView.Adapter{
         if(dayOfMonth < 10){
             formattedDayOfMonth = "0" + dayOfMonth;
         }
-        Edt.setText(formattedDayOfMonth + "-" + formattedMonth + "-" + year);
+        Edt.setText(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
     }
 
     @Override
     public int getItemCount() {
         return SearchFragment.Fields.size();
-    }
-
-    public class SpinerViewHolder extends RecyclerView.ViewHolder {
-         final Spinner spiner;
-         final MaterialTextView txtHint;
-         SpinerViewHolder(@NonNull View itemView) {
-            super(itemView);
-            spiner = itemView.findViewById(R.id.spinner);
-            txtHint = itemView.findViewById(R.id.hint);
-        }
-    }
-
-    public class EditTextViewHolder extends RecyclerView.ViewHolder {
-        final TextInputEditText field;
-        final TextInputLayout Layout;
-         EditTextViewHolder(@NonNull View itemView) {
-            super(itemView);
-            field = itemView.findViewById(R.id.TextInput);
-            Layout = itemView.findViewById(R.id.TextLayout);
-        }
     }
 }

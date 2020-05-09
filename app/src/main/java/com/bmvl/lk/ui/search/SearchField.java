@@ -51,8 +51,6 @@ public class SearchField {
     }
 
 
-
-
     public SearchField(String value, String hint, int inputType) {
         this.value = value;
         Hint = hint;

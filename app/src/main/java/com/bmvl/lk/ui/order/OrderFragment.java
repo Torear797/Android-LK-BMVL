@@ -104,11 +104,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.fragment_order, container, false);
         if (Hawk.contains("OrdersList")) Orders = Hawk.get("OrdersList");
@@ -128,7 +123,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                 .duration(700)
                 .playOn(fab);
 
-        FabLisener(); //Слушатель для скрытия кнопки при скролинге
+        FabLisener(); //Слушатель нажатия кнопки меню
         RecyclerViewEndLisener(); //Слушатель конца списка
         return MyView;
     }

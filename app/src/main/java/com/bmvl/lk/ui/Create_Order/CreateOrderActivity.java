@@ -57,6 +57,7 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     public static SendOrder order;
     private boolean Edit; //Флаг, истина - заявка редактируется.
+    public static FieldsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,6 @@ public class CreateOrderActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
-        LoadDefaultFields();
 
         OrderName.setText(getResources().getStringArray(R.array.order_name)[order_id - 1]);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -105,11 +105,12 @@ public class CreateOrderActivity extends AppCompatActivity {
         });
         recyclerView.setLayoutManager(mng_layout);
 
-        final FieldsAdapter adapter = new FieldsAdapter(this);
+        adapter = new FieldsAdapter(this);
         recyclerView.setAdapter(adapter);
 
         switch (order_id) {
             case 1:
+                LoadDefaultFields();
                 addFieldOrderType1();
                 cbox.setVisibility(View.VISIBLE);
                 cbox.setMovementMethod(LinkMovementMethod.getInstance());
@@ -117,6 +118,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                 loadFragment(ProbyMenuFragment.newInstance());
                 break;
             case 4:
+                LoadDefaultFields();
                 addFieldOrderType4();
                 cbox.setVisibility(View.VISIBLE);
                 cbox.setMovementMethod(LinkMovementMethod.getInstance());
@@ -124,13 +126,25 @@ public class CreateOrderActivity extends AppCompatActivity {
                 loadFragment(ProbyMenuFragment.newInstance());
                 break;
             case 5:
+                LoadDefaultFields();
                 addFieldOrderType5();
                 break;
             case 6:
+                LoadDefaultFields();
                 addFieldOrderType6();
                 break;
             case 7:
+                LoadDefaultFields();
                 addFieldOrderType7();
+                break;
+            case 8:
+                LoadDefaultFields();
+                break;
+            case 9:
+                LoadDefaultFields();
+                break;
+            case 10:
+                LoadDefaultFields();
                 break;
         }
     }
@@ -223,7 +237,6 @@ public class CreateOrderActivity extends AppCompatActivity {
         ft.replace(R.id.Menu_proby_fragment, fragment);
         ft.commit();
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -377,5 +390,4 @@ public class CreateOrderActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }

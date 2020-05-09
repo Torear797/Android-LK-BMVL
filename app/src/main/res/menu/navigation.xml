@@ -6,9 +6,9 @@
         android:title="@string/order" />
 
     <item
-        android:id="@+id/navigation_search"
-        android:icon="@drawable/ic_search_black_24dp"
-        android:title="@string/search" />
+        android:id="@+id/navigation_patterns"
+        android:icon="@drawable/ic_content_paste_black_24dp"
+        android:title="@string/menu_patterns" />
 
 <!--    <item-->
 <!--        android:id="@+id/navigation_people"-->
@@ -16,8 +16,12 @@
 <!--        android:title="@string/people" />-->
 
     <item
+        android:id="@+id/navigation_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="@string/search" />
+
+    <item
         android:id="@+id/notice"
-        android:title="@string/AB_notification"
-        android:icon="@drawable/ic_notifications_black_24dp">
-    </item>
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="@string/AB_notification" />
 </menu>

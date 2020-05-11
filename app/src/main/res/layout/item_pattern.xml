@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false">
+
+    <LinearLayout
+        android:id="@+id/bottom_wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
+
+        <ImageView
+            android:id="@+id/edit"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="#119CDA"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:src="@drawable/ic_edit_black_24dp" />
+
+        <ImageView
+            android:id="@+id/copy"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="#752DF1"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:src="@drawable/ic_content_copy_black_24dp" />
+
+        <ImageView
+            android:id="@+id/create"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="#18D120"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:src="@drawable/ic_note_add_black_24dp" />
+
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="#FF5534"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:src="@drawable/ic_delete_white_24dp" />
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/PattertName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="sans-serif"
+                android:paddingEnd="20dp"
+                android:text="Сопроводительное письмо"
+                android:textColor="#222222"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toStartOf="@+id/Data"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/Data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:text="2012-05-15"
+                android:textColor="#535353"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/separator"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/PattertName" />
+
+            <TextView
+                android:id="@+id/TypePattern"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="sans-serif"
+                android:text="Заявка на исследование семян, почв, удобрений"
+                android:textColor="#222222"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</com.daimajia.swipe.SwipeLayout>

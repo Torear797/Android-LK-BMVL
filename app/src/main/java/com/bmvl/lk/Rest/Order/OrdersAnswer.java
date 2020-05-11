@@ -1,26 +1,15 @@
 package com.bmvl.lk.Rest.Order;
 
+import com.bmvl.lk.Rest.StandardAnswer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class OrdersAnswer {
-    @SerializedName("status")
-    @Expose
-    private short  status;
-
-    @SerializedName("text")
-    @Expose
-    private String text;
-
+public class OrdersAnswer extends StandardAnswer {
     @SerializedName("orders")
     @Expose
     private OrdersElements orders;
 
     public OrdersElements getOrders() {
         return orders;
-    }
-
-    public short getStatus() {
-        return status;
     }
 }

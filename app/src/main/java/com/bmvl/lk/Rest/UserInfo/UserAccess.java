@@ -1,18 +1,10 @@
 package com.bmvl.lk.Rest.UserInfo;
 
+import com.bmvl.lk.Rest.StandardAnswer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UserAccess {
-
-    @SerializedName("status")
-    @Expose
-    private short  status;
-
-    @SerializedName("text")
-    @Expose
-    private String text;
-
+public class UserAccess extends StandardAnswer {
     @SerializedName("token")
     @Expose
     private String token;
@@ -53,13 +45,5 @@ public class UserAccess {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
-    }
-
-    public short getStatus() {
-        return status;
-    }
-
-    public String getText() {
-        return text;
     }
 }

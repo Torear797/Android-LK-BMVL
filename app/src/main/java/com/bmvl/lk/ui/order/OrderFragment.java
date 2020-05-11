@@ -427,15 +427,18 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                         choce = 1;
                                         break;
                                     case 1:
-                                        choce = 4;
+                                        choce = 3;
                                         break;
                                     case 2:
-                                        choce = 5;
+                                        choce = 4;
                                         break;
                                     case 3:
-                                        choce = 6;
+                                        choce = 5;
                                         break;
                                     case 4:
+                                        choce = 6;
+                                        break;
+                                    case 5:
                                         choce = 7;
                                         break;
                                 }

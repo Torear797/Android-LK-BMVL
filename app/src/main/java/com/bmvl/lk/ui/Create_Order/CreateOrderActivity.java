@@ -73,10 +73,9 @@ public class CreateOrderActivity extends AppCompatActivity {
 
         Edit = getIntent().getBooleanExtra("isEdit", false);
         if (!Edit) {
-            order = new SendOrder(getIntent().getByteExtra("type_id",(byte)1));
+            order = new SendOrder(getIntent().getByteExtra("type_id", (byte) 1));
             toolbar.setTitle(R.string.new_order);
-        }
-        else {
+        } else {
             order = (SendOrder) getIntent().getSerializableExtra(SendOrder.class.getSimpleName());
             toolbar.setTitle(R.string.edit_order);
             final MaterialButton btn = findViewById(R.id.Create);
@@ -95,8 +94,10 @@ public class CreateOrderActivity extends AppCompatActivity {
         mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (position == 1 || position == 2) return 1;
+                if ((position == 1 || position == 2) && order_id != 8 && order_id != 9 && order_id != 10) return 1;
                 if (order_id == 1 && (position == 14 || position == 15))
+                    return 1;
+                if (order_id == 3 && (position == 15 || position == 16))
                     return 1;
                 if (order_id == 4 && (position == 13 || position == 14))
                     return 1;
@@ -107,23 +108,23 @@ public class CreateOrderActivity extends AppCompatActivity {
 
         adapter = new FieldsAdapter(this);
         recyclerView.setAdapter(adapter);
+        Fields.clear();
 
         switch (order_id) {
             case 1:
                 LoadDefaultFields();
                 addFieldOrderType1();
-                cbox.setVisibility(View.VISIBLE);
-                cbox.setMovementMethod(LinkMovementMethod.getInstance());
-                Frame.setVisibility(View.VISIBLE);
-                loadFragment(ProbyMenuFragment.newInstance());
+                EnableTable(Frame);
+                break;
+            case 3:
+                LoadDefaultFields();
+                addFieldOrderType3();
+                EnableTable(Frame);
                 break;
             case 4:
                 LoadDefaultFields();
                 addFieldOrderType4();
-                cbox.setVisibility(View.VISIBLE);
-                cbox.setMovementMethod(LinkMovementMethod.getInstance());
-                Frame.setVisibility(View.VISIBLE);
-                loadFragment(ProbyMenuFragment.newInstance());
+                EnableTable(Frame);
                 break;
             case 5:
                 LoadDefaultFields();
@@ -138,17 +139,28 @@ public class CreateOrderActivity extends AppCompatActivity {
                 addFieldOrderType7();
                 break;
             case 8:
-                LoadDefaultFields();
+                addFieldPatternType1();
+                EnableTable(Frame);
                 break;
             case 9:
-                LoadDefaultFields();
+                addFieldPatternType4();
+                EnableTable(Frame);
                 break;
             case 10:
-                LoadDefaultFields();
+                addFieldPatternType3();
+                EnableTable(Frame);
                 break;
         }
     }
-    private void StandartFieldPart1(){
+
+    private void EnableTable(FrameLayout Frame) {
+        cbox.setVisibility(View.VISIBLE);
+        cbox.setMovementMethod(LinkMovementMethod.getInstance());
+        Frame.setVisibility(View.VISIBLE);
+        loadFragment(ProbyMenuFragment.newInstance());
+    } //Включает отображение таблицы проб
+
+    private void addFieldOrderType1() {
         Fields.add(new Field((byte) 1, R.array.target_research, 3, "", "Цель исследования/категория"));
         Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), App.OrderInfo.getOD_Value(), "Оригиналы документов предоставлять")); //52. 63. 64
         Fields.add(new Field((byte) 3, 66, "", "Возврат образцов"));
@@ -156,12 +168,19 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field((byte) 5, 59, "", "Контрольный образец"));
         Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
         Fields.add(new Field(10, "", "№", InputType.TYPE_CLASS_TEXT));
-    }
-
-    private void addFieldOrderType1() {
-        StandartFieldPart1();
         Fields.add(new Field(49, "", "Площадка", InputType.TYPE_CLASS_TEXT));
     } //Заявка на исследования пищевых продуктов
+
+    private void addFieldOrderType3() {
+        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "", "Цель исследования/категория"));
+        Fields.add(new Field((byte) 3, 66, "", "Возврат образцов"));
+        Fields.add(new Field((byte) 4, 0, "", "Акт отбора"));
+        Fields.add(new Field(24, "", "Сопроводительный документ", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(9, "", "Владелец образцов", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field((byte) 5, 59, "", "Контрольный образец"));
+        Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        Fields.add(new Field(10, "", "№", InputType.TYPE_CLASS_TEXT));
+    } //Заявка на исследование семян, почв, удобрений
 
     private void addFieldOrderType4() {
         Fields.add(new Field((byte) 1, R.array.target_research2, 3, "", "Цель исследования/категория"));
@@ -175,7 +194,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field(9, "", "Владелец образцов", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(49, "", "Площадка", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(7, "", "Количество проб", InputType.TYPE_NULL));
-        order.getFields().put((short)7,"1");
+        order.getFields().put((short) 7, "1");
         Fields.add(new Field(93, "", "Общее поголовье", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(98, "", "Дата предыдущего исследоваия", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
         Fields.add(new Field(99, "", "Результат предыдущего исследования", InputType.TYPE_CLASS_TEXT));
@@ -209,15 +228,14 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     private void LoadDefaultFields() {
         //Заполнение полей на форме
-        Fields.clear();
-        Fields.add(new Field(135,false, "Заявитель", InputType.TYPE_NULL));
-        Fields.add(new Field(136,false, "Договор №", InputType.TYPE_NULL));
-        Fields.add(new Field(137,false, "от", InputType.TYPE_NULL));
-        Fields.add(new Field(138,false, "Адрес", InputType.TYPE_NULL));
-        Fields.add(new Field(139,false, "ИНН", InputType.TYPE_NULL));
-        Fields.add(new Field(140,false, "Телефон", InputType.TYPE_NULL));
-        Fields.add(new Field(141,false, "E-mail", InputType.TYPE_NULL));
-        Fields.add(new Field(142,false, "Представитель организации", InputType.TYPE_NULL));
+        Fields.add(new Field(135, false, "Заявитель", InputType.TYPE_NULL));
+        Fields.add(new Field(136, false, "Договор №", InputType.TYPE_NULL));
+        Fields.add(new Field(137, false, "от", InputType.TYPE_NULL));
+        Fields.add(new Field(138, false, "Адрес", InputType.TYPE_NULL));
+        Fields.add(new Field(139, false, "ИНН", InputType.TYPE_NULL));
+        Fields.add(new Field(140, false, "Телефон", InputType.TYPE_NULL));
+        Fields.add(new Field(141, false, "E-mail", InputType.TYPE_NULL));
+        Fields.add(new Field(142, false, "Представитель организации", InputType.TYPE_NULL));
         Fields.add(new Field(-1, new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(new Date()), false, "Дата создания заявки", InputType.TYPE_NULL));
 
         //Заполнение отправляемого объекта
@@ -232,11 +250,45 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     } //Базовые поля
 
+    private void addFieldPatternType1() {
+        Fields.add(new Field(133, "", "Наименование шаблона", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field((byte) 1, R.array.target_research, 3, "", "Цель исследования/категория"));
+        Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), App.OrderInfo.getOD_Value(), "Оригиналы документов предоставлять")); //52. 63. 64
+        Fields.add(new Field((byte) 3, 66, "", "Возврат образцов"));
+        Fields.add(new Field((byte) 5, 59, "", "Контрольный образец"));
+        Fields.add(new Field(49, "", "Площадка", InputType.TYPE_CLASS_TEXT));
+    }
+
+    private void addFieldPatternType3() {
+        Fields.add(new Field(133, "", "Наименование шаблона", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "", "Цель исследования/категория"));
+        Fields.add(new Field((byte) 3, 66, "", "Возврат образцов"));
+        Fields.add(new Field(24, "", "Сопроводительный документ", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(9, "", "Владелец образцов", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field((byte) 5, 59, "", "Контрольный образец"));
+    }
+
+    private void addFieldPatternType4() {
+        Fields.add(new Field(133, "", "Наименование шаблона", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "", "Цель исследования/категория"));
+        Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), App.OrderInfo.getOD_Value(), "Оригиналы документов предоставлять")); //52. 63. 64
+        Fields.add(new Field((byte) 1, R.array.Reserch_start, 97, "", "Исследование проводится")); //act_of_selection
+        Fields.add(new Field(24, "", "Сопроводительный документ", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(9, "", "Владелец образцов", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(49, "", "Площадка", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(93, "", "Общее поголовье", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field((byte) 1, R.array.hoz_zab, 97, "", "Хозяйство по вышеуказанному заболеванию"));
+        Fields.add(new Field(108, "", "Клиническая картина", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(109, "", "Данные патологического вскрытия", InputType.TYPE_CLASS_TEXT));
+        Fields.add(new Field(110, "", "Предположительный диагноз", InputType.TYPE_CLASS_TEXT));
+    }
+
     private void loadFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.Menu_proby_fragment, fragment);
         ft.commit();
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -278,7 +330,7 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     private void SaveOrder(final View view) {
         //String json = order.getJsonOrder();
-     //   Hawk.put("obraz",json);
+        //   Hawk.put("obraz",json);
         Log.d("JSON", order.getJsonOrder());
 
         NetworkService.getInstance()
@@ -357,11 +409,11 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private void SendOrder(final View view) {
-       // String json = Hawk.get("obraz");
+        // String json = Hawk.get("obraz");
         Log.d("JSON", order.getJsonOrder());
 
-     //   view.setEnabled(true);
-      //  bar.setVisibility(View.GONE);
+        //   view.setEnabled(true);
+        //  bar.setVisibility(View.GONE);
 
         NetworkService.getInstance()
                 .getJSONApi()

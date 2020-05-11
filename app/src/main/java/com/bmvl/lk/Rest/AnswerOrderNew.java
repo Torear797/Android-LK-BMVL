@@ -5,14 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
 
-public class AnswerOrderNew {
-    @SerializedName("status")
-    @Expose
-    private short  status;
-
-    @SerializedName("text")
-    @Expose
-    private String text;
+public class AnswerOrderNew extends StandardAnswer{
 
     @SerializedName("defaultFields")
     @Expose
@@ -23,10 +16,6 @@ public class AnswerOrderNew {
 //    @Expose
 //  //  private Map<Short, String> fieldValues;
 //    private List<PairData> fieldValues;
-
-    public short getStatus() {
-        return status;
-    }
 
     public Map getDefaultFields() {
         return defaultFields;

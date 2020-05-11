@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:minWidth="200dp"
         android:checked="false"
-        android:hint="Контрольный образец"
+        android:text="Контрольный образец"
         android:textColor="@color/text_order_field_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

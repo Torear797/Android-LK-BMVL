@@ -16,13 +16,23 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/trash"
+            android:id="@+id/edit"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#FF5534"
+            android:background="#119CDA"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
-            android:src="@drawable/ic_delete_white_24dp" />
+            android:src="@drawable/ic_edit_black_24dp" />
+
+        <ImageView
+            android:id="@+id/create"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#752DF1"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:src="@drawable/ic_content_copy_black_24dp"  />
+<!--            android:src="@drawable/ic_note_add_black_24dp" -->
 
         <ImageView
             android:id="@+id/download"
@@ -35,23 +45,15 @@
             android:paddingRight="25dp"
             android:src="@drawable/ic_file_download_black_24dp" />
 
-        <ImageView
-            android:id="@+id/edit"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#119CDA"
-            android:paddingLeft="25dp"
-            android:paddingRight="25dp"
-            android:src="@drawable/ic_edit_black_24dp" />
 
         <ImageView
-            android:id="@+id/create"
+            android:id="@+id/trash"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#752DF1"
+            android:background="#FF5534"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
-            android:src="@drawable/ic_note_add_black_24dp" />
+            android:src="@drawable/ic_delete_white_24dp" />
     </LinearLayout>
 
 

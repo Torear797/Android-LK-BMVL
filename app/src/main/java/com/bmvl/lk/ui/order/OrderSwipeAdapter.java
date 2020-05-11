@@ -68,7 +68,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         simpleViewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
             @Override
             public void onOpen(SwipeLayout layout) {
-                YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.trash));
+                YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.edit));
                 //Toast.makeText(layout.getContext(), "Открыто", Toast.LENGTH_SHORT).show();
             }
         });
@@ -80,12 +80,12 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 //        });
 
 
-        if (Order.getType_id() != 1 && Order.getType_id() != 2 && Order.getType_id() != 3) {
+        if (Order.getType_id() != 1 && Order.getType_id() != 2 && Order.getType_id() != 3 && Order.getType_id() != 4) {
             simpleViewHolder.buttonDownload.setVisibility(View.GONE);
 
-            final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) simpleViewHolder.buttonDelete.getLayoutParams(); // получаем параметры
+            final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) simpleViewHolder.buttonOpen.getLayoutParams(); // получаем параметры
             params.height = 130;
-            simpleViewHolder.buttonDelete.setLayoutParams(params);
+            simpleViewHolder.buttonCopy.setLayoutParams(params);
             simpleViewHolder.buttonOpen.setLayoutParams(params);
         }
         mItemManger.bindView(simpleViewHolder.itemView, i);

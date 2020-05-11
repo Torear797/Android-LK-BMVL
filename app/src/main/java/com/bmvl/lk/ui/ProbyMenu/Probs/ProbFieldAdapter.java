@@ -3,6 +3,7 @@ package com.bmvl.lk.ui.ProbyMenu.Probs;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,13 +66,6 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     private ResearhAdapter Adapter;
     private SamplesAdapter SamAdapter;
     private String[] Indicators;
-
-    public ProbFieldAdapter(Context context, List<Field> Fields, ProbyRest prob, TextView header) {
-        this.inflater = LayoutInflater.from(context);
-        this.ProbHeader = header;
-        ProbFields = Fields;
-        CurrentProb = prob;
-    }
 
     public ProbFieldAdapter(Context context, List<Field> probFields, List<Field> sampleFields, ProbyRest prob, TextView header) {
         this.inflater = LayoutInflater.from(context);
@@ -174,6 +168,9 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
         switch (f.getType()) {
             case 0: {
+                if (f.getInputType() == InputType.TYPE_NULL)
+                    ((TextViewHolder) holder).Layout.setBoxBackgroundColor(inflater.getContext().getResources().getColor(R.color.field_inactive));
+
                 ((TextViewHolder) holder).Layout.setHint(f.getHint());
                 ((TextViewHolder) holder).field.setInputType(f.getInputType());
                 ((TextViewHolder) holder).field.setText(CurrentProb.getFields().get(String.valueOf(f.getColumn_id())));

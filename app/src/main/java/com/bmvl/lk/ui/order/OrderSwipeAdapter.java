@@ -80,13 +80,13 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 //        });
 
 
-        if (Order.getType_id() != 1 && Order.getType_id() != 2 && Order.getType_id() != 3 && Order.getType_id() != 4) {
+        if (Order.getType_id() > 4) {
             simpleViewHolder.buttonDownload.setVisibility(View.GONE);
 
-            final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) simpleViewHolder.buttonOpen.getLayoutParams(); // получаем параметры
-            params.height = 130;
-            simpleViewHolder.buttonCopy.setLayoutParams(params);
-            simpleViewHolder.buttonOpen.setLayoutParams(params);
+//            final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) simpleViewHolder.buttonOpen.getLayoutParams(); // получаем параметры
+//            params.height = 130;
+//            simpleViewHolder.buttonCopy.setLayoutParams(params);
+//            simpleViewHolder.buttonOpen.setLayoutParams(params);
         }
         mItemManger.bindView(simpleViewHolder.itemView, i);
     }

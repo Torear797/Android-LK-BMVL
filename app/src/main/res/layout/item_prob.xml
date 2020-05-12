@@ -18,8 +18,9 @@
 
         <ImageView
             android:id="@+id/trash"
-            android:layout_width="50dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="#FF5534"
             android:padding="10dp"
             android:layout_marginStart="5dp"
@@ -28,8 +29,9 @@
 
         <ImageView
             android:id="@+id/create"
-            android:layout_width="50dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="#752DF1"
             android:padding="10dp"
             android:src="@drawable/ic_note_add_black_24dp" />

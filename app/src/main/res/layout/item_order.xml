@@ -18,7 +18,8 @@
         <ImageView
             android:id="@+id/edit"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="#119CDA"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
@@ -27,17 +28,18 @@
         <ImageView
             android:id="@+id/create"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="#752DF1"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
             android:src="@drawable/ic_content_copy_black_24dp"  />
-<!--            android:src="@drawable/ic_note_add_black_24dp" -->
 
         <ImageView
             android:id="@+id/download"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="#18D120"
             android:clickable="true"
             android:focusable="true"
@@ -49,7 +51,8 @@
         <ImageView
             android:id="@+id/trash"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="#FF5534"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"

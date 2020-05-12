@@ -14,19 +14,11 @@ import retrofit2.http.POST;
 public interface ServerApi {
     @FormUrlEncoded
     @POST("/session/login")
-    //  Call<TestUser> getTestUser(@Header("Content-Type") String content_type, @Body OutputData data);
-//    Call<TestUser> getTestUser(
-//            @Query("login") String login,
-//            @Query("password") String password,
-//            @Query("device_id") String device_id,
-//            @Query("getToken") boolean getToken);
-
     Call<UserAccess> getTestUser(
             @Field("login") String login,
             @Field("password") String password,
             @Field("device_id") String device_id,
             @Field("getToken") boolean getToken);
-
 
     @FormUrlEncoded
     @POST("account/info")

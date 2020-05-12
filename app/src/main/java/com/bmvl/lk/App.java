@@ -6,8 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.InputType;
 
-import androidx.recyclerview.widget.GridLayoutManager;
-
 import com.bmvl.lk.Rest.UserInfo.OrderInfo;
 import com.bmvl.lk.Rest.UserInfo.UserAccess;
 import com.bmvl.lk.data.models.LoggedInUser;
@@ -15,22 +13,15 @@ import com.bmvl.lk.ui.search.SearchField;
 import com.bmvl.lk.ui.search.SearchFragment;
 import com.orhanobut.hawk.Hawk;
 
-import java.util.Map;
-
 public class App extends Application {
     public static UserAccess UserAccessData = null;
     public static LoggedInUser UserInfo = null;
     public static OrderInfo OrderInfo = null;
 
-    private GridLayoutManager mng_layout;
-    //  App application = (App) getApplication();
-
     @Override
     public void onCreate() {
         super.onCreate();
         Hawk.init(this).build();
-        // CreateSerchFields();
-
         CreateSerchFields();
     }
 
@@ -39,10 +30,7 @@ public class App extends Application {
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         assert cm != null;
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }
-        return false;
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     public static void setUserData(UserAccess Access, LoggedInUser Data, OrderInfo Info) {
@@ -67,6 +55,5 @@ public class App extends Application {
 
         SearchFragment.Fields.add(new SearchField("", "Статус", true, R.array.order_statuses));
         SearchFragment.Fields.add(new SearchField("", "Порядок сортировки", true, R.array.sort_types));
-
     }
 }

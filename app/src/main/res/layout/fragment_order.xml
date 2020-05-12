@@ -46,7 +46,6 @@
         android:layout_height="wrap_content"
         android:text="@string/empty_orders"
         android:textSize="20dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/SwipeRefreshLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

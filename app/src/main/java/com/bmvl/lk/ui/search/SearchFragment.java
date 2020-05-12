@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,8 +23,28 @@ import java.util.List;
 public class SearchFragment extends Fragment implements OnBackPressedListener {
 
     public static List<SearchField> Fields = new ArrayList<>();
+    private GridLayoutManager mng_layout;
+    private static SearchFieldsAdapter adapter;
 
     public SearchFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mng_layout = new GridLayoutManager(getContext(), 2);
+        mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position == 4 || position == 5) {
+                    return 2;
+                } else {
+                    return 1;
+                }
+            }
+        });
+        adapter = new SearchFieldsAdapter(getContext());
     }
 
     public static SearchFragment newInstance() {
@@ -39,22 +60,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
 
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
         recyclerView.setHasFixedSize(true);
-
-        final GridLayoutManager mng_layout = new GridLayoutManager(getContext(), 2);
-        mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                if (position == 4 || position == 5) {
-                    return 2;
-                } else {
-                    return 1;
-                }
-            }
-        });
-
         recyclerView.setLayoutManager(mng_layout);
-
-        final SearchFieldsAdapter adapter = new SearchFieldsAdapter(getContext());
         recyclerView.setAdapter(adapter);
 
         SearchButton.setOnClickListener(new View.OnClickListener() {

@@ -1,6 +1,5 @@
 package com.bmvl.lk.ui.Notification;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +32,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class NoticeFragment extends Fragment implements OnBackPressedListener {
 
     private static List<Notifications> Notifi = new ArrayList<>();
@@ -51,9 +49,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
     private RecyclerView recyclerView;
     private TextView Message;
 
-
     public NoticeFragment() {
-        // Required empty public constructor
     }
 
     public static NoticeFragment newInstance() {
@@ -72,16 +68,6 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
 
         initRecyclerView();
 
-
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                swipeRefreshLayout.setRefreshing(true);
-//                List<Notifications> insertlist = new ArrayList<>();
-//                getNotifications(insertlist, false);
-//            }
-//        }, 60000);
-
         RecyclerViewEndLisener();
         return MyView;
     }
@@ -91,7 +77,6 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
         super.onResume();
         if (Notifi.size() == 0) InsertNotifications(Notifi, (byte) 0);
         else UpdateNotify();
-        // Toast.makeText(getContext(), "123", Toast.LENGTH_SHORT).show();
     }
 
     public void initRecyclerView() {
@@ -171,14 +156,16 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
                                     loading = true;
                                     break;
                             }
-                            if (Notifi.size() == 0) Message.setVisibility(View.VISIBLE);
-                            else Message.setVisibility(View.GONE);
                         }
+                        if (Notifi.size() == 0) Message.setVisibility(View.VISIBLE);
+                        else Message.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<NotificationsAnswer> call, @NonNull Throwable t) {
                         swipeRefreshLayout.setRefreshing(false);
+                        if (Notifi.size() == 0) Message.setVisibility(View.VISIBLE);
+                        else Message.setVisibility(View.GONE);
                     }
                 });
     }

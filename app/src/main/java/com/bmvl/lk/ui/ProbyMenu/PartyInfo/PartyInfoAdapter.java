@@ -21,6 +21,7 @@ import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.ui.Create_Order.Field;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
@@ -134,7 +135,7 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
         if (dayOfMonth < 10) {
             formattedDayOfMonth = "0" + dayOfMonth;
         }
-        Edt.setText(formattedDayOfMonth + "-" + formattedMonth + "-" + year);
+        Edt.setText(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
     }
 
     @Override

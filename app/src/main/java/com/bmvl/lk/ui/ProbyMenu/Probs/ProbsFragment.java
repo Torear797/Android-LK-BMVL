@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
+import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.bmvl.lk.ui.Create_Order.Field;
@@ -27,7 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
-public class ProbsFragment extends Fragment {
+public class ProbsFragment extends Fragment implements OnBackPressedListener {
     private List<Field> ProbFields = new ArrayList<>(); //Поля пробы
     private List<Field> SampleFields = new ArrayList<>(); //Поля Образцов
     private ProbAdapter adapter;
@@ -61,8 +62,8 @@ public class ProbsFragment extends Fragment {
                 Toast.makeText(getContext(), "Копирование пробы", Toast.LENGTH_SHORT).show();
             }
         };
-        ProbFields.clear();
-        SampleFields.clear();
+//        ProbFields.clear();
+//        SampleFields.clear();
 
         switch (CreateOrderActivity.order_id) {
             case 1:
@@ -262,5 +263,11 @@ public class ProbsFragment extends Fragment {
         SampleFields.add(new Field(6, "", "Наименование доставленного биоматериала", InputType.TYPE_CLASS_TEXT));
         SampleFields.add(new Field(102, "", "Вакцинация поголовья", InputType.TYPE_CLASS_TEXT));
         SampleFields.add(new Field((byte) 6, 0, "", ""));
+    }
+
+    @Override
+    public void onBackPressed() {
+        ProbFields.clear();
+        SampleFields.clear();
     }
 }

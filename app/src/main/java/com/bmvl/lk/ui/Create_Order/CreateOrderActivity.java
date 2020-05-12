@@ -108,7 +108,7 @@ public class CreateOrderActivity extends AppCompatActivity {
 
         adapter = new FieldsAdapter(this);
         recyclerView.setAdapter(adapter);
-        Fields.clear();
+      //  Fields.clear();
 
         switch (order_id) {
             case 1:
@@ -293,6 +293,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                Fields.clear();
                 this.finish();
                 return true;
             default:

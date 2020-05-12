@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
@@ -85,7 +84,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
     @Override
     public void onResume() {
         super.onResume();
-     //    Toast.makeText(getContext(), "123", Toast.LENGTH_SHORT).show();
         if (Orders.size() == 0) LoadOrders(Orders, (byte) 0);
         else UpdateOrders();
     }
@@ -158,8 +156,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                         loading = true;
                                         break;
                                 }
-                                if(Orders.size() == 0) message.setVisibility(View.VISIBLE);
-                                else message.setVisibility(View.GONE);
                             } else {
                                 Hawk.deleteAll();
                                 Intent intent = new Intent(getContext(), LoginActivity.class);
@@ -168,11 +164,15 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                 Objects.requireNonNull(getActivity()).finish();
                             }
                         } else swipeRefreshLayout.setRefreshing(false);
+                        if (Orders.size() == 0) message.setVisibility(View.VISIBLE);
+                        else message.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<OrdersAnswer> call, @NonNull Throwable t) {
                         swipeRefreshLayout.setRefreshing(false);
+                        if (Orders.size() == 0) message.setVisibility(View.VISIBLE);
+                        else message.setVisibility(View.GONE);
                     }
                 });
     }
@@ -288,8 +288,8 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                         OpenOrder.setId(order.getId());
                                         OpenOrder.setFields(response.body().getOrderFields());
                                         OpenOrder.setProby(response.body().getProby());
-                                       // String json = OpenOrder.getJsonOrder();
-                                      //  Log.d("JSON", json);
+                                        // String json = OpenOrder.getJsonOrder();
+                                        //  Log.d("JSON", json);
 
                                         Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
                                         intent.putExtra("type_id", order.getType_id());
@@ -304,7 +304,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                             @Override
                             public void onFailure(@NonNull Call<AnswerOrderEdit> call, @NonNull Throwable t) {
                                 Toast.makeText(getContext(), "Сервер не доступен!", Toast.LENGTH_SHORT).show();
-                                Log.d("ОШИБКА","ТЕКСТ",t);
+                                Log.d("ОШИБКА", "ТЕКСТ", t);
                             }
                         });
             }
@@ -421,29 +421,34 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                         .setItems(R.array.order_types, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                byte choce = 1;
-                                switch (which) {
-                                    case 0:
-                                        choce = 1;
-                                        break;
-                                    case 1:
-                                        choce = 3;
-                                        break;
-                                    case 2:
-                                        choce = 4;
-                                        break;
-                                    case 3:
-                                        choce = 5;
-                                        break;
-                                    case 4:
-                                        choce = 6;
-                                        break;
-                                    case 5:
-                                        choce = 7;
-                                        break;
-                                }
+                                //     byte choce;
+//                                switch (which) {
+//                                    case 0:
+//                                        choce = 1;
+//                                        break;
+//                                    case 1:
+//                                        choce = 3;
+//                                        break;
+//                                    case 2:
+//                                        choce = 4;
+//                                        break;
+//                                    case 3:
+//                                        choce = 5;
+//                                        break;
+//                                    case 4:
+//                                        choce = 6;
+//                                        break;
+//                                    case 5:
+//                                        choce = 7;
+//                                        break;
+//                                }
+
                                 Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
-                                intent.putExtra("type_id", choce);
+                                if (which == 0)
+                                    intent.putExtra("type_id", 1);
+                                else
+                                    //choce = (byte) (which + 2);
+                                    intent.putExtra("type_id", (byte) (which + 2));
                                 startActivity(intent);
                             }
                         })

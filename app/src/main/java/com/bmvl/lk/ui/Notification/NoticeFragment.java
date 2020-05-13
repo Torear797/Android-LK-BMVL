@@ -66,6 +66,9 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
         swipeRefreshLayout.setOnRefreshListener(MyRefresh);
         Message = MyView.findViewById(R.id.msg);
 
+        if (Notifi.size() == 0) Message.setVisibility(View.VISIBLE);
+        else Message.setVisibility(View.GONE);
+
         initRecyclerView();
 
         RecyclerViewEndLisener();

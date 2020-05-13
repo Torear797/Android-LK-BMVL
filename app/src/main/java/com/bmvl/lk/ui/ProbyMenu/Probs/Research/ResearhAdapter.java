@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -14,11 +15,17 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bmvl.lk.App;
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.AnswerMethods;
+import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.ResearchRest;
+import com.bmvl.lk.Rest.Suggestion;
+import com.bmvl.lk.Rest.SuggestionMethod;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.ProbyMenu.Probs.ProbFieldAdapter;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -28,21 +35,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.ResearchItemHolder> {
     private LayoutInflater inflater;
     private TreeMap<Short, ResearchRest> researches; //Исследования
-    // private List<Field> ResearchField; //Поля Исследований
     private RecyclerView.RecycledViewPool viewPool;
     private OnResearchClickListener onResearchClickListener;
 
     private String[] Methods, Types, Indicators;
+    private List<Suggestion> suggestions;
+    private List<SuggestionMethod> suggestionsMethods;
+    private short materialId;
+    private short posInd = -1, posMet = -1, posType = -1;
 
-    public ResearhAdapter(Context context, TreeMap<Short, ResearchRest> ResearchesLise, OnResearchClickListener Listener, String[] ind) {
+    public ResearhAdapter(Context context, TreeMap<Short, ResearchRest> ResearchesLise, OnResearchClickListener Listener) {
         this.inflater = LayoutInflater.from(context);
         this.onResearchClickListener = Listener;
-        //    ResearchField = Fields;
         researches = ResearchesLise;
-        this.Indicators = ind;
     }
 
     public interface OnResearchClickListener {
@@ -64,29 +76,68 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
         //  researchItemHolder.ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
         // researchItemHolder.ResearchList.setRecycledViewPool(viewPool);
 
-        // String[] NewIndicators = new String[response.body().getSuggestions().size()];
-
         researchItemHolder.NumberResearch.setText(MessageFormat.format("№ {0}", i + 1));
 
-        if (CurrentResearch.getIndicatorVal() != null && CurrentResearch.getMethodVal() != null && CurrentResearch.getTypeVal() != null) {
-            Indicators = new String[1];
-            Methods = new String[1];
-            Types = new String[1];
+        if (CurrentResearch.getTypeId() != 0 &&
+                        CurrentResearch.getTypeVal() != null && !CurrentResearch.getTypeVal().equals("")) {
+//            Indicators = new String[1];
+//            Methods = new String[1];
+//            Types = new String[1];
+//
+//            Indicators[0] = CurrentResearch.getIndicatorVal();
+//            Methods[0] = CurrentResearch.getMethodVal();
+//            Types[0] = CurrentResearch.getTypeVal();
+//
+//            InitAdapter(Indicators, researchItemHolder.Indicators);
+//            InitAdapter(Methods, researchItemHolder.Methods);
+//            InitAdapter(Types, researchItemHolder.Types);
+            if(posInd == -1 || posMet == -1 || posType == -1)
+                getPositionForSpiners(CurrentResearch.getIndicatorVal(), CurrentResearch.getMethodVal(), CurrentResearch.getTypeVal());
 
-            Indicators[0] = CurrentResearch.getIndicatorVal();
-            Methods[0] = CurrentResearch.getMethodVal();
-            Types[0] = CurrentResearch.getTypeVal();
+            researchItemHolder.Indicators.setSelection(posInd);
+            researchItemHolder.Methods.setSelection(posMet);
+            researchItemHolder.Types.setSelection(posType);
+        } else {
+            if(CurrentResearch.getMethodVal() != null && !CurrentResearch.getMethodVal().equals("")){
 
-            InitAdapter(Indicators, researchItemHolder.Indicators);
-            InitAdapter(Methods, researchItemHolder.Methods);
-            InitAdapter(Types, researchItemHolder.Types);
-        } else
-            setTestResearchData(CurrentResearch);
+                    researchItemHolder.Indicators.setSelection(posInd);
+                    researchItemHolder.Methods.setSelection(posMet);
 
+            } else if(CurrentResearch.getIndicatorVal() != null && !CurrentResearch.getIndicatorVal().equals("")){
+                researchItemHolder.Indicators.setSelection(posInd);
+
+                if(Methods != null)
+                    InitAdapter(Methods, researchItemHolder.Methods);
+
+                if(Types != null)
+                    InitAdapter(Types, researchItemHolder.Types);
+            } else
+                InitAdapter(Indicators, researchItemHolder.Indicators);
+
+        }
 
 
         researchItemHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         mItemManger.bindView(researchItemHolder.itemView, i);
+    }
+
+    private void getPositionForSpiners(String indicator, String Method, String Type){
+        int position = 0;
+        if(posInd == -1)
+        for (String name: Indicators) {
+            if(name.equals(Indicators[position])) {
+                posInd = (short) position;
+                break;
+            }
+        }
+
+
+    }
+
+    public void UpdateIndicators(String[] ind, List<Suggestion> sug, int id) {
+        Indicators = ind;
+        suggestions = sug;
+        materialId = (short) id;
     }
 
     private void setTestResearchData(ResearchRest CurrentResearch) {
@@ -177,7 +228,57 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
                     // Toast.makeText(view.getContext(), "Удаление ииследования", Toast.LENGTH_SHORT).show();
                 }
             });
+
+
+            AdapterView.OnItemSelectedListener IndicatorsSelectedListener = new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    final ResearchRest CurrentReseacrh = researches.get(getPositionKey(getLayoutPosition()));
+                    final Suggestion CurrentItem = suggestions.get(position);
+
+                    if (CurrentReseacrh.getIndicatorId() != (short) CurrentItem.getId()) {
+                        posInd = (short) position;
+                        CurrentReseacrh.ClearAll();
+
+                        CurrentReseacrh.setIndicatorId((short) CurrentItem.getId());
+                        CurrentReseacrh.setIndicatorVal(String.valueOf(parent.getItemAtPosition(position)));
+                        CurrentReseacrh.setIndicatorNd(CurrentItem.getName_document());
+                        CurrentReseacrh.setIndicatorNdId(CurrentItem.getId_document());
+
+                        getMethods((short) CurrentItem.getId(), String.valueOf(CurrentItem.getId_document()));
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            };
+            Indicators.setOnItemSelectedListener(IndicatorsSelectedListener);
         }
+    }
+
+    private void getMethods(short indicatorId, String indicatorNdId) {
+        if(indicatorNdId.equals("0")) indicatorNdId = "";
+        NetworkService.getInstance()
+                .getJSONApi()
+                .getMethods(App.UserAccessData.getToken(), "", materialId, indicatorId, indicatorNdId)
+                .enqueue(new Callback<AnswerMethods>() {
+                    @Override
+                    public void onResponse(@NonNull Call<AnswerMethods> call, @NonNull Response<AnswerMethods> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            Methods = new String[response.body().getSuggestions().size()];
+                            for (int i = 0; i < response.body().getSuggestions().size(); i++) {
+                                Methods[i] = response.body().getSuggestions().get(i).getValue();
+                            }
+                            suggestionsMethods = response.body().getSuggestions();
+                            notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<AnswerMethods> call, @NonNull Throwable t) {
+                    }
+                });
     }
 
     public void insertdata(Map<Short, ResearchRest> insertList) {

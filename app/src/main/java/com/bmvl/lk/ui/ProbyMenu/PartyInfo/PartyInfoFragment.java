@@ -81,7 +81,7 @@ public class PartyInfoFragment extends Fragment {
     private void AddOriginField() {
         OriginFields.clear();
         OriginFields.add(new Field((byte) 3, 56, "", "Происхождение неизвестно"));
-        if(CreateOrderActivity.order_id != 8 && CreateOrderActivity.order_id != 9 && CreateOrderActivity.order_id != 10)
+        if(CreateOrderActivity.order_id != 4 &&CreateOrderActivity.order_id != 8 && CreateOrderActivity.order_id != 9 && CreateOrderActivity.order_id != 10)
         OriginFields.add(new Field(19, "", "НД на производство", InputType.TYPE_CLASS_TEXT));
         OriginFields.add(new Field(8, "", "Производитель", InputType.TYPE_CLASS_TEXT));
         OriginFields.add(new Field(29, "", "Страна происхождения", InputType.TYPE_CLASS_TEXT));
@@ -99,7 +99,7 @@ public class PartyInfoFragment extends Fragment {
             PartyInfoFields.add(new Field(42, "", "№", InputType.TYPE_CLASS_TEXT));
             PartyInfoFields.add(new Field(34, "", "Номер партии", InputType.TYPE_CLASS_TEXT));
             PartyInfoFields.add(new Field(36, "", "Масса (объем) партии", InputType.TYPE_CLASS_TEXT));
-            PartyInfoFields.add(new Field((byte) 1, R.array.units_of_measure, 0, "", " "));
+            PartyInfoFields.add(new Field((byte) 1, R.array.units_of_measure, 37, "", " "));
             PartyInfoFields.add(new Field(38, "", "Количество в партии", InputType.TYPE_CLASS_TEXT));
             PartyInfoFields.add(new Field((byte) 1, R.array.units_of_measure, 39, "", " "));
         }

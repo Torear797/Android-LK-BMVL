@@ -102,6 +102,7 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
                                 }
                                 Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
                                 intent.putExtra("type_id", choce);
+                                intent.putExtra("Pattern", true);
                                 startActivity(intent);
                             }
                         })

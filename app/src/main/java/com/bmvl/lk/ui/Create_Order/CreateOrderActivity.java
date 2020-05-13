@@ -71,17 +71,22 @@ public class CreateOrderActivity extends AppCompatActivity {
         final FrameLayout Frame = findViewById(R.id.Menu_proby_fragment);
         bar = findViewById(R.id.ProgressBar);
 
+        final boolean pattern = getIntent().getBooleanExtra("Pattern", false);
+
+
         Edit = getIntent().getBooleanExtra("isEdit", false);
         if (!Edit) {
             order = new SendOrder(getIntent().getByteExtra("type_id", (byte) 1));
             toolbar.setTitle(R.string.new_order);
         } else {
             order = (SendOrder) getIntent().getSerializableExtra(SendOrder.class.getSimpleName());
+            Log.d("JSON",order.getJsonOrder());
             toolbar.setTitle(R.string.edit_order);
             final MaterialButton btn = findViewById(R.id.Create);
             btn.setText("Сохранить");
         }
         order_id = order.getType_id();
+        if(pattern)order.setPattern((byte) 1);
 
         setSupportActionBar(toolbar);
 

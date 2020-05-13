@@ -63,31 +63,18 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         simpleViewHolder.PersonStatus.setText(App.UserInfo.getPosition());
         simpleViewHolder.Data.setText(String.valueOf(Order.getDate()));
 
-
         simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         simpleViewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
             @Override
             public void onOpen(SwipeLayout layout) {
                 YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.edit));
-                //Toast.makeText(layout.getContext(), "Открыто", Toast.LENGTH_SHORT).show();
             }
         });
-//        simpleViewHolder.swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
-//            @Override
-//            public void onDoubleClick(SwipeLayout layout, boolean surface) {
-//                Toast.makeText(MyContext, "DoubleClick", Toast.LENGTH_SHORT).show();
-//            }
-//        });
 
-
-        if (Order.getType_id() > 4) {
+        if (Order.getType_id() > (byte) 4)
             simpleViewHolder.buttonDownload.setVisibility(View.GONE);
+        else simpleViewHolder.buttonDownload.setVisibility(View.VISIBLE);
 
-//            final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) simpleViewHolder.buttonOpen.getLayoutParams(); // получаем параметры
-//            params.height = 130;
-//            simpleViewHolder.buttonCopy.setLayoutParams(params);
-//            simpleViewHolder.buttonOpen.setLayoutParams(params);
-        }
         mItemManger.bindView(simpleViewHolder.itemView, i);
     }
 
@@ -158,10 +145,6 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
             });
         }
     }
-//    private void CheckEmpty(){
-//        if(Orders.size() == 0) message.setVisibility(View.VISIBLE);
-//        else message.setVisibility(View.GONE);
-//    }
 
     public void insertdata(List<Orders> insertList, boolean isCopy) {
         OrdersDiffUtilCallback diffUtilCallback = new OrdersDiffUtilCallback(Orders, insertList);
@@ -169,7 +152,6 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         if (isCopy)
             Orders.addAll(0, insertList);
         else Orders.addAll(insertList);
-        //  CheckEmpty();
         diffResult.dispatchUpdatesTo(this);
     }
 
@@ -178,7 +160,6 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
         Orders.clear();
         Orders.addAll(newList);
-        //  CheckEmpty();
         diffResult.dispatchUpdatesTo(this);
     }
 }

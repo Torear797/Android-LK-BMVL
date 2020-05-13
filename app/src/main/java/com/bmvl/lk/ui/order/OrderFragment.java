@@ -112,6 +112,9 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         fab = MyView.findViewById(R.id.floatingActionButton);
         message = MyView.findViewById(R.id.empty_msg);
 
+        if (Orders.size() == 0) message.setVisibility(View.VISIBLE);
+        else message.setVisibility(View.GONE);
+
         initRecyclerView();
         recyclerView.scrollToPosition(0);
 

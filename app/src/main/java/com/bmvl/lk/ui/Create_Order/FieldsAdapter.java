@@ -77,7 +77,6 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 View view2 = inflater.inflate(R.layout.item_original_doc, parent, false);
                 return new OriginalDocHolder(view2);
             case 3:
-               // View view3 = inflater.inflate(R.layout.item_check_button, parent, false);
                 View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_check_button, parent, false);
                 final SwitchHolder holder3 = new SwitchHolder(view3);
 

@@ -66,7 +66,28 @@ public interface ServerApi {
 
     @FormUrlEncoded
     @POST("ajax/getIndicators")
-    Call<AnswerIndicators> getIndicators(@Field("materialId") int materialId);
+    Call<AnswerIndicators> getIndicators(@Field("token") String token, @Field("materialId") int materialId,@Field("query") String query);
+
+    @FormUrlEncoded
+    @POST("ajax/getMethods")
+    Call<AnswerMethods> getMethods(
+            @Field("token") String token,
+            @Field("query") String query,
+            @Field("materialId") short materialId,
+            @Field("indicatorId") short indicatorId,
+            @Field("indicatorNdId") String indicatorNdId);
+
+    @FormUrlEncoded
+    @POST("ajax/getTypes")
+    Call<AnswerTypes> getTypes(
+            @Field("token") String token,
+            @Field("query") String query,
+            @Field("materialId") short materialId,
+            @Field("indicatorId") short indicatorId,
+            @Field("indicatorNdId") short indicatorNdId,
+            @Field("methodId") short methodId,
+            @Field("methodNdId") short methodNdId
+    );
 
     @FormUrlEncoded
     @POST("orders/edit")

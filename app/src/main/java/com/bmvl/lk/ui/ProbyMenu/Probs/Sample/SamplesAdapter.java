@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.SamplesRest;
+import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.bmvl.lk.ui.Create_Order.Field;
@@ -37,15 +38,13 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     private RecyclerView.RecycledViewPool viewPool;
     private OnSamplesClickListener onSamplesClickListener;
 
-    private String[] Indicators;
+    private SamplesFieldAdapter adapter;
 
-    public SamplesAdapter(Context context, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList,OnSamplesClickListener Listener, String[] ind) {
+    public SamplesAdapter(Context context, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList,OnSamplesClickListener Listener) {
         this.inflater = LayoutInflater.from(context);
-  //      ResearchsField = Researchs;
         SamplesField = Samples;
         this.Samples = SamplesList;
         this.onSamplesClickListener = Listener;
-        this.Indicators = ind;
     }
 
     public interface OnSamplesClickListener {
@@ -62,12 +61,12 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final SamplesRest CurrentSample = Samples.get(getPositionKey(i));
 
-        final SamplesFieldAdapter adapter = new SamplesFieldAdapter(inflater.getContext(), SamplesField, CurrentSample,Indicators);
+        adapter = new SamplesFieldAdapter(inflater.getContext(), SamplesField, CurrentSample);
         simpleViewHolder.SampleList.setAdapter(adapter);
         simpleViewHolder.SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
         simpleViewHolder.SampleList.setRecycledViewPool(viewPool);
 
-        if(CreateOrderActivity.order_id != 1) {
+        if(CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id !=8) {
             simpleViewHolder.NumberSample.setText(MessageFormat.format("№ {0}", getPositionKey(i)));
             simpleViewHolder.Info.setText("Образец");
         } else {
@@ -75,15 +74,18 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
             simpleViewHolder.SampleList.setVisibility(View.VISIBLE);
             simpleViewHolder.swipeLayout.setSwipeEnabled(false);
 
-            final GridLayoutManager mng_layout = new GridLayoutManager(inflater.getContext(), 2);
-            mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    if (position == 2 || position == 3) return 1;
-                    return 2;
-                }
-            });
-            simpleViewHolder.SampleList.setLayoutManager(mng_layout);
+            if(CreateOrderActivity.order_id !=8) {
+                final GridLayoutManager mng_layout = new GridLayoutManager(inflater.getContext(), 2);
+                mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                    @Override
+                    public int getSpanSize(int position) {
+                        if (position == 2 || position == 3)
+                            return 1;
+                        return 2;
+                    }
+                });
+                simpleViewHolder.SampleList.setLayoutManager(mng_layout);
+            }
         }
 
         simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
@@ -168,6 +170,10 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
                 }
             });
         }
+    }
+    public void UpdateAdapter(String[] Indicators,List<Suggestion> suggestions, int id){
+       // adapter.notifyDataSetChanged();
+        adapter.UpdateAdapter(Indicators, suggestions, id);
     }
 
     public void insertdata(Map<Short, SamplesRest> insertList) {

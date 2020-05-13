@@ -18,6 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.AnswerIndicators;
 import com.bmvl.lk.Rest.NetworkService;
@@ -65,7 +66,10 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
     private ResearhAdapter Adapter;
     private SamplesAdapter SamAdapter;
-    private String[] Indicators;
+
+    public ProbFieldAdapter(){
+
+    }
 
     public ProbFieldAdapter(Context context, List<Field> probFields, List<Field> sampleFields, ProbyRest prob, TextView header) {
         this.inflater = LayoutInflater.from(context);
@@ -238,10 +242,11 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 break;
             } //Swith
-            case 4:
+            case 4: {
                 ((SelectButtonHolder) holder).hint.setText(f.getHint());
                 break;
-            case 5:
+            }
+            case 5: {
                 final List<String> items = Arrays.asList(inflater.getContext().getResources().getStringArray(f.getEntries()));
                 MultiSpinner.MultiSpinnerListener onSelectedListener = new MultiSpinner.MultiSpinnerListener() {
                     public void onItemsSelected(boolean[] selected, String id) {
@@ -261,40 +266,41 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
-            case 6:
-                Adapter = new ResearhAdapter(inflater.getContext(), CurrentProb.getSamples().get(getPositionKey(0, CurrentProb.getSamples())).getResearches(), Listener, Indicators);
-                (Adapter).setMode(Attributes.Mode.Single);
-                ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
-                ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
-                ((ResearchPanelHolder) holder).ResearchList.setRecycledViewPool(viewPool);
-
-
-                //Добавляет исследование
-                ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        short size = (short) CurrentProb.getSamples().get((short) 1).getResearches().size();
-                        short newid = 0;
-                        if (size > 0)
-                            newid = getPositionKeyR(size - 1, CurrentProb.getSamples().get((short) 1).getResearches());
-
-                        Map<Short, ResearchRest> insertlist = new HashMap<>();
-                        insertlist.put((short) (newid + 1), new ResearchRest((short) (newid + 1)));
-                        Adapter.insertdata(insertlist);
-                        ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
-                    }
-                });
-
-                break;
+            }
+//            case 6: {
+//                Adapter = new ResearhAdapter(inflater.getContext(), CurrentProb.getSamples().get(getPositionKey(0, CurrentProb.getSamples())).getResearches(), Listener);
+//                (Adapter).setMode(Attributes.Mode.Single);
+//                ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
+//                ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
+//                ((ResearchPanelHolder) holder).ResearchList.setRecycledViewPool(viewPool);
+//
+//
+//                //Добавляет исследование
+//                ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        short size = (short) CurrentProb.getSamples().get((short) 1).getResearches().size();
+//                        short newid = 0;
+//                        if (size > 0)
+//                            newid = getPositionKeyR(size - 1, CurrentProb.getSamples().get((short) 1).getResearches());
+//
+//                        Map<Short, ResearchRest> insertlist = new HashMap<>();
+//                        insertlist.put((short) (newid + 1), new ResearchRest((short) (newid + 1)));
+//                        Adapter.insertdata(insertlist);
+//                        ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
+//                    }
+//                });
+//
+//                break;
+//            }
             case 7:
-                SamAdapter = new SamplesAdapter(inflater.getContext(), SampleFields, CurrentProb.getSamples(), SamListener, Indicators);
+                SamAdapter = new SamplesAdapter(inflater.getContext(), SampleFields, CurrentProb.getSamples(), SamListener);
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
                 ((SamplesPanelHolder) holder).SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
                 ((SamplesPanelHolder) holder).SampleList.setRecycledViewPool(viewPool);
 
-
-                if (CreateOrderActivity.order_id != 1) {
+                if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id !=8) {
                     //Добавление образца
                     ((SamplesPanelHolder) holder).btnAddSample.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -366,10 +372,10 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
         return ProbFields.size();
     }
 
-    private void getIndicators(int id) {
+    private void getIndicators(final int id) {
         NetworkService.getInstance()
                 .getJSONApi()
-                .getIndicators(id)
+                .getIndicators(App.UserAccessData.getToken(),id,"")
                 .enqueue(new Callback<AnswerIndicators>() {
                     @Override
                     public void onResponse(@NonNull Call<AnswerIndicators> call, @NonNull Response<AnswerIndicators> response) {
@@ -378,7 +384,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                             for (int i = 0; i < response.body().getSuggestions().size(); i++) {
                                 NewIndicators[i] = response.body().getSuggestions().get(i).getValue();
                             }
-                            Indicators = NewIndicators;
+                            SamAdapter.UpdateAdapter(NewIndicators,response.body().getSuggestions(), id);
                         }
                     }
 

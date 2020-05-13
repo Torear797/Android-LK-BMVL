@@ -93,4 +93,8 @@ public class SendOrder implements Serializable{
     public void setProby(TreeMap<Short, ProbyRest> proby) {
         this.proby = proby;
     }
+
+    public void setPattern(byte pattern) {
+        this.pattern = pattern;
+    }
 }

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
+import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.ViewHolders.MultiSpinerHolder;
 import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
@@ -35,19 +36,16 @@ import java.util.Map;
 public class SamplesFieldAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private RecyclerView.RecycledViewPool viewPool;
-    // private List<Field> ResearchsField; //Поля исследвоаний
     private List<Field> SamplesField; //Поля образцов
 
     private SamplesRest CurrentSample; //Текущий образец
     private ResearhAdapter Adapter;
     private String[] Indicators;
 
-    public SamplesFieldAdapter(Context context, List<Field> SamFields, SamplesRest Sample, String[] ind) {
+    public SamplesFieldAdapter(Context context, List<Field> SamFields, SamplesRest Sample) {
         this.inflater = LayoutInflater.from(context);
-        //  ResearchsField = ResFields;
         SamplesField = SamFields;
         CurrentSample = Sample;
-        this.Indicators = ind;
     }
 
     @Override
@@ -161,7 +159,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
             case 6:
-                Adapter = new ResearhAdapter(inflater.getContext(), CurrentSample.getResearches(), Listener, Indicators);
+                Adapter = new ResearhAdapter(inflater.getContext(), CurrentSample.getResearches(), Listener);
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
@@ -194,6 +192,11 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
             Adapter.closeAllItems();
         }
     };
+
+    public void UpdateAdapter(String[] Indicators, List<Suggestion> suggestions, int id){
+        Adapter.UpdateIndicators(Indicators, suggestions, id);
+        Adapter.notifyDataSetChanged();
+    }
 
     private Short getPositionKeyR(int position, Map<Short, ResearchRest> List) {
         if (List.size() > 0)

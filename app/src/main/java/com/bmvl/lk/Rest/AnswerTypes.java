@@ -2,7 +2,7 @@ package com.bmvl.lk.Rest;
 
 import java.util.List;
 
-class AnswerTypes {
+public class AnswerTypes {
     private List<SuggestionType> suggestions;
 
     public List<SuggestionType> getSuggestions() {

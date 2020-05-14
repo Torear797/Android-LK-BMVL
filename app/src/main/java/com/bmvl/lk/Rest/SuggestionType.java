@@ -1,7 +1,15 @@
 package com.bmvl.lk.Rest;
 
-class SuggestionType {
+public class SuggestionType {
     private String value;
     private short id;
     private double price;
+
+    public String getValue() {
+        return value;
+    }
+
+    public short getId() {
+        return id;
+    }
 }

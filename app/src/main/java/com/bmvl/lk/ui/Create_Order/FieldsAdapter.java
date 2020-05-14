@@ -181,15 +181,15 @@ public class FieldsAdapter extends RecyclerView.Adapter {
 
                 if (OrderFields.containsKey((short) f.getColumn_id())) {
 
-                    String[] id = inflater.getContext().getResources().getStringArray(f.getEntries());
-                    int CurrentID = 0;
-                    for (String name : id) {
-                        if (name.equals(OrderFields.get((short) f.getColumn_id())))
-                            break;
-                        CurrentID++;
-                    }
-                    if(CurrentID < id.length)
-                    ((SpinerHolder) holder).spiner.setSelection(CurrentID, true);
+//                    String[] id = inflater.getContext().getResources().getStringArray(f.getEntries());
+//                    int CurrentID = 0;
+//                    for (String name : id) {
+//                        if (name.equals(OrderFields.get((short) f.getColumn_id())))
+//                            break;
+//                        CurrentID++;
+//                    }
+//                    if(CurrentID < id.length)
+                    ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(OrderFields.get((short) f.getColumn_id())));
                 }
                 //else
 //                    CreateOrderActivity.order.getFields().put((short) f.getColumn_id(), String.valueOf(((SpinerHolder) holder).spiner.getSelectedItem()));

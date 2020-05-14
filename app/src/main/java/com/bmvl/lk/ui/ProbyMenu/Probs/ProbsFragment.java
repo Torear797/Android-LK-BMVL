@@ -137,7 +137,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
     private void AddProb() {
         CreateOrderActivity.order.addProb((short) 1, new ProbyRest((short) 0));
         CreateOrderActivity.order.getProby().get((short) (1)).addSample((short) 1, new SamplesRest((short) 0));
-    } //Создает первую пробу
+    } //Создает первую пробу и первый образец
 
     private void AddSamplesForType4() {
         SampleFields.add(new Field(6, "", "Наименование доставленного биоматериала", InputType.TYPE_CLASS_TEXT));

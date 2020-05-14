@@ -40,7 +40,9 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
 
     private SamplesRest CurrentSample; //Текущий образец
     private ResearhAdapter Adapter;
-    private String[] Indicators;
+
+    private List<Suggestion> buffer_sug;
+    private Integer buffer_id;
 
     public SamplesFieldAdapter(Context context, List<Field> SamFields, SamplesRest Sample) {
         this.inflater = LayoutInflater.from(context);
@@ -125,16 +127,18 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 ((SpinerHolder) holder).txtHint.setText(f.getHint());
 
                 if (CurrentSample.getFields().containsKey((short) (f.getColumn_id()))) {
-                    String[] id = inflater.getContext().getResources().getStringArray(f.getEntries());
-                    int CurrentID = 0;
-                    for (String name : id) {
-                        if (name.equals(CurrentSample.getFields().get((short) (f.getColumn_id()))))
-                            break;
-                        CurrentID++;
-                    }
+//                    String[] id = inflater.getContext().getResources().getStringArray(f.getEntries());
+//                    int CurrentID = 0;
+//                    for (String name : id) {
+//                        if (name.equals(CurrentSample.getFields().get((short) (f.getColumn_id()))))
+//                            break;
+//                        CurrentID++;
+//                    }
+//
+//                    if (CurrentID < id.length)
+//                        ((SpinerHolder) holder).spiner.setSelection(CurrentID);
+                    ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentSample.getFields().get((short) (f.getColumn_id()))));
 
-                    if (CurrentID < id.length)
-                        ((SpinerHolder) holder).spiner.setSelection(CurrentID, true);
                 }
 
                 break;
@@ -151,7 +155,6 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
 
                 ((MultiSpinerHolder) holder).spiner.setItems(
                         items,
-                        //inflater.getContext().getString(R.string.for_all),
                         selected,
                         onSelectedListener
                 );
@@ -164,6 +167,12 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
                 ((ResearchPanelHolder) holder).ResearchList.setRecycledViewPool(viewPool);
+
+                if(buffer_id != null && buffer_sug != null) {
+                    UpdateAdapter(buffer_sug, buffer_id);
+                    buffer_sug = null;
+                    buffer_id = null;
+                }
 
                 //Добавляет исследование
                 ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(new View.OnClickListener() {
@@ -193,9 +202,14 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
         }
     };
 
-    public void UpdateAdapter(String[] Indicators, List<Suggestion> suggestions, int id){
-        Adapter.UpdateIndicators(Indicators, suggestions, id);
-        Adapter.notifyDataSetChanged();
+    public void UpdateAdapter(List<Suggestion> suggestions, int id){
+        if(Adapter != null) {
+            Adapter.UpdateIndicators(suggestions, id);
+            Adapter.notifyDataSetChanged();
+        } else {
+            buffer_sug = suggestions;
+            buffer_id = id;
+        }
     }
 
     private Short getPositionKeyR(int position, Map<Short, ResearchRest> List) {

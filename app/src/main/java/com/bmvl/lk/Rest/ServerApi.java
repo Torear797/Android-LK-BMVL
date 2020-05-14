@@ -84,9 +84,9 @@ public interface ServerApi {
             @Field("query") String query,
             @Field("materialId") short materialId,
             @Field("indicatorId") short indicatorId,
-            @Field("indicatorNdId") short indicatorNdId,
+            @Field("indicatorNdId") String indicatorNdId,
             @Field("methodId") short methodId,
-            @Field("methodNdId") short methodNdId
+            @Field("methodNdId") String methodNdId
     );
 
     @FormUrlEncoded

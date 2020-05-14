@@ -62,29 +62,20 @@ public class ResearchRest implements Serializable {
     public void ClearAll() {
         this.price = 0;
         this.methodId = 0;
-        this.methodNd = "";
+        this.methodNd = null;
         this.methodNdId = 0;
-        this.methodVal = "";
-        this.indicatorVal = "";
+        this.methodVal = null;
+        this.indicatorVal = null;
         this.indicatorId = 0;
-        this.indicatorNd = "";
+        this.indicatorNd = null;
         this.indicatorNdId = 0;
         this.typeId = 0;
-        this.typeVal = "";
-    }
-
-    public void ClearMethod() {
-        this.methodId = 0;
-        this.methodNd = "";
-        this.methodNdId = 0;
-        this.methodVal = "";
-        this.typeId = 0;
-        this.typeVal = "";
+        this.typeVal = null;
     }
 
     public void ClearType() {
         this.typeId = 0;
-        this.typeVal = "";
+        this.typeVal = null;
     }
 
     public short getIndicatorId() {

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,13 +64,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     private TextView ProbHeader;
 
     private ProbyRest CurrentProb;
-
-    private ResearhAdapter Adapter;
     private SamplesAdapter SamAdapter;
-
-    public ProbFieldAdapter(){
-
-    }
 
     public ProbFieldAdapter(Context context, List<Field> probFields, List<Field> sampleFields, ProbyRest prob, TextView header) {
         this.inflater = LayoutInflater.from(context);
@@ -214,20 +209,21 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id()))) {
 
                     if (f.getColumn_id() != 5) {
-                        String[] id = inflater.getContext().getResources().getStringArray(f.getEntries());
-                        int CurrentID = 0;
-                        for (String name : id) {
-                            if (name.equals(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))))
-                                break;
-                            CurrentID++;
-                        }
-
-                        if (CurrentID < id.length)
-                            ((SpinerHolder) holder).spiner.setSelection(CurrentID, true);
+//                        String[] id = inflater.getContext().getResources().getStringArray(f.getEntries());
+//                        int CurrentID = 0;
+//                        for (String name : id) {
+//                            if (name.equals(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))))
+//                                break;
+//                            CurrentID++;
+//                        }
+//
+//                        if (CurrentID < id.length)
+//                            ((SpinerHolder) holder).spiner.setSelection(CurrentID);
+                        ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))));
                     } else {
-                        ((SpinerHolder) holder).spiner.setSelection(Integer.parseInt(CurrentProb.getFields().get("5")) - 1, true);
+                        ((SpinerHolder) holder).spiner.setSelection(Integer.parseInt(CurrentProb.getFields().get("5")) - 1);
                         ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", CurrentProb.getFields().get("materialName"), CurrentProb.getSamples().size()));
-                        getIndicators(1);
+                        //getIndicators(1);
                     }
                 }
 
@@ -293,14 +289,14 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 //
 //                break;
 //            }
-            case 7:
+            case 7: {
                 SamAdapter = new SamplesAdapter(inflater.getContext(), SampleFields, CurrentProb.getSamples(), SamListener);
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
                 ((SamplesPanelHolder) holder).SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
                 ((SamplesPanelHolder) holder).SampleList.setRecycledViewPool(viewPool);
 
-                if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id !=8) {
+                if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {
                     //Добавление образца
                     ((SamplesPanelHolder) holder).btnAddSample.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -318,16 +314,10 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 }
 
                 break;
+            } // Иссследования
         }
     }
 
-    ResearhAdapter.OnResearchClickListener Listener = new ResearhAdapter.OnResearchClickListener() {
-
-        @Override
-        public void onUpdateResearch() {
-            Adapter.closeAllItems();
-        }
-    };
     SamplesAdapter.OnSamplesClickListener SamListener = new SamplesAdapter.OnSamplesClickListener() {
 
         @Override
@@ -380,11 +370,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     @Override
                     public void onResponse(@NonNull Call<AnswerIndicators> call, @NonNull Response<AnswerIndicators> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                            String[] NewIndicators = new String[response.body().getSuggestions().size()];
-                            for (int i = 0; i < response.body().getSuggestions().size(); i++) {
-                                NewIndicators[i] = response.body().getSuggestions().get(i).getValue();
-                            }
-                            SamAdapter.UpdateAdapter(NewIndicators,response.body().getSuggestions(), id);
+                           SamAdapter.UpdateAdapter(response.body().getSuggestions(), id);
                         }
                     }
 

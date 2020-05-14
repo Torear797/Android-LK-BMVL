@@ -33,14 +33,13 @@ import java.util.TreeMap;
 public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleViewHolder> {
     private LayoutInflater inflater;
     private TreeMap<Short, SamplesRest> Samples; //Образцы
-   // private List<Field> ResearchsField; //Поля исследований
     private List<Field> SamplesField; //Поля образцов
     private RecyclerView.RecycledViewPool viewPool;
     private OnSamplesClickListener onSamplesClickListener;
 
     private SamplesFieldAdapter adapter;
 
-    public SamplesAdapter(Context context, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList,OnSamplesClickListener Listener) {
+    public SamplesAdapter(Context context, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList, OnSamplesClickListener Listener) {
         this.inflater = LayoutInflater.from(context);
         SamplesField = Samples;
         this.Samples = SamplesList;
@@ -66,7 +65,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
         simpleViewHolder.SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
         simpleViewHolder.SampleList.setRecycledViewPool(viewPool);
 
-        if(CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id !=8) {
+        if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {
             simpleViewHolder.NumberSample.setText(MessageFormat.format("№ {0}", getPositionKey(i)));
             simpleViewHolder.Info.setText("Образец");
         } else {
@@ -74,7 +73,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
             simpleViewHolder.SampleList.setVisibility(View.VISIBLE);
             simpleViewHolder.swipeLayout.setSwipeEnabled(false);
 
-            if(CreateOrderActivity.order_id !=8) {
+            if (CreateOrderActivity.order_id != 8) {
                 final GridLayoutManager mng_layout = new GridLayoutManager(inflater.getContext(), 2);
                 mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override
@@ -103,12 +102,12 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     }
 
     private Short getPositionKey(int position) {
-        if(Samples.size() > 0)
-        return new ArrayList<Short>(Samples.keySet()).get(position);
+        if (Samples.size() > 0)
+            return new ArrayList<Short>(Samples.keySet()).get(position);
         else return 0;
     }
 
-     class SimpleViewHolder extends RecyclerView.ViewHolder {
+    class SimpleViewHolder extends RecyclerView.ViewHolder {
         final ConstraintLayout head;
         final LinearLayout GreenHeader;
         final TextView NumberSample, Info;
@@ -147,7 +146,6 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
                     TreeMap<Short, SamplesRest> insertlist = new TreeMap<>(Samples);
                     insertlist.remove(getPositionKey(getLayoutPosition()));
                     updateList(insertlist);
-                  //  Toast.makeText(view.getContext(), "Удаление Образца", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -159,21 +157,16 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
                     TreeMap<Short, SamplesRest> insertlist = new TreeMap<>();
                     short newid = getPositionKey(Samples.size() - 1);
                     SamplesRest insertSample = new SamplesRest(newid);
-
-                    insertSample.setData(Samples.get(getPositionKey(getLayoutPosition())).getFields(),Samples.get(getPositionKey(getLayoutPosition())).getResearches());
-
-                    insertlist.put((short)(newid + 1), insertSample);
+                    insertSample.setData(Samples.get(getPositionKey(getLayoutPosition())).getFields(), Samples.get(getPositionKey(getLayoutPosition())).getResearches());
+                    insertlist.put((short) (newid + 1), insertSample);
                     insertdata(insertlist);
-
-
-                   // Toast.makeText(view.getContext(), "Копирование Образца", Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
-    public void UpdateAdapter(String[] Indicators,List<Suggestion> suggestions, int id){
-       // adapter.notifyDataSetChanged();
-        adapter.UpdateAdapter(Indicators, suggestions, id);
+
+    public void UpdateAdapter(List<Suggestion> suggestions, int id) {
+        adapter.UpdateAdapter(suggestions, id);
     }
 
     public void insertdata(Map<Short, SamplesRest> insertList) {

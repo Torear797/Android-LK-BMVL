@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
@@ -99,6 +100,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         View MyView = inflater.inflate(R.layout.fragment_recyclerview, container, false);
         final RecyclerView recyclerView = MyView.findViewById(R.id.List);
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         final MaterialButton AddProbBtn = MyView.findViewById(R.id.addProb);
 
         recyclerView.setAdapter(adapter);

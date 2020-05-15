@@ -1,26 +1,21 @@
 <resources>
     <string name="app_name">ЛК БМВЛ</string>
-    <string name="title_activity_login">Войти</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Пароль</string>
     <string name="action_sign_in">Войти</string>
-    <string name="action_sign_in_short">Войти</string>
-    <string name="welcome">"Добро пожаловать !"</string>
     <string name="invalid_username">Некорректная почта или Телефон</string>
     <string name="invalid_password">Пароль должен содержать минимум 5 символов</string>
-    <string name="login_failed">"Некорректный Логин"</string>
     <string name="order">Заказы</string>
     <string name="search">Поиск</string>
     <string name="profile">Профиль</string>
     <string name="Notice">Уведомления</string>
     <string name="people">Подчиненные</string>
-    <string name="AB_notification">Уведомление</string>
+
     <string name="s_numer">Номер заявки</string>
     <string name="s_numer_protocol">Номер протокола</string>
     <string name="ot">Дата от</string>
     <string name="Do">Дата до</string>
     <string name="email">Email или Телефон</string>
-    <string name="password">Пароль</string>
     <string name="price_ot">Цена От</string>
     <string name="price_do">Цена До</string>
     <string name="Login_title">Авторизация</string>
@@ -310,6 +305,20 @@
         <item>По статусу</item>
     </string-array>
 
+    <string-array name="brob_menu_titles">
+        <item>Пробы</item>
+        <item>Происхождение</item>
+        <item>Партия</item>
+        <item>Инфо</item>
+    </string-array>
+
+    <array name="brob_menu_icons">
+        <item>@drawable/ic_prob</item>
+        <item>@drawable/ic_origin</item>
+        <item>@drawable/ic_info_black_24dp</item>
+        <item>@drawable/ic_security_black_24dp</item>
+    </array>
+
     <string name="contact_face">Контактное лицо</string>
     <string name="create_botton">Отправить</string>
     <string name="adres">Адрес</string>
@@ -327,5 +336,6 @@
     <string name="empty_orders">Список заявок пуст!</string>
     <string name="empty_notify">Список уведомлений пуст!</string>
     <string name="menu_patterns">Шаблоны</string>
+    <string name="server_lost">Сервер не доступен!</string>
 
 </resources>

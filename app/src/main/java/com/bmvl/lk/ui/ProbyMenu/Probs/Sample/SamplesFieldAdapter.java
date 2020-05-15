@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
@@ -166,6 +167,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
+                ((ResearchPanelHolder) holder).ResearchList.setItemAnimator(new DefaultItemAnimator());
                 ((ResearchPanelHolder) holder).ResearchList.setRecycledViewPool(viewPool);
 
                 if(buffer_id != null && buffer_sug != null) {

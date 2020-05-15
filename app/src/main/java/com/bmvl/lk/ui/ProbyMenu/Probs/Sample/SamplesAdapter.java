@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,6 +64,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
         adapter = new SamplesFieldAdapter(inflater.getContext(), SamplesField, CurrentSample);
         simpleViewHolder.SampleList.setAdapter(adapter);
         simpleViewHolder.SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
+        simpleViewHolder.SampleList.setItemAnimator(new DefaultItemAnimator());
         simpleViewHolder.SampleList.setRecycledViewPool(viewPool);
         simpleViewHolder.SampleList.setHasFixedSize(true);
 

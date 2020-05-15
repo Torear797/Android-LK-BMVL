@@ -16,9 +16,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.Objects;
 
 public class ProbyMenuFragment extends Fragment {
-    private final String[] tabTitles = new String[] { "Пробы", "Происхождение", "Партия","Инф."};
-    private final int[] myImageList = new int[]{R.drawable.ic_prob, R.drawable.ic_origin, R.drawable.ic_info_black_24dp, R.drawable.ic_security_black_24dp};
-
     public ProbyMenuFragment() {
     }
 
@@ -27,31 +24,19 @@ public class ProbyMenuFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.fragment_proby_menu, container, false);
-
         final ViewPager2 viewPager = MyView.findViewById(R.id.viewPager);
         final TabLayout tabLayout = MyView.findViewById(R.id.tabLayout);
-
         viewPager.setAdapter(createAdapter());
-
         new TabLayoutMediator(tabLayout, viewPager,
                 new TabLayoutMediator.TabConfigurationStrategy() {
                     @Override
                     public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                        tab.setText(tabTitles[position]);
-                        tab.setIcon(myImageList[position]);
+                        tab.setText(getResources().getStringArray(R.array.brob_menu_titles)[position]);
+                        tab.setIcon(getResources().obtainTypedArray(R.array.brob_menu_icons).getDrawable(position));
                     }
                 }).attach();
-
-
-//        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-//            public void onPageSelected(int position) {
-//                viewPager.setOffscreenPageLimit(position+1);
-//            }
-//        });
-
         return MyView;
     }
 

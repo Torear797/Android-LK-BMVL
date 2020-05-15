@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -110,6 +111,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
 
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 10, (byte) 10));
         recyclerView.setHasFixedSize(true);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         NotifiAdapter = new NotifiSwipeAdapter(getContext(), Notifi, onClickListener);
         (NotifiAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(NotifiAdapter);

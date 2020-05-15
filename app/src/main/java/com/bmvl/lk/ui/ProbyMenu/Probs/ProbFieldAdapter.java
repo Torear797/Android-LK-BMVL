@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.App;
@@ -294,6 +295,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
                 ((SamplesPanelHolder) holder).SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
+                ((SamplesPanelHolder) holder).SampleList.setItemAnimator(new DefaultItemAnimator());
                 ((SamplesPanelHolder) holder).SampleList.setRecycledViewPool(viewPool);
 
                 if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {

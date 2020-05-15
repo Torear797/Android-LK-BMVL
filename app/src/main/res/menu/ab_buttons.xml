@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/profile"
-        android:title="@string/AB_notification"
+        android:title="@string/profile"
         android:icon="@drawable/ic_account_circle_black_24dp"
         app:showAsAction="always">
     </item>

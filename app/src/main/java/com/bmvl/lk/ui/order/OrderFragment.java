@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -308,13 +309,13 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
                             @Override
                             public void onFailure(@NonNull Call<AnswerOrderEdit> call, @NonNull Throwable t) {
-                                Toast.makeText(getContext(), "Сервер не доступен!", Toast.LENGTH_SHORT).show();
-                                Log.d("ОШИБКА", "ТЕКСТ", t);
+                                Toast.makeText(getContext(), getResources().getText(R.string.server_lost), Toast.LENGTH_SHORT).show();
                             }
                         });
             }
         };
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 10, (byte) 10));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         OrderAdapter = new OrderSwipeAdapter(getContext(), Orders, onClickListener);
         (OrderAdapter).setMode(Attributes.Mode.Single);

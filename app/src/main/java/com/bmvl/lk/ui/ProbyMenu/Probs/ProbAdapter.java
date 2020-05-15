@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -116,14 +117,13 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
                 if(position >= 4 && position <= 7) return 1;
                 if ((CreateOrderActivity.order_id == 1 || CreateOrderActivity.order_id == 3) && (position == 22 || position == 23))
                     return 1;
-              //  if (CreateOrderActivity.order_id == 3 && (position == 24 || position == 25))
-                  //  return 1;
                 return 2;
             }
         });
 
         simpleViewHolder.ProbList.setLayoutManager(mng_layout);
         simpleViewHolder.ProbList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
+        simpleViewHolder.ProbList.setItemAnimator(new DefaultItemAnimator());
         simpleViewHolder.ProbList.setRecycledViewPool(viewPool);
         simpleViewHolder.ProbList.setHasFixedSize(true);
 
@@ -135,28 +135,6 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
                 simpleViewHolder.infoProb
         );
         simpleViewHolder.ProbList.setAdapter(adapter2);
-//
-//        switch (CreateOrderActivity.order_id) {
-//            case 1:
-//                final ProbFieldAdapter adapter = new ProbFieldAdapter(
-//                        inflater.getContext(),
-//                        ProbFields,
-//                        CurrentProb,
-//                        simpleViewHolder.infoProb
-//                );
-//                simpleViewHolder.ProbList.setAdapter(adapter);
-//                break;
-//            case 4:
-//                final ProbFieldAdapter adapter2 = new ProbFieldAdapter(
-//                        inflater.getContext(),
-//                        ProbFields,
-//                        SampleFields,
-//                        CurrentProb,
-//                        simpleViewHolder.infoProb
-//                );
-//                simpleViewHolder.ProbList.setAdapter(adapter2);
-//                break;
-//        }
     }
 
     class SimpleViewHolder extends RecyclerView.ViewHolder {

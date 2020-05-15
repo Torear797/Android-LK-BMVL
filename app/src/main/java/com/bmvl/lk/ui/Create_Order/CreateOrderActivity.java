@@ -1,5 +1,6 @@
 package com.bmvl.lk.ui.Create_Order;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.LinkMovementMethod;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,6 +61,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     private boolean Edit; //Флаг, истина - заявка редактируется.
     public static FieldsAdapter adapter;
     private static String act_of_selection;
+    private FrameLayout Frame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +72,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         final Toolbar toolbar = findViewById(R.id.toolbar);
         final RecyclerView recyclerView = findViewById(R.id.FieldList);
         cbox = findViewById(R.id.AcceptcheckBox);
-        final FrameLayout Frame = findViewById(R.id.Menu_proby_fragment);
+        Frame = findViewById(R.id.Menu_proby_fragment);
         bar = findViewById(R.id.ProgressBar);
 
         final boolean pattern = getIntent().getBooleanExtra("Pattern", false);
@@ -77,7 +80,7 @@ public class CreateOrderActivity extends AppCompatActivity {
 
         Edit = getIntent().getBooleanExtra("isEdit", false);
         if (!Edit) {
-            order = new SendOrder(getIntent().getByteExtra("type_id", (byte) 1));
+            order = new SendOrder(getIntent().getByteExtra("type_id",(byte)1));
             toolbar.setTitle(R.string.new_order);
         } else {
             order = (SendOrder) getIntent().getSerializableExtra(SendOrder.class.getSimpleName());
@@ -92,6 +95,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         OrderName.setText(getResources().getStringArray(R.array.order_name)[order_id - 1]);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -116,47 +120,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         adapter = new FieldsAdapter(this);
         recyclerView.setAdapter(adapter);
 
-        switch (order_id) {
-            case 1:
-                LoadDefaultFields();
-                addFieldOrderType1();
-                EnableTable(Frame);
-                break;
-            case 3:
-                LoadDefaultFields();
-                addFieldOrderType3();
-                EnableTable(Frame);
-                break;
-            case 4:
-                LoadDefaultFields();
-                addFieldOrderType4();
-                EnableTable(Frame);
-                break;
-            case 5:
-                LoadDefaultFields();
-                addFieldOrderType5();
-                break;
-            case 6:
-                LoadDefaultFields();
-                addFieldOrderType6();
-                break;
-            case 7:
-                LoadDefaultFields();
-                addFieldOrderType7();
-                break;
-            case 8:
-                addFieldPatternType1();
-                EnableTable(Frame);
-                break;
-            case 9:
-                addFieldPatternType4();
-                EnableTable(Frame);
-                break;
-            case 10:
-                addFieldPatternType3();
-                EnableTable(Frame);
-                break;
-        }
+   new AsynkTask().execute();
     }
 
     private void EnableTable(FrameLayout Frame) {
@@ -448,5 +412,60 @@ public class CreateOrderActivity extends AppCompatActivity {
                         Log.d("Проблема в ", String.valueOf(t));
                     }
                 });
+    }
+
+    class AsynkTask extends AsyncTask<Void, Integer, Void> {
+        @Override
+        protected Void doInBackground(Void... unused) {
+            switch (order_id) {
+                case 1:
+                    LoadDefaultFields();
+                    addFieldOrderType1();
+                    EnableTable(Frame);
+                    break;
+                case 3:
+                    LoadDefaultFields();
+                    addFieldOrderType3();
+                    EnableTable(Frame);
+                    break;
+                case 4:
+                    LoadDefaultFields();
+                    addFieldOrderType4();
+                    EnableTable(Frame);
+                    break;
+                case 5:
+                    LoadDefaultFields();
+                    addFieldOrderType5();
+                    break;
+                case 6:
+                    LoadDefaultFields();
+                    addFieldOrderType6();
+                    break;
+                case 7:
+                    LoadDefaultFields();
+                    addFieldOrderType7();
+                    break;
+                case 8:
+                    addFieldPatternType1();
+                    EnableTable(Frame);
+                    break;
+                case 9:
+                    addFieldPatternType4();
+                    EnableTable(Frame);
+                    break;
+                case 10:
+                    addFieldPatternType3();
+                    EnableTable(Frame);
+                    break;
+            }
+
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(Integer... items) {
+        }
+        @Override
+        protected void onPostExecute(Void unused) {
+        }
     }
 }

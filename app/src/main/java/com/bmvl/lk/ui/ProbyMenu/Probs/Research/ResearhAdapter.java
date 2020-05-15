@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -71,6 +72,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
         adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchFields, CurrentResearch, Indicators, suggestions, materialId);
         researchItemHolder.List.setAdapter(adapter);
         researchItemHolder.List.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
+        researchItemHolder.List.setItemAnimator(new DefaultItemAnimator());
         researchItemHolder.List.setRecycledViewPool(viewPool);
         researchItemHolder.List.setHasFixedSize(true);
 

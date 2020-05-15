@@ -34,6 +34,15 @@ public class PartyInfoFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if(adapter!= null)
+        adapter.notifyDataSetChanged();
+        if(adapter2!= null)
+        adapter2.notifyDataSetChanged();
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

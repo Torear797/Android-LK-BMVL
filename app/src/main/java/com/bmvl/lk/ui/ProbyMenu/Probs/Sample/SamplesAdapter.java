@@ -64,6 +64,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
         simpleViewHolder.SampleList.setAdapter(adapter);
         simpleViewHolder.SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
         simpleViewHolder.SampleList.setRecycledViewPool(viewPool);
+        simpleViewHolder.SampleList.setHasFixedSize(true);
 
         if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {
             simpleViewHolder.NumberSample.setText(MessageFormat.format("№ {0}", getPositionKey(i)));

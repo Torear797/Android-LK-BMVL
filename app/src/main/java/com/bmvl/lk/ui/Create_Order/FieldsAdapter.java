@@ -55,7 +55,6 @@ public class FieldsAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case 1:
-               // View view1 = inflater.inflate(R.layout.item_spiner, parent, false);
                 View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spiner, parent, false);
                 final SpinerHolder holder1 = new SpinerHolder(view1);
 
@@ -100,10 +99,10 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if((CreateOrderActivity.Fields.get(holder.getLayoutPosition()).getInputType() != InputType.TYPE_NULL
+                        if ((CreateOrderActivity.Fields.get(holder.getLayoutPosition()).getInputType() != InputType.TYPE_NULL
                                 || CreateOrderActivity.Fields.get(holder.getLayoutPosition()).getColumn_id() == 7)
                                 && !String.valueOf(s).equals(""))
-                        OrderFields.put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
+                            OrderFields.put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
 
                     }
 
@@ -119,8 +118,9 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 return holder;
         }
     }
-    private short GetColumn_id(int position){
-        return (short)CreateOrderActivity.Fields.get(position).getColumn_id();
+
+    private short GetColumn_id(int position) {
+        return (short) CreateOrderActivity.Fields.get(position).getColumn_id();
     }
 
     @Override
@@ -161,10 +161,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                         });
 
                     }
-                }
-                else
-
-                if (f.isDoubleSize()) {
+                } else if (f.isDoubleSize()) {
                     ((TextViewHolder) holder).field.setGravity(Gravity.START | Gravity.TOP);
                     ((TextViewHolder) holder).field.setMinLines(4);
                     ((TextViewHolder) holder).field.setLines(6);
@@ -324,6 +321,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
         final public SwitchMaterial switchButton;
         public TextInputEditText field;
         public final TextInputLayout Layout;
+
         public BoxAndTextHolder(View view5) {
             super(view5);
             switchButton = itemView.findViewById(R.id.my_switch);
@@ -333,7 +331,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
             switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     OrderFields.put(GetColumn_id(getLayoutPosition()), String.valueOf(isChecked));
-                    if(isChecked)Layout.setVisibility(View.VISIBLE);
+                    if (isChecked) Layout.setVisibility(View.VISIBLE);
                     else Layout.setVisibility(View.GONE);
                 }
             });
@@ -341,8 +339,8 @@ public class FieldsAdapter extends RecyclerView.Adapter {
             field.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void afterTextChanged(Editable s) {
-                    if(!String.valueOf(s).equals("") && Layout.getVisibility() == View.VISIBLE)
-                        OrderFields.put((short)67, String.valueOf(s));
+                    if (!String.valueOf(s).equals("") && Layout.getVisibility() == View.VISIBLE)
+                        OrderFields.put((short) 67, String.valueOf(s));
                 }
 
                 @Override

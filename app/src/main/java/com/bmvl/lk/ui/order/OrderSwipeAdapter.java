@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +21,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
+import com.google.android.material.card.MaterialCardView;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -94,6 +96,10 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         final SwipeLayout swipeLayout;
         final ImageView buttonDelete, buttonCopy, buttonOpen, buttonDownload;
 
+        final ConstraintLayout content;
+        final MaterialCardView Card;
+        final LinearLayout btnLinear;
+
         SimpleViewHolder(@NonNull View itemView) {
             super(itemView);
             Number = itemView.findViewById(R.id.nomer);
@@ -104,13 +110,29 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
             PersonStatus = itemView.findViewById(R.id.person_status);
             Data = itemView.findViewById(R.id.Data);
 
+            content =  itemView.findViewById(R.id.Content);
             swipeLayout = itemView.findViewById(R.id.swipe);
+            Card = itemView.findViewById(R.id.Card);
+            btnLinear = itemView.findViewById(R.id.bottom_wrapper);
 
             buttonDelete = itemView.findViewById(R.id.trash);
             buttonCopy = itemView.findViewById(R.id.create);
             buttonOpen = itemView.findViewById(R.id.edit);
             buttonDownload = itemView.findViewById(R.id.download);
 
+            Card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                   if(content.getVisibility() == View.VISIBLE) {
+                       content.setVisibility(View.GONE);
+                       btnLinear.setOrientation(LinearLayout.HORIZONTAL);
+                   }
+                   else {
+                       content.setVisibility(View.VISIBLE);
+                       btnLinear.setOrientation(LinearLayout.VERTICAL);
+                   }
+                }
+            });
 
             buttonOpen.setOnClickListener(new View.OnClickListener() {
                 @Override

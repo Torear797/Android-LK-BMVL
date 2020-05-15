@@ -4,11 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,20 +13,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bmvl.lk.App;
 import com.bmvl.lk.R;
-import com.bmvl.lk.Rest.AnswerMethods;
-import com.bmvl.lk.Rest.AnswerTypes;
-import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Suggestion;
-import com.bmvl.lk.Rest.SuggestionMethod;
-import com.bmvl.lk.Rest.SuggestionType;
-import com.bmvl.lk.ViewHolders.SpinerHolder;
-import com.bmvl.lk.data.CustomSpinerAdapter;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.Create_Order.Field;
-import com.bmvl.lk.ui.ProbyMenu.Probs.ProbFieldAdapter;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -39,30 +27,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.ResearchItemHolder> {
     private LayoutInflater inflater;
     private TreeMap<Short, ResearchRest> researches; //Исследования
-    private List<Field> ResearchFields = new ArrayList<>();; //Поля исследований
+    private List<Field> ResearchFields = new ArrayList<>();
+    ; //Поля исследований
     private RecyclerView.RecycledViewPool viewPool;
     private OnResearchClickListener onResearchClickListener;
 
     private ResearchFieldAdapter adapter;
-
-//    private String[] Methods, Types;
     private static String[] Indicators;
     private static List<Suggestion> suggestions;
-//    private List<SuggestionMethod> suggestionsMethods;
-//    private List<SuggestionType> suggestionsTypes;
     private static short materialId;
-//    private short posInd = -1, posMet = -1, posType = -1;
-  //  private short indicatorId;
-//    private String indicatorNdId;
-//    private ResearchRest CurrentResearch;
-//    private boolean isCompleteResearch;
 
     public ResearhAdapter(Context context, TreeMap<Short, ResearchRest> ResearchesLise, OnResearchClickListener Listener) {
         this.inflater = LayoutInflater.from(context);
@@ -74,7 +50,8 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     public interface OnResearchClickListener {
         void onUpdateResearch();
     }
-    private void AddResearchFields(){
+
+    private void AddResearchFields() {
         ResearchFields.add(new Field((byte) 1, 0, "", "Показатель"));
         ResearchFields.add(new Field((byte) 2, 1, "", "Метод испытаний"));
         ResearchFields.add(new Field((byte) 3, 2, "", "Тип исследования"));
@@ -89,18 +66,20 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
 
     @Override
     public void onBindViewHolder(ResearchItemHolder researchItemHolder, int i) {
-      final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
+        final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
 
-        adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchFields, CurrentResearch, Indicators,suggestions,materialId);
+        adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchFields, CurrentResearch, Indicators, suggestions, materialId);
         researchItemHolder.List.setAdapter(adapter);
         researchItemHolder.List.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
         researchItemHolder.List.setRecycledViewPool(viewPool);
+        researchItemHolder.List.setHasFixedSize(true);
 
         researchItemHolder.Number.setText(MessageFormat.format("№ {0}", i + 1));
 
         researchItemHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         mItemManger.bindView(researchItemHolder.itemView, i);
     }
+
     public void UpdateIndicators(List<Suggestion> sug, int id) {
         suggestions = sug;
         materialId = (short) id;

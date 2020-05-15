@@ -125,6 +125,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         simpleViewHolder.ProbList.setLayoutManager(mng_layout);
         simpleViewHolder.ProbList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
         simpleViewHolder.ProbList.setRecycledViewPool(viewPool);
+        simpleViewHolder.ProbList.setHasFixedSize(true);
 
         final ProbFieldAdapter adapter2 = new ProbFieldAdapter(
                 inflater.getContext(),

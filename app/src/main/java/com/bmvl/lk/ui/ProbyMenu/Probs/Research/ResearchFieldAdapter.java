@@ -1,7 +1,6 @@
 package com.bmvl.lk.ui.ProbyMenu.Probs.Research;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,6 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
     private String[] MasMethods, MasTypes;
     private List<SuggestionMethod> suggestionsMethods;
     private List<SuggestionType> suggestionsTypes;
-    private Short posInd, posMet, posType;
     private short indicatorId;
     private String indicatorNdId;
     private Spinner SpinIndicator, SpinMethd, SpinType;
@@ -81,13 +79,10 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
                             getMethods();
                             return;
                         }
-                        final Suggestion CurrentItem = suggestions.get(position);
 
-                        if (CurrentResearch.getIndicatorId() != (short) CurrentItem.getId()) {
-                            posInd = (short) position;
-                            posMet = null;
-                            posType = null;
+                        if (CurrentResearch.getIndicatorId() != suggestions.get(position).getId()) {
                             CurrentResearch.ClearAll();
+                            final Suggestion CurrentItem = suggestions.get(position);
 
                             CurrentResearch.setIndicatorId((short) CurrentItem.getId());
                             CurrentResearch.setIndicatorVal(String.valueOf(parent.getItemAtPosition(position)));
@@ -116,13 +111,11 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
                             getTypes(CurrentResearch.getMethodId(), String.valueOf(CurrentResearch.getMethodNdId()));
                             return;
                         }
-                        final SuggestionMethod CurrentItem = suggestionsMethods.get(position);
 
-
-                        if (CurrentResearch.getMethodId() != CurrentItem.getId()) {
-                            posMet = (short) position;
-                            posType = -1;
+                      //  if (CurrentResearch.getMethodVal() != null && !CurrentResearch.getMethodVal().equals(parent.getItemAtPosition(position))) {
+                            if (CurrentResearch.getMethodId() != suggestionsMethods.get(position).getId()) {
                             CurrentResearch.ClearType();
+                            final SuggestionMethod CurrentItem = suggestionsMethods.get(position);
 
                             CurrentResearch.setMethodId(CurrentItem.getId());
                             CurrentResearch.setMethodVal(String.valueOf(parent.getItemAtPosition(position)));
@@ -145,10 +138,11 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
                 AdapterView.OnItemSelectedListener TypeSelectedListener = new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        if (isCompleteResearch) return;
-                        final SuggestionType CurrentItem = suggestionsTypes.get(position);
-                        if (CurrentResearch.getTypeId() != CurrentItem.getId()) {
-                            posType = (short) position;
+                          if (isCompleteResearch) return;
+
+                          if (CurrentResearch.getTypeId() != suggestionsTypes.get(position).getId()) {
+                        //if (CurrentResearch.getTypeVal()!= null && !CurrentResearch.getTypeVal().equals(parent.getItemAtPosition(position))) {
+                            final SuggestionType CurrentItem = suggestionsTypes.get(position);
                             CurrentResearch.setTypeId(CurrentItem.getId());
                             CurrentResearch.setTypeVal(String.valueOf(parent.getItemAtPosition(position)));
                         }
@@ -178,9 +172,8 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
             indicatorNdId = String.valueOf(CurrentResearch.getIndicatorNdId());
             isCompleteResearch = true;
             if (f.getColumn_id() == 0)
-            InitAdapter(Indicators, ((SpinerHolder) holder).spiner,CurrentResearch.getIndicatorVal());
-        } else
-        if (f.getColumn_id() == 0)
+                InitAdapter(Indicators, ((SpinerHolder) holder).spiner, CurrentResearch.getIndicatorVal());
+        } else if (f.getColumn_id() == 0)
             InitAdapter(Indicators, ((SpinerHolder) holder).spiner);
 
     }

@@ -107,6 +107,13 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         return MyView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(adapter!= null)
+        adapter.notifyDataSetChanged();
+    }
+
     private void NewProbListener(final MaterialButton AddProbBtn, final ProbAdapter adapter, final RecyclerView recyclerView) {
         AddProbBtn.setVisibility(View.VISIBLE);
         AddProbBtn.setOnClickListener(new View.OnClickListener() {

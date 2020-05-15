@@ -110,6 +110,7 @@ public class CreateOrderActivity extends AppCompatActivity {
             }
         });
         recyclerView.setLayoutManager(mng_layout);
+        recyclerView.setHasFixedSize(true);
 
         adapter = new FieldsAdapter(this);
         recyclerView.setAdapter(adapter);

@@ -24,11 +24,6 @@ import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.Rest.SuggestionMethod;
 import com.bmvl.lk.Rest.SuggestionType;
-import com.bmvl.lk.ViewHolders.SpinerHolder;
-import com.bmvl.lk.data.CustomSpinerAdapter;
-import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.Create_Order.Field;
-import com.bmvl.lk.ui.ProbyMenu.Probs.ProbFieldAdapter;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -53,7 +48,6 @@ public class Res extends RecyclerSwipeAdapter<Res.ResearchItemHolder> {
     private List<SuggestionMethod> suggestionsMethods;
     private List<SuggestionType> suggestionsTypes;
     private static short materialId;
-    private short posInd = -1, posMet = -1, posType = -1;
     private short indicatorId;
     private String indicatorNdId;
     private ResearchRest CurrentResearch;
@@ -79,81 +73,20 @@ public class Res extends RecyclerSwipeAdapter<Res.ResearchItemHolder> {
     @Override
     public void onBindViewHolder(ResearchItemHolder researchItemHolder, int i) {
         CurrentResearch = researches.get(getPositionKey(i));
-        posInd = -1;
-        posMet = -1;
-        posType = -1;
-        Methods = null;
-        Types = null;
-        isCompleteResearch = false;
 
         researchItemHolder.NumberResearch.setText(MessageFormat.format("№ {0}", i + 1));
 
         if (CurrentResearch.getIndicatorVal() != null && CurrentResearch.getMethodVal() != null && CurrentResearch.getTypeVal() != null) {
-            //  getMassiveValueForSpinner(researchItemHolder);
             indicatorId = CurrentResearch.getIndicatorId();
             indicatorNdId = String.valueOf(CurrentResearch.getIndicatorNdId());
             isCompleteResearch = true;
-            getPositionForSpiners(researchItemHolder);
-
-
-//            researchItemHolder.Indicators.setSelection(posInd);
-//            researchItemHolder.Methods.setSelection(posMet);
-//            researchItemHolder.Types.setSelection(posType);
-        }
-
-        InitAdapter(Indicators, researchItemHolder.Indicators);
+                InitAdapter(Indicators, researchItemHolder.Indicators, CurrentResearch.getIndicatorVal());
+        } else
+            InitAdapter(Indicators, researchItemHolder.Indicators);
 
 
         researchItemHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         mItemManger.bindView(researchItemHolder.itemView, i);
-    }
-
-    private void getMassiveValueForSpinner(ResearchItemHolder holder) {
-        if (Indicators != null) {
-            if (Methods == null) {
-                indicatorId = CurrentResearch.getIndicatorId();
-                indicatorNdId = String.valueOf(CurrentResearch.getIndicatorNdId());
-                getMethods(holder.Methods);
-            }
-            if (Types == null)
-                getTypes(CurrentResearch.getMethodId(), String.valueOf(CurrentResearch.getMethodNdId()), holder.Types);
-        }
-    }
-
-    private void getPositionForSpiners(ResearchItemHolder researchItemHolder) {
-        int position = 0;
-        if (posInd == -1 && Indicators != null)
-            for (String name : Indicators) {
-                if (name.equals(CurrentResearch.getIndicatorVal())) {
-                    posInd = (short) position;
-                    break;
-                }
-            }
-//        final ArrayAdapter adapter = (ArrayAdapter) researchItemHolder.Indicators.getAdapter();
-//        posInd = (short) adapter.getPosition(CurrentResearch.getIndicatorVal());
-//
-//        final ArrayAdapter adapter2 = (ArrayAdapter) researchItemHolder.Methods.getAdapter();
-//        posMet = (short) adapter2.getPosition(CurrentResearch.getIndicatorVal());
-//
-//        final ArrayAdapter adapter3 = (ArrayAdapter) researchItemHolder.Types.getAdapter();
-//        posType = (short) adapter3.getPosition(CurrentResearch.getIndicatorVal());
-
-        position = 0;
-        if (posMet == -1 && Methods != null)
-            for (String name : Methods) {
-                if (name.equals(CurrentResearch.getMethodVal())) {
-                    posMet = (short) position;
-                    break;
-                }
-            }
-        position = 0;
-        if (posType == -1 && Types != null)
-            for (String name : Types) {
-                if (name.equals(CurrentResearch.getTypeVal())) {
-                    posType = (short) position;
-                    break;
-                }
-            }
     }
 
     public void UpdateIndicators(List<Suggestion> sug, int id) {
@@ -247,25 +180,23 @@ public class Res extends RecyclerSwipeAdapter<Res.ResearchItemHolder> {
             AdapterView.OnItemSelectedListener IndicatorsSelectedListener = new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    final Suggestion CurrentItem = suggestions.get(position);
+                    if (isCompleteResearch) {
+                        getMethods(Methods);
+                        return;
+                    }
 
-                    if (CurrentResearch.getIndicatorId() != (short) CurrentItem.getId()) {
-                        if (!isCompleteResearch) {
-                            posInd = (short) position;
-                            posMet = -1;
-                            posType = -1;
-                            CurrentResearch.ClearAll();
+                    if (CurrentResearch.getIndicatorId() != suggestions.get(position).getId()) {
+                        CurrentResearch.ClearAll();
+                        final Suggestion CurrentItem = suggestions.get(position);
 
-                            CurrentResearch.setIndicatorId((short) CurrentItem.getId());
-                            CurrentResearch.setIndicatorVal(String.valueOf(parent.getItemAtPosition(position)));
-                            CurrentResearch.setIndicatorNd(CurrentItem.getName_document());
-                            CurrentResearch.setIndicatorNdId(CurrentItem.getId_document());
+                        CurrentResearch.setIndicatorId((short) CurrentItem.getId());
+                        CurrentResearch.setIndicatorVal(String.valueOf(parent.getItemAtPosition(position)));
+                        CurrentResearch.setIndicatorNd(CurrentItem.getName_document());
+                        CurrentResearch.setIndicatorNdId(CurrentItem.getId_document());
 
+                        indicatorId = (short) CurrentItem.getId();
+                        indicatorNdId = String.valueOf(CurrentItem.getId_document());
 
-                            indicatorId = (short) CurrentItem.getId();
-                            indicatorNdId = String.valueOf(CurrentItem.getId_document());
-                        } else
-                            Indicators.setSelection(posInd);
                         getMethods(Methods);
                     }
                 }
@@ -277,21 +208,22 @@ public class Res extends RecyclerSwipeAdapter<Res.ResearchItemHolder> {
             AdapterView.OnItemSelectedListener MethodSelectedListener = new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    final SuggestionMethod CurrentItem = suggestionsMethods.get(position);
+                    if (isCompleteResearch) {
+                        getTypes(CurrentResearch.getMethodId(), String.valueOf(CurrentResearch.getMethodNdId()),Types);
+                        return;
+                    }
 
-                    if (CurrentResearch.getMethodId() != CurrentItem.getId()) {
-                        if(!isCompleteResearch) {
-                            posMet = (short) position;
-                            posType = -1;
-                            CurrentResearch.ClearType();
+                    //  if (CurrentResearch.getMethodVal() != null && !CurrentResearch.getMethodVal().equals(parent.getItemAtPosition(position))) {
+                    if (CurrentResearch.getMethodId() != suggestionsMethods.get(position).getId()) {
+                        CurrentResearch.ClearType();
+                        final SuggestionMethod CurrentItem = suggestionsMethods.get(position);
 
-                            CurrentResearch.setMethodId(CurrentItem.getId());
-                            CurrentResearch.setMethodVal(String.valueOf(parent.getItemAtPosition(position)));
-                            CurrentResearch.setMethodNd(CurrentItem.getName_document());
-                            CurrentResearch.setMethodNdId(CurrentItem.getId_document());
-                        } else Methods.setSelection(posMet);
+                        CurrentResearch.setMethodId(CurrentItem.getId());
+                        CurrentResearch.setMethodVal(String.valueOf(parent.getItemAtPosition(position)));
+                        CurrentResearch.setMethodNd(CurrentItem.getName_document());
+                        CurrentResearch.setMethodNdId(CurrentItem.getId_document());
 
-                        getTypes(CurrentItem.getId(), String.valueOf(CurrentItem.getId_document()), Types);
+                        getTypes(CurrentItem.getId(), String.valueOf(CurrentItem.getId_document()),Types);
                     }
                 }
 
@@ -302,14 +234,12 @@ public class Res extends RecyclerSwipeAdapter<Res.ResearchItemHolder> {
             AdapterView.OnItemSelectedListener TypeSelectedListener = new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    final SuggestionType CurrentItem = suggestionsTypes.get(position);
+                    if (isCompleteResearch) return;
 
-                    if (CurrentResearch.getTypeId() != CurrentItem.getId()) {
-                        if(!isCompleteResearch) {
-                            posType = (short) position;
-                            CurrentResearch.setTypeId(CurrentItem.getId());
-                            CurrentResearch.setTypeVal(String.valueOf(parent.getItemAtPosition(position)));
-                        } else Types.setSelection(posType);
+                    if (CurrentResearch.getTypeId() != suggestionsTypes.get(position).getId()) {
+                        final SuggestionType CurrentItem = suggestionsTypes.get(position);
+                        CurrentResearch.setTypeId(CurrentItem.getId());
+                        CurrentResearch.setTypeVal(String.valueOf(parent.getItemAtPosition(position)));
                     }
                 }
 
@@ -339,7 +269,7 @@ public class Res extends RecyclerSwipeAdapter<Res.ResearchItemHolder> {
                                 Methods[i] = response.body().getSuggestions().get(i).getValue();
                             }
                             suggestionsMethods = response.body().getSuggestions();
-                            InitAdapter(Methods, SpinerMethods);
+                            InitAdapter(Methods, SpinerMethods, CurrentResearch.getMethodVal());
                         }
                     }
 
@@ -347,6 +277,14 @@ public class Res extends RecyclerSwipeAdapter<Res.ResearchItemHolder> {
                     public void onFailure(@NonNull Call<AnswerMethods> call, @NonNull Throwable t) {
                     }
                 });
+    }
+    private void InitAdapter(String[] mass, Spinner spiner, String text) {
+        if (mass != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(inflater.getContext(), android.R.layout.simple_spinner_item, mass);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spiner.setAdapter(adapter);
+            spiner.setSelection(adapter.getPosition(text));
+        }
     }
 
     private void getTypes(short methodId, String methodNdId, final Spinner SpinerTypes) {
@@ -365,7 +303,8 @@ public class Res extends RecyclerSwipeAdapter<Res.ResearchItemHolder> {
                                 Types[i] = response.body().getSuggestions().get(i).getValue();
                             }
                             suggestionsTypes = response.body().getSuggestions();
-                            InitAdapter(Types, SpinerTypes);
+                            InitAdapter(Types, SpinerTypes, CurrentResearch.getTypeVal());
+                            isCompleteResearch = false;
                         }
                     }
 

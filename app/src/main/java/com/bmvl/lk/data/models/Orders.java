@@ -66,4 +66,12 @@ public class Orders {
     public String getDate() {
         return date;
     }
+
+    public String getAct_of_selection() {
+        return act_of_selection;
+    }
+
+    public void setAct_of_selection(String act_of_selection) {
+        this.act_of_selection = act_of_selection;
+    }
 }

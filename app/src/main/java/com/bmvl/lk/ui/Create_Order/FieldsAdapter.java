@@ -2,6 +2,9 @@ package com.bmvl.lk.ui.Create_Order;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -21,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.ViewHolders.OriginalDocHolder;
 import com.bmvl.lk.ViewHolders.SelectButtonHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
@@ -287,7 +291,20 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 break;
             } //Свич
             case 4: //Акт
-                ((SelectButtonHolder) holder).hint.setText(f.getHint());
+               // ((SelectButtonHolder) holder).hint.setText(f.getHint());
+                if(f.getValue() != null && !f.getValue().equals("")){
+                  //  ((SelectButtonHolder) holder).path.setText(MessageFormat.format("{0}/{1}", NetworkService.getServerUrl(), f.getValue()));
+
+                    ((SelectButtonHolder) holder).path.setText(android.text.Html.fromHtml("<u>Загруженный файл</u>"));
+                    ((SelectButtonHolder) holder).path.setTextColor(Color.parseColor("#0066cc"));
+                    ((SelectButtonHolder) holder).path.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            inflater.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(MessageFormat.format("{0}/{1}", NetworkService.getServerUrl(), f.getValue()))));
+                        }
+                    });
+                           // ((SelectButtonHolder) holder).path.setText(MessageFormat.format("<a href=\"{0}", MessageFormat.format("{0}/{1}", NetworkService.getServerUrl(), f.getValue() + "\">Загруженный файл</a>")));
+                }
                 break;
         }
     }

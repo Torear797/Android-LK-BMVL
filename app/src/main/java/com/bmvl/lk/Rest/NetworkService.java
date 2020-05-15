@@ -33,6 +33,10 @@ public class NetworkService {
         return mInstance;
     }
 
+    public static String getServerUrl(){
+        return BASE_URL;
+    }
+
     public ServerApi getJSONApi() {
         return mRetrofit.create(ServerApi.class);
     }

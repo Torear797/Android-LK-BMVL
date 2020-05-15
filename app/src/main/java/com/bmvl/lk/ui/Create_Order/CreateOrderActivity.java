@@ -58,6 +58,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     public static SendOrder order;
     private boolean Edit; //Флаг, истина - заявка редактируется.
     public static FieldsAdapter adapter;
+    private static String act_of_selection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         bar = findViewById(R.id.ProgressBar);
 
         final boolean pattern = getIntent().getBooleanExtra("Pattern", false);
-
+        act_of_selection = getIntent().getStringExtra("ACT");
 
         Edit = getIntent().getBooleanExtra("isEdit", false);
         if (!Edit) {
@@ -114,7 +115,6 @@ public class CreateOrderActivity extends AppCompatActivity {
 
         adapter = new FieldsAdapter(this);
         recyclerView.setAdapter(adapter);
-      //  Fields.clear();
 
         switch (order_id) {
             case 1:
@@ -170,7 +170,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field((byte) 1, R.array.target_research, 3, "", "Цель исследования/категория"));
         Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), App.OrderInfo.getOD_Value(), "Оригиналы документов предоставлять")); //52. 63. 64
         Fields.add(new Field((byte) 3, 66, "", "Возврат образцов"));
-        Fields.add(new Field((byte) 4, 0, "", "Акт отбора"));
+        Fields.add(new Field((byte) 4, 0, act_of_selection, "Акт отбора"));
         Fields.add(new Field((byte) 5, 59, "", "Контрольный образец"));
         Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
         Fields.add(new Field(10, "", "№", InputType.TYPE_CLASS_TEXT));
@@ -180,7 +180,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     private void addFieldOrderType3() {
         Fields.add(new Field((byte) 1, R.array.target_research2, 3, "", "Цель исследования/категория"));
         Fields.add(new Field((byte) 3, 66, "", "Возврат образцов"));
-        Fields.add(new Field((byte) 4, 0, "", "Акт отбора"));
+        Fields.add(new Field((byte) 4, 0, act_of_selection, "Акт отбора"));
         Fields.add(new Field(24, "", "Сопроводительный документ", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(9, "", "Владелец образцов", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field((byte) 5, 59, "", "Контрольный образец"));
@@ -192,7 +192,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field((byte) 1, R.array.target_research2, 3, "", "Цель исследования/категория"));
         Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), App.OrderInfo.getOD_Value(), "Оригиналы документов предоставлять")); //52. 63. 64
         Fields.add(new Field((byte) 1, R.array.Reserch_start, 97, "", "Исследование проводится")); //act_of_selection
-        Fields.add(new Field((byte) 4, 0, "", "Акт отбора"));
+        Fields.add(new Field((byte) 4, 0, act_of_selection, "Акт отбора"));
         Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
         Fields.add(new Field(10, "", "№", InputType.TYPE_CLASS_TEXT));
 

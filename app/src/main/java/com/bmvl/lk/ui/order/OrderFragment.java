@@ -297,6 +297,8 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                         Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
                                         intent.putExtra("type_id", order.getType_id());
                                         intent.putExtra("isEdit", true);
+                                        if(order.getAct_of_selection() != null)
+                                            intent.putExtra("ACT", order.getAct_of_selection());
                                         intent.putExtra(SendOrder.class.getSimpleName(), OpenOrder);
                                         startActivity(intent);
 

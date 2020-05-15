@@ -43,6 +43,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
 
     public ResearhAdapter(Context context, TreeMap<Short, ResearchRest> ResearchesLise, OnResearchClickListener Listener) {
         this.inflater = LayoutInflater.from(context);
+        viewPool = new RecyclerView.RecycledViewPool();
         this.onResearchClickListener = Listener;
         researches = ResearchesLise;
         AddResearchFields();

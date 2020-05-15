@@ -51,6 +51,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
 
     public ResearchFieldAdapter(Context context, List<Field> Fields, ResearchRest res, String[] mass, List<Suggestion> sug, short id) {
         this.inflater = LayoutInflater.from(context);
+        viewPool = new RecyclerView.RecycledViewPool();
         ResearchFields = Fields;
         CurrentResearch = res;
 

@@ -70,6 +70,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     public ProbFieldAdapter(Context context, List<Field> probFields, List<Field> sampleFields, ProbyRest prob, TextView header) {
         this.inflater = LayoutInflater.from(context);
         this.ProbHeader = header;
+        viewPool = new RecyclerView.RecycledViewPool();
         ProbFields = probFields;
         SampleFields = sampleFields;
         CurrentProb = prob;
@@ -263,7 +264,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
-            }
+            } //Мультиспинер
 //            case 6: {
 //                Adapter = new ResearhAdapter(inflater.getContext(), CurrentProb.getSamples().get(getPositionKey(0, CurrentProb.getSamples())).getResearches(), Listener);
 //                (Adapter).setMode(Attributes.Mode.Single);

@@ -43,9 +43,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         Probs = CreateOrderActivity.order.getProby();
         this.OnProbClickListener = Listener;
         viewPool = new RecyclerView.RecycledViewPool();
-
         ProbFields = Fields;
-       // ResearchFields = ResFields;
     }
 
     public ProbAdapter(Context context, List<Field> Fields, List<Field> sampleFields, OnProbClickListener Listener) {

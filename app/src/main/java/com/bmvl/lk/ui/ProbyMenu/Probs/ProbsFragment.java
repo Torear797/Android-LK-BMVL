@@ -63,8 +63,6 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
                 Toast.makeText(getContext(), "Копирование пробы", Toast.LENGTH_SHORT).show();
             }
         };
-//        ProbFields.clear();
-//        SampleFields.clear();
 
         switch (CreateOrderActivity.order_id) {
             case 1:

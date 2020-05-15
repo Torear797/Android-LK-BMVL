@@ -47,6 +47,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
 
     public SamplesFieldAdapter(Context context, List<Field> SamFields, SamplesRest Sample) {
         this.inflater = LayoutInflater.from(context);
+        viewPool = new RecyclerView.RecycledViewPool();
         SamplesField = SamFields;
         CurrentSample = Sample;
     }

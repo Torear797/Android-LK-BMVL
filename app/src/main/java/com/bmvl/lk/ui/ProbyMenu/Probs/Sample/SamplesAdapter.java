@@ -45,6 +45,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
         SamplesField = Samples;
         this.Samples = SamplesList;
         this.onSamplesClickListener = Listener;
+        viewPool = new RecyclerView.RecycledViewPool();
     }
 
     public interface OnSamplesClickListener {

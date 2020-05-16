@@ -2,7 +2,6 @@ package com.bmvl.lk.ui.search;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ import java.util.Objects;
 class SearchFieldsAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private static Calendar dateAndTime = Calendar.getInstance();
-   // private AsyncTask mAsyncTask;
+    // private AsyncTask mAsyncTask;
 
     SearchFieldsAdapter(Context context) {
         this.inflater = LayoutInflater.from(context);
@@ -85,6 +84,7 @@ class SearchFieldsAdapter extends RecyclerView.Adapter {
 
                 }
             }
+
         }
 
     }

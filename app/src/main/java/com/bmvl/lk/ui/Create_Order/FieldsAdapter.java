@@ -65,8 +65,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        String item = (String) parent.getItemAtPosition(position);
-                        OrderFields.put(GetColumn_id(holder1.getLayoutPosition()), String.valueOf(item));
+                        OrderFields.put(GetColumn_id(holder1.getLayoutPosition()), String.valueOf(parent.getItemAtPosition(position)));
                     }
 
                     @Override

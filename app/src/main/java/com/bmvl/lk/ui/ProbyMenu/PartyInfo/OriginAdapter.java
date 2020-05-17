@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
-import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
@@ -25,11 +25,16 @@ class OriginAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private static List<Field> OriginFields;
     private static Map<Short, String> fields;
+    private OnOriginClickListener onOriginClickListener;
 
-    OriginAdapter(Context context, List<Field> Fields) {
+    OriginAdapter(Context context, List<Field> Fields, OnOriginClickListener Listener) {
         this.inflater = LayoutInflater.from(context);
+        this.onOriginClickListener = Listener;
         OriginFields = Fields;
         fields = CreateOrderActivity.order.getFields();
+    }
+    public interface OnOriginClickListener {
+        void onChangeOrigin(boolean isChecked);
     }
 
     @Override
@@ -48,6 +53,8 @@ class OriginAdapter extends RecyclerView.Adapter {
                 holder3.switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         fields.put(GetColumn_id(holder3.getLayoutPosition()), String.valueOf(isChecked));
+                        if(GetColumn_id(holder3.getLayoutPosition()) == (byte)56)
+                            onOriginClickListener.onChangeOrigin(isChecked);
                     }
                 });
                 return holder3;
@@ -100,5 +107,12 @@ class OriginAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         return OriginFields.size();
+    }
+
+    public void updateList(List<Field> newList) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FieldsDiffUtilCallback(OriginFields, newList));
+        OriginFields.clear();
+        OriginFields.addAll(newList);
+        diffResult.dispatchUpdatesTo(this);
     }
 }

@@ -326,7 +326,7 @@
     <string name="file_no_select">Файл не выбран</string>
     <string name="accept">Согласен с <a href="http://192.168.0.69/terms">условиями</a></string>
 
-    <string name="add_prob">Добавить пробу</string>
+    <string name="add_prob">Новая проба</string>
     <string name="Indicator">Показатель</string>
     <string name="Test_method">Метод испытаний</string>
     <string name="Price">Цена</string>

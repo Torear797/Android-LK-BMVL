@@ -36,24 +36,13 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     private List<Field> SampleFields; //Поля Образцов
 
     private OnProbClickListener OnProbClickListener; //Слушатель нажатий кнопок
-   // private GridLayoutManager mng_layout;
-
-    public ProbAdapter(Context context, List<Field> Fields, OnProbClickListener Listener) {
-        this.inflater = LayoutInflater.from(context);
-        Probs = CreateOrderActivity.order.getProby();
-        this.OnProbClickListener = Listener;
-        viewPool = new RecyclerView.RecycledViewPool();
-        ProbFields = Fields;
-    }
 
     public ProbAdapter(Context context, List<Field> Fields, List<Field> sampleFields, OnProbClickListener Listener) {
         this.inflater = LayoutInflater.from(context);
         Probs = CreateOrderActivity.order.getProby();
         this.OnProbClickListener = Listener;
         viewPool = new RecyclerView.RecycledViewPool();
-
         ProbFields = Fields;
-       // ResearchFields = ResFields;
         SampleFields = sampleFields;
     }
 
@@ -65,8 +54,6 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-
         View view = inflater.inflate(R.layout.item_prob, parent, false);
         return new ProbAdapter.SimpleViewHolder(view);
     }
@@ -77,7 +64,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 
         initRecyclerView(simpleViewHolder, CurrentProb);
 
-        simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", i+1));
+        simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", i + 1));
 
         String nameMaterial = "Молоко сырое";
         assert CurrentProb != null;
@@ -112,7 +99,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if(position >= 4 && position <= 7) return 1;
+                if (position >= 4 && position <= 7) return 1;
                 if ((CreateOrderActivity.order_id == 1 || CreateOrderActivity.order_id == 3) && (position == 22 || position == 23))
                     return 1;
                 return 2;

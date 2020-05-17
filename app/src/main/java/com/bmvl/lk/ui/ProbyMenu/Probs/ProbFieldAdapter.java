@@ -114,14 +114,11 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             case 3:
                 View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_check_button, parent, false);
                 final SwitchHolder holder3 = new SwitchHolder(view3);
-
                 holder3.switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         CurrentProb.getFields().put(GetColumn_id(holder3.getLayoutPosition()), String.valueOf(isChecked));
-                        // ProbFields.get(position).setValue(String.valueOf(isChecked));
                     }
                 });
-
                 return holder3;
             case 4:
                 View view4 = inflater.inflate(R.layout.item_button_select, parent, false);
@@ -129,16 +126,12 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             case 5:
                 View view5 = inflater.inflate(R.layout.item_multi_spinner, parent, false);
                 return new MultiSpinerHolder(view5);
-            case 6:
-                View view6 = inflater.inflate(R.layout.item_research_list, parent, false);
-                return new ResearchPanelHolder(view6);
             case 7:
                 View view7 = inflater.inflate(R.layout.item_research_list, parent, false);
                 return new SamplesPanelHolder(view7);
             default:
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_field, parent, false);
                 final TextViewHolder holder = new TextViewHolder(view);
-
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {

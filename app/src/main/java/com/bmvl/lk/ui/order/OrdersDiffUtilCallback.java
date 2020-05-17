@@ -6,7 +6,7 @@ import com.bmvl.lk.data.models.Orders;
 
 import java.util.List;
 
-class OrdersDiffUtilCallback extends DiffUtil.Callback{
+class OrdersDiffUtilCallback extends DiffUtil.Callback {
     private final List<Orders> oldList;
     private final List<Orders> newList;
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,10 +37,10 @@ public class PartyInfoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(adapter!= null)
-        adapter.notifyDataSetChanged();
-        if(adapter2!= null)
-        adapter2.notifyDataSetChanged();
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
+        if (adapter2 != null)
+            adapter2.notifyDataSetChanged();
     }
 
     @Override
@@ -59,8 +60,20 @@ public class PartyInfoFragment extends Fragment {
             });
             adapter = new PartyInfoAdapter(getContext(), PartyInfoFields);
         } else {
-            AddOriginField();
-            adapter2 = new OriginAdapter(getContext(), OriginFields);
+            AddOriginField(OriginFields);
+            OriginAdapter.OnOriginClickListener onClickListener = new OriginAdapter.OnOriginClickListener() {
+                @Override
+                public void onChangeOrigin(boolean isChecked) {
+                    List<Field> NewList = new ArrayList<>();
+                    if (isChecked)
+                        AddOriginFieldNoOrigin(NewList);
+                    else
+                        AddOriginField(NewList);
+
+                    adapter2.updateList(NewList);
+                }
+            };
+            adapter2 = new OriginAdapter(getContext(), OriginFields, onClickListener);
         }
     }
 
@@ -76,9 +89,11 @@ public class PartyInfoFragment extends Fragment {
 
         final RecyclerView recyclerView = MyView.findViewById(R.id.List);
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
-        recyclerView.setHasFixedSize(true);
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         if (TypeTabs == 2) {
+            recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(mng_layout);
             recyclerView.setAdapter(adapter);
         } else
@@ -87,23 +102,32 @@ public class PartyInfoFragment extends Fragment {
         return MyView;
     }
 
-    private void AddOriginField() {
-        OriginFields.clear();
-        OriginFields.add(new Field((byte) 3, 56, "", "Происхождение неизвестно"));
-        if(CreateOrderActivity.order_id != 4 &&CreateOrderActivity.order_id != 8 && CreateOrderActivity.order_id != 9 && CreateOrderActivity.order_id != 10)
-        OriginFields.add(new Field(19, "", "НД на производство", InputType.TYPE_CLASS_TEXT));
-        OriginFields.add(new Field(8, "", "Производитель", InputType.TYPE_CLASS_TEXT));
-        OriginFields.add(new Field(29, "", "Страна происхождения", InputType.TYPE_CLASS_TEXT));
-        OriginFields.add(new Field(30, "", "Регион происхождения", InputType.TYPE_CLASS_TEXT));
-        OriginFields.add(new Field(46, "", "Адрес производства", InputType.TYPE_CLASS_TEXT));
-        OriginFields.add(new Field(130, "", "Страна экспортер", InputType.TYPE_CLASS_TEXT));
-        OriginFields.add(new Field(129, "", "Страна импортер", InputType.TYPE_CLASS_TEXT));
-        OriginFields.add(new Field((byte) 3, 120, "", "Применить для всех проб"));
+    private void AddOriginField(List<Field> NewList) {
+        NewList.clear();
+        NewList.add(new Field((byte) 3, 56, "", "Происхождение неизвестно"));
+        if (CreateOrderActivity.order_id != 4 && CreateOrderActivity.order_id != 8 && CreateOrderActivity.order_id != 9 && CreateOrderActivity.order_id != 10)
+            NewList.add(new Field(19, "", "НД на производство", InputType.TYPE_CLASS_TEXT));
+        NewList.add(new Field(8, "", "Производитель", InputType.TYPE_CLASS_TEXT));
+        NewList.add(new Field(29, "", "Страна происхождения", InputType.TYPE_CLASS_TEXT));
+        NewList.add(new Field(30, "", "Регион происхождения", InputType.TYPE_CLASS_TEXT));
+        NewList.add(new Field(46, "", "Адрес производства", InputType.TYPE_CLASS_TEXT));
+        NewList.add(new Field(130, "", "Страна экспортер", InputType.TYPE_CLASS_TEXT));
+        NewList.add(new Field(129, "", "Страна импортер", InputType.TYPE_CLASS_TEXT));
+        NewList.add(new Field((byte) 3, 120, "", "Применить для всех проб"));
+    }
+
+    private void AddOriginFieldNoOrigin(List<Field> NewList) {
+        NewList.clear();
+        NewList.add(new Field((byte) 3, 56, "", "Происхождение неизвестно"));
+        if (CreateOrderActivity.order_id != 4 && CreateOrderActivity.order_id != 8 && CreateOrderActivity.order_id != 9 && CreateOrderActivity.order_id != 10)
+            NewList.add(new Field(19, "", "НД на производство", InputType.TYPE_CLASS_TEXT));
+        NewList.add(new Field(58, "", "Номер и дата протокола изъятия/досмотра", InputType.TYPE_CLASS_TEXT));
+        NewList.add(new Field((byte) 3, 120, "", "Применить для всех проб"));
     }
 
     private void AddPartyInfoFields() {
         PartyInfoFields.clear();
-        if(CreateOrderActivity.order_id != 8 && CreateOrderActivity.order_id != 9 && CreateOrderActivity.order_id != 10) {
+        if (CreateOrderActivity.order_id != 8 && CreateOrderActivity.order_id != 9 && CreateOrderActivity.order_id != 10) {
             PartyInfoFields.add(new Field(43, "", "Ветеринарный документ от", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getContext()).getDrawable(R.drawable.ic_date_range_black_24dp), true));
             PartyInfoFields.add(new Field(42, "", "№", InputType.TYPE_CLASS_TEXT));
             PartyInfoFields.add(new Field(34, "", "Номер партии", InputType.TYPE_CLASS_TEXT));

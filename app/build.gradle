@@ -31,21 +31,21 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.android.material:material:1.2.0-alpha06'
     implementation "com.daimajia.swipelayout:library:1.2.0@aar"
 
-    implementation 'com.daimajia.androidanimations:library:1.1.2@aar'
+    implementation 'com.daimajia.androidanimations:library:2.3@aar'
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'jp.wasabeef:recyclerview-animators:1.0.3@aar'
 
     implementation "com.orhanobut:hawk:2.0.1"
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0' //не обновлять minSDK Android O
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0' //не обновлять minSDK Android O
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
 
 
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0' //log
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.7.0' //log
 }

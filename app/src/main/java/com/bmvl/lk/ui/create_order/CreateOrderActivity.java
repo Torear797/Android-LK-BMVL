@@ -1,4 +1,4 @@
-package com.bmvl.lk.ui.Create_Order;
+package com.bmvl.lk.ui.create_order;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,26 +23,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
-import com.bmvl.lk.Rest.AnswerOrderEdit;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.AnswerSendOrder;
 import com.bmvl.lk.Rest.Order.ProbyRest;
-import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
-import com.orhanobut.hawk.Hawk;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
@@ -84,6 +79,7 @@ public class CreateOrderActivity extends AppCompatActivity {
             toolbar.setTitle(R.string.new_order);
         } else {
             order = (SendOrder) getIntent().getSerializableExtra(SendOrder.class.getSimpleName());
+            assert order != null;
             Log.d("JSON",order.getJsonOrder());
             toolbar.setTitle(R.string.edit_order);
             final MaterialButton btn = findViewById(R.id.Create);
@@ -350,14 +346,14 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private Short getPositionKeySamples(int position, int prob) {
-        if (order.getProby().get(getPositionKeyProbs(prob)).getSamples().size() > 0)
-            return new ArrayList<Short>(order.getProby().get(getPositionKeyProbs(prob)).getSamples().keySet()).get(position);
+        if (Objects.requireNonNull(order.getProby().get(getPositionKeyProbs(prob))).getSamples().size() > 0)
+            return new ArrayList<>(Objects.requireNonNull(order.getProby().get(getPositionKeyProbs(prob))).getSamples().keySet()).get(position);
         else return 0;
     }
 
     private Short getPositionKeyProbs(int position) {
         if (order.getProby().size() > 0)
-            return new ArrayList<Short>(order.getProby().keySet()).get(position);
+            return new ArrayList<>(order.getProby().keySet()).get(position);
         else return 0;
     }
 
@@ -365,10 +361,10 @@ public class CreateOrderActivity extends AppCompatActivity {
         final int ProbSize = order.getProby().size();
         int SamplesSize;
         for (int i = 0; i < ProbSize; i++) {
-            SamplesSize = order.getProby().get(getPositionKeyProbs((short) i)).getSamples().size();
+            SamplesSize = Objects.requireNonNull(order.getProby().get(getPositionKeyProbs((short) i))).getSamples().size();
             for (int j = 0; j < SamplesSize; j++) {
-                if (order.getProby().get(getPositionKeyProbs((short) i)).getSamples().get(getPositionKeySamples(j, i)).getFields().size() <= 0) {
-                    order.getProby().get(getPositionKeyProbs((short) i)).getSamples().get(getPositionKeySamples(j, i)).DeleteSamplesFields();
+                if (Objects.requireNonNull(Objects.requireNonNull(order.getProby().get(getPositionKeyProbs((short) i))).getSamples().get(getPositionKeySamples(j, i))).getFields().size() <= 0) {
+                    Objects.requireNonNull(Objects.requireNonNull(order.getProby().get(getPositionKeyProbs((short) i))).getSamples().get(getPositionKeySamples(j, i))).DeleteSamplesFields();
                     break;
                 }
             }

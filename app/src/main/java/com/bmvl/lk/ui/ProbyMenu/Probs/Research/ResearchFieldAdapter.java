@@ -21,7 +21,7 @@ import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.Rest.SuggestionMethod;
 import com.bmvl.lk.Rest.SuggestionType;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
-import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.create_order.Field;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
     private boolean isCompleteResearch = false;
 
 
-    public ResearchFieldAdapter(Context context, List<Field> Fields, ResearchRest res, String[] mass, List<Suggestion> sug, short id) {
+    ResearchFieldAdapter(Context context, List<Field> Fields, ResearchRest res, String[] mass, List<Suggestion> sug, short id) {
         this.inflater = LayoutInflater.from(context);
         viewPool = new RecyclerView.RecycledViewPool();
         ResearchFields = Fields;
@@ -181,7 +181,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
 
     private void InitAdapter(String[] mass, Spinner spiner) {
         if (mass != null) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(inflater.getContext(), android.R.layout.simple_spinner_item, mass);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(inflater.getContext(), android.R.layout.simple_spinner_item, mass);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spiner.setAdapter(adapter);
         }
@@ -189,7 +189,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
 
     private void InitAdapter(String[] mass, Spinner spiner, String text) {
         if (mass != null) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(inflater.getContext(), android.R.layout.simple_spinner_item, mass);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(inflater.getContext(), android.R.layout.simple_spinner_item, mass);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spiner.setAdapter(adapter);
             spiner.setSelection(adapter.getPosition(text));

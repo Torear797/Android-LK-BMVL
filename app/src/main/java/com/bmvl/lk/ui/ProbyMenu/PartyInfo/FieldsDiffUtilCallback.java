@@ -2,7 +2,7 @@ package com.bmvl.lk.ui.ProbyMenu.PartyInfo;
 
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.create_order.Field;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ class FieldsDiffUtilCallback extends DiffUtil.Callback {
     private final List<Field> oldList;
     private final List<Field> newList;
 
-    public FieldsDiffUtilCallback(List<Field> oldList, List<Field> newList) {
+    FieldsDiffUtilCallback(List<Field> oldList, List<Field> newList) {
         this.oldList = oldList;
         this.newList = newList;
     }

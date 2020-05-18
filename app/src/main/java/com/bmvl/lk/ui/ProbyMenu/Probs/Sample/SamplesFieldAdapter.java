@@ -22,12 +22,11 @@ import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.create_order.Field;
 import com.bmvl.lk.ui.ProbyMenu.Probs.MultiSpinner;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
 import com.daimajia.swipe.util.Attributes;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,7 +44,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
     private List<Suggestion> buffer_sug;
     private Integer buffer_id;
 
-    public SamplesFieldAdapter(Context context, List<Field> SamFields, SamplesRest Sample) {
+    SamplesFieldAdapter(Context context, List<Field> SamFields, SamplesRest Sample) {
         this.inflater = LayoutInflater.from(context);
         viewPool = new RecyclerView.RecycledViewPool();
         SamplesField = SamFields;
@@ -57,8 +56,9 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
         return SamplesField.get(position).getType();
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case 1:
                 View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spiner, parent, false);
@@ -155,6 +155,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 if (CurrentSample.getFields().containsKey((short) f.getColumn_id()))
                     selected = CurrentSample.getFields().get((short) f.getColumn_id());
 
+                assert selected != null;
                 ((MultiSpinerHolder) holder).spiner.setItems(
                         items,
                         selected,
@@ -197,7 +198,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
         }
     }
 
-    ResearhAdapter.OnResearchClickListener Listener = new ResearhAdapter.OnResearchClickListener() {
+    private ResearhAdapter.OnResearchClickListener Listener = new ResearhAdapter.OnResearchClickListener() {
 
         @Override
         public void onUpdateResearch() {
@@ -205,7 +206,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
         }
     };
 
-    public void UpdateAdapter(List<Suggestion> suggestions, int id){
+    void UpdateAdapter(List<Suggestion> suggestions, int id){
         if(Adapter != null) {
             Adapter.UpdateIndicators(suggestions, id);
             Adapter.notifyDataSetChanged();
@@ -217,7 +218,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
 
     private Short getPositionKeyR(int position, Map<Short, ResearchRest> List) {
         if (List.size() > 0)
-            return new ArrayList<Short>(List.keySet()).get(position);
+            return new ArrayList<>(List.keySet()).get(position);
         else return 0;
     }
 

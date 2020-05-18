@@ -18,7 +18,7 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.create_order.Field;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -32,7 +32,6 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     private LayoutInflater inflater;
     private TreeMap<Short, ResearchRest> researches; //Исследования
     private List<Field> ResearchFields = new ArrayList<>();
-    ; //Поля исследований
     private RecyclerView.RecycledViewPool viewPool;
     private OnResearchClickListener onResearchClickListener;
 
@@ -93,7 +92,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     }
 
     private Short getPositionKey(int position) {
-        return new ArrayList<Short>(researches.keySet()).get(position);
+        return new ArrayList<>(researches.keySet()).get(position);
     }
 
     @Override

@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -20,8 +19,8 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
-import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.create_order.CreateOrderActivity;
+import com.bmvl.lk.ui.create_order.Field;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -29,6 +28,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleViewHolder> {
@@ -52,6 +52,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
         void onUpdateSamples();
     }
 
+    @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view1 = inflater.inflate(R.layout.item_prob, parent, false);
@@ -107,7 +108,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
 
     private Short getPositionKey(int position) {
         if (Samples.size() > 0)
-            return new ArrayList<Short>(Samples.keySet()).get(position);
+            return new ArrayList<>(Samples.keySet()).get(position);
         else return 0;
     }
 
@@ -161,7 +162,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
                     TreeMap<Short, SamplesRest> insertlist = new TreeMap<>();
                     short newid = getPositionKey(Samples.size() - 1);
                     SamplesRest insertSample = new SamplesRest(newid);
-                    insertSample.setData(Samples.get(getPositionKey(getLayoutPosition())).getFields(), Samples.get(getPositionKey(getLayoutPosition())).getResearches());
+                    insertSample.setData(Objects.requireNonNull(Samples.get(getPositionKey(getLayoutPosition()))).getFields(), Objects.requireNonNull(Samples.get(getPositionKey(getLayoutPosition()))).getResearches());
                     insertlist.put((short) (newid + 1), insertSample);
                     insertdata(insertlist);
                 }

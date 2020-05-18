@@ -1,4 +1,4 @@
-package com.bmvl.lk.ui.Create_Order;
+package com.bmvl.lk.ui.create_order;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -334,11 +334,11 @@ public class FieldsAdapter extends RecyclerView.Adapter {
     }
 
     private class BoxAndTextHolder extends RecyclerView.ViewHolder {
-        final public SwitchMaterial switchButton;
+        final SwitchMaterial switchButton;
         public TextInputEditText field;
-        public final TextInputLayout Layout;
+        final TextInputLayout Layout;
 
-        public BoxAndTextHolder(View view5) {
+        BoxAndTextHolder(View view5) {
             super(view5);
             switchButton = itemView.findViewById(R.id.my_switch);
             field = itemView.findViewById(R.id.TextInput);

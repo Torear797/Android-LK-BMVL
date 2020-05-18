@@ -1,4 +1,4 @@
-package com.bmvl.lk.ui.SplashScreen;
+package com.bmvl.lk.ui.splash_screen;
 
 import android.content.Intent;
 import android.os.Bundle;

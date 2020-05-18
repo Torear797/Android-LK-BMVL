@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
-import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.create_order.CreateOrderActivity;
+import com.bmvl.lk.ui.create_order.Field;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -37,7 +37,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 
     private OnProbClickListener OnProbClickListener; //Слушатель нажатий кнопок
 
-    public ProbAdapter(Context context, List<Field> Fields, List<Field> sampleFields, OnProbClickListener Listener) {
+    ProbAdapter(Context context, List<Field> Fields, List<Field> sampleFields, OnProbClickListener Listener) {
         this.inflater = LayoutInflater.from(context);
         Probs = CreateOrderActivity.order.getProby();
         this.OnProbClickListener = Listener;
@@ -52,6 +52,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         void onCopyProb();
     }
 
+    @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_prob, parent, false);
@@ -59,7 +60,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     }
 
     @Override
-    public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
+    public void onBindViewHolder(@NonNull SimpleViewHolder simpleViewHolder, int i) {
         final ProbyRest CurrentProb = Probs.get(getPositionKey(i));
 
         initRecyclerView(simpleViewHolder, CurrentProb);
@@ -84,7 +85,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 
     private Short getPositionKey(int position) {
         if (Probs.size() > 0)
-            return new ArrayList<Short>(Probs.keySet()).get(position);
+            return new ArrayList<>(Probs.keySet()).get(position);
         else return 0;
     }
 

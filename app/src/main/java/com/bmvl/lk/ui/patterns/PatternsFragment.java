@@ -2,7 +2,6 @@ package com.bmvl.lk.ui.patterns;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +15,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bmvl.lk.R;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
+import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class PatternsFragment extends Fragment implements OnBackPressedListener {
@@ -67,8 +64,6 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
 
         initRecyclerView();
         recyclerView.scrollToPosition(0);
-
-        fab.setColorFilter(Color.argb(255, 255, 255, 255));
 
         YoYo.with(Techniques.Tada)
                 .duration(700)

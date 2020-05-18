@@ -24,7 +24,6 @@ import java.util.Objects;
 class SearchFieldsAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private static Calendar dateAndTime = Calendar.getInstance();
-    // private AsyncTask mAsyncTask;
 
     SearchFieldsAdapter(Context context) {
         this.inflater = LayoutInflater.from(context);

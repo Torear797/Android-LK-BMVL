@@ -7,12 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
-import com.bmvl.lk.Rest.Order.ResearchRest;
-import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
 import com.google.android.material.button.MaterialButton;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ResearchPanelHolder extends RecyclerView.ViewHolder {
     public final MaterialButton btnAddReserch;

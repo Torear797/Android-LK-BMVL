@@ -5,11 +5,9 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +36,7 @@ import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Orders;
-import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
+import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.bmvl.lk.ui.login.LoginActivity;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -118,8 +116,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
         initRecyclerView();
         recyclerView.scrollToPosition(0);
-
-        fab.setColorFilter(Color.argb(255, 255, 255, 255));
 
         YoYo.with(Techniques.Tada)
                 .duration(700)

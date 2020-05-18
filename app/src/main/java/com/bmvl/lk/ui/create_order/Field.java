@@ -1,4 +1,4 @@
-package com.bmvl.lk.ui.Create_Order;
+package com.bmvl.lk.ui.create_order;
 
 import android.graphics.drawable.Drawable;
 

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,18 +26,15 @@ import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
-import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.ViewHolders.MultiSpinerHolder;
-import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
 import com.bmvl.lk.ViewHolders.SamplesPanelHolder;
 import com.bmvl.lk.ViewHolders.SelectButtonHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
-import com.bmvl.lk.ui.Create_Order.Field;
-import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
+import com.bmvl.lk.ui.create_order.CreateOrderActivity;
+import com.bmvl.lk.ui.create_order.Field;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.textfield.TextInputLayout;
@@ -67,7 +63,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     private ProbyRest CurrentProb;
     private SamplesAdapter SamAdapter;
 
-    public ProbFieldAdapter(Context context, List<Field> probFields, List<Field> sampleFields, ProbyRest prob, TextView header) {
+    ProbFieldAdapter(Context context, List<Field> probFields, List<Field> sampleFields, ProbyRest prob, TextView header) {
         this.inflater = LayoutInflater.from(context);
         this.ProbHeader = header;
         viewPool = new RecyclerView.RecycledViewPool();
@@ -216,7 +212,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 //                            ((SpinerHolder) holder).spiner.setSelection(CurrentID);
                         ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))));
                     } else {
-                        ((SpinerHolder) holder).spiner.setSelection(Integer.parseInt(CurrentProb.getFields().get("5")) - 1);
+                        ((SpinerHolder) holder).spiner.setSelection(Integer.parseInt(Objects.requireNonNull(CurrentProb.getFields().get("5"))) - 1);
                         ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", CurrentProb.getFields().get("materialName"), CurrentProb.getSamples().size()));
                         //getIndicators(1);
                     }
@@ -248,6 +244,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
                     selected = CurrentProb.getFields().get(String.valueOf(f.getColumn_id()));
 
+                assert selected != null;
                 ((MultiSpinerHolder) holder).spiner.setItems(
                         items,
                         //inflater.getContext().getString(R.string.for_all),
@@ -314,7 +311,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
         }
     }
 
-    SamplesAdapter.OnSamplesClickListener SamListener = new SamplesAdapter.OnSamplesClickListener() {
+    private SamplesAdapter.OnSamplesClickListener SamListener = new SamplesAdapter.OnSamplesClickListener() {
 
         @Override
         public void onUpdateSamples() {
@@ -324,12 +321,12 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
     private Short getPositionKey(int position, Map<Short, SamplesRest> Samples) {
         if (Samples.size() > 0)
-            return new ArrayList<Short>(Samples.keySet()).get(position);
+            return new ArrayList<>(Samples.keySet()).get(position);
         else return 0;
     }
 
     private Short getPositionKeyR(int position, Map<Short, ResearchRest> List) {
-        return new ArrayList<Short>(List.keySet()).get(position);
+        return new ArrayList<>(List.keySet()).get(position);
     }
 
     private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt, Field f) {

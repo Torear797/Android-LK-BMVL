@@ -17,8 +17,8 @@ import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.Create_Order.CreateOrderActivity;
-import com.bmvl.lk.ui.Create_Order.Field;
+import com.bmvl.lk.ui.create_order.CreateOrderActivity;
+import com.bmvl.lk.ui.create_order.Field;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.button.MaterialButton;
 
@@ -123,7 +123,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
                 final short newid = getPositionKey(CreateOrderActivity.order.getProby().size() - 1, CreateOrderActivity.order.getProby());
                 insertlist.put((short) (newid + 1), new ProbyRest(newid));
                 adapter.insertdata(insertlist);
-                CreateOrderActivity.order.getProby().get((short) (newid + 1)).addSample((short) 1, new SamplesRest((short) 0));
+                Objects.requireNonNull(CreateOrderActivity.order.getProby().get((short) (newid + 1))).addSample((short) 1, new SamplesRest((short) 0));
 
                 if (CreateOrderActivity.order_id == 4) {
                     CreateOrderActivity.order.getFields().put((short) 7, String.valueOf(CreateOrderActivity.order.getProby().size()));
@@ -137,13 +137,13 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
 
     private Short getPositionKey(int position, Map<Short, ProbyRest> Probs) {
         if (Probs.size() > 0)
-            return new ArrayList<Short>(Probs.keySet()).get(position);
+            return new ArrayList<>(Probs.keySet()).get(position);
         else return 0;
     }
 
     private void AddProb() {
         CreateOrderActivity.order.addProb((short) 1, new ProbyRest((short) 0));
-        CreateOrderActivity.order.getProby().get((short) (1)).addSample((short) 1, new SamplesRest((short) 0));
+        Objects.requireNonNull(CreateOrderActivity.order.getProby().get((short) (1))).addSample((short) 1, new SamplesRest((short) 0));
     } //Создает первую пробу и первый образец
 
     private void AddSamplesForType4() {

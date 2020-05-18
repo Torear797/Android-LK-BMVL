@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ui.SplashScreen.SplashScreenActivity"
+            android:name=".ui.splash_screen.SplashScreenActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.Create_Order.CreateOrderActivity"
+            android:name=".ui.create_order.CreateOrderActivity"
             android:screenOrientation="portrait">
 
         </activity>

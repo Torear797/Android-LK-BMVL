@@ -1,7 +1,6 @@
 package com.bmvl.lk.ui.ProbyMenu;
 
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +8,6 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import com.bmvl.lk.R;
-import com.bmvl.lk.data.models.Proby;
-import com.bmvl.lk.ui.create_order.Field;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.

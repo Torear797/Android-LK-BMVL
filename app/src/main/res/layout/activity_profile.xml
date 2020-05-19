@@ -8,7 +8,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="218dp"
+        android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:background="@color/colorPrimary"
         >
@@ -24,7 +24,7 @@
             >
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="match_parent"
-                android:layout_height="230dp"
+                android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
                 android:src="@drawable/bg"
@@ -53,6 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/myfab_margin"
         android:src="@drawable/ic_exit_to_app_black_24dp"
+        app:tint="@android:color/white"
         app:rippleColor="@color/colorPrimary_dark"
         app:backgroundTint="@color/colorPrimary"
         app:layout_anchor="@id/app_bar"

@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_material_login);
+        setContentView(R.layout.activity_login);
         final String ANDROID_ID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         final MaterialToolbar toolbar = findViewById(R.id.toolbar);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);

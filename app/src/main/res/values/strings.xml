@@ -321,7 +321,7 @@
 
     <string name="contact_face">Контактное лицо</string>
     <string name="create_botton">Отправить</string>
-    <string name="adres">Адрес</string>
+
     <string name="Select_btn">Обзор…</string>
     <string name="file_no_select">Файл не выбран</string>
     <string name="accept">Согласен с <a href="http://192.168.0.69/terms">условиями</a></string>
@@ -337,5 +337,12 @@
     <string name="empty_notify">Список уведомлений пуст!</string>
     <string name="menu_patterns">Шаблоны</string>
     <string name="server_lost">Сервер не доступен!</string>
+    <string name="INN">ИНН</string>
+    <string name="bank_info">Данные банка</string>
+    <string name="data_contract">Дата контракта</string>
+    <string name="number_contract">Номер контракта</string>
+    <string name="adres">Адрес</string>
+    <string name="phone">Телефон</string>
+    <string name="FIO">ФИО</string>
 
 </resources>

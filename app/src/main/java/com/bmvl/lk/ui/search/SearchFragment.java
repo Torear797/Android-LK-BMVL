@@ -1,8 +1,11 @@
 package com.bmvl.lk.ui.search;
 
 
+import android.app.Application;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,15 +19,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.R;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.ui.MenuActivity;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SearchFragment extends Fragment implements OnBackPressedListener {
 
     public static List<SearchField> Fields = new ArrayList<>();
-    private GridLayoutManager mng_layout = new GridLayoutManager(getContext(), 2);
+    private static GridLayoutManager mng_layout;
     private static SearchFieldsAdapter adapter;
 
     public SearchFragment() {
@@ -38,6 +44,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mng_layout  = new GridLayoutManager(getContext(), 2);
         mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -49,13 +56,6 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
             }
         });
         adapter = new SearchFieldsAdapter(getContext());
-//        mAsyncTask = new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//
-//                return null;
-//            }
-//        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public static SearchFragment newInstance() {
@@ -68,12 +68,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
 
         final RecyclerView recyclerView = MyView.findViewById(R.id.recyclerView);
         final Button SearchButton = MyView.findViewById(R.id.search_button);
-
-        recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setLayoutManager(mng_layout);
-        recyclerView.setAdapter(adapter);
+        new MyTask(recyclerView).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         SearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,5 +81,32 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
 
     @Override
     public void onBackPressed() {
+    }
+
+    private static class MyTask extends AsyncTask<Void, Void, String> {
+        private RecyclerView recyclerView;
+
+        MyTask(RecyclerView List) {
+            this.recyclerView = List;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            return "task finished";
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setLayoutManager(mng_layout);
+            recyclerView.setAdapter(adapter);
+        }
     }
 }

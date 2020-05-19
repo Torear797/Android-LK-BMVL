@@ -23,7 +23,7 @@ import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
-import com.bmvl.lk.ui.create_order.Field;
+import com.bmvl.lk.data.Field;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.MessageFormat;

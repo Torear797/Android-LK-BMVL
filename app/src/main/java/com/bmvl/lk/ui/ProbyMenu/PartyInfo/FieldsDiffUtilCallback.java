@@ -2,7 +2,7 @@ package com.bmvl.lk.ui.ProbyMenu.PartyInfo;
 
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.bmvl.lk.ui.create_order.Field;
+import com.bmvl.lk.data.Field;
 
 import java.util.List;
 

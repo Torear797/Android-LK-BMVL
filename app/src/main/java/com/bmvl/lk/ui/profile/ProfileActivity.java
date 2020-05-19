@@ -1,7 +1,6 @@
 package com.bmvl.lk.ui.profile;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -32,7 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_material);
+        setContentView(R.layout.activity_profile);
         Log.d("TOKEN: ", App.UserAccessData.getToken());
 
         final MaterialToolbar toolbar = findViewById(R.id.toolbar);
@@ -52,8 +51,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         Objects.requireNonNull(getSupportActionBar()).setIcon(R.drawable.logo);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-
-        fab.setColorFilter(Color.argb(255, 255, 255, 255));
 
         FIO.setText(App.UserInfo.getFIO());
         Email.setText(App.UserInfo.getEmail());
@@ -75,9 +72,9 @@ public class ProfileActivity extends AppCompatActivity {
                             public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
                                 if (response.isSuccessful()) {
                                     StandardAnswer answer = response.body();
+                                    assert answer != null;
                                     if (answer.getStatus() == 200) {
                                         Hawk.deleteAll();
-                                        //LoginActivity.loginViewModel.logout();
 
                                         Intent intent = new Intent(ProfileActivity.this, MenuActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -21,7 +21,7 @@ import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.Rest.SuggestionMethod;
 import com.bmvl.lk.Rest.SuggestionType;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
-import com.bmvl.lk.ui.create_order.Field;
+import com.bmvl.lk.data.Field;
 
 import java.util.List;
 

@@ -20,7 +20,7 @@ import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
-import com.bmvl.lk.ui.create_order.Field;
+import com.bmvl.lk.data.Field;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 

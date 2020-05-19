@@ -1,5 +1,6 @@
 package com.bmvl.lk.ui.create_order;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
@@ -28,6 +29,7 @@ import com.bmvl.lk.Rest.Order.AnswerSendOrder;
 import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.StandardAnswer;
+import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
 import com.google.android.material.button.MaterialButton;
@@ -65,58 +67,32 @@ public class CreateOrderActivity extends AppCompatActivity {
 
         final TextView OrderName = findViewById(R.id.Order_name);
         final Toolbar toolbar = findViewById(R.id.toolbar);
-        final RecyclerView recyclerView = findViewById(R.id.FieldList);
+        //    final RecyclerView recyclerView = findViewById(R.id.FieldList);
         cbox = findViewById(R.id.AcceptcheckBox);
         Frame = findViewById(R.id.Menu_proby_fragment);
         bar = findViewById(R.id.ProgressBar);
 
         final boolean pattern = getIntent().getBooleanExtra("Pattern", false);
-        act_of_selection = getIntent().getStringExtra("ACT");
-
         Edit = getIntent().getBooleanExtra("isEdit", false);
         if (!Edit) {
-            order = new SendOrder(getIntent().getByteExtra("type_id",(byte)1));
+            order = new SendOrder(getIntent().getByteExtra("type_id", (byte) 1));
             toolbar.setTitle(R.string.new_order);
         } else {
             order = (SendOrder) getIntent().getSerializableExtra(SendOrder.class.getSimpleName());
             assert order != null;
-            Log.d("JSON",order.getJsonOrder());
+            Log.d("JSON", order.getJsonOrder());
             toolbar.setTitle(R.string.edit_order);
             final MaterialButton btn = findViewById(R.id.Create);
             btn.setText("Сохранить");
         }
         order_id = order.getType_id();
-        if(pattern)order.setPattern((byte) 1);
+        if (pattern) order.setPattern((byte) 1);
 
         setSupportActionBar(toolbar);
-
-        recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
         OrderName.setText(getResources().getStringArray(R.array.order_name)[order_id - 1]);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        final GridLayoutManager mng_layout = new GridLayoutManager(this, 2);
-        mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                if ((position == 1 || position == 2) && order_id != 8 && order_id != 9 && order_id != 10) return 1;
-                if (order_id == 1 && (position == 14 || position == 15))
-                    return 1;
-                if (order_id == 3 && (position == 15 || position == 16))
-                    return 1;
-                if (order_id == 4 && (position == 13 || position == 14))
-                    return 1;
-                return 2;
-            }
-        });
-        recyclerView.setLayoutManager(mng_layout);
-        recyclerView.setHasFixedSize(true);
-
-        adapter = new FieldsAdapter(this);
-        recyclerView.setAdapter(adapter);
-
-   new AsynkTask().execute();
+        new MyTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void EnableTable(FrameLayout Frame) {
@@ -410,9 +386,17 @@ public class CreateOrderActivity extends AppCompatActivity {
                 });
     }
 
-    class AsynkTask extends AsyncTask<Void, Integer, Void> {
+    private class MyTask extends AsyncTask<Void, Void, GridLayoutManager> {
+        //  private RecyclerView recyclerView;
+        private Context context;
+
+        MyTask(Context con) {
+            this.context = con;
+        }
+
         @Override
-        protected Void doInBackground(Void... unused) {
+        protected GridLayoutManager doInBackground(Void... params) {
+            act_of_selection = getIntent().getStringExtra("ACT");
             switch (order_id) {
                 case 1:
                     LoadDefaultFields();
@@ -454,14 +438,33 @@ public class CreateOrderActivity extends AppCompatActivity {
                     EnableTable(Frame);
                     break;
             }
+            final GridLayoutManager mng_layout = new GridLayoutManager(context, 2);
+            mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if ((position == 1 || position == 2) && order_id != 8 && order_id != 9 && order_id != 10)
+                        return 1;
+                    if (order_id == 1 && (position == 14 || position == 15))
+                        return 1;
+                    if (order_id == 3 && (position == 15 || position == 16))
+                        return 1;
+                    if (order_id == 4 && (position == 13 || position == 14))
+                        return 1;
+                    return 2;
+                }
+            });
+            adapter = new FieldsAdapter(context);
+            return mng_layout;
+        }
 
-            return null;
-        }
         @Override
-        protected void onProgressUpdate(Integer... items) {
-        }
-        @Override
-        protected void onPostExecute(Void unused) {
+        protected void onPostExecute(GridLayoutManager result) {
+            final RecyclerView recyclerView = findViewById(R.id.FieldList);
+            recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(result);
+            recyclerView.setAdapter(adapter);
         }
     }
 }

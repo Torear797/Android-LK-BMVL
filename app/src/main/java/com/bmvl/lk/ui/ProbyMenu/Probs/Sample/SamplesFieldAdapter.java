@@ -168,8 +168,6 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 Adapter = new ResearhAdapter(inflater.getContext(), CurrentSample.getResearches(), Listener);
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
-                ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
-                ((ResearchPanelHolder) holder).ResearchList.setItemAnimator(new DefaultItemAnimator());
                 ((ResearchPanelHolder) holder).ResearchList.setRecycledViewPool(viewPool);
 
                 if(buffer_id != null && buffer_sug != null) {

@@ -61,15 +61,14 @@
                 android:layout_weight="1"
                 android:minWidth="160dp"
                 android:text="Проба № 0"
-                android:textColor="@color/White" />
+                android:textColor="@android:color/white" />
 
             <TextView
                 android:id="@+id/InfoProb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Вид материала: не выбран Образцов: 0 шт."
-                android:textColor="@color/White" />
+                android:textColor="@android:color/white" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

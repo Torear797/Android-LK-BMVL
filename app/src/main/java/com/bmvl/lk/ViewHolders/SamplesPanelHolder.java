@@ -4,9 +4,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.data.SpacesItemDecoration;
 import com.google.android.material.button.MaterialButton;
 
 public class SamplesPanelHolder extends RecyclerView.ViewHolder {
@@ -22,5 +24,8 @@ public class SamplesPanelHolder extends RecyclerView.ViewHolder {
         Header.setText("Образцы");
 
         btnAddSample.setText("Добавить образец");
+
+        SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
+        SampleList.setItemAnimator(new DefaultItemAnimator());
     }
 }

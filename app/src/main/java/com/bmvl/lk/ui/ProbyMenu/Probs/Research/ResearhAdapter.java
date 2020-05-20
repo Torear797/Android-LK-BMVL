@@ -68,17 +68,11 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     @Override
     public void onBindViewHolder(ResearchItemHolder researchItemHolder, int i) {
         final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
-
         adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchFields, CurrentResearch, Indicators, suggestions, materialId);
         researchItemHolder.List.setAdapter(adapter);
-        researchItemHolder.List.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
-        researchItemHolder.List.setItemAnimator(new DefaultItemAnimator());
-        researchItemHolder.List.setRecycledViewPool(viewPool);
-        researchItemHolder.List.setHasFixedSize(true);
 
         researchItemHolder.Number.setText(MessageFormat.format("№ {0}", i + 1));
 
-        researchItemHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         mItemManger.bindView(researchItemHolder.itemView, i);
     }
 
@@ -126,6 +120,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
             createBtn = itemView.findViewById(R.id.create);
 
             Info.setVisibility(View.GONE);
+            createBtn.setVisibility(View.GONE);
 
             head.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -149,6 +144,13 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
                 }
             });
 
+            List.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
+            List.setItemAnimator(new DefaultItemAnimator());
+
+            swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+
+            List.setRecycledViewPool(viewPool);
+            List.setHasFixedSize(true);
         }
     }
 

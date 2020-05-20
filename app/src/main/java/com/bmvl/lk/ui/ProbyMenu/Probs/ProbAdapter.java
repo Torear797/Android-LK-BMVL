@@ -95,32 +95,14 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     }
 
     private void initRecyclerView(SimpleViewHolder simpleViewHolder, ProbyRest CurrentProb) {
-
-        final GridLayoutManager mng_layout = new GridLayoutManager(inflater.getContext(), 2);
-        mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                if (position >= 4 && position <= 7) return 1;
-                if ((CreateOrderActivity.order_id == 1 || CreateOrderActivity.order_id == 3) && (position == 22 || position == 23))
-                    return 1;
-                return 2;
-            }
-        });
-
-        simpleViewHolder.ProbList.setLayoutManager(mng_layout);
-        simpleViewHolder.ProbList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
-        simpleViewHolder.ProbList.setItemAnimator(new DefaultItemAnimator());
-        simpleViewHolder.ProbList.setRecycledViewPool(viewPool);
-        simpleViewHolder.ProbList.setHasFixedSize(true);
-
-        final ProbFieldAdapter adapter2 = new ProbFieldAdapter(
+        final ProbFieldAdapter adapter = new ProbFieldAdapter(
                 inflater.getContext(),
                 ProbFields,
                 SampleFields,
                 CurrentProb,
                 simpleViewHolder.infoProb
         );
-        simpleViewHolder.ProbList.setAdapter(adapter2);
+        simpleViewHolder.ProbList.setAdapter(adapter);
     }
 
     class SimpleViewHolder extends RecyclerView.ViewHolder {
@@ -168,6 +150,24 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 //                }
 //            });
             buttonCopy.setVisibility(View.GONE);
+
+
+            ProbList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
+            ProbList.setItemAnimator(new DefaultItemAnimator());
+            ProbList.setRecycledViewPool(viewPool);
+            ProbList.setHasFixedSize(true);
+            final GridLayoutManager mng_layout = new GridLayoutManager(inflater.getContext(), 2);
+            mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if (position >= 4 && position <= 7) return 1;
+                    if ((CreateOrderActivity.order_id == 1 || CreateOrderActivity.order_id == 3) && (position == 22 || position == 23))
+                        return 1;
+                    return 2;
+                }
+            });
+
+            ProbList.setLayoutManager(mng_layout);
         }
     }
 

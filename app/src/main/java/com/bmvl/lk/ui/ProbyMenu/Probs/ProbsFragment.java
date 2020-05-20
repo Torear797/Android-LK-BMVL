@@ -1,5 +1,6 @@
 package com.bmvl.lk.ui.ProbyMenu.Probs;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -41,51 +42,51 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (CreateOrderActivity.order.getProby().size() == 0)
-            AddProb();
+//        if (CreateOrderActivity.order.getProby().size() == 0)
+//            AddProb();
 
-        ProbAdapter.OnProbClickListener onClickListener = new ProbAdapter.OnProbClickListener() {
-            @Override
-            public void onDeletedProb(short id) {
-                adapter.closeAllItems();
-                TreeMap<Short, ProbyRest> insertlist = new TreeMap<>(CreateOrderActivity.order.getProby());
-                insertlist.remove(id);
-                adapter.updateList(insertlist);
+//        ProbAdapter.OnProbClickListener onClickListener = new ProbAdapter.OnProbClickListener() {
+//            @Override
+//            public void onDeletedProb(short id) {
+//                adapter.closeAllItems();
+//                TreeMap<Short, ProbyRest> insertlist = new TreeMap<>(CreateOrderActivity.order.getProby());
+//                insertlist.remove(id);
+//                adapter.updateList(insertlist);
+//
+//                if (CreateOrderActivity.order_id == 4) {
+//                    CreateOrderActivity.order.getFields().put((short) 7, String.valueOf(CreateOrderActivity.order.getProby().size()));
+//                    CreateOrderActivity.adapter.notifyItemChanged(18);
+//                }
+//            }
+//
+//            @Override
+//            public void onCopyProb() {
+//                Toast.makeText(getContext(), "Копирование пробы", Toast.LENGTH_SHORT).show();
+//            }
+//        };
 
-                if (CreateOrderActivity.order_id == 4) {
-                    CreateOrderActivity.order.getFields().put((short) 7, String.valueOf(CreateOrderActivity.order.getProby().size()));
-                    CreateOrderActivity.adapter.notifyItemChanged(18);
-                }
-            }
-
-            @Override
-            public void onCopyProb() {
-                Toast.makeText(getContext(), "Копирование пробы", Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        switch (CreateOrderActivity.order_id) {
-            case 1:
-                AddProbFieldsType1();
-                break;
-            case 3:
-                AddProbFieldsType3();
-                break;
-            case 4:
-                AddProbFieldsType4();
-                break;
-            case 8:
-                AddPatternFieldsType1();
-                break;
-            case 9:
-                AddPatternFieldsType4();
-                break;
-            case 10:
-                AddPatternFieldsType3();
-                break;
-        }
-        adapter = new ProbAdapter(getContext(), ProbFields, SampleFields, onClickListener);
-        (adapter).setMode(Attributes.Mode.Single);
+//        switch (CreateOrderActivity.order_id) {
+//            case 1:
+//                AddProbFieldsType1();
+//                break;
+//            case 3:
+//                AddProbFieldsType3();
+//                break;
+//            case 4:
+//                AddProbFieldsType4();
+//                break;
+//            case 8:
+//                AddPatternFieldsType1();
+//                break;
+//            case 9:
+//                AddPatternFieldsType4();
+//                break;
+//            case 10:
+//                AddPatternFieldsType3();
+//                break;
+//        }
+//        adapter = new ProbAdapter(getContext(), ProbFields, SampleFields, onClickListener);
+//        (adapter).setMode(Attributes.Mode.Single);
     }
 
     public static ProbsFragment newInstance() {
@@ -97,13 +98,14 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
                              Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.fragment_recyclerview, container, false);
         final RecyclerView recyclerView = MyView.findViewById(R.id.List);
+
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        final MaterialButton AddProbBtn = MyView.findViewById(R.id.addProb);
 
-        recyclerView.setAdapter(adapter);
-        NewProbListener(AddProbBtn, adapter, recyclerView);
 
+//        recyclerView.setAdapter(adapter);
+//        NewProbListener(AddProbBtn, adapter, recyclerView);
+        new MyTask(recyclerView).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         return MyView;
     }
 
@@ -276,5 +278,72 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
     public void onBackPressed() {
         ProbFields.clear();
         SampleFields.clear();
+    }
+
+    private class MyTask extends AsyncTask<Void, Void, Void> {
+        private RecyclerView recyclerView;
+
+        MyTask(RecyclerView con) {
+            this.recyclerView = con;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            if (CreateOrderActivity.order.getProby().size() == 0)
+                AddProb();
+
+            ProbAdapter.OnProbClickListener onClickListener = new ProbAdapter.OnProbClickListener() {
+                @Override
+                public void onDeletedProb(short id) {
+                    adapter.closeAllItems();
+                    TreeMap<Short, ProbyRest> insertlist = new TreeMap<>(CreateOrderActivity.order.getProby());
+                    insertlist.remove(id);
+                    adapter.updateList(insertlist);
+
+                    if (CreateOrderActivity.order_id == 4) {
+                        CreateOrderActivity.order.getFields().put((short) 7, String.valueOf(CreateOrderActivity.order.getProby().size()));
+                        CreateOrderActivity.adapter.notifyItemChanged(18);
+                    }
+                }
+
+                @Override
+                public void onCopyProb() {
+                    Toast.makeText(getContext(), "Копирование пробы", Toast.LENGTH_SHORT).show();
+                }
+            };
+
+            switch (CreateOrderActivity.order_id) {
+                case 1:
+                    AddProbFieldsType1();
+                    break;
+                case 3:
+                    AddProbFieldsType3();
+                    break;
+                case 4:
+                    AddProbFieldsType4();
+                    break;
+                case 8:
+                    AddPatternFieldsType1();
+                    break;
+                case 9:
+                    AddPatternFieldsType4();
+                    break;
+                case 10:
+                    AddPatternFieldsType3();
+                    break;
+            }
+
+            adapter = new ProbAdapter(getContext(), ProbFields, SampleFields, onClickListener);
+            (adapter).setMode(Attributes.Mode.Single);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            recyclerView.setAdapter(adapter);
+            final MaterialButton AddProbBtn = Objects.requireNonNull(getView()).findViewById(R.id.addProb);
+            NewProbListener(AddProbBtn, adapter, recyclerView);
+        }
     }
 }

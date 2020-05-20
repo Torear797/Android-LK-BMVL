@@ -9,13 +9,13 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/toolbar_color"
+        android:background="@android:color/white"
         android:minHeight="?attr/actionBarSize"
         android:elevation="@dimen/ShadowSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@color/toolbar_icon"
+        app:titleTextColor="@android:color/black"
         android:theme="?attr/actionBarTheme" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

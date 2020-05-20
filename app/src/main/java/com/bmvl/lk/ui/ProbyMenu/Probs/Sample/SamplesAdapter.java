@@ -62,13 +62,8 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     @Override
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final SamplesRest CurrentSample = Samples.get(getPositionKey(i));
-
         adapter = new SamplesFieldAdapter(inflater.getContext(), SamplesField, CurrentSample);
         simpleViewHolder.SampleList.setAdapter(adapter);
-        simpleViewHolder.SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
-        simpleViewHolder.SampleList.setItemAnimator(new DefaultItemAnimator());
-        simpleViewHolder.SampleList.setRecycledViewPool(viewPool);
-        simpleViewHolder.SampleList.setHasFixedSize(true);
 
         if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {
             simpleViewHolder.NumberSample.setText(MessageFormat.format("№ {0}", getPositionKey(i)));
@@ -92,7 +87,6 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
             }
         }
 
-        simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         mItemManger.bindView(simpleViewHolder.itemView, i);
     }
 
@@ -167,6 +161,14 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
                     insertdata(insertlist);
                 }
             });
+
+            SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
+            SampleList.setItemAnimator(new DefaultItemAnimator());
+
+            swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+
+            SampleList.setRecycledViewPool(viewPool);
+            SampleList.setHasFixedSize(true);
         }
     }
 

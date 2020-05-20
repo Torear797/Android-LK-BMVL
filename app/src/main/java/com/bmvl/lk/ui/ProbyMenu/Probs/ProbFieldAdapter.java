@@ -131,8 +131,8 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if(!String.valueOf(s).equals(""))
-                        CurrentProb.getFields().put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
+                        if (!String.valueOf(s).equals(""))
+                            CurrentProb.getFields().put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
                     }
 
                     @Override
@@ -214,7 +214,6 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     } else {
                         ((SpinerHolder) holder).spiner.setSelection(Integer.parseInt(Objects.requireNonNull(CurrentProb.getFields().get("5"))) - 1);
                         ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", CurrentProb.getFields().get("materialName"), CurrentProb.getSamples().size()));
-                        //getIndicators(1);
                     }
                 }
 
@@ -225,7 +224,6 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
                     ((SwitchHolder) holder).switchButton.setEnabled(Boolean.parseBoolean(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))));
-                else ((SwitchHolder) holder).switchButton.setEnabled(false);
 
                 break;
             } //Swith
@@ -247,7 +245,6 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 assert selected != null;
                 ((MultiSpinerHolder) holder).spiner.setItems(
                         items,
-                        //inflater.getContext().getString(R.string.for_all),
                         selected,
                         onSelectedListener
                 );
@@ -255,38 +252,10 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
             } //Мультиспинер
-//            case 6: {
-//                Adapter = new ResearhAdapter(inflater.getContext(), CurrentProb.getSamples().get(getPositionKey(0, CurrentProb.getSamples())).getResearches(), Listener);
-//                (Adapter).setMode(Attributes.Mode.Single);
-//                ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
-//                ((ResearchPanelHolder) holder).ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
-//                ((ResearchPanelHolder) holder).ResearchList.setRecycledViewPool(viewPool);
-//
-//
-//                //Добавляет исследование
-//                ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        short size = (short) CurrentProb.getSamples().get((short) 1).getResearches().size();
-//                        short newid = 0;
-//                        if (size > 0)
-//                            newid = getPositionKeyR(size - 1, CurrentProb.getSamples().get((short) 1).getResearches());
-//
-//                        Map<Short, ResearchRest> insertlist = new HashMap<>();
-//                        insertlist.put((short) (newid + 1), new ResearchRest((short) (newid + 1)));
-//                        Adapter.insertdata(insertlist);
-//                        ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
-//                    }
-//                });
-//
-//                break;
-//            }
             case 7: {
                 SamAdapter = new SamplesAdapter(inflater.getContext(), SampleFields, CurrentProb.getSamples(), SamListener);
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
-                ((SamplesPanelHolder) holder).SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
-                ((SamplesPanelHolder) holder).SampleList.setItemAnimator(new DefaultItemAnimator());
                 ((SamplesPanelHolder) holder).SampleList.setRecycledViewPool(viewPool);
 
                 if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {
@@ -325,10 +294,6 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
         else return 0;
     }
 
-    private Short getPositionKeyR(int position, Map<Short, ResearchRest> List) {
-        return new ArrayList<>(List.keySet()).get(position);
-    }
-
     private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt, Field f) {
         monthOfYear = monthOfYear + 1;
         dateAndTime.set(Calendar.YEAR, year);
@@ -358,12 +323,12 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     private void getIndicators(final int id) {
         NetworkService.getInstance()
                 .getJSONApi()
-                .getIndicators(App.UserAccessData.getToken(),id,"")
+                .getIndicators(App.UserAccessData.getToken(), id, "")
                 .enqueue(new Callback<AnswerIndicators>() {
                     @Override
                     public void onResponse(@NonNull Call<AnswerIndicators> call, @NonNull Response<AnswerIndicators> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                           SamAdapter.UpdateAdapter(response.body().getSuggestions(), id);
+                            SamAdapter.UpdateAdapter(response.body().getSuggestions(), id);
                         }
                     }
 

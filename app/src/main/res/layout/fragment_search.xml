@@ -6,13 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backround_color_site">
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/ClearFocus"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
         android:background="@android:color/white">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -38,6 +43,6 @@
             app:layout_constraintTop_toBottomOf="@+id/recyclerView"
             app:strokeColor="@color/accent"
             app:strokeWidth="1dp" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.core.widget.NestedScrollView>

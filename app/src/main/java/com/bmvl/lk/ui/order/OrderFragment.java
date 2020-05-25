@@ -179,7 +179,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
     private void initRecyclerView() {
         OrderSwipeAdapter.OnOrderClickListener onClickListener = new OrderSwipeAdapter.OnOrderClickListener() {
-
             @Override
             public void onDeleteOrder(int id, final int position) {
                 OrderAdapter.closeAllItems();
@@ -270,8 +269,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
             @Override
             public void onEditOrder(final com.bmvl.lk.data.models.Orders order) {
-                //         Snackbar.make(Objects.requireNonNull(getView()), "Изменение " + order.getType_id(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
                 OrderAdapter.closeAllItems();
                 final SendOrder OpenOrder = new SendOrder(order.getType_id());
 
@@ -283,13 +280,9 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                             public void onResponse(@NonNull Call<AnswerOrderEdit> call, @NonNull Response<AnswerOrderEdit> response) {
                                 if (response.isSuccessful() && response.body() != null) {
                                     if (response.body().getStatus() == 200) {
-                                        //Toast.makeText(view.getContext(), "Заказ успешно создан!", Toast.LENGTH_SHORT).show();
-                                        // CreateOrderActivity.this.finish();
                                         OpenOrder.setId(order.getId());
                                         OpenOrder.setFields(response.body().getOrderFields());
                                         OpenOrder.setProby(response.body().getProby());
-                                        // String json = OpenOrder.getJsonOrder();
-                                        //  Log.d("JSON", json);
 
                                         Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
                                         intent.putExtra("type_id", order.getType_id());

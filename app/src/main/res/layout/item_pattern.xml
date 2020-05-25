@@ -17,40 +17,44 @@
 
         <ImageView
             android:id="@+id/edit"
-            android:layout_width="50dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#119CDA"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
+            android:layout_weight="1"
             android:src="@drawable/ic_edit_black_24dp" />
 
         <ImageView
             android:id="@+id/copy"
-            android:layout_width="50dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#752DF1"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
+            android:layout_weight="1"
             android:src="@drawable/ic_content_copy_black_24dp" />
 
         <ImageView
             android:id="@+id/create"
-            android:layout_width="50dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#18D120"
             android:clickable="true"
             android:focusable="true"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
+            android:layout_weight="1"
             android:src="@drawable/ic_note_add_black_24dp" />
 
         <ImageView
             android:id="@+id/delete"
-            android:layout_width="50dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#FF5534"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
+            android:layout_weight="1"
             android:src="@drawable/ic_delete_white_24dp" />
     </LinearLayout>
 
@@ -70,15 +74,16 @@
 
             <TextView
                 android:id="@+id/PattertName"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
                 android:fontFamily="sans-serif"
                 android:paddingEnd="20dp"
-                android:text="Сопроводительное письмо"
-                android:textColor="#222222"
-                android:textSize="15sp"
+                android:textAlignment="textStart"
+                android:textColor="#535353"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@+id/Data"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -90,7 +95,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
-                android:text="2012-05-15"
                 android:textColor="#535353"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -113,7 +117,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="sans-serif"
-                android:text="Заявка на исследование семян, почв, удобрений"
+                android:textAlignment="center"
                 android:textColor="#222222"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

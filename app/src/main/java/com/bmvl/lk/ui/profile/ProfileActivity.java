@@ -56,6 +56,8 @@ public class ProfileActivity extends AppCompatActivity {
         Email.setText(App.UserInfo.getEmail());
         Phone.setText(App.UserInfo.getPhone());
         Adress.setText(App.UserInfo.getAdress());
+//        Phone.setText("8 999 856 42 14");
+//        Adress.setText("ул. Есенина 22");
         inn.setText(App.UserInfo.getInn());
         bank_details.setText(App.UserInfo.getBank_details());
         Contract_number.setText(App.UserInfo.getContract_number());

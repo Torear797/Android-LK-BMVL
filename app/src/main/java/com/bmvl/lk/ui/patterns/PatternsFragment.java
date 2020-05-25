@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bmvl.lk.R;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.data.models.Pattern;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -22,11 +23,16 @@ import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class PatternsFragment extends Fragment implements OnBackPressedListener {
 
-  //  private static List<com.bmvl.lk.data.models.Orders> Orders = new ArrayList<>();
+    private static List<Pattern> Patterns = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -61,6 +67,12 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
      //   swipeRefreshLayout.setOnRefreshListener(MyRefresh);
         fab = MyView.findViewById(R.id.floatingActionButton);
         message = MyView.findViewById(R.id.empty_msg);
+        message.setVisibility(View.GONE);
+
+        Patterns.clear();
+        Patterns.add(new Pattern(0,"Шаблон 1","Заявка на исследование пищевых продуктов и кормов", new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date())));
+        Patterns.add(new Pattern(1,"Шаблон 2","Заявка на исследование семян, почв, удобрений", new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date())));
+        Patterns.add(new Pattern(2,"Шаблон 3","Сопроводительное письмо", new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date())));
 
         initRecyclerView();
         recyclerView.scrollToPosition(0);
@@ -241,7 +253,8 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
 //        };
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 10, (byte) 10));
         recyclerView.setHasFixedSize(true);
-        PatternAdapter = new PatternAdapter(getContext());
+
+        PatternAdapter = new PatternAdapter(getContext(), Patterns);
         (PatternAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(PatternAdapter);
     }

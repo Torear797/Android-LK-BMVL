@@ -83,7 +83,7 @@ public class CreateOrderActivity extends AppCompatActivity {
             Log.d("JSON", order.getJsonOrder());
             toolbar.setTitle(R.string.edit_order);
             final MaterialButton btn = findViewById(R.id.Create);
-            btn.setText("Сохранить");
+            btn.setText(R.string.save_text);
         }
         order_id = order.getType_id();
         if (pattern) order.setPattern((byte) 1);
@@ -245,13 +245,13 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     private boolean isFieldCorrect() {
         if (cbox.getVisibility() == View.VISIBLE && !cbox.isChecked()) {
-            Toast.makeText(getApplicationContext(), "Для сохранения заявки вы должны согласиться с условиям.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.accept_error, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         for (TreeMap.Entry<Short, ProbyRest> prob : order.getProby().entrySet()) {
             if (!prob.getValue().isResearchCorrect()) {
-                Toast.makeText(getApplicationContext(), "У образца должно быть заполено хотя бы одно исследование.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.research_error, Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
@@ -284,13 +284,13 @@ public class CreateOrderActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             if (response.body().getStatus() == 200) {
-                                Toast.makeText(view.getContext(), "Заказ успешно изменен!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(view.getContext(), R.string.order_isEdit, Toast.LENGTH_SHORT).show();
                                 CreateOrderActivity.this.finish();
                             }
                         } else {
                             view.setEnabled(true);
                             bar.setVisibility(View.GONE);
-                            Toast.makeText(view.getContext(), "Ошибка 1", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(view.getContext(), R.string.error, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -298,8 +298,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
                         view.setEnabled(true);
                         bar.setVisibility(View.GONE);
-                        Toast.makeText(view.getContext(), "Ошибка 2", Toast.LENGTH_SHORT).show();
-                        Log.d("Проблема в ", String.valueOf(t));
+                        Toast.makeText(view.getContext(), R.string.error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }

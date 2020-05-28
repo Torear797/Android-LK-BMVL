@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
@@ -21,7 +20,6 @@ import com.bmvl.lk.ViewHolders.MultiSpinerHolder;
 import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
-import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.Field;
 import com.bmvl.lk.ui.ProbyMenu.Probs.MultiSpinner;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
@@ -91,8 +89,8 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if(!String.valueOf(s).equals(""))
-                        CurrentSample.getFields().put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
+                        if (!String.valueOf(s).equals(""))
+                            CurrentSample.getFields().put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
                     }
 
                     @Override
@@ -165,12 +163,12 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
             case 6:
-                Adapter = new ResearhAdapter(inflater.getContext(), CurrentSample.getResearches(), Listener);
+                Adapter = new ResearhAdapter(inflater.getContext(), CurrentSample.getResearches());
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.setRecycledViewPool(viewPool);
 
-                if(buffer_id != null && buffer_sug != null) {
+                if (buffer_id != null && buffer_sug != null) {
                     UpdateAdapter(buffer_sug, buffer_id);
                     buffer_sug = null;
                     buffer_id = null;
@@ -196,16 +194,8 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private ResearhAdapter.OnResearchClickListener Listener = new ResearhAdapter.OnResearchClickListener() {
-
-        @Override
-        public void onUpdateResearch() {
-            Adapter.closeAllItems();
-        }
-    };
-
-    void UpdateAdapter(List<Suggestion> suggestions, int id){
-        if(Adapter != null) {
+    void UpdateAdapter(List<Suggestion> suggestions, int id) {
+        if (Adapter != null) {
             Adapter.UpdateIndicators(suggestions, id);
             Adapter.notifyDataSetChanged();
         } else {

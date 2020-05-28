@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Suggestion;
-import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.Field;
+import com.bmvl.lk.data.SpacesItemDecoration;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -33,23 +33,17 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     private TreeMap<Short, ResearchRest> researches; //Исследования
     private List<Field> ResearchFields = new ArrayList<>();
     private RecyclerView.RecycledViewPool viewPool;
-    private OnResearchClickListener onResearchClickListener;
 
     private ResearchFieldAdapter adapter;
     private static String[] Indicators;
     private static List<Suggestion> suggestions;
     private static short materialId;
 
-    public ResearhAdapter(Context context, TreeMap<Short, ResearchRest> ResearchesLise, OnResearchClickListener Listener) {
+    public ResearhAdapter(Context context, TreeMap<Short, ResearchRest> ResearchesLise) {
         this.inflater = LayoutInflater.from(context);
         viewPool = new RecyclerView.RecycledViewPool();
-        this.onResearchClickListener = Listener;
         researches = ResearchesLise;
         AddResearchFields();
-    }
-
-    public interface OnResearchClickListener {
-        void onUpdateResearch();
     }
 
     private void AddResearchFields() {
@@ -137,7 +131,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
                 @Override
                 public void onClick(View view) {
                     swipeLayout.close();
-                    onResearchClickListener.onUpdateResearch();
+                    closeAllItems();
                     TreeMap<Short, ResearchRest> insertlist = new TreeMap<>(researches);
                     insertlist.remove(getPositionKey(getLayoutPosition()));
                     updateList(insertlist);
@@ -154,7 +148,6 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
         }
     }
 
-
     public void insertdata(Map<Short, ResearchRest> insertList) {
         ResearchDiffUtilCallback diffUtilCallback = new ResearchDiffUtilCallback(researches, insertList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
@@ -169,5 +162,4 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
         researches.putAll(newList);
         diffResult.dispatchUpdatesTo(this);
     }
-
 }

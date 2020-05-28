@@ -1,11 +1,9 @@
 package com.bmvl.lk.ui.search;
 
 
-import android.app.Application;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,13 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.R;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.MenuActivity;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class SearchFragment extends Fragment implements OnBackPressedListener {
 

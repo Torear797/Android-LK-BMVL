@@ -344,5 +344,17 @@
     <string name="adres">Адрес</string>
     <string name="phone">Телефон</string>
     <string name="FIO">ФИО</string>
+    <string name="auth_error">Ошибка авторизации!</string>
+    <string name="notyfi_change_text">Уведомление прочтено!</string>
+    <string name="no_permisssion_write">Нет разрешения на запись файла!</string>
+    <string name="error_download">Ошибка скачивания!</string>
+    <string name="download_successfully">Документ успешно скачан!</string>
+    <string name="order_copy">Заявка скопирована!</string>
+    <string name="order_deleted">Заявка удалена!</string>
+    <string name="save_text">Сохранить</string>
+    <string name="order_isEdit">Заказ успешно изменен!</string>
+    <string name="error">Ошибка</string>
+    <string name="accept_error">Для сохранения заявки вы должны согласиться с условиям.</string>
+    <string name="research_error">У образца должно быть заполено хотя бы одно исследование.</string>
 
 </resources>

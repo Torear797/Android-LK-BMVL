@@ -49,7 +49,6 @@ import com.orhanobut.hawk.Hawk;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,7 +59,6 @@ import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 
 public class OrderFragment extends Fragment implements OnBackPressedListener {
     private static List<Orders> Orders = new ArrayList<>();
@@ -181,7 +179,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         OrderSwipeAdapter.OnOrderClickListener onClickListener = new OrderSwipeAdapter.OnOrderClickListener() {
             @Override
             public void onDeleteOrder(int id, final int position) {
-                OrderAdapter.closeAllItems();
                 NetworkService.getInstance()
                         .getJSONApi()
                         .DeleteOrder(App.UserAccessData.getToken(), id)
@@ -190,24 +187,24 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                             public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
                                 if (response.isSuccessful() && response.body() != null) {
                                     if (response.body().getStatus() == 200) {
-                                        // UpdateOrders();
                                         List<Orders> insertlist = new ArrayList<>(Orders);
                                         insertlist.remove(position);
                                         OrderAdapter.updateList(insertlist);
-                                        Snackbar.make(Objects.requireNonNull(getView()), "Заявка удалена!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        Hawk.put("OrdersList", Orders);
+                                        Snackbar.make(Objects.requireNonNull(getView()), R.string.order_deleted, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                     }
                                 }
                             }
 
                             @Override
                             public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
+                                Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
                             }
                         });
             }
 
             @Override
             public void onCopyOrder(final com.bmvl.lk.data.models.Orders order) {
-                OrderAdapter.closeAllItems();
                 NetworkService.getInstance()
                         .getJSONApi()
                         .CopyOrder(App.UserAccessData.getToken(), order.getId())
@@ -216,19 +213,18 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                             public void onResponse(@NonNull Call<AnswerCopyOrder> call, @NonNull Response<AnswerCopyOrder> response) {
                                 if (response.isSuccessful() && response.body() != null) {
                                     if (response.body().getStatus() == 200) {
-                                        // UpdateOrders();
                                         List<Orders> insertlist = new ArrayList<>();
-                                        Date currentDate = new Date();
-                                        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
-                                        insertlist.add(new Orders(response.body().getOrderId(), order.getUser_id(), order.getType_id(), order.getStatus_id(), dateFormat.format(currentDate)));
+                                        insertlist.add(new Orders(response.body().getOrderId(), order.getUser_id(), order.getType_id(), order.getStatus_id(), new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(new Date())));
                                         OrderAdapter.insertdata(insertlist, true);
-                                        Snackbar.make(Objects.requireNonNull(getView()), "Заявка скопирована!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        Hawk.put("OrdersList", Orders);
+                                        Snackbar.make(Objects.requireNonNull(getView()), R.string.order_copy, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                     }
                                 }
                             }
 
                             @Override
                             public void onFailure(@NonNull Call<AnswerCopyOrder> call, @NonNull Throwable t) {
+                                Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
                             }
                         });
             }
@@ -246,32 +242,25 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                     if (response.isSuccessful() && response.body() != null) {
                                         if (response.body().getStatus() == 200) {
                                             if (SavePhpWordFile(response.body().getDocx(), id))
-                                                Toast.makeText(getContext(), "Документ успешно скачан!", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getContext(), R.string.download_successfully, Toast.LENGTH_SHORT).show();
                                             else
-                                                Toast.makeText(getContext(), "Ошибка скачивания!", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getContext(), R.string.error_download, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(@NonNull Call<AnswerDownloadOrder> call, @NonNull Throwable t) {
+                                    Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
                                 }
                             });
                 } else
-                    Toast.makeText(getContext(), "Нет разрешения на запись файла!", Toast.LENGTH_SHORT).show();
-
-//                if(ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()),Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//                    SavePhpWordFile("");
-//                    Toast.makeText(getContext(), "Все ОК", Toast.LENGTH_SHORT).show();
-//                }
-//                else Toast.makeText(getContext(), "Нет разрешения на запись файла!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.no_permisssion_write, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onEditOrder(final com.bmvl.lk.data.models.Orders order) {
-                OrderAdapter.closeAllItems();
                 final SendOrder OpenOrder = new SendOrder(order.getType_id());
-
                 NetworkService.getInstance()
                         .getJSONApi()
                         .getOrderInfo(App.UserAccessData.getToken(), order.getId())
@@ -287,7 +276,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                         Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
                                         intent.putExtra("type_id", order.getType_id());
                                         intent.putExtra("isEdit", true);
-                                        if(order.getAct_of_selection() != null)
+                                        if (order.getAct_of_selection() != null)
                                             intent.putExtra("ACT", order.getAct_of_selection());
                                         intent.putExtra(SendOrder.class.getSimpleName(), OpenOrder);
                                         startActivity(intent);
@@ -298,10 +287,11 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
                             @Override
                             public void onFailure(@NonNull Call<AnswerOrderEdit> call, @NonNull Throwable t) {
-                                Toast.makeText(getContext(), getResources().getText(R.string.server_lost), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
                             }
                         });
             }
+
         };
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 10, (byte) 10));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -416,28 +406,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                         .setItems(R.array.order_types, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //     byte choce;
-//                                switch (which) {
-//                                    case 0:
-//                                        choce = 1;
-//                                        break;
-//                                    case 1:
-//                                        choce = 3;
-//                                        break;
-//                                    case 2:
-//                                        choce = 4;
-//                                        break;
-//                                    case 3:
-//                                        choce = 5;
-//                                        break;
-//                                    case 4:
-//                                        choce = 6;
-//                                        break;
-//                                    case 5:
-//                                        choce = 7;
-//                                        break;
-//                                }
-
                                 Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
                                 if (which == 0)
                                     intent.putExtra("type_id", 1);

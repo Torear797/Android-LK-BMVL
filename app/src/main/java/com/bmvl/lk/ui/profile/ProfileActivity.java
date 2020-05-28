@@ -91,7 +91,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
-                                Snackbar.make(view, "Ошибка доступа к Серверу!", Snackbar.LENGTH_LONG)
+                                Snackbar.make(view, getString(R.string.server_lost), Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
                             }
                         });

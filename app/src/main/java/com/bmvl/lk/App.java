@@ -40,7 +40,7 @@ public class App extends Application {
     }
 
     public void CreateSerchFields() {
-      //  SearchFragment.Fields.clear();
+        //  SearchFragment.Fields.clear();
         SearchFragment.Fields.add(new SearchField("", "Номер заявки", InputType.TYPE_CLASS_NUMBER));
         SearchFragment.Fields.add(new SearchField("", "Номер протокола", InputType.TYPE_CLASS_NUMBER));
 

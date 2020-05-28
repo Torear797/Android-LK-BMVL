@@ -15,7 +15,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // Hawk.deleteAll();
         Intent intent;
         if (isAuth())
             intent = new Intent(this, MenuActivity.class);
@@ -24,7 +23,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         startActivity(intent);
         finish();
-
     }
 
     private boolean isAuth() {

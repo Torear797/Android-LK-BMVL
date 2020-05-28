@@ -1,5 +1,6 @@
 package com.bmvl.lk.ui.login;
 
+import android.content.Context;
 import android.util.Log;
 import android.util.Patterns;
 
@@ -38,8 +39,7 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
-    public void login(String username, String password, String device_id) {
-
+    public void login(String username, String password, String device_id, final Context context) {
         NetworkService.getInstance()
                 .getJSONApi()
                 .getTestUser(username, password, device_id, true)
@@ -48,25 +48,26 @@ public class LoginViewModel extends ViewModel {
                     public void onResponse(@NonNull Call<UserAccess> call, @NonNull Response<UserAccess> response) {
                         if (response.isSuccessful()) {
                             //App.UserAccessData = response.body();
+                            assert response.body() != null;
                             if (response.body().getUser_id() != null)
-                                getUserInfo(response.body());
+                                getUserInfo(response.body(),context);
 
                             else { //Пользователь ввел не верный лог/пас
                                 loginResult.setValue(new LoginResult(response.body().getText()));
                                 // loginResult.setValue(new LoginResult("Не верный логин/пароль!"));
                             }
                         } else
-                            loginResult.setValue(new LoginResult("Ошибка авторизации!"));
+                            loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<UserAccess> call, @NonNull Throwable t) {
-                        loginResult.setValue(new LoginResult("Сервер не доступен!"));
+                        loginResult.setValue(new LoginResult(context.getString(R.string.server_lost)));
                     }
                 });
     }
 
-    private void getUserInfo(final UserAccess accessData) {
+    private void getUserInfo(final UserAccess accessData, final Context context) {
         NetworkService.getInstance()
                 .getJSONApi()
                 .getUserInfo(accessData.getToken())
@@ -78,12 +79,12 @@ public class LoginViewModel extends ViewModel {
                             assert response.body() != null;
                             getOriginalDocInfo(accessData, response.body().getUserInfo());
                         } else
-                            loginResult.setValue(new LoginResult("Ошибка авторизации!"));
+                            loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<UserInfoCall> call, @NonNull Throwable t) {
-                        loginResult.setValue(new LoginResult("Сервер не доступен!"));
+                        loginResult.setValue(new LoginResult(context.getString(R.string.server_lost)));
                     }
                 });
     }
@@ -97,7 +98,7 @@ public class LoginViewModel extends ViewModel {
                     public void onResponse(@NonNull Call<AnswerOrderNew> call, @NonNull Response<AnswerOrderNew> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             if (response.body().getStatus() == 200) {
-                               // final List<PairData> defaultFields = response.body().getDefaultFields();
+                                // final List<PairData> defaultFields = response.body().getDefaultFields();
                                 final Map<Short, String> defaultFields = response.body().getDefaultFields();
 
 //                                for (PairData entry : defaultFields) {
@@ -107,9 +108,9 @@ public class LoginViewModel extends ViewModel {
 //                                    }
 //                                }
 
-                                for(Map.Entry<Short, String> entry: defaultFields.entrySet()){
+                                for (Map.Entry<Short, String> entry : defaultFields.entrySet()) {
 
-                                    if(!entry.getValue().equals("")){
+                                    if (!entry.getValue().equals("")) {
                                         loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, UserInfo, new OrderInfo(entry.getKey(), entry.getValue()))));
                                         break;
                                     }
@@ -122,12 +123,11 @@ public class LoginViewModel extends ViewModel {
                     @Override
                     public void onFailure(@NonNull Call<AnswerOrderNew> call, @NonNull Throwable t) {
                         loginResult.setValue(new LoginResult("Сервер не доступен2!"));
-                        Log.d("MAX","MSG",t);
                     }
                 });
     }
 
-    public void loginDataChanged(String username, String password) {
+    void loginDataChanged(String username, String password) {
         if (!isUserNameValid(username)) {
             loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
         } else if (!isPasswordValid(password)) {

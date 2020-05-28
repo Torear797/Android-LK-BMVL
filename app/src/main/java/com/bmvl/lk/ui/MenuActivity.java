@@ -25,7 +25,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class MenuActivity extends AppCompatActivity {
-    private int CurrentPage = R.id.navigation_order;
+    private int CurrentPage;
 
     private MaterialToolbar MenuToolbar;
 
@@ -107,17 +107,12 @@ public class MenuActivity extends AppCompatActivity {
             finish();
         } else {
             setContentView(R.layout.activity_menu);
-
             MenuToolbar = findViewById(R.id.toolbar);
-            if (MenuToolbar != null) {
-                MenuToolbar.setTitle(R.string.order);
-                setSupportActionBar(MenuToolbar);
-            }
 
-            BottomNavigationView navigation = findViewById(R.id.nav_view);
+            final BottomNavigationView navigation = findViewById(R.id.nav_view);
             navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-            loadFragment(OrderFragment.newInstance());
+            navigation.setSelectedItemId(R.id.navigation_order);
+            setSupportActionBar(MenuToolbar);
         }
     }
 

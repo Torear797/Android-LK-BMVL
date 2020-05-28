@@ -1,6 +1,7 @@
 package com.bmvl.lk.ui.order;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +25,11 @@ import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.google.android.material.card.MaterialCardView;
 
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.SimpleViewHolder> {
     private static List<Orders> Orders;
@@ -63,13 +68,34 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         simpleViewHolder.Adres.setText(App.UserInfo.getAdress());
         simpleViewHolder.Person.setText(App.UserInfo.getFIO());
         simpleViewHolder.PersonStatus.setText(App.UserInfo.getPosition());
-        simpleViewHolder.Data.setText(String.valueOf(Order.getDate()));
+
+
+        try {
+            simpleViewHolder.Data.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(Order.getDate())));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //simpleViewHolder.Data.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date()));
 
         simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         simpleViewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
             @Override
             public void onOpen(SwipeLayout layout) {
                 YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.edit));
+            }
+        });
+
+        simpleViewHolder.Card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (simpleViewHolder.group.getVisibility() == View.VISIBLE) {
+                    simpleViewHolder.group.setVisibility(View.GONE);
+                    simpleViewHolder.btnLinear.setOrientation(LinearLayout.HORIZONTAL);
+                } else {
+                    simpleViewHolder.group.setVisibility(View.VISIBLE);
+                    simpleViewHolder.btnLinear.setOrientation(LinearLayout.VERTICAL);
+                }
             }
         });
 
@@ -96,9 +122,10 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         final SwipeLayout swipeLayout;
         final ImageView buttonDelete, buttonCopy, buttonOpen, buttonDownload;
 
-        final ConstraintLayout content;
-        final MaterialCardView Card;
-        final LinearLayout btnLinear;
+        //final ConstraintLayout content;
+         Group group;
+         MaterialCardView Card;
+         LinearLayout btnLinear;
 
         SimpleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -110,7 +137,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
             PersonStatus = itemView.findViewById(R.id.person_status);
             Data = itemView.findViewById(R.id.Data);
 
-            content =  itemView.findViewById(R.id.Content);
+            group = itemView.findViewById(R.id.MyGroup);
             swipeLayout = itemView.findViewById(R.id.swipe);
             Card = itemView.findViewById(R.id.Card);
             btnLinear = itemView.findViewById(R.id.bottom_wrapper);
@@ -120,31 +147,31 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
             buttonOpen = itemView.findViewById(R.id.edit);
             buttonDownload = itemView.findViewById(R.id.download);
 
-            Card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                   if(content.getVisibility() == View.VISIBLE) {
-                       content.setVisibility(View.GONE);
-                       btnLinear.setOrientation(LinearLayout.HORIZONTAL);
-                   }
-                   else {
-                       content.setVisibility(View.VISIBLE);
-                       btnLinear.setOrientation(LinearLayout.VERTICAL);
-                   }
-                }
-            });
-
             buttonOpen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    closeAllItems();
                     onOrderClickListener.onEditOrder(Orders.get(getLayoutPosition()));
                 }
             });
 
+//            Card.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (group.getVisibility() == View.VISIBLE) {
+//                        group.setVisibility(View.GONE);
+//                        btnLinear.setOrientation(LinearLayout.HORIZONTAL);
+//                    } else {
+//                        group.setVisibility(View.VISIBLE);
+//                        btnLinear.setOrientation(LinearLayout.VERTICAL);
+//                    }
+//                }
+//            });
 
             buttonCopy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    closeAllItems();
                     swipeLayout.close();
                     onOrderClickListener.onCopyOrder(Orders.get(getLayoutPosition()));
                 }
@@ -153,6 +180,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    closeAllItems();
                     swipeLayout.close();
                     onOrderClickListener.onDeleteOrder(Orders.get(getLayoutPosition()).getId(), getLayoutPosition());
                 }
@@ -161,6 +189,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
             buttonDownload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    closeAllItems();
                     swipeLayout.close();
                     onOrderClickListener.onDownloadOrder(Orders.get(getLayoutPosition()).getId());
                 }

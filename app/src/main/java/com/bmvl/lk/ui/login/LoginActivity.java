@@ -21,8 +21,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bmvl.lk.App;
-import com.bmvl.lk.ui.MenuActivity;
 import com.bmvl.lk.R;
+import com.bmvl.lk.ui.MenuActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.orhanobut.hawk.Hawk;
 
@@ -75,9 +75,6 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.Create);
 
-       // Hawk.deleteAll();
-
-
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
             public void onChanged(@Nullable LoginFormState loginFormState) {        //Меняем состояние кнопки
@@ -112,8 +109,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 if (loginResult.getSuccess() != null) {
-                     updateUiWithUser(loginResult.getSuccess());
-                  //  updateUiWithUser();
+                    updateUiWithUser(loginResult.getSuccess());
+                    //  updateUiWithUser();
                 }
                 setResult(Activity.RESULT_OK);
 
@@ -148,7 +145,7 @@ public class LoginActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString(), ANDROID_ID);
+                            passwordEditText.getText().toString(), ANDROID_ID,getApplicationContext());
                 }
                 return false;
             }
@@ -158,7 +155,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(), passwordEditText.getText().toString(), ANDROID_ID);
+                loginViewModel.login(usernameEditText.getText().toString(), passwordEditText.getText().toString(), ANDROID_ID,getApplicationContext());
             }
         });
     }
@@ -169,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
         Hawk.put("OrderInfo", User.getOrderInfo());
 
 
-        App.setUserData(User.getAccessData(), User.getUserInfo(),User.getOrderInfo());
+        App.setUserData(User.getAccessData(), User.getUserInfo(), User.getOrderInfo());
 
         AccessIsObtained();
     }
@@ -184,10 +181,10 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private void EnebledForm(boolean flag, Button loginButton, EditText passwordEditText, EditText usernameEditText, ProgressBar loadingProgressBar){
+    private void EnebledForm(boolean flag, Button loginButton, EditText passwordEditText, EditText usernameEditText, ProgressBar loadingProgressBar) {
         loginButton.setEnabled(flag);
         passwordEditText.setEnabled(flag);
         usernameEditText.setEnabled(flag);
-        if(!flag) loadingProgressBar.setVisibility(View.GONE);
+        if (!flag) loadingProgressBar.setVisibility(View.GONE);
     }
 }

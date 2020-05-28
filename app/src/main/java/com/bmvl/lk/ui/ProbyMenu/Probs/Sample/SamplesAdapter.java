@@ -18,9 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Suggestion;
+import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
-import com.bmvl.lk.data.Field;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -36,20 +36,14 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     private TreeMap<Short, SamplesRest> Samples; //Образцы
     private List<Field> SamplesField; //Поля образцов
     private RecyclerView.RecycledViewPool viewPool;
-    private OnSamplesClickListener onSamplesClickListener;
 
     private SamplesFieldAdapter adapter;
 
-    public SamplesAdapter(Context context, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList, OnSamplesClickListener Listener) {
+    public SamplesAdapter(Context context, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList) {
         this.inflater = LayoutInflater.from(context);
         SamplesField = Samples;
         this.Samples = SamplesList;
-        this.onSamplesClickListener = Listener;
         viewPool = new RecyclerView.RecycledViewPool();
-    }
-
-    public interface OnSamplesClickListener {
-        void onUpdateSamples();
     }
 
     @NonNull
@@ -141,7 +135,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
                 @Override
                 public void onClick(View view) {
                     swipeLayout.close();
-                    onSamplesClickListener.onUpdateSamples();
+                    closeAllItems();
                     TreeMap<Short, SamplesRest> insertlist = new TreeMap<>(Samples);
                     insertlist.remove(getPositionKey(getLayoutPosition()));
                     updateList(insertlist);
@@ -152,7 +146,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
                 @Override
                 public void onClick(View view) {
                     swipeLayout.close();
-                    onSamplesClickListener.onUpdateSamples();
+                    closeAllItems();
                     TreeMap<Short, SamplesRest> insertlist = new TreeMap<>();
                     short newid = getPositionKey(Samples.size() - 1);
                     SamplesRest insertSample = new SamplesRest(newid);

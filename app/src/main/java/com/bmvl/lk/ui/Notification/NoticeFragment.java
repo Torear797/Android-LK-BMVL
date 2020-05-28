@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -83,11 +84,10 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
         else UpdateNotify();
     }
 
-    public void initRecyclerView() {
+    private void initRecyclerView() {
         NotifiSwipeAdapter.OnNotifyClickListener onClickListener = new NotifiSwipeAdapter.OnNotifyClickListener() {
             @Override
             public void onNotifyClick(final int pos, final int id) {
-                NotifiAdapter.closeAllItems();
                 NotifiAdapter.notifyItemChanged(pos);
                 NetworkService.getInstance()
                         .getJSONApi()
@@ -97,13 +97,16 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
                             public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
                                 if (response.isSuccessful() && response.body() != null) {
 
-                                    if (response.body().getStatus() == 200)
-                                        Snackbar.make(Objects.requireNonNull(getView()), "Уведомление прочтено!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                    if (response.body().getStatus() == 200) {
+                                        Hawk.put("NotifyList", Notifi);
+                                        Snackbar.make(Objects.requireNonNull(getView()), R.string.notyfi_change_text, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                    }
                                 }
                             }
 
                             @Override
                             public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
+                                Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
                             }
                         });
             }
@@ -141,6 +144,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
                     @Override
                     public void onResponse(@NonNull Call<NotificationsAnswer> call, @NonNull Response<NotificationsAnswer> response) {
                         if (response.isSuccessful()) {
+                            assert response.body() != null;
                             TotalPage = response.body().getNotifications().getTotal_pages();
                             CurrentPage = response.body().getNotifications().getCurrent();
                             NewList.addAll(response.body().getNotifications().getNotifications());

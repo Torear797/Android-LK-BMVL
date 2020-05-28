@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.App;
@@ -24,7 +23,6 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.AnswerIndicators;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.ProbyRest;
-import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.ViewHolders.MultiSpinerHolder;
 import com.bmvl.lk.ViewHolders.SamplesPanelHolder;
@@ -32,10 +30,9 @@ import com.bmvl.lk.ViewHolders.SelectButtonHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
-import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.bmvl.lk.data.Field;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
+import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -253,7 +250,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 break;
             } //Мультиспинер
             case 7: {
-                SamAdapter = new SamplesAdapter(inflater.getContext(), SampleFields, CurrentProb.getSamples(), SamListener);
+                SamAdapter = new SamplesAdapter(inflater.getContext(), SampleFields, CurrentProb.getSamples());
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
                 ((SamplesPanelHolder) holder).SampleList.setRecycledViewPool(viewPool);
@@ -279,14 +276,6 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             } // Иссследования
         }
     }
-
-    private SamplesAdapter.OnSamplesClickListener SamListener = new SamplesAdapter.OnSamplesClickListener() {
-
-        @Override
-        public void onUpdateSamples() {
-            SamAdapter.closeAllItems();
-        }
-    };
 
     private Short getPositionKey(int position, Map<Short, SamplesRest> Samples) {
         if (Samples.size() > 0)

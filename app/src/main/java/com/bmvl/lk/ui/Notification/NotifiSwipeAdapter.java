@@ -20,7 +20,10 @@ import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleViewHolder> {
@@ -50,7 +53,13 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
     public void onBindViewHolder(@NonNull NotifiSwipeAdapter.SimpleViewHolder simpleViewHolder, int i) {
 
         final Notifications notifi = Notifi.get(i);
-        simpleViewHolder.Data.setText(notifi.getDate());
+        //simpleViewHolder.Data.setText(notifi.getDate());
+        try {
+            simpleViewHolder.Data.setText(new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(notifi.getDate())));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         simpleViewHolder.Event.setText(notifi.getEvent());
 
         simpleViewHolder.Order.setText(notifi.getOrder_type());
@@ -60,6 +69,7 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
             simpleViewHolder.Data.setTextColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
             simpleViewHolder.Event.setTextColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
             simpleViewHolder.Order.setTextColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
+            simpleViewHolder.swipeLayout.setSwipeEnabled(false);
         } else
             {
                 simpleViewHolder.status.setImageResource(R.drawable.ic_new_notifi);
@@ -124,7 +134,8 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
             buttonRead.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Notifications Notify = Notifi.get(getLayoutPosition());
+                 final Notifications Notify = Notifi.get(getLayoutPosition());
+                    closeAllItems();
                     swipeLayout.close();
                     if(Notify.getStatus() == 1) {
                         Notify.setStatus(0);

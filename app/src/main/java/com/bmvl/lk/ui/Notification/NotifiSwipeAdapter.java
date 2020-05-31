@@ -42,6 +42,12 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
         void onNotifyClick(int position, int id);
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+
     @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

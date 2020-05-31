@@ -80,6 +80,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
     @Override
     public void onResume() {
         super.onResume();
+        if(App.isOnline(Objects.requireNonNull(getContext())))
         if (Notifi.size() == 0) InsertNotifications(Notifi, (byte) 0);
         else UpdateNotify();
     }

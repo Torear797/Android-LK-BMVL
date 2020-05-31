@@ -1,19 +1,26 @@
 package com.bmvl.lk.ui.ProbyMenu.Probs;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bmvl.lk.App;
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.data.OnBackPressedListener;
@@ -23,12 +30,22 @@ import com.bmvl.lk.data.Field;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.button.MaterialButton;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProbsFragment extends Fragment implements OnBackPressedListener {
     private List<Field> ProbFields = new ArrayList<>(); //Поля пробы
@@ -112,8 +129,8 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
     @Override
     public void onResume() {
         super.onResume();
-        if(adapter!= null)
-        adapter.notifyDataSetChanged();
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
     }
 
     private void NewProbListener(final MaterialButton AddProbBtn, final ProbAdapter adapter, final RecyclerView recyclerView) {
@@ -307,8 +324,26 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
                 }
 
                 @Override
-                public void onCopyProb() {
-                    Toast.makeText(getContext(), "Копирование пробы", Toast.LENGTH_SHORT).show();
+                public void onDownloadProtocol(String adres, final short id) {
+                    NetworkService.getInstance()
+                            .getJSONApi()
+                            .DownloadProtocol(App.UserAccessData.getToken())
+                            .enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                                    if (response.isSuccessful() && response.body() != null) {
+                                        if (writeResponseBodyToDisk(response.body(), id)) {
+                                            Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                                        } else
+                                            Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                                    Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 }
             };
 
@@ -336,6 +371,55 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
             adapter = new ProbAdapter(getContext(), ProbFields, SampleFields, onClickListener);
             (adapter).setMode(Attributes.Mode.Single);
             return null;
+        }
+
+        private boolean writeResponseBodyToDisk(ResponseBody body, short id) {
+            try {
+                File futureStudioIconFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "Protocol_" + id + ".pdf");
+
+                InputStream inputStream = null;
+                OutputStream outputStream = null;
+
+                try {
+                    byte[] fileReader = new byte[4096];
+
+                    long fileSize = body.contentLength();
+                    long fileSizeDownloaded = 0;
+
+                    inputStream = body.byteStream();
+                    outputStream = new FileOutputStream(futureStudioIconFile);
+
+                    while (true) {
+                        int read = inputStream.read(fileReader);
+
+                        if (read == -1) {
+                            break;
+                        }
+
+                        outputStream.write(fileReader, 0, read);
+
+                        fileSizeDownloaded += read;
+
+                        //  Log.d("File Download: " , fileSizeDownloaded + " of " + fileSize);
+                    }
+
+                    outputStream.flush();
+
+                    return true;
+                } catch (IOException e) {
+                    return false;
+                } finally {
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+
+                    if (outputStream != null) {
+                        outputStream.close();
+                    }
+                }
+            } catch (IOException e) {
+                return false;
+            }
         }
 
         @Override

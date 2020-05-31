@@ -25,24 +25,6 @@ public class Orders {
         this.date = date;
     }
 
-    public Orders(int id, String id1c, int user_id, byte type_id, int status_id, String number, String ecp, String date, String note, String ecp_note, double price, int deleted, int from1c, int send_to_1c, String act_of_selection) {
-        this.id = id;
-        this.id1c = id1c;
-        this.user_id = user_id;
-        this.type_id = type_id;
-        this.status_id = status_id;
-        this.number = number;
-        this.ecp = ecp;
-        this.date = date;
-        this.note = note;
-        this.ecp_note = ecp_note;
-        this.price = price;
-        this.deleted = deleted;
-        this.from1c = from1c;
-        this.send_to_1c = send_to_1c;
-        this.act_of_selection = act_of_selection;
-    }
-
     public int getId() {
         return id;
     }

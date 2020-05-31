@@ -31,15 +31,20 @@ import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.data.models.Orders;
 import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
+import com.bmvl.lk.ui.order.OrderFragment;
+import com.bmvl.lk.ui.order.OrderSwipeAdapter;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.orhanobut.hawk.Hawk;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
@@ -59,6 +64,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     public static FieldsAdapter adapter;
     private static String act_of_selection;
     private FrameLayout Frame;
+    private byte status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +78,8 @@ public class CreateOrderActivity extends AppCompatActivity {
         Frame = findViewById(R.id.Menu_proby_fragment);
         bar = findViewById(R.id.ProgressBar);
 
+        status = getIntent().getByteExtra("status", (byte) 0);
+        Log.d("STATUS"," " + status);
         final boolean pattern = getIntent().getBooleanExtra("Pattern", false);
         Edit = getIntent().getBooleanExtra("isEdit", false);
         if (!Edit) {
@@ -235,7 +243,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Fields.clear();
+                ClearDate();
                 this.finish();
                 return true;
             default:
@@ -249,6 +257,7 @@ public class CreateOrderActivity extends AppCompatActivity {
             return false;
         }
 
+        if(order.getProby() != null)
         for (TreeMap.Entry<Short, ProbyRest> prob : order.getProby().entrySet()) {
             if (!prob.getValue().isResearchCorrect()) {
                 Toast.makeText(getApplicationContext(), R.string.research_error, Toast.LENGTH_SHORT).show();
@@ -263,6 +272,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         if (isFieldCorrect()) {
             view.setEnabled(false);
             bar.setVisibility(View.VISIBLE);
+            if(order.getProby() != null)
             DeleteEmptyFields();
             if (!Edit)
                 SendOrder(view);
@@ -276,31 +286,40 @@ public class CreateOrderActivity extends AppCompatActivity {
         //   Hawk.put("obraz",json);
         Log.d("JSON", order.getJsonOrder());
 
-        NetworkService.getInstance()
-                .getJSONApi()
-                .SaveOrder(App.UserAccessData.getToken(), order.getJsonOrder())
-                .enqueue(new Callback<StandardAnswer>() {
-                    @Override
-                    public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            if (response.body().getStatus() == 200) {
-                                Toast.makeText(view.getContext(), R.string.order_isEdit, Toast.LENGTH_SHORT).show();
-                                CreateOrderActivity.this.finish();
+        if(status!= 11) {
+            NetworkService.getInstance()
+                    .getJSONApi()
+                    .SaveOrder(App.UserAccessData.getToken(), order.getJsonOrder())
+                    .enqueue(new Callback<StandardAnswer>() {
+                        @Override
+                        public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                if (response.body().getStatus() == 200) {
+                                    Toast.makeText(view.getContext(), R.string.order_isEdit, Toast.LENGTH_SHORT).show();
+                                    ClearDate();
+                                    CreateOrderActivity.this.finish();
+                                }
+                            } else {
+                                view.setEnabled(true);
+                                bar.setVisibility(View.GONE);
+                                Toast.makeText(view.getContext(), R.string.error, Toast.LENGTH_SHORT).show();
                             }
-                        } else {
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
                             view.setEnabled(true);
                             bar.setVisibility(View.GONE);
                             Toast.makeText(view.getContext(), R.string.error, Toast.LENGTH_SHORT).show();
                         }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
-                        view.setEnabled(true);
-                        bar.setVisibility(View.GONE);
-                        Toast.makeText(view.getContext(), R.string.error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    });
+        } else {
+            Toast.makeText(view.getContext(), R.string.order_isEdit, Toast.LENGTH_SHORT).show();
+            OrderFragment.offlineOrders.put((short)order.getId(), order);
+            Hawk.put("OfflineOrders", OrderFragment.offlineOrders);
+            ClearDate();
+            CreateOrderActivity.this.finish();
+        }
     }
 
     private String getBasisString() {
@@ -349,40 +368,67 @@ public class CreateOrderActivity extends AppCompatActivity {
             order.DeleteProb();
         }
     }
+    private void ClearDate(){
+        Fields.clear();
+        order = null;
+    }
 
     private void SendOrder(final View view) {
-        // String json = Hawk.get("obraz");
         Log.d("JSON", order.getJsonOrder());
 
         //   view.setEnabled(true);
         //  bar.setVisibility(View.GONE);
 
-        NetworkService.getInstance()
-                .getJSONApi()
-                .sendOrder(App.UserAccessData.getToken(), order.getJsonOrder())
-                .enqueue(new Callback<AnswerSendOrder>() {
-                    @Override
-                    public void onResponse(@NonNull Call<AnswerSendOrder> call, @NonNull Response<AnswerSendOrder> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            if (response.body().getStatus() == 200) {
-                                Toast.makeText(view.getContext(), "Заказ успешно создан!", Toast.LENGTH_SHORT).show();
-                                CreateOrderActivity.this.finish();
+        if(App.isOnline(getApplicationContext())) {
+            NetworkService.getInstance()
+                    .getJSONApi()
+                    .sendOrder(App.UserAccessData.getToken(), order.getJsonOrder())
+                    .enqueue(new Callback<AnswerSendOrder>() {
+                        @Override
+                        public void onResponse(@NonNull Call<AnswerSendOrder> call, @NonNull Response<AnswerSendOrder> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                if (response.body().getStatus() == 200) {
+                                    Toast.makeText(view.getContext(), "Заказ успешно создан!", Toast.LENGTH_SHORT).show();
+                                    ClearDate();
+                                    CreateOrderActivity.this.finish();
+                                }
+                            } else {
+                                view.setEnabled(true);
+                                bar.setVisibility(View.GONE);
+                               // Toast.makeText(view.getContext(), "Ошибка 1", Toast.LENGTH_SHORT).show();
                             }
-                        } else {
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<AnswerSendOrder> call, @NonNull Throwable t) {
                             view.setEnabled(true);
                             bar.setVisibility(View.GONE);
-                            Toast.makeText(view.getContext(), "Ошибка 1", Toast.LENGTH_SHORT).show();
                         }
-                    }
+                    });
+        } else {
+            //OrderFragment.offlineOrders.add(order);
+           // Hawk.put("offlineOrders",);
+            final short newid = getPositionKey(OrderFragment.offlineOrders.size() - 1, OrderFragment.offlineOrders);
+            order.setId(newid + 1);
+            OrderFragment.offlineOrders.put((short) (newid + 1), order);
+          // OrderFragment.Orders.add(0, new Orders((short) (newid + 1),0,order_id,11,""));
 
-                    @Override
-                    public void onFailure(@NonNull Call<AnswerSendOrder> call, @NonNull Throwable t) {
-                        view.setEnabled(true);
-                        bar.setVisibility(View.GONE);
-                        Toast.makeText(view.getContext(), "Ошибка 2", Toast.LENGTH_SHORT).show();
-                        Log.d("Проблема в ", String.valueOf(t));
-                    }
-                });
+            List<Orders> insertList = new ArrayList<>();
+            insertList.add(new Orders(newid + 1,0,order_id,11, new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date())));
+            OrderFragment.OrderAdapter.insertdata(insertList,true);
+
+            Hawk.put("OfflineOrders", OrderFragment.offlineOrders);
+            Hawk.put("OrdersList", OrderFragment.Orders);
+
+            Toast.makeText(view.getContext(), "Заказ успешно создан (offline)", Toast.LENGTH_SHORT).show();
+            ClearDate();
+            CreateOrderActivity.this.finish();
+        }
+    }
+    private Short getPositionKey(int position, Map<Short, SendOrder> offlineOrders) {
+        if (offlineOrders.size() > 0)
+            return new ArrayList<>(offlineOrders.keySet()).get(position);
+        else return 0;
     }
 
     private class MyTask extends AsyncTask<Void, Void, GridLayoutManager> {

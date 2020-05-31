@@ -297,6 +297,7 @@
         <item>Протокол скачен</item>
         <item>Оплачен и протокол скачан</item>
         <item>Подписано</item>
+        <item>Offline</item>
     </string-array>
 
     <string-array name="sort_types">
@@ -307,7 +308,7 @@
 
     <string-array name="brob_menu_titles">
         <item>Пробы</item>
-        <item>Происхождение</item>
+        <item>Основание</item>
         <item>Партия</item>
         <item>Инфо</item>
     </string-array>

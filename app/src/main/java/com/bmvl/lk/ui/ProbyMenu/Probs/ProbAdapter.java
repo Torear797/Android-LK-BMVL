@@ -26,6 +26,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHolder> {
     private static Map<Short, ProbyRest> Probs; //Пробы
@@ -49,7 +50,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     public interface OnProbClickListener {
         void onDeletedProb(short id);
 
-        void onCopyProb();
+        void onDownloadProtocol(String adres, short id);
     }
 
     @NonNull
@@ -66,6 +67,9 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         initRecyclerView(simpleViewHolder, CurrentProb);
 
         simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", i + 1));
+
+        if(CurrentProb.getProtocol() != null)
+            simpleViewHolder.btnDownload.setVisibility(View.VISIBLE);
 
         String nameMaterial = "Молоко сырое";
         assert CurrentProb != null;
@@ -109,7 +113,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         final ConstraintLayout head;
         final TextView NameProb, infoProb;
         final SwipeLayout swipeLayout;
-        final ImageView buttonDelete, buttonCopy;
+        final ImageView buttonDelete, buttonCopy, btnDownload;
         final RecyclerView ProbList;
 
         SimpleViewHolder(@NonNull View itemView) {
@@ -122,6 +126,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
             swipeLayout = itemView.findViewById(R.id.swipe);
             buttonDelete = itemView.findViewById(R.id.trash);
             buttonCopy = itemView.findViewById(R.id.create);
+            btnDownload = itemView.findViewById(R.id.download);
 
             head.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -139,18 +144,21 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
                 @Override
                 public void onClick(View view) {
                     swipeLayout.close();
+                    closeAllItems();
                     OnProbClickListener.onDeletedProb(getPositionKey(getLayoutPosition()));
                 }
             });
 
-//            buttonCopy.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    OnProbClickListener.onCopyProb();
-//                }
-//            });
-            buttonCopy.setVisibility(View.GONE);
+            btnDownload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    swipeLayout.close();
+                    closeAllItems();
+                    OnProbClickListener.onDownloadProtocol(Objects.requireNonNull(Probs.get(getPositionKey(getLayoutPosition()))).getProtocol(), Objects.requireNonNull(Probs.get(getPositionKey(getLayoutPosition()))).getId());
+                }
+            });
 
+            buttonCopy.setVisibility(View.GONE);
 
             ProbList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
             ProbList.setItemAnimator(new DefaultItemAnimator());

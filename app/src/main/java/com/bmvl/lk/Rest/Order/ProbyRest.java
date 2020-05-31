@@ -22,6 +22,10 @@ public class ProbyRest implements Serializable {
     @Expose
     private TreeMap<Short, SamplesRest> samples = new TreeMap<>();
 
+    @SerializedName("protocol")
+    @Expose
+    private String protocol;
+
     public void addSample(Short key, SamplesRest newSample) {
         this.samples.put(key, newSample);
     }
@@ -74,5 +78,9 @@ public class ProbyRest implements Serializable {
 
     private Short getPositionKeyR(int i, int j) {
         return new ArrayList<Short>(samples.get(getPositionKey(i)).getResearches().keySet()).get(j);
+    }
+
+    public String getProtocol() {
+        return protocol;
     }
 }

@@ -50,7 +50,6 @@ public class SendOrder implements Serializable{
         this.proby = null;
     }
 
-
     public SendOrder(byte type_id) {
         this.type_id = type_id;
 

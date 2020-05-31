@@ -37,6 +37,8 @@ class OrdersDiffUtilCallback extends DiffUtil.Callback {
         Orders oldProduct = oldList.get(oldItemPosition);
         Orders newProduct = newList.get(newItemPosition);
         return oldProduct.getDate().equals(newProduct.getDate())
-                && oldProduct.getType_id() == newProduct.getType_id();
+                && oldProduct.getType_id() == newProduct.getType_id()
+                && oldProduct.getStatus_id() == newProduct.getStatus_id()
+                && oldProduct.getUser_id() == newProduct.getUser_id();
     }
 }

@@ -6,6 +6,7 @@ import com.bmvl.lk.Rest.Order.OrdersAnswer;
 import com.bmvl.lk.Rest.UserInfo.UserAccess;
 import com.bmvl.lk.Rest.UserInfo.UserInfoCall;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -96,4 +97,8 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("orders/save")
     Call<StandardAnswer> SaveOrder(@Field("token") String token, @Field("order") String order);
+
+    @FormUrlEncoded
+    @POST("orders/save")
+    Call<ResponseBody> DownloadProtocol(@Field("token") String token);
 }

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,9 @@ import com.bmvl.lk.Rest.AnswerCopyOrder;
 import com.bmvl.lk.Rest.AnswerDownloadOrder;
 import com.bmvl.lk.Rest.AnswerOrderEdit;
 import com.bmvl.lk.Rest.NetworkService;
+import com.bmvl.lk.Rest.Order.AnswerSendOrder;
 import com.bmvl.lk.Rest.Order.OrdersAnswer;
+import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.data.OnBackPressedListener;
@@ -52,20 +55,24 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.TreeMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OrderFragment extends Fragment implements OnBackPressedListener {
-    private static List<Orders> Orders = new ArrayList<>();
+    public static List<Orders> Orders = new ArrayList<>();
+    public static TreeMap<Short, SendOrder> offlineOrders = new TreeMap<>();
+    //public static List<SendOrder> offlineOrders = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private OrderSwipeAdapter OrderAdapter;
+    public static OrderSwipeAdapter OrderAdapter;
     private FloatingActionButton fab;
 
     private boolean loading = true;
@@ -81,13 +88,40 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
     @Override
     public void onResume() {
         super.onResume();
+        if(App.isOnline(Objects.requireNonNull(getContext())))
         if (Orders.size() == 0) LoadOrders(Orders, (byte) 0);
         else UpdateOrders();
+
+//        if(App.isOnline(Objects.requireNonNull(getContext())) && offlineOrders.size() > 0){
+//            SynchronizationOrders();
+//        }
     }
 
     public OrderFragment() {
     }
 
+    private void SynchronizationOrders(){
+        for(int i = 0; i< offlineOrders.size();i++){
+            NetworkService.getInstance()
+                    .getJSONApi()
+                    .sendOrder(App.UserAccessData.getToken(), offlineOrders.get(i).getJsonOrder())
+                    .enqueue(new Callback<AnswerSendOrder>() {
+                        @Override
+                        public void onResponse(@NonNull Call<AnswerSendOrder> call, @NonNull Response<AnswerSendOrder> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                if (response.body().getStatus() == 200) {
+                                    Toast.makeText(getContext(), "Заявки успешно синхронизированы!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<AnswerSendOrder> call, @NonNull Throwable t) {
+                        }
+                    });
+        }
+        offlineOrders.clear();
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +136,11 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.fragment_order, container, false);
         if (Hawk.contains("OrdersList")) Orders = Hawk.get("OrdersList");
+        if (Hawk.contains("OfflineOrders")) offlineOrders = new TreeMap<Short, SendOrder>((HashMap<Short, SendOrder>) Hawk.get("OfflineOrders"));
+
+        //TreeMap<Short, SendOrder> results = new TreeMap<Short, SendOrder>((HashMap<Short, SendOrder>) Hawk.get("OfflineOrders"));
+
+        //TreeMap<Long, Long> results = new TreeMap<Long, Long>((HashMap<Long, Long>) getIntent().getSerializableExtra("results"));
 
         recyclerView = MyView.findViewById(R.id.list);
         swipeRefreshLayout = MyView.findViewById(R.id.SwipeRefreshLayout);
@@ -178,29 +217,39 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
     private void initRecyclerView() {
         OrderSwipeAdapter.OnOrderClickListener onClickListener = new OrderSwipeAdapter.OnOrderClickListener() {
             @Override
-            public void onDeleteOrder(int id, final int position) {
-                NetworkService.getInstance()
-                        .getJSONApi()
-                        .DeleteOrder(App.UserAccessData.getToken(), id)
-                        .enqueue(new Callback<StandardAnswer>() {
-                            @Override
-                            public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
-                                if (response.isSuccessful() && response.body() != null) {
-                                    if (response.body().getStatus() == 200) {
-                                        List<Orders> insertlist = new ArrayList<>(Orders);
-                                        insertlist.remove(position);
-                                        OrderAdapter.updateList(insertlist);
-                                        Hawk.put("OrdersList", Orders);
-                                        Snackbar.make(Objects.requireNonNull(getView()), R.string.order_deleted, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            public void onDeleteOrder(int id, final int position, int status) {
+                if(status != 11) {
+                    NetworkService.getInstance()
+                            .getJSONApi()
+                            .DeleteOrder(App.UserAccessData.getToken(), id)
+                            .enqueue(new Callback<StandardAnswer>() {
+                                @Override
+                                public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
+                                    if (response.isSuccessful() && response.body() != null) {
+                                        if (response.body().getStatus() == 200) {
+                                            List<Orders> insertlist = new ArrayList<>(Orders);
+                                            insertlist.remove(position);
+                                            OrderAdapter.updateList(insertlist);
+                                            Hawk.put("OrdersList", Orders);
+                                            Snackbar.make(Objects.requireNonNull(getView()), R.string.order_deleted, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        }
                                     }
                                 }
-                            }
 
-                            @Override
-                            public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
-                                Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                                @Override
+                                public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
+                                    Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } else {
+                    List<Orders> insertlist = new ArrayList<>(Orders);
+                    insertlist.remove(position);
+                    OrderAdapter.updateList(insertlist);
+                    offlineOrders.remove((short)id);
+                    Hawk.put("OfflineOrders", OrderFragment.offlineOrders);
+                    Hawk.put("OrdersList", OrderFragment.Orders);
+                    Snackbar.make(Objects.requireNonNull(getView()), R.string.order_deleted, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                }
             }
 
             @Override
@@ -260,36 +309,45 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
             @Override
             public void onEditOrder(final com.bmvl.lk.data.models.Orders order) {
-                final SendOrder OpenOrder = new SendOrder(order.getType_id());
-                NetworkService.getInstance()
-                        .getJSONApi()
-                        .getOrderInfo(App.UserAccessData.getToken(), order.getId())
-                        .enqueue(new Callback<AnswerOrderEdit>() {
-                            @Override
-                            public void onResponse(@NonNull Call<AnswerOrderEdit> call, @NonNull Response<AnswerOrderEdit> response) {
-                                if (response.isSuccessful() && response.body() != null) {
-                                    if (response.body().getStatus() == 200) {
-                                        OpenOrder.setId(order.getId());
-                                        OpenOrder.setFields(response.body().getOrderFields());
-                                        OpenOrder.setProby(response.body().getProby());
+                if(order.getStatus_id() != 11) {
+                    final SendOrder OpenOrder = new SendOrder(order.getType_id());
+                    NetworkService.getInstance()
+                            .getJSONApi()
+                            .getOrderInfo(App.UserAccessData.getToken(), order.getId())
+                            .enqueue(new Callback<AnswerOrderEdit>() {
+                                @Override
+                                public void onResponse(@NonNull Call<AnswerOrderEdit> call, @NonNull Response<AnswerOrderEdit> response) {
+                                    if (response.isSuccessful() && response.body() != null) {
+                                        if (response.body().getStatus() == 200) {
+                                            OpenOrder.setId(order.getId());
+                                            OpenOrder.setFields(response.body().getOrderFields());
+                                            OpenOrder.setProby(response.body().getProby());
 
-                                        Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
-                                        intent.putExtra("type_id", order.getType_id());
-                                        intent.putExtra("isEdit", true);
-                                        if (order.getAct_of_selection() != null)
-                                            intent.putExtra("ACT", order.getAct_of_selection());
-                                        intent.putExtra(SendOrder.class.getSimpleName(), OpenOrder);
-                                        startActivity(intent);
+                                            Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
+                                            intent.putExtra("type_id", order.getType_id());
+                                            intent.putExtra("isEdit", true);
+                                            if (order.getAct_of_selection() != null)
+                                                intent.putExtra("ACT", order.getAct_of_selection());
+                                            intent.putExtra(SendOrder.class.getSimpleName(), OpenOrder);
+                                            startActivity(intent);
 
+                                        }
                                     }
                                 }
-                            }
 
-                            @Override
-                            public void onFailure(@NonNull Call<AnswerOrderEdit> call, @NonNull Throwable t) {
-                                Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                                @Override
+                                public void onFailure(@NonNull Call<AnswerOrderEdit> call, @NonNull Throwable t) {
+                                    Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } else {
+                    Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
+                    intent.putExtra("type_id", order.getType_id());
+                    intent.putExtra("isEdit", true);
+                    intent.putExtra("status", (byte) 11);
+                    intent.putExtra(SendOrder.class.getSimpleName(), offlineOrders.get((short)order.getId()));
+                    startActivity(intent);
+                }
             }
 
         };

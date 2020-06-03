@@ -1,5 +1,6 @@
 package com.bmvl.lk.Rest;
 
+import com.bmvl.lk.data.models.LoggedInUser;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,6 +13,10 @@ public class AnswerOrderNew extends StandardAnswer{
    // private Map<Short, String> defaultFields;
     private Map<Short, String> defaultFields;
 
+    @SerializedName("userInfo")
+    @Expose
+    private LoggedInUser UserInfo;
+
 //    @SerializedName("fieldValues")
 //    @Expose
 //  //  private Map<Short, String> fieldValues;
@@ -19,6 +24,10 @@ public class AnswerOrderNew extends StandardAnswer{
 
     public Map getDefaultFields() {
         return defaultFields;
+    }
+
+    public LoggedInUser getUserInfo() {
+        return UserInfo;
     }
 
 //    public List<PairData> getDefaultFields() {

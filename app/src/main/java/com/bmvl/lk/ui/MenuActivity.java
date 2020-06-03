@@ -18,6 +18,7 @@ import com.bmvl.lk.ui.Notification.NoticeFragment;
 import com.bmvl.lk.ui.login.LoginActivity;
 import com.bmvl.lk.ui.order.OrderFragment;
 import com.bmvl.lk.ui.patterns.PatternsFragment;
+import com.bmvl.lk.ui.patterns.PatternsMenu;
 import com.bmvl.lk.ui.profile.ProfileActivity;
 import com.bmvl.lk.ui.search.SearchFragment;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -45,7 +46,8 @@ public class MenuActivity extends AppCompatActivity {
                         return true;
                     case R.id.navigation_patterns:
                         MenuToolbar.setTitle(R.string.menu_patterns);
-                        loadFragment(PatternsFragment.newInstance());
+                      //  loadFragment(PatternsFragment.newInstance());
+                        loadFragment(PatternsMenu.newInstance());
                         return true;
                     case R.id.navigation_search:
                         MenuToolbar.setTitle(R.string.search);

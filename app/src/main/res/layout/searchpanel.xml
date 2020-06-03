@@ -7,282 +7,304 @@
     android:layout_height="match_parent"
     android:background="@color/backround_color_site">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        style="@style/ClearFocus"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
-        android:background="@android:color/white">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/linearLayout2"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/NumberLay"
-                style="@style/MyHintText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/field_marginEnd"
-                android:layout_weight="1"
-                android:hint="Номер заявки">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/NumberOrder"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/NumberProtocolLay"
-                style="@style/MyHintText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Номер протокола">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/NumberProtocol"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/DataOtLay"
-                style="@style/MyHintText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/field_marginEnd"
-                android:layout_weight="1"
-                android:hint="От"
-                app:endIconDrawable="@drawable/ic_date_range_black_24dp"
-                app:endIconMode="custom">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/DataOt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/DataDoLay"
-                style="@style/MyHintText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="До"
-                app:endIconDrawable="@drawable/ic_date_range_black_24dp"
-                app:endIconMode="custom">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/DataDo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ContactFaceLay"
-            style="@style/MyHintText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:hint="Контактное лицо"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ContactFace"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Spinner
-            android:id="@+id/OrderType"
-            style="@style/MySpinner"
-            android:layout_width="match_parent"
-            android:layout_height="61.5dp"
-            android:layout_marginTop="10dp"
-            android:paddingTop="5dp"
-            android:spinnerMode="dialog"
-            android:entries="@array/order_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ContactFaceLay" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="5dp"
-            android:text="Вид заказа"
-            android:textSize="12dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/OrderType" />
-
-        <LinearLayout
-            android:id="@+id/linearLayout4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/OrderType">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/PriceOtLay"
-                style="@style/MyHintText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/field_marginEnd"
-                android:layout_weight="1"
-                android:hint="От"
-                app:endIconDrawable="@drawable/rub"
-                app:endIconMode="custom">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/Price"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/PriceDoLay"
-                style="@style/MyHintText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="До"
-                app:endIconDrawable="@drawable/rub"
-                app:endIconMode="custom">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/PriceDo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
-
-            <Spinner
-                android:id="@+id/Status"
-                style="@style/MySpinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="@dimen/field_marginEnd"
-                android:spinnerMode="dialog"
-                android:entries="@array/order_statuses"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ContactFaceLay" />
+            android:background="#FFFFFF"
+            app:cardCornerRadius="2dp"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_weight="1"
-                app:layout_constraintTop_toBottomOf="@+id/ContactFaceLay"
+                style="@style/ClearFocus"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@android:color/white">
 
-                <Spinner
-                    android:id="@+id/Sort"
-                    style="@style/MySpinner"
+                <LinearLayout
+                    android:id="@+id/linearLayout2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:entries="@array/sort_types"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/NumberLay"
+                        style="@style/MyHintText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/field_marginEnd"
+                        android:layout_weight="1"
+                        android:hint="Номер заявки">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/NumberOrder"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/NumberProtocolLay"
+                        style="@style/MyHintText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Номер протокола">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/NumberProtocol"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/DataOtLay"
+                        style="@style/MyHintText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/field_marginEnd"
+                        android:layout_weight="1"
+                        android:hint="От"
+                        app:endIconDrawable="@drawable/ic_date_range_black_24dp"
+                        app:endIconMode="custom">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/DataOt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/DataDoLay"
+                        style="@style/MyHintText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="До"
+                        app:endIconDrawable="@drawable/ic_date_range_black_24dp"
+                        app:endIconMode="custom">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/DataDo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/ContactFaceLay"
+                    style="@style/MyHintText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:hint="Контактное лицо"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ContactFace"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Spinner
+                    android:id="@+id/OrderType"
+                    style="@style/MySpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="61.5dp"
+                    android:layout_marginTop="10dp"
+                    android:entries="@array/order_name"
                     android:paddingTop="5dp"
                     android:spinnerMode="dialog"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/ContactFaceLay" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/SortHint"
-                    android:layout_width="116dp"
-                    android:layout_height="18dp"
+                    android:id="@+id/hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="5dp"
-                    android:text="Порядок сортировки"
+                    android:text="Вид заказа"
                     android:textSize="12dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@+id/OrderType" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/OrderType">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/PriceOtLay"
+                        style="@style/MyHintText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/field_marginEnd"
+                        android:layout_weight="1"
+                        android:hint="От"
+                        app:endIconDrawable="@drawable/rub"
+                        app:endIconMode="custom">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/Price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/PriceDoLay"
+                        style="@style/MyHintText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="До"
+                        app:endIconDrawable="@drawable/rub"
+                        app:endIconMode="custom">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/PriceDo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+
+                    <Spinner
+                        android:id="@+id/Status"
+                        style="@style/MySpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/field_marginEnd"
+                        android:layout_weight="1"
+                        android:entries="@array/order_statuses"
+                        android:paddingTop="5dp"
+                        android:spinnerMode="dialog"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ContactFaceLay" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ContactFaceLay">
+
+                        <Spinner
+                            android:id="@+id/Sort"
+                            style="@style/MySpinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/sort_types"
+                            android:paddingTop="5dp"
+                            android:spinnerMode="dialog"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/SortHint"
+                            android:layout_width="116dp"
+                            android:layout_height="18dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="5dp"
+                            android:text="Порядок сортировки"
+                            android:textSize="12dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/StatusHint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Статус"
+                    android:textSize="12dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/linearLayout5" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/search_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/search"
+                    app:cornerRadius="5dp"
+                    app:icon="@drawable/ic_search_black_24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+                    app:strokeColor="@color/accent"
+                    app:strokeWidth="1dp" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-        </LinearLayout>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/StatusHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="5dp"
-            android:text="Статус"
-            android:textSize="12dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/linearLayout5" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/search_button"
-            android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchList"
+            style="@style/ClearFocus"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/search"
-            app:cornerRadius="5dp"
-            app:icon="@drawable/ic_search_black_24dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
-            app:strokeColor="@color/accent"
-            app:strokeWidth="1dp" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/search_button" />
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>

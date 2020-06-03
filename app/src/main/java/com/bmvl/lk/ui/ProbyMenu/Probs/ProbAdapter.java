@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.ProbyRest;
+import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
-import com.bmvl.lk.data.Field;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -68,11 +68,11 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 
         simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", i + 1));
 
-        if(CurrentProb.getProtocol() != null)
+        assert CurrentProb != null;
+        if (CurrentProb.getProtocol() != null)
             simpleViewHolder.btnDownload.setVisibility(View.VISIBLE);
 
         String nameMaterial = "Молоко сырое";
-        assert CurrentProb != null;
         if (CurrentProb.getFields().containsKey("5"))
             nameMaterial = CurrentProb.getFields().get("materialName");
 
@@ -169,8 +169,13 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
                 @Override
                 public int getSpanSize(int position) {
                     if (position >= 4 && position <= 7) return 1;
-                    if ((CreateOrderActivity.order_id == 1 || CreateOrderActivity.order_id == 3) && (position == 22 || position == 23))
+
+                    if(!CreateOrderActivity.IsPattern) {
+                        if ((CreateOrderActivity.order_id == 1 || CreateOrderActivity.order_id == 3) && (position == 22 || position == 23))
+                            return 1;
+                    } else if ((CreateOrderActivity.order_id == 1 || CreateOrderActivity.order_id == 3) && (position == 21 || position == 22))
                         return 1;
+
                     return 2;
                 }
             });

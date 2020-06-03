@@ -5,6 +5,12 @@ import android.graphics.drawable.Drawable;
 public class SearchField {
     private String value;
     private String Hint;
+
+    public String getColumnID() {
+        return ColumnID;
+    }
+
+    private String ColumnID;
     private int InputType;
     private boolean spener;
     private int entries;
@@ -12,30 +18,30 @@ public class SearchField {
     private boolean Data;
     private boolean DoubleColumn;
 
-    public SearchField(String value, String hint, int inputType, boolean doubleColumn) {
-        this.value = value;
+    public SearchField(String id,String hint, int inputType, boolean doubleColumn) {
+        this.ColumnID = id;
         Hint = hint;
         InputType = inputType;
         DoubleColumn = doubleColumn;
     }
 
-    public SearchField(String value, String hint, boolean spener, int entries) {
-        this.value = value;
+    public SearchField(String id,String hint, boolean spener, int entries) {
+        this.ColumnID = id;
         Hint = hint;
         this.spener = spener;
         this.entries = entries;
     }
 
-    public SearchField(String value, String hint, int inputType, Drawable icon, boolean data) {
-        this.value = value;
+    public SearchField(String id,String hint, int inputType, Drawable icon, boolean data) {
+        this.ColumnID = id;
         Hint = hint;
         InputType = inputType;
         Icon = icon;
         Data = data;
     }
 
-    public SearchField(String value, String hint, boolean spener, int entries, boolean doubleColumn) {
-        this.value = value;
+    public SearchField(String id,String hint, boolean spener, int entries, boolean doubleColumn) {
+        this.ColumnID = id;
         Hint = hint;
         this.spener = spener;
         this.entries = entries;
@@ -51,8 +57,8 @@ public class SearchField {
     }
 
 
-    public SearchField(String value, String hint, int inputType) {
-        this.value = value;
+    public SearchField(String id,String hint, int inputType) {
+        this.ColumnID = id;
         Hint = hint;
         InputType = inputType;
     }

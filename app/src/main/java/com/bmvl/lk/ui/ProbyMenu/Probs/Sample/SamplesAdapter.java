@@ -67,7 +67,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
             simpleViewHolder.SampleList.setVisibility(View.VISIBLE);
             simpleViewHolder.swipeLayout.setSwipeEnabled(false);
 
-            if (CreateOrderActivity.order_id != 8) {
+            if (!CreateOrderActivity.IsPattern) {
                 final GridLayoutManager mng_layout = new GridLayoutManager(inflater.getContext(), 2);
                 mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override

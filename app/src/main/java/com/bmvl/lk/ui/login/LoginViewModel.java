@@ -50,7 +50,8 @@ public class LoginViewModel extends ViewModel {
                             //App.UserAccessData = response.body();
                             assert response.body() != null;
                             if (response.body().getUser_id() != null)
-                                getUserInfo(response.body(),context);
+                               // getUserInfo(response.body(),context);
+                            getOrderNewInfo(response.body(), context);
 
                             else { //Пользователь ввел не верный лог/пас
                                 loginResult.setValue(new LoginResult(response.body().getText()));
@@ -67,29 +68,29 @@ public class LoginViewModel extends ViewModel {
                 });
     }
 
-    private void getUserInfo(final UserAccess accessData, final Context context) {
-        NetworkService.getInstance()
-                .getJSONApi()
-                .getUserInfo(accessData.getToken())
-                .enqueue(new Callback<UserInfoCall>() {
-                    @Override
-                    public void onResponse(@NonNull Call<UserInfoCall> call, @NonNull Response<UserInfoCall> response) {
-                        if (response.isSuccessful()) {
-                            //  App.UserInfo = response.body().getUserInfo();
-                            assert response.body() != null;
-                            getOriginalDocInfo(accessData, response.body().getUserInfo());
-                        } else
-                            loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
-                    }
+//    private void getUserInfo(final UserAccess accessData, final Context context) {
+//        NetworkService.getInstance()
+//                .getJSONApi()
+//                .getUserInfo(accessData.getToken())
+//                .enqueue(new Callback<UserInfoCall>() {
+//                    @Override
+//                    public void onResponse(@NonNull Call<UserInfoCall> call, @NonNull Response<UserInfoCall> response) {
+//                        if (response.isSuccessful()) {
+//                            //  App.UserInfo = response.body().getUserInfo();
+//                            assert response.body() != null;
+//                           // getOrderNewInfo(accessData);
+//                        } else
+//                            loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
+//                    }
+//
+//                    @Override
+//                    public void onFailure(@NonNull Call<UserInfoCall> call, @NonNull Throwable t) {
+//                        loginResult.setValue(new LoginResult(context.getString(R.string.server_lost)));
+//                    }
+//                });
+//    }
 
-                    @Override
-                    public void onFailure(@NonNull Call<UserInfoCall> call, @NonNull Throwable t) {
-                        loginResult.setValue(new LoginResult(context.getString(R.string.server_lost)));
-                    }
-                });
-    }
-
-    private void getOriginalDocInfo(final UserAccess accessData, final LoggedInUser UserInfo) {
+    private void getOrderNewInfo(final UserAccess accessData,final Context context) {
         NetworkService.getInstance()
                 .getJSONApi()
                 .OrderNew(accessData.getToken())
@@ -98,31 +99,24 @@ public class LoginViewModel extends ViewModel {
                     public void onResponse(@NonNull Call<AnswerOrderNew> call, @NonNull Response<AnswerOrderNew> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             if (response.body().getStatus() == 200) {
-                                // final List<PairData> defaultFields = response.body().getDefaultFields();
                                 final Map<Short, String> defaultFields = response.body().getDefaultFields();
-
-//                                for (PairData entry : defaultFields) {
-//                                    if (!entry.getData().equals("")) {
-//                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, UserInfo, new OrderInfo(entry.getId(), entry.getData()))));
-//                                        break;
-//                                    }
-//                                }
 
                                 for (Map.Entry<Short, String> entry : defaultFields.entrySet()) {
 
                                     if (!entry.getValue().equals("")) {
-                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, UserInfo, new OrderInfo(entry.getKey(), entry.getValue()))));
+                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo(entry.getKey(), entry.getValue()))));
                                         break;
                                     }
                                 }
 
-                            }
+                            }else
+                                loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<AnswerOrderNew> call, @NonNull Throwable t) {
-                        loginResult.setValue(new LoginResult("Сервер не доступен2!"));
+                        loginResult.setValue(new LoginResult(context.getString(R.string.server_lost)));
                     }
                 });
     }

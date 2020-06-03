@@ -255,7 +255,7 @@
     <string-array name="target_research2">
         <item>Платная</item>
         <item>Производственный контроль</item>
-        <item>Сертификация/Декларирование</item>
+        <item>Сертификация и декларирование</item>
     </string-array>
 
     <string-array name="order_types">
@@ -311,6 +311,11 @@
         <item>Основание</item>
         <item>Партия</item>
         <item>Инфо</item>
+    </string-array>
+
+    <string-array name="patterns_menu_titles">
+        <item>Мои шаблоны</item>
+        <item>Типовые шаблоны</item>
     </string-array>
 
     <array name="brob_menu_icons">

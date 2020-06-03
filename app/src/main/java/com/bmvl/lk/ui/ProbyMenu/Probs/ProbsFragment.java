@@ -1,7 +1,5 @@
 package com.bmvl.lk.ui.ProbyMenu.Probs;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,7 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,10 +20,10 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
+import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
-import com.bmvl.lk.data.Field;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.button.MaterialButton;
 
@@ -230,6 +227,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         ProbFields.add(new Field(143, "", "Кадастровый номер участка", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(144, "", "Глубина отбора", InputType.TYPE_NULL));
         ProbFields.add(new Field(145, "", "Площадь с которой отобрано", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field((byte) 1, R.array.units_of_measure, 146, "", " "));
         AddSamplesForType3();
         ProbFields.add(new Field((byte) 7));
     }
@@ -349,22 +347,22 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
 
             switch (CreateOrderActivity.order_id) {
                 case 1:
-                    AddProbFieldsType1();
+                    if (!CreateOrderActivity.IsPattern)
+                        AddProbFieldsType1();
+                    else
+                        AddPatternFieldsType1();
                     break;
                 case 3:
-                    AddProbFieldsType3();
+                    if (!CreateOrderActivity.IsPattern)
+                        AddProbFieldsType3();
+                    else
+                        AddPatternFieldsType3();
                     break;
                 case 4:
-                    AddProbFieldsType4();
-                    break;
-                case 8:
-                    AddPatternFieldsType1();
-                    break;
-                case 9:
-                    AddPatternFieldsType4();
-                    break;
-                case 10:
-                    AddPatternFieldsType3();
+                    if (!CreateOrderActivity.IsPattern)
+                        AddProbFieldsType4();
+                    else
+                        AddPatternFieldsType4();
                     break;
             }
 

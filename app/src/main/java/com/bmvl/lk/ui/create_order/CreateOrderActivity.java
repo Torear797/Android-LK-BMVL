@@ -34,9 +34,9 @@ import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Orders;
 import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
 import com.bmvl.lk.ui.order.OrderFragment;
-import com.bmvl.lk.ui.order.OrderSwipeAdapter;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.gson.Gson;
 import com.orhanobut.hawk.Hawk;
 
 import java.text.SimpleDateFormat;
@@ -65,6 +65,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     private static String act_of_selection;
     private FrameLayout Frame;
     private byte status;
+    public static boolean IsPattern;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +80,14 @@ public class CreateOrderActivity extends AppCompatActivity {
         bar = findViewById(R.id.ProgressBar);
 
         status = getIntent().getByteExtra("status", (byte) 0);
-        Log.d("STATUS"," " + status);
-        final boolean pattern = getIntent().getBooleanExtra("Pattern", false);
+        Log.d("STATUS", " " + status);
+        IsPattern = getIntent().getBooleanExtra("Pattern", false);
         Edit = getIntent().getBooleanExtra("isEdit", false);
         if (!Edit) {
-            order = new SendOrder(getIntent().getByteExtra("type_id", (byte) 1));
+            if(getIntent().getBooleanExtra("CreatePattern", false))
+                order = (SendOrder) getIntent().getSerializableExtra(SendOrder.class.getSimpleName());
+            else
+                order = new SendOrder(getIntent().getByteExtra("type_id", (byte) 1));
             toolbar.setTitle(R.string.new_order);
         } else {
             order = (SendOrder) getIntent().getSerializableExtra(SendOrder.class.getSimpleName());
@@ -94,7 +98,7 @@ public class CreateOrderActivity extends AppCompatActivity {
             btn.setText(R.string.save_text);
         }
         order_id = order.getType_id();
-        if (pattern) order.setPattern((byte) 1);
+        if (IsPattern) order.setPattern((byte) 1);
 
         setSupportActionBar(toolbar);
         OrderName.setText(getResources().getStringArray(R.array.order_name)[order_id - 1]);
@@ -202,7 +206,7 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     private void addFieldPatternType1() {
         Fields.add(new Field(133, "", "Наименование шаблона", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field((byte) 1, R.array.target_research, 3, "", "Цель исследования/категория"));
+        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "", "Цель исследования/категория"));
         Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), App.OrderInfo.getOD_Value(), "Оригиналы документов предоставлять")); //52. 63. 64
         Fields.add(new Field((byte) 3, 66, "", "Возврат образцов"));
         Fields.add(new Field((byte) 5, 59, "", "Контрольный образец"));
@@ -257,13 +261,13 @@ public class CreateOrderActivity extends AppCompatActivity {
             return false;
         }
 
-        if(order.getProby() != null)
-        for (TreeMap.Entry<Short, ProbyRest> prob : order.getProby().entrySet()) {
-            if (!prob.getValue().isResearchCorrect()) {
-                Toast.makeText(getApplicationContext(), R.string.research_error, Toast.LENGTH_SHORT).show();
-                return false;
+        if (order.getProby() != null)
+            for (TreeMap.Entry<Short, ProbyRest> prob : order.getProby().entrySet()) {
+                if (!prob.getValue().isResearchCorrect()) {
+                    Toast.makeText(getApplicationContext(), R.string.research_error, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
             }
-        }
 
         return true;
     }
@@ -272,8 +276,8 @@ public class CreateOrderActivity extends AppCompatActivity {
         if (isFieldCorrect()) {
             view.setEnabled(false);
             bar.setVisibility(View.VISIBLE);
-            if(order.getProby() != null)
-            DeleteEmptyFields();
+            if (order.getProby() != null)
+                DeleteEmptyFields();
             if (!Edit)
                 SendOrder(view);
             else
@@ -284,9 +288,9 @@ public class CreateOrderActivity extends AppCompatActivity {
     private void SaveOrder(final View view) {
         //String json = order.getJsonOrder();
         //   Hawk.put("obraz",json);
-        Log.d("JSON", order.getJsonOrder());
+        // Log.d("JSON", order.getJsonOrder());
 
-        if(status!= 11) {
+        if (status != 11) {
             NetworkService.getInstance()
                     .getJSONApi()
                     .SaveOrder(App.UserAccessData.getToken(), order.getJsonOrder())
@@ -315,7 +319,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                     });
         } else {
             Toast.makeText(view.getContext(), R.string.order_isEdit, Toast.LENGTH_SHORT).show();
-            OrderFragment.offlineOrders.put((short)order.getId(), order);
+            OrderFragment.offlineOrders.put((short) order.getId(), order);
             Hawk.put("OfflineOrders", OrderFragment.offlineOrders);
             ClearDate();
             CreateOrderActivity.this.finish();
@@ -368,7 +372,8 @@ public class CreateOrderActivity extends AppCompatActivity {
             order.DeleteProb();
         }
     }
-    private void ClearDate(){
+
+    private void ClearDate() {
         Fields.clear();
         order = null;
     }
@@ -379,10 +384,18 @@ public class CreateOrderActivity extends AppCompatActivity {
         //   view.setEnabled(true);
         //  bar.setVisibility(View.GONE);
 
-        if(App.isOnline(getApplicationContext())) {
+        if (App.isOnline(getApplicationContext())) {
+            //  Map<Short, String> orders = new HashMap<>();
+            //  orders.put((short)0, order.getJsonOrder());
+            List<SendOrder> orders = new ArrayList<>();
+            final Gson gson = new Gson();
+            orders.add(order);
+
+            Log.d("JSON2", gson.toJson(orders));
+
             NetworkService.getInstance()
                     .getJSONApi()
-                    .sendOrder(App.UserAccessData.getToken(), order.getJsonOrder())
+                    .sendOrder(App.UserAccessData.getToken(), gson.toJson(orders))
                     .enqueue(new Callback<AnswerSendOrder>() {
                         @Override
                         public void onResponse(@NonNull Call<AnswerSendOrder> call, @NonNull Response<AnswerSendOrder> response) {
@@ -395,7 +408,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                             } else {
                                 view.setEnabled(true);
                                 bar.setVisibility(View.GONE);
-                               // Toast.makeText(view.getContext(), "Ошибка 1", Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(view.getContext(), "Ошибка 1", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -407,15 +420,15 @@ public class CreateOrderActivity extends AppCompatActivity {
                     });
         } else {
             //OrderFragment.offlineOrders.add(order);
-           // Hawk.put("offlineOrders",);
+            // Hawk.put("offlineOrders",);
             final short newid = getPositionKey(OrderFragment.offlineOrders.size() - 1, OrderFragment.offlineOrders);
             order.setId(newid + 1);
             OrderFragment.offlineOrders.put((short) (newid + 1), order);
-          // OrderFragment.Orders.add(0, new Orders((short) (newid + 1),0,order_id,11,""));
+            // OrderFragment.Orders.add(0, new Orders((short) (newid + 1),0,order_id,11,""));
 
             List<Orders> insertList = new ArrayList<>();
-            insertList.add(new Orders(newid + 1,0,order_id,11, new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date())));
-            OrderFragment.OrderAdapter.insertdata(insertList,true);
+            insertList.add(new Orders(newid + 1, 0, order_id, 11, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date())));
+            OrderFragment.OrderAdapter.insertdata(insertList, true);
 
             Hawk.put("OfflineOrders", OrderFragment.offlineOrders);
             Hawk.put("OrdersList", OrderFragment.Orders);
@@ -425,6 +438,7 @@ public class CreateOrderActivity extends AppCompatActivity {
             CreateOrderActivity.this.finish();
         }
     }
+
     private Short getPositionKey(int position, Map<Short, SendOrder> offlineOrders) {
         if (offlineOrders.size() > 0)
             return new ArrayList<>(offlineOrders.keySet()).get(position);
@@ -444,18 +458,25 @@ public class CreateOrderActivity extends AppCompatActivity {
             act_of_selection = getIntent().getStringExtra("ACT");
             switch (order_id) {
                 case 1:
-                    LoadDefaultFields();
-                    addFieldOrderType1();
+                    if (!IsPattern) {
+                        LoadDefaultFields();
+                        addFieldOrderType1();
+                    } else
+                        addFieldPatternType1();
                     EnableTable(Frame);
                     break;
                 case 3:
-                    LoadDefaultFields();
-                    addFieldOrderType3();
+                    if (!IsPattern) {
+                        LoadDefaultFields();
+                        addFieldOrderType3();
+                    } else addFieldPatternType3();
                     EnableTable(Frame);
                     break;
                 case 4:
-                    LoadDefaultFields();
-                    addFieldOrderType4();
+                    if (!IsPattern) {
+                        LoadDefaultFields();
+                        addFieldOrderType4();
+                    } else addFieldPatternType4();
                     EnableTable(Frame);
                     break;
                 case 5:
@@ -470,24 +491,12 @@ public class CreateOrderActivity extends AppCompatActivity {
                     LoadDefaultFields();
                     addFieldOrderType7();
                     break;
-                case 8:
-                    addFieldPatternType1();
-                    EnableTable(Frame);
-                    break;
-                case 9:
-                    addFieldPatternType4();
-                    EnableTable(Frame);
-                    break;
-                case 10:
-                    addFieldPatternType3();
-                    EnableTable(Frame);
-                    break;
             }
             final GridLayoutManager mng_layout = new GridLayoutManager(context, 2);
             mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    if ((position == 1 || position == 2) && order_id != 8 && order_id != 9 && order_id != 10)
+                    if ((position == 1 || position == 2) && !IsPattern)
                         return 1;
                     if (order_id == 1 && (position == 14 || position == 15))
                         return 1;

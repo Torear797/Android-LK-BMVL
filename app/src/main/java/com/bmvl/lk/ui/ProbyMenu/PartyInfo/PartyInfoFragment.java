@@ -94,6 +94,7 @@ public class PartyInfoFragment extends Fragment {
 
         if (TypeTabs == 2) {
             recyclerView.setHasFixedSize(true);
+            if(!CreateOrderActivity.IsPattern)
             recyclerView.setLayoutManager(mng_layout);
             recyclerView.setAdapter(adapter);
         } else
@@ -105,7 +106,7 @@ public class PartyInfoFragment extends Fragment {
     private void AddOriginField(List<Field> NewList) {
         NewList.clear();
         NewList.add(new Field((byte) 3, 56, "", "Происхождение неизвестно"));
-        if (CreateOrderActivity.order_id != 4 && CreateOrderActivity.order_id != 8 && CreateOrderActivity.order_id != 9 && CreateOrderActivity.order_id != 10)
+        if (CreateOrderActivity.order_id != 4 && !CreateOrderActivity.IsPattern)
             NewList.add(new Field(19, "", "НД на производство", InputType.TYPE_CLASS_TEXT));
         NewList.add(new Field(8, "", "Производитель", InputType.TYPE_CLASS_TEXT));
         NewList.add(new Field(29, "", "Страна происхождения", InputType.TYPE_CLASS_TEXT));
@@ -119,7 +120,7 @@ public class PartyInfoFragment extends Fragment {
     private void AddOriginFieldNoOrigin(List<Field> NewList) {
         NewList.clear();
         NewList.add(new Field((byte) 3, 56, "", "Происхождение неизвестно"));
-        if (CreateOrderActivity.order_id != 4 && CreateOrderActivity.order_id != 8 && CreateOrderActivity.order_id != 9 && CreateOrderActivity.order_id != 10)
+        if (CreateOrderActivity.order_id != 4 && !CreateOrderActivity.IsPattern)
             NewList.add(new Field(19, "", "НД на производство", InputType.TYPE_CLASS_TEXT));
         NewList.add(new Field(58, "", "Номер и дата протокола изъятия/досмотра", InputType.TYPE_CLASS_TEXT));
         NewList.add(new Field((byte) 3, 120, "", "Применить для всех проб"));
@@ -127,7 +128,7 @@ public class PartyInfoFragment extends Fragment {
 
     private void AddPartyInfoFields() {
         PartyInfoFields.clear();
-        if (CreateOrderActivity.order_id != 8 && CreateOrderActivity.order_id != 9 && CreateOrderActivity.order_id != 10) {
+        if (!CreateOrderActivity.IsPattern) {
             PartyInfoFields.add(new Field(43, "", "Ветеринарный документ от", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getContext()).getDrawable(R.drawable.ic_date_range_black_24dp), true));
             PartyInfoFields.add(new Field(42, "", "№", InputType.TYPE_CLASS_TEXT));
             PartyInfoFields.add(new Field(34, "", "Номер партии", InputType.TYPE_CLASS_TEXT));

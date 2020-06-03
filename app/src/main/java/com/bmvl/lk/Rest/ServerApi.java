@@ -3,8 +3,11 @@ package com.bmvl.lk.Rest;
 import com.bmvl.lk.Rest.Notify.NotificationsAnswer;
 import com.bmvl.lk.Rest.Order.AnswerSendOrder;
 import com.bmvl.lk.Rest.Order.OrdersAnswer;
+import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.UserInfo.UserAccess;
 import com.bmvl.lk.Rest.UserInfo.UserInfoCall;
+
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -43,7 +46,11 @@ public interface ServerApi {
 
     @FormUrlEncoded
     @POST("orders/create")
-    Call<AnswerSendOrder> sendOrder(@Field("token") String token, @Field("order") String order);
+    Call<AnswerSendOrder> sendOrder(@Field("token") String token, @Field("orders") String order);
+
+    @FormUrlEncoded
+    @POST("orders/create")
+    Call<ResponseBody> sendOrders(@Field("token") String token, @Field("orders") String order);
 
     @FormUrlEncoded
     @POST("orders/new")
@@ -59,7 +66,7 @@ public interface ServerApi {
 
     @FormUrlEncoded
     @POST("orders/copyOrder")
-    Call<AnswerCopyOrder> CopyOrder(@Field("token") String token, @Field("id") int id);
+    Call<AnswerCopyOrder> CopyOrder(@Field("token") String token, @Field("id") int id, @Field("pattern") byte pattern);
 
     @FormUrlEncoded
     @POST("orders/phpWord")
@@ -67,7 +74,7 @@ public interface ServerApi {
 
     @FormUrlEncoded
     @POST("ajax/getIndicators")
-    Call<AnswerIndicators> getIndicators(@Field("token") String token, @Field("materialId") int materialId,@Field("query") String query);
+    Call<AnswerIndicators> getIndicators(@Field("token") String token, @Field("materialId") int materialId, @Field("query") String query);
 
     @FormUrlEncoded
     @POST("ajax/getMethods")
@@ -101,4 +108,30 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("orders/save")
     Call<ResponseBody> DownloadProtocol(@Field("token") String token);
+
+    @FormUrlEncoded
+    @POST("session/checkTokenStatus")
+    Call<CheckTokenAnswer> CheckToken(@Field("token_val") String token);
+
+    @FormUrlEncoded
+    @POST("orders/find")
+    Call<AnswerSearch> Search(
+            @Field("token") String token,
+            @Field("id") String id,
+            @Field("protocolNumber") String protocolNumber,
+            @Field("date[from]") String date_from,
+            @Field("date[to]") String date_to,
+            @Field("contactPersons") String contactPersons,
+            @Field("orderType") byte orderType,
+            @Field("price[from]") String price_from,
+            @Field("price[to]") String price_to,
+            @Field("orderStatus") byte orderStatus,
+            @Field("sort") String sort,
+            @Field("limit") short limit,
+            @Field("page") short page
+    );
+
+    @FormUrlEncoded
+    @POST("orders/patterns")
+    Call<AnswerPatterns> getPatterns(@Field("token") String token, @Field("standart") byte standart);
 }

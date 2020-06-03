@@ -69,7 +69,7 @@ public class SendOrder implements Serializable{
     }
 
     public String getJsonOrder() {
-        Gson gson = new Gson();
+        final Gson gson = new Gson();
         return gson.toJson(this);
     }
 

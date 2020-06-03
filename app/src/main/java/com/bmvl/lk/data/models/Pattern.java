@@ -1,41 +1,15 @@
 package com.bmvl.lk.data.models;
 
-import java.util.Date;
+public class Pattern extends Orders {
 
-public class Pattern {
-    private int id;
-    private String PatternName;
-    private String TypePattern;
-    private String CreateDate;
-
-    public Pattern(int id, String patternName, String typePattern, String createDate) {
-        this.id = id;
-        PatternName = patternName;
-        TypePattern = typePattern;
-        CreateDate = createDate;
+    public Pattern(int id, int user_id, byte type_id, int status_id, String date, String name) {
+        super(id, user_id, type_id, status_id, date);
+        this.patternName = name;
     }
+    private String patternName;
+
 
     public String getPatternName() {
-        return PatternName;
-    }
-
-    public void setPatternName(String patternName) {
-        PatternName = patternName;
-    }
-
-    public String getTypePattern() {
-        return TypePattern;
-    }
-
-    public void setTypePattern(String typePattern) {
-        TypePattern = typePattern;
-    }
-
-    public String getCreateDate() {
-        return CreateDate;
-    }
-
-    public void setCreateDate(String createDate) {
-        CreateDate = createDate;
+        return patternName;
     }
 }

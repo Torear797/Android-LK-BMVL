@@ -209,6 +209,8 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 //                            ((SpinerHolder) holder).spiner.setSelection(CurrentID);
                         ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))));
                     } else {
+                        //Для 5 сликшом маленький список. Надо либо получить его с сервера, либо добавить фул в string.
+                        if((Integer.parseInt(Objects.requireNonNull(CurrentProb.getFields().get("5"))) - 1) <= 10)
                         ((SpinerHolder) holder).spiner.setSelection(Integer.parseInt(Objects.requireNonNull(CurrentProb.getFields().get("5"))) - 1);
                         ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", CurrentProb.getFields().get("materialName"), CurrentProb.getSamples().size()));
                     }

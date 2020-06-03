@@ -33,10 +33,9 @@ import java.util.Locale;
 public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.SimpleViewHolder> {
     private static List<Orders> Orders;
     private LayoutInflater inflater;
-
     private OnOrderClickListener onOrderClickListener;
 
-    OrderSwipeAdapter(Context context, List<Orders> Contents, OnOrderClickListener onOrderClickListener) {
+    public OrderSwipeAdapter(Context context, List<Orders> Contents, OnOrderClickListener onOrderClickListener) {
         this.inflater = LayoutInflater.from(context);
         Orders = Contents;
         this.onOrderClickListener = onOrderClickListener;

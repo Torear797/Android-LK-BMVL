@@ -75,17 +75,16 @@ public class ProfileActivity extends AppCompatActivity {
                                 if (response.isSuccessful()) {
                                     StandardAnswer answer = response.body();
                                     assert answer != null;
-                                    if (answer.getStatus() == 200) {
-                                        Hawk.deleteAll();
-
-                                        Intent intent = new Intent(ProfileActivity.this, MenuActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        intent.putExtra("finish", true);
-                                        startActivity(intent);
-                                        finish();
-                                    } else
-                                        Snackbar.make(view, "Ошибка: " + answer.getText(), Snackbar.LENGTH_LONG)
-                                                .setAction("Action", null).show();
+//                                    if (answer.getStatus() == 200) {
+//                                        Hawk.deleteAll();
+//
+//                                        Intent intent = new Intent(ProfileActivity.this, MenuActivity.class);
+//                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                        intent.putExtra("finish", true);
+//                                        startActivity(intent);
+//                                        finish();
+//                                    }
+                                    exit();
                                 }
                             }
 
@@ -99,6 +98,15 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    private void exit(){
+        Hawk.deleteAll();
+
+        Intent intent = new Intent(ProfileActivity.this, MenuActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("finish", true);
+        startActivity(intent);
+        finish();
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

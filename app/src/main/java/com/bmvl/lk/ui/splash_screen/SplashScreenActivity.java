@@ -22,13 +22,13 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Intent intent = new Intent(this, LoginActivity.class);
         final boolean isAuth = isAuth();
 
         if (App.isOnline(this) && isAuth) CheckToken();
         else {
+            Intent intent;
             if (isAuth) intent = new Intent(getApplicationContext(), MenuActivity.class);
+            else intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
         }
@@ -51,18 +51,25 @@ public class SplashScreenActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<CheckTokenAnswer> call, @NonNull Response<CheckTokenAnswer> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             Intent intent;
-                            if (response.body().getStatus() == 200 && response.body().isActive()) {
+                            if (response.body().getStatus() == 200 && response.body().isActive())
                                 intent = new Intent(getApplicationContext(), MenuActivity.class);
-                            } else
+                            else
                                 intent = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(intent);
                             finish();
-                        }
+                        } else GoToLogin();
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<CheckTokenAnswer> call, @NonNull Throwable t) {
+                        GoToLogin();
                     }
                 });
+    }
+
+    private void GoToLogin() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

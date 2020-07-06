@@ -307,7 +307,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 ((AutoCompleteTextViewHolder) holder).TextView.setThreshold(3);
 
                 if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
-                    ((AutoCompleteTextViewHolder) holder).TextView.setText(CurrentProb.getFields().get(String.valueOf(f.getColumn_id())));
+                    ((AutoCompleteTextViewHolder) holder).TextView.setText(CurrentProb.getFields().get("materialName"));
                 else
                     ((AutoCompleteTextViewHolder) holder).TextView.setText(mMaterials[0]);
 

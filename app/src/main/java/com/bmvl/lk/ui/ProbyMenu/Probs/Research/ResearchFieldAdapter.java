@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.Rest.SuggestionMethod;
 import com.bmvl.lk.Rest.SuggestionType;
+import com.bmvl.lk.ViewHolders.AutoCompleteFieldHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.data.Field;
 
@@ -45,7 +47,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
     private List<SuggestionType> suggestionsTypes;
     private short indicatorId;
     private String indicatorNdId;
-    private Spinner SpinIndicator, SpinMethd, SpinType;
+    private AutoCompleteTextView SpinIndicator, SpinMethd, SpinType;
     private boolean isCompleteResearch = false;
 
 
@@ -68,14 +70,43 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spiner, parent, false);
-        final SpinerHolder holder1 = new SpinerHolder(view1);
+        View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_research_field, parent, false);
+       // final SpinerHolder holder1 = new SpinerHolder(view1);
+        final AutoCompleteFieldHolder holder1 = new AutoCompleteFieldHolder(view1);
 
         switch (viewType) {
             case 1:
-                AdapterView.OnItemSelectedListener IndicatorsSelectedListener = new AdapterView.OnItemSelectedListener() {
+//                AdapterView.OnItemSelectedListener IndicatorsSelectedListener = new AdapterView.OnItemSelectedListener() {
+//                    @Override
+//                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                        if (isCompleteResearch) {
+//                            getMethods();
+//                            return;
+//                        }
+//
+//                        if (CurrentResearch.getIndicatorId() != suggestions.get(position).getId()) {
+//                            CurrentResearch.ClearAll();
+//                            final Suggestion CurrentItem = suggestions.get(position);
+//
+//                            CurrentResearch.setIndicatorId((short) CurrentItem.getId());
+//                            CurrentResearch.setIndicatorVal(String.valueOf(parent.getItemAtPosition(position)));
+//                            CurrentResearch.setIndicatorNd(CurrentItem.getName_document());
+//                            CurrentResearch.setIndicatorNdId(CurrentItem.getId_document());
+//
+//                            indicatorId = (short) CurrentItem.getId();
+//                            indicatorNdId = String.valueOf(CurrentItem.getId_document());
+//
+//                            getMethods();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onNothingSelected(AdapterView<?> parent) {
+//                    }
+//                };
+                holder1.TextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (isCompleteResearch) {
                             getMethods();
                             return;
@@ -83,6 +114,9 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
 
                         if (CurrentResearch.getIndicatorId() != suggestions.get(position).getId()) {
                             CurrentResearch.ClearAll();
+                            SpinMethd.clearListSelection();
+                            SpinType.clearListSelection();
+                            SpinType.setText("");
                             final Suggestion CurrentItem = suggestions.get(position);
 
                             CurrentResearch.setIndicatorId((short) CurrentItem.getId());
@@ -95,27 +129,52 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
 
                             getMethods();
                         }
+                        holder1.TextView.clearFocus();
                     }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                    }
-                };
-                holder1.spiner.setOnItemSelectedListener(IndicatorsSelectedListener);
-                SpinIndicator = holder1.spiner;
+                });
+               // holder1.TextView.setOnItemSelectedListener(IndicatorsSelectedListener);
+                SpinIndicator = holder1.TextView;
                 break;
             case 2: {
-                AdapterView.OnItemSelectedListener MethodSelectedListener = new AdapterView.OnItemSelectedListener() {
+//                AdapterView.OnItemSelectedListener MethodSelectedListener = new AdapterView.OnItemSelectedListener() {
+//                    @Override
+//                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                        if (isCompleteResearch) {
+//                            getTypes(CurrentResearch.getMethodId(), String.valueOf(CurrentResearch.getMethodNdId()));
+//                            return;
+//                        }
+//
+//                      //  if (CurrentResearch.getMethodVal() != null && !CurrentResearch.getMethodVal().equals(parent.getItemAtPosition(position))) {
+//                            if (CurrentResearch.getMethodId() != suggestionsMethods.get(position).getId()) {
+//                            CurrentResearch.ClearType();
+//                            final SuggestionMethod CurrentItem = suggestionsMethods.get(position);
+//
+//                            CurrentResearch.setMethodId(CurrentItem.getId());
+//                            CurrentResearch.setMethodVal(String.valueOf(parent.getItemAtPosition(position)));
+//                            CurrentResearch.setMethodNd(CurrentItem.getName_document());
+//                            CurrentResearch.setMethodNdId(CurrentItem.getId_document());
+//
+//                            getTypes(CurrentItem.getId(), String.valueOf(CurrentItem.getId_document()));
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onNothingSelected(AdapterView<?> parent) {
+//                    }
+//                };
+
+                holder1.TextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (isCompleteResearch) {
                             getTypes(CurrentResearch.getMethodId(), String.valueOf(CurrentResearch.getMethodNdId()));
                             return;
                         }
 
-                      //  if (CurrentResearch.getMethodVal() != null && !CurrentResearch.getMethodVal().equals(parent.getItemAtPosition(position))) {
-                            if (CurrentResearch.getMethodId() != suggestionsMethods.get(position).getId()) {
+                        //  if (CurrentResearch.getMethodVal() != null && !CurrentResearch.getMethodVal().equals(parent.getItemAtPosition(position))) {
+                        if (CurrentResearch.getMethodId() != suggestionsMethods.get(position).getId()) {
                             CurrentResearch.ClearType();
+                            SpinType.clearListSelection();
                             final SuggestionMethod CurrentItem = suggestionsMethods.get(position);
 
                             CurrentResearch.setMethodId(CurrentItem.getId());
@@ -125,36 +184,48 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
 
                             getTypes(CurrentItem.getId(), String.valueOf(CurrentItem.getId_document()));
                         }
+                        holder1.TextView.clearFocus();
                     }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                    }
-                };
-                holder1.spiner.setOnItemSelectedListener(MethodSelectedListener);
-                SpinMethd = holder1.spiner;
+                });
+               // holder1.TextView.setOnItemSelectedListener(MethodSelectedListener);
+                SpinMethd = holder1.TextView;
             }
             break;
             case 3: {
-                AdapterView.OnItemSelectedListener TypeSelectedListener = new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                          if (isCompleteResearch) return;
+//                AdapterView.OnItemSelectedListener TypeSelectedListener = new AdapterView.OnItemSelectedListener() {
+//                    @Override
+//                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                          if (isCompleteResearch) return;
+//
+//                          if (CurrentResearch.getTypeId() != suggestionsTypes.get(position).getId()) {
+//                        //if (CurrentResearch.getTypeVal()!= null && !CurrentResearch.getTypeVal().equals(parent.getItemAtPosition(position))) {
+//                            final SuggestionType CurrentItem = suggestionsTypes.get(position);
+//                            CurrentResearch.setTypeId(CurrentItem.getId());
+//                            CurrentResearch.setTypeVal(String.valueOf(parent.getItemAtPosition(position)));
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onNothingSelected(AdapterView<?> parent) {
+//                    }
+//                };
 
-                          if (CurrentResearch.getTypeId() != suggestionsTypes.get(position).getId()) {
-                        //if (CurrentResearch.getTypeVal()!= null && !CurrentResearch.getTypeVal().equals(parent.getItemAtPosition(position))) {
+                holder1.TextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (isCompleteResearch) return;
+
+                        if (CurrentResearch.getTypeId() != suggestionsTypes.get(position).getId()) {
+                            //if (CurrentResearch.getTypeVal()!= null && !CurrentResearch.getTypeVal().equals(parent.getItemAtPosition(position))) {
                             final SuggestionType CurrentItem = suggestionsTypes.get(position);
                             CurrentResearch.setTypeId(CurrentItem.getId());
                             CurrentResearch.setTypeVal(String.valueOf(parent.getItemAtPosition(position)));
                         }
+                        holder1.TextView.clearFocus();
                     }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                    }
-                };
-                holder1.spiner.setOnItemSelectedListener(TypeSelectedListener);
-                SpinType = holder1.spiner;
+                });
+               // holder1.TextView.setOnItemSelectedListener(TypeSelectedListener);
+                SpinType = holder1.TextView;
             }
             break;
         }
@@ -166,20 +237,27 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final Field f = ResearchFields.get(position);
-        ((SpinerHolder) holder).txtHint.setText(f.getHint());
+        ((AutoCompleteFieldHolder) holder).Layout.setHint(f.getHint());
 
         if (CurrentResearch.getIndicatorVal() != null && CurrentResearch.getMethodVal() != null && CurrentResearch.getTypeVal() != null) {
             indicatorId = CurrentResearch.getIndicatorId();
             indicatorNdId = String.valueOf(CurrentResearch.getIndicatorNdId());
             isCompleteResearch = true;
             if (f.getColumn_id() == 0)
-                InitAdapter(Indicators, ((SpinerHolder) holder).spiner, CurrentResearch.getIndicatorVal());
+                InitAdapter(Indicators, ((AutoCompleteFieldHolder) holder).TextView);
+
+            if(f.getColumn_id() == 0)
+                ((AutoCompleteFieldHolder) holder).TextView.setText(CurrentResearch.getIndicatorVal());
+            if(f.getColumn_id() == 1)
+                ((AutoCompleteFieldHolder) holder).TextView.setText(CurrentResearch.getMethodVal());
+            if(f.getColumn_id() == 2)
+                ((AutoCompleteFieldHolder) holder).TextView.setText(CurrentResearch.getTypeVal());
         } else if (f.getColumn_id() == 0)
-            InitAdapter(Indicators, ((SpinerHolder) holder).spiner);
+            InitAdapter(Indicators, ((AutoCompleteFieldHolder) holder).TextView);
 
     }
 
-    private void InitAdapter(String[] mass, Spinner spiner) {
+    private void InitAdapter(String[] mass, AutoCompleteTextView spiner) {
         if (mass != null) {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(inflater.getContext(), android.R.layout.simple_spinner_item, mass);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -187,12 +265,12 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private void InitAdapter(String[] mass, Spinner spiner, String text) {
+    private void InitAdapter(String[] mass, AutoCompleteTextView spiner, String text) {
         if (mass != null) {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(inflater.getContext(), android.R.layout.simple_spinner_item, mass);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spiner.setAdapter(adapter);
-            spiner.setSelection(adapter.getPosition(text));
+            spiner.setText(text);
         }
     }
 

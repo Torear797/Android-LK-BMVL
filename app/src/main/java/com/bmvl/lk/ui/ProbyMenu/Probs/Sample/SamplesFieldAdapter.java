@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,8 +43,11 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
     private List<Suggestion> buffer_sug;
     private Integer buffer_id;
 
-    SamplesFieldAdapter(Context context, List<Field> SamFields, SamplesRest Sample) {
+    private Map<String, String> ProbFields; //Поля пробы
+
+    SamplesFieldAdapter(Context context, List<Field> SamFields, SamplesRest Sample,Map<String, String> ProbFields) {
         this.inflater = LayoutInflater.from(context);
+        this.ProbFields = ProbFields;
         viewPool = new RecyclerView.RecycledViewPool();
         SamplesField = SamFields;
         CurrentSample = Sample;
@@ -121,26 +125,22 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                     ((TextViewHolder) holder).field.setText(CurrentSample.getFields().get((short) f.getColumn_id()));
                 break;
             case 1:
-                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                ((SpinerHolder) holder).spiner.setAdapter(adapter);
-                ((SpinerHolder) holder).txtHint.setText(f.getHint());
-
-                if (CurrentSample.getFields().containsKey((short) (f.getColumn_id()))) {
-//                    String[] id = inflater.getContext().getResources().getStringArray(f.getEntries());
-//                    int CurrentID = 0;
-//                    for (String name : id) {
-//                        if (name.equals(CurrentSample.getFields().get((short) (f.getColumn_id()))))
-//                            break;
-//                        CurrentID++;
-//                    }
-//
-//                    if (CurrentID < id.length)
-//                        ((SpinerHolder) holder).spiner.setSelection(CurrentID);
-                    ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentSample.getFields().get((short) (f.getColumn_id()))));
-
+                if (f.getEntries() != -1) {
+                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    ((SpinerHolder) holder).spiner.setAdapter(adapter);
+                    if (CurrentSample.getFields().containsKey((short) (f.getColumn_id())))
+                        ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentSample.getFields().get((short) (f.getColumn_id()))));
+                } else {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(inflater.getContext(), android.R.layout.simple_spinner_item, f.getSpinerData());
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    ((SpinerHolder) holder).spiner.setAdapter(adapter);
+                    if (CurrentSample.getFields().containsKey((short) (f.getColumn_id())))
+                        ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentSample.getFields().get((short) (f.getColumn_id()))));
                 }
 
+
+                ((SpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
             case 5:
                 final List<String> items = Arrays.asList(inflater.getContext().getResources().getStringArray(f.getEntries()));
@@ -178,15 +178,18 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        short size = (short) CurrentSample.getResearches().size();
-                        short newid = 0;
-                        if (size > 0)
-                            newid = getPositionKeyR(size - 1, CurrentSample.getResearches());
+                        if(ProbFields.containsKey("5")) {
+                            short size = (short) CurrentSample.getResearches().size();
+                            short newid = 0;
+                            if (size > 0)
+                                newid = getPositionKeyR(size - 1, CurrentSample.getResearches());
 
-                        Map<Short, ResearchRest> insertlist = new HashMap<>();
-                        insertlist.put((short) (newid + 1), new ResearchRest(newid));
-                        Adapter.insertdata(insertlist);
-                        ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
+                            Map<Short, ResearchRest> insertlist = new HashMap<>();
+                            insertlist.put((short) (newid + 1), new ResearchRest(newid));
+                            Adapter.insertdata(insertlist);
+                            ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
+                        } else
+                            Toast.makeText(inflater.getContext(), inflater.getContext().getString(R.string.MaterialNoSelect), Toast.LENGTH_SHORT).show();
                     }
                 });
 

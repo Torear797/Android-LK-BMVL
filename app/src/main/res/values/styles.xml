@@ -35,6 +35,13 @@
         <item name="boxBackgroundColor">@color/field</item>
     </style>
 
+    <style name="AutoCompleteTextViewStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+        <item name="colorControlNormal">#c5c5c5</item>
+        <item name="colorControlActivated">@color/accent</item>
+        <item name="colorControlHighlight">@color/accent</item>
+        <item name="boxBackgroundColor">@color/field</item>
+    </style>
+
     <!--Input field style-->
     <style name="MySpinner" parent="Widget.AppCompat.Spinner">
         <item name="android:background">@drawable/spinner_bg</item>
@@ -57,5 +64,8 @@
         <item name="android:windowBackground">@drawable/background_splash_screen</item>
     </style>
 
+    <style name="TreeNodeStyleCustom">
+        <item name="android:paddingLeft">25dp</item>
+    </style>
 
 </resources>

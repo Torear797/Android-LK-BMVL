@@ -17,15 +17,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.Material;
 import com.bmvl.lk.Rest.NetworkService;
+import com.bmvl.lk.Rest.Order.OrdersAnswer;
 import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.data.TreeViewHolder.ProfileHolder;
+import com.bmvl.lk.data.TreeViewHolder.SelectableHeaderHolder;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.button.MaterialButton;
+import com.orhanobut.hawk.Hawk;
+import com.unnamed.b.atv.model.TreeNode;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,6 +39,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +55,8 @@ import retrofit2.Response;
 public class ProbsFragment extends Fragment implements OnBackPressedListener {
     private List<Field> ProbFields = new ArrayList<>(); //Поля пробы
     private List<Field> SampleFields = new ArrayList<>(); //Поля Образцов
+    public static List<Material> Materials = new ArrayList<>(); //Список материалов
+    public static TreeNode root; //Дерево материалов
     private ProbAdapter adapter;
 
     public ProbsFragment() {
@@ -119,6 +129,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
 
 //        recyclerView.setAdapter(adapter);
 //        NewProbListener(AddProbBtn, adapter, recyclerView);
+        getMaterialsList();
         new MyTask(recyclerView).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         return MyView;
     }
@@ -128,6 +139,54 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         super.onResume();
         if (adapter != null)
             adapter.notifyDataSetChanged();
+    }
+
+    private void getMaterialsList() {
+        NetworkService.getInstance()
+                .getJSONApi()
+                .getMaterials(App.UserAccessData.getToken())
+                .enqueue(new Callback<List<Material>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<Material>> call, @NonNull Response<List<Material>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            Materials = response.body();
+                            Collections.sort(Materials, new Comparator<Material>() {
+                                public int compare(Material obj1, Material obj2) {
+                                    return obj1.getText().compareToIgnoreCase(obj2.getText()); // To compare string values
+                                }
+                            });
+
+//                            TreeNode Localroot = TreeNode.root();
+//                            TreeNode parent, child1,child2;
+//                            for (Material CurrentMaterial : Materials) {
+//                                if (CurrentMaterial.getParent().equals("#")) {
+//                                    parent = new TreeNode(CurrentMaterial.getText()).setViewHolder(new SelectableHeaderHolder(getActivity()));
+//
+//                                    for (Material Lvl1 : Materials) {
+//                                        if (Lvl1.getParent().equals(String.valueOf(CurrentMaterial.getId()))) {
+//                                            child1 = new TreeNode(Lvl1.getText()).setViewHolder(new SelectableHeaderHolder(getActivity()));
+//
+//                                            for (Material Lvl2 : Materials) {
+//                                                if (Lvl2.getParent().equals(String.valueOf(Lvl1.getId()))) {
+//                                                    child2 = new TreeNode(Lvl2.getText()).setViewHolder(new ProfileHolder(getActivity()));
+//                                                    child1.addChild(child2);
+//                                                }
+//                                            }
+//
+//                                            parent.addChild(child1);
+//                                        }
+//                                    }
+//                                    Localroot.addChild(parent);
+//                                }
+//                            }
+                           // root = Localroot;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<Material>> call, @NonNull Throwable t) {
+                    }
+                });
     }
 
     private void NewProbListener(final MaterialButton AddProbBtn, final ProbAdapter adapter, final RecyclerView recyclerView) {
@@ -176,14 +235,14 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         SampleFields.add(new Field(6, "", "Наименование образца, термическое состояние", InputType.TYPE_CLASS_TEXT));
         SampleFields.add(new Field(22, "", "Дата выработки", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getActivity()).getDrawable(R.drawable.ic_date_range_black_24dp), true));
         SampleFields.add(new Field(40, "", "Масса/объем образца", InputType.TYPE_CLASS_TEXT));
-        SampleFields.add(new Field((byte) 1, R.array.units_of_measure, 41, "", " "));
-        SampleFields.add(new Field((byte) 5, R.array.documents, 19, "", "НД на продукцию"));
+        SampleFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)41), 41, " "));
+        SampleFields.add(new Field((byte) 5, R.array.documents, 19, "НД на продукцию"));
         SampleFields.add(new Field((byte) 6, 0, "", ""));
     }
 
     private void AddProbFieldsType1() {
         AddStandartFieldPart1();
-        ProbFields.add(new Field((byte) 1, R.array.packaging_type, 25, "", "Вид упаковки, наличие маркировки"));
+        ProbFields.add(new Field((byte) 1,  App.OrderInfo.getFieldValues().get((short)25), 25, "Вид упаковки, наличие маркировки"));
         AddStandartFieldPart2();
         AddSamplesForType1();
         ProbFields.add(new Field((byte) 7));
@@ -191,12 +250,12 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
 
     private void AddProbFieldsType3() {
         AddStandartFieldPart1();
-        ProbFields.add(new Field((byte) 1, R.array.packaging_type, 25, "", "Пробы упакованы"));
+        ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)25), 25, "Пробы упакованы"));
         AddStandartFieldPart2();
         ProbFields.add(new Field(143, "", "Кадастровый номер участка", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(144, "", "Глубина отбора", InputType.TYPE_NULL));
         ProbFields.add(new Field(145, "", "Площадь с которой отобрано", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field((byte) 1, R.array.units_of_measure, 146, "", " "));
+        ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)146), 146, " "));
         ProbFields.add(new Field(68, "", "Особые условия доставки проб", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(69, "", "Отклонения проб от нормального состояния", InputType.TYPE_CLASS_TEXT));
         AddSamplesForType3();
@@ -206,7 +265,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
     private void AddProbFieldsType4() {
         AddStandartFieldPart1();
         ProbFields.add(new Field(131, "", "Вид животного", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field((byte) 1, R.array.packaging_type, 25, "", "Пробы упакованы"));
+        ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)25), 25, "Пробы упакованы"));
         AddStandartFieldPart2();
         ProbFields.add(new Field((byte) 7));
         AddSamplesForType4();
@@ -214,7 +273,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
 
     private void AddPatternFieldsType1() {
         AddStandartFieldPart1();
-        ProbFields.add(new Field((byte) 1, R.array.packaging_type, 25, "", "Вид упаковки, наличие маркировки"));
+        ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)25), 25, "Вид упаковки, наличие маркировки"));
         AddStandartFieldPart3();
         AddSamplesForPatternType1();
         ProbFields.add(new Field((byte) 7));
@@ -222,12 +281,12 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
 
     private void AddPatternFieldsType3() {
         AddStandartFieldPart1();
-        ProbFields.add(new Field((byte) 1, R.array.packaging_type, 25, "", "Пробы упакованы"));
+        ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)25), 25, "Пробы упакованы"));
         AddStandartFieldPart3();
         ProbFields.add(new Field(143, "", "Кадастровый номер участка", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(144, "", "Глубина отбора", InputType.TYPE_NULL));
         ProbFields.add(new Field(145, "", "Площадь с которой отобрано", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field((byte) 1, R.array.units_of_measure, 146, "", " "));
+        ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)146), 146, " "));
         AddSamplesForType3();
         ProbFields.add(new Field((byte) 7));
     }
@@ -235,18 +294,21 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
     private void AddPatternFieldsType4() {
         AddStandartFieldPart1();
         ProbFields.add(new Field(131, "", "Вид животного", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field((byte) 1, R.array.packaging_type, 25, "", "Пробы упакованы"));
+        ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)25), 25, "Пробы упакованы"));
         AddStandartFieldPart3();
         AddSamplesForPatternType4();
         ProbFields.add(new Field((byte) 7));
     }
 
     private void AddStandartFieldPart1() {
-        ProbFields.add(new Field((byte) 1, R.array.type_material, 5, "", "Вид материала"));
-        ProbFields.add(new Field((byte) 5, R.array.documents, 116, "", "На соответствие требованиям"));
+        // ProbFields.add(new Field((byte) 1, R.array.type_material, 5, "", "Вид материала"));
+
+        ProbFields.add(new Field((byte) 6, 5, "", "Вид материала"));
+
+        ProbFields.add(new Field((byte) 5, R.array.documents, 116, "На соответствие требованиям"));
         ProbFields.add(new Field(15, "", "Номер сейф пакета", InputType.TYPE_CLASS_NUMBER));
-        ProbFields.add(new Field((byte) 1, R.array.sample_states, 32, "", "Состояние образца"));
-        ProbFields.add(new Field((byte) 1, R.array.transport, 60, "", "Транспорт"));
+        ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)32), 32, "Состояние образца"));
+        ProbFields.add(new Field((byte) 1, R.array.transport, 60, "Транспорт"));
         ProbFields.add(new Field(61, "", "", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(54, "", "Широта", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(55, "", "Долгота", InputType.TYPE_CLASS_TEXT));
@@ -279,7 +341,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
 
     private void AddSamplesForPatternType1() {
         SampleFields.add(new Field(6, "", "Наименование образца, термическое состояние", InputType.TYPE_CLASS_TEXT));
-        SampleFields.add(new Field((byte) 5, R.array.documents, 19, "", "НД на продукцию"));
+        SampleFields.add(new Field((byte) 5, R.array.documents, 19, "НД на продукцию"));
         SampleFields.add(new Field((byte) 6, 0, "", ""));
     }
 

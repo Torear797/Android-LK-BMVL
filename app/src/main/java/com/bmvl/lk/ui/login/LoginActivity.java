@@ -165,7 +165,6 @@ public class LoginActivity extends AppCompatActivity {
         Hawk.put("UserInfo", User.getUserInfo());
         Hawk.put("OrderInfo", User.getOrderInfo());
 
-
         App.setUserData(User.getAccessData(), User.getUserInfo(), User.getOrderInfo());
 
         AccessIsObtained();

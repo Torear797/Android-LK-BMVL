@@ -72,7 +72,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         if (CurrentProb.getProtocol() != null)
             simpleViewHolder.btnDownload.setVisibility(View.VISIBLE);
 
-        String nameMaterial = "Молоко сырое";
+        String nameMaterial = inflater.getContext().getString(R.string.MaterialNoSelectHeader);
         if (CurrentProb.getFields().containsKey("5"))
             nameMaterial = CurrentProb.getFields().get("materialName");
 

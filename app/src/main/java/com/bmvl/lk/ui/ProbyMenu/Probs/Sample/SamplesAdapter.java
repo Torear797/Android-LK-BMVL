@@ -37,12 +37,15 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     private List<Field> SamplesField; //Поля образцов
     private RecyclerView.RecycledViewPool viewPool;
 
+    private Map<String, String> ProbFields; //Поля пробы
+
     private SamplesFieldAdapter adapter;
 
-    public SamplesAdapter(Context context, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList) {
+    public SamplesAdapter(Context context, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList,Map<String, String> ProbFields) {
         this.inflater = LayoutInflater.from(context);
         SamplesField = Samples;
         this.Samples = SamplesList;
+        this.ProbFields = ProbFields;
         viewPool = new RecyclerView.RecycledViewPool();
     }
 
@@ -56,7 +59,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     @Override
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final SamplesRest CurrentSample = Samples.get(getPositionKey(i));
-        adapter = new SamplesFieldAdapter(inflater.getContext(), SamplesField, CurrentSample);
+        adapter = new SamplesFieldAdapter(inflater.getContext(), SamplesField, CurrentSample, ProbFields);
         simpleViewHolder.SampleList.setAdapter(adapter);
 
         if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {

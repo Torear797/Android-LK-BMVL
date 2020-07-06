@@ -7,6 +7,7 @@ import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.UserInfo.UserAccess;
 import com.bmvl.lk.Rest.UserInfo.UserInfoCall;
 
+import java.lang.reflect.Array;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -134,4 +135,8 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("orders/patterns")
     Call<AnswerPatterns> getPatterns(@Field("token") String token, @Field("standart") byte standart);
+
+    @FormUrlEncoded
+    @POST("ajax/getMaterialsTree")
+    Call<List<Material>> getMaterials(@Field("token") String token);
 }

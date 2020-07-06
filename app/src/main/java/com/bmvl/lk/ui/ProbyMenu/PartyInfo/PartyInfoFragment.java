@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
@@ -133,9 +134,9 @@ public class PartyInfoFragment extends Fragment {
             PartyInfoFields.add(new Field(42, "", "№", InputType.TYPE_CLASS_TEXT));
             PartyInfoFields.add(new Field(34, "", "Номер партии", InputType.TYPE_CLASS_TEXT));
             PartyInfoFields.add(new Field(36, "", "Масса (объем) партии", InputType.TYPE_CLASS_TEXT));
-            PartyInfoFields.add(new Field((byte) 1, R.array.units_of_measure, 37, "", " "));
+            PartyInfoFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)37), 37, " "));
             PartyInfoFields.add(new Field(38, "", "Количество в партии", InputType.TYPE_CLASS_TEXT));
-            PartyInfoFields.add(new Field((byte) 1, R.array.units_of_measure, 39, "", " "));
+            PartyInfoFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)39), 39, " "));
         }
         PartyInfoFields.add(new Field(44, "", "Упаковка партии", InputType.TYPE_CLASS_TEXT));
         PartyInfoFields.add(new Field(35, "", "Срок годности", InputType.TYPE_CLASS_TEXT));

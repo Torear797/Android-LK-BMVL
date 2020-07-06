@@ -38,72 +38,6 @@
         <item>Служебная информация</item>
     </string-array>
 
-    <string-array name="type_material">
-        <item>Молоко сырое</item>
-        <item>Мясо других видов животных</item>
-        <item>Мясо говядина</item>
-        <item>Мясо свинина</item>
-        <item>Мясо птицы</item>
-        <item>Мясо баранина</item>
-        <item>Мясо конина</item>
-        <item>Мясо кролика</item>
-        <item>Мясо диких животных</item>
-        <item>Сырье для кормовых добавок</item>
-    </string-array>
-
-    <string-array name="units_of_measure">
-        <item>-</item>
-        <item>°С</item>
-        <item>1 проба</item>
-        <item>мм</item>
-        <item>1 протокол</item>
-        <item>кг</item>
-        <item>1 иссл.</item>
-        <item>1 пассаж</item>
-        <item>3 пассажа</item>
-        <item>1 проба(3 исс</item>
-        <item>1 проба(3 иссл.)</item>
-        <item>1 проба(2 иссл.)</item>
-        <item>1 проба</item>
-        <item>1 час</item>
-        <item>проба</item>
-        <item>Бк/кг</item>
-        <item>Бк/л</item>
-        <item>%</item>
-        <item>ОПВиГ</item>
-        <item>Без названия</item>
-        <item>мкл</item>
-        <item>ед/л</item>
-        <item>г/л</item>
-        <item>ммоль/л</item>
-        <item>мкмоль/л</item>
-        <item>мкг/мл</item>
-        <item>мг%</item>
-        <item>мл%</item>
-        <item>мм/л</item>
-        <item>mmol/L</item>
-        <item>Cell/uL</item>
-        <item>umol/L</item>
-        <item>g/L</item>
-        <item>баллы</item>
-        <item>см{3} раствора NaOH 1моль/дм{3} /100 см{3}</item>
-        <item>°T</item>
-        <item>кг/м³</item>
-        <item>°C</item>
-        <item>группа</item>
-        <item>г/100 г</item>
-        <item>мг/кг</item>
-        <item>мкг/г</item>
-        <item>мгКОН</item>
-        <item>мг йода</item>
-        <item>мг КОН/г</item>
-        <item>ммоль активного кислорода/кг</item>
-        <item>мэкв/кг</item>
-        <item>ºК</item>
-        <item>Т</item>
-        <item>градус</item>
-    </string-array>
-
     <string-array name="documents">
         <item>ТР ТС 021/2011</item>
         <item>ГОСТ 32161-2013</item>
@@ -155,82 +89,12 @@
         <item>Инструкция по применению набора для выявления РНК ...</item>
         <item>Инструкция по применению набора для выявления ДНК ...</item>
     </string-array>
-    <string-array name="sample_states">
-        <item>Первично</item>
-        <item>Соответствует</item>
-        <item>доставлен в термоконтейнере с соблюдением сроков д...</item>
-        <item>полиэтиленовый пакет опечатан, с этикеткой</item>
-        <item>доставлен в установленных сроках годности, с соблю...</item>
-        <item>контроль первого вскрытия сейф-пакета сохранен</item>
-    </string-array>
+
     <string-array name="transport">
         <item>Авто</item>
         <item>ЖД</item>
         <item>Авиа</item>
         <item>Морской</item>
-    </string-array>
-    <string-array name="packaging_type">
-        <item>банка-крынка с крышкой</item>
-        <item>бочка</item>
-        <item>бумажные конверты, термосумка</item>
-        <item>бумажный мешок, полиэтиленовый пакет</item>
-        <item>бумажный пакет</item>
-        <item>бутылка из полиэтилентерефталата</item>
-        <item>в полиэтиленовом пакете, упакован в сейф-пакет, по...</item>
-        <item>в потребительской упаковке, упакован в сейф-пакет,...</item>
-        <item>вакуумная пробирка, термосумка</item>
-        <item>вакуумные пробирки, термосумка</item>
-        <item>вакуумный пакет</item>
-        <item>ванночка из полистирола</item>
-        <item>гофрокороб</item>
-        <item>гофротара</item>
-        <item>жестяная банка</item>
-        <item>картонная коробка</item>
-        <item>кашированная фольга</item>
-        <item>Контейнер, термосумка</item>
-        <item>Контейнеры, термосумка</item>
-        <item>лоток ВСП</item>
-        <item>монолит</item>
-        <item>пакет</item>
-        <item>пакеты, термосумка</item>
-        <item>пенопластовая коробка</item>
-        <item>пластиковая бутылка</item>
-        <item>пластиковые пакеты, термосумка</item>
-        <item>пластиковый контейнер, термосумка</item>
-        <item>пластиковый стакан с крышкой</item>
-        <item>пломба</item>
-        <item>подложка</item>
-        <item>Полимерная пленка, К/Д</item>
-        <item>полимерные пакеты в картонных коробках (2 короба)</item>
-        <item>полипропиленовая пленка</item>
-        <item>полипропиленовый стакан</item>
-        <item>полистерольный пакет</item>
-        <item>полиэтиленовые мешки</item>
-        <item>полиэтиленовый пакет</item>
-        <item>полиэтиленовый пакет с этикеткой</item>
-        <item>полиэтиленовый пакет, опечатано</item>
-        <item>полиэтиленовый пакет, опечатано, термосумка</item>
-        <item>пробирка, термосумка</item>
-        <item>Пробирки Эппендорфа, термосумка</item>
-        <item>пробирки, термосумка</item>
-        <item>Прозрачный пакет ПНД</item>
-        <item>Сейф-пакет</item>
-        <item>стаканчик из полимерных материалов по 150 г.</item>
-        <item>стеклянная бутылка</item>
-        <item>стерильные банки, закрытые плотной тканью, обвязан...</item>
-        <item>стерильные пластиковые пакеты</item>
-        <item>стерильный контейнер</item>
-        <item>стерильный пакет</item>
-        <item>тетра/брик</item>
-        <item>упакован в полиэтиленовый пакет, помещен в сейф-па...</item>
-        <item>упакован в полиэтиленовый пакет, промаркирован</item>
-        <item>упакован в сейф-пакет, помещен в изотермический ко...</item>
-        <item>упаковано под вакуумом</item>
-        <item>фирменный пакет</item>
-        <item>Фирменный пакет ПВД</item>
-        <item>флакон</item>
-        <item>флакон, термосумка</item>
-        <item>чашки Петри,термосумка</item>
     </string-array>
 
     <string-array name="Reserch_start">
@@ -342,7 +206,7 @@
     <string name="empty_orders">Список заявок пуст!</string>
     <string name="empty_notify">Список уведомлений пуст!</string>
     <string name="menu_patterns">Шаблоны</string>
-    <string name="server_lost">Сервер не доступен!</string>
+    <string name="server_lost">Сервер недоступен!</string>
     <string name="INN">ИНН</string>
     <string name="bank_info">Данные банка</string>
     <string name="data_contract">Дата контракта</string>
@@ -362,5 +226,7 @@
     <string name="error">Ошибка</string>
     <string name="accept_error">Для сохранения заявки вы должны согласиться с условиям.</string>
     <string name="research_error">У образца должно быть заполено хотя бы одно исследование.</string>
+    <string name="MaterialNoSelect">Материал не выбран</string>
+    <string name="MaterialNoSelectHeader">не выбрано</string>
 
 </resources>

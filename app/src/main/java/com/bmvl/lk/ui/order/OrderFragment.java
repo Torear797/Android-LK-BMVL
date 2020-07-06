@@ -8,10 +8,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,18 +30,15 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.AnswerCopyOrder;
 import com.bmvl.lk.Rest.AnswerDownloadOrder;
 import com.bmvl.lk.Rest.AnswerOrderEdit;
-import com.bmvl.lk.Rest.AnswerSendOrders;
+import com.bmvl.lk.Rest.AnswerOrderNew;
 import com.bmvl.lk.Rest.NetworkService;
-import com.bmvl.lk.Rest.Order.AnswerSendOrder;
 import com.bmvl.lk.Rest.Order.OrdersAnswer;
-import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Orders;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
-import com.bmvl.lk.ui.login.LoginActivity;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.util.Attributes;
@@ -72,12 +69,12 @@ import retrofit2.Response;
 public class OrderFragment extends Fragment implements OnBackPressedListener {
     public static List<Orders> Orders = new ArrayList<>();
     public static TreeMap<Short, SendOrder> offlineOrders = new TreeMap<>();
-    //public static List<SendOrder> offlineOrders = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     public static OrderSwipeAdapter OrderAdapter;
     private FloatingActionButton fab;
+    private ProgressBar ProgresBar;
 
     private boolean loading = true;
 
@@ -94,8 +91,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         super.onResume();
         if (App.isOnline(Objects.requireNonNull(getContext()))) {
             if (offlineOrders.size() > 0) SynchronizationOrders();
-            else
-            if (Orders.size() == 0) LoadOrders(Orders, (byte) 0);
+            else if (Orders.size() == 0) LoadOrders(Orders, (byte) 0);
             else UpdateOrders();
         }
 
@@ -155,6 +151,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
             offlineOrders = new TreeMap<Short, SendOrder>((HashMap<Short, SendOrder>) Hawk.get("OfflineOrders"));
 
         recyclerView = MyView.findViewById(R.id.list);
+        ProgresBar = MyView.findViewById(R.id.progressBar);
         swipeRefreshLayout = MyView.findViewById(R.id.SwipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(MyRefresh);
         fab = MyView.findViewById(R.id.floatingActionButton);
@@ -269,7 +266,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
             public void onCopyOrder(final com.bmvl.lk.data.models.Orders order) {
                 NetworkService.getInstance()
                         .getJSONApi()
-                        .CopyOrder(App.UserAccessData.getToken(), order.getId(), (byte)0)
+                        .CopyOrder(App.UserAccessData.getToken(), order.getId(), (byte) 0)
                         .enqueue(new Callback<AnswerCopyOrder>() {
                             @Override
                             public void onResponse(@NonNull Call<AnswerCopyOrder> call, @NonNull Response<AnswerCopyOrder> response) {
@@ -479,18 +476,68 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                         .setItems(R.array.order_types, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
-                                if (which == 0)
-                                    intent.putExtra("type_id", 1);
-                                else
-                                    //choce = (byte) (which + 2);
-                                    intent.putExtra("type_id", (byte) (which + 2));
-                                startActivity(intent);
+                                if (!App.isOnline(getContext())) {
+                                    Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
+                                    if (which == 0)
+                                        intent.putExtra("type_id", 1);
+                                    else
+                                        intent.putExtra("type_id", (byte) (which + 2));
+                                    startActivity(intent);
+                                } else UpdateOrderInfo(which);
                             }
                         })
                         .create()
                         .show();
             }
         });
+    }
+
+    private void UpdateOrderInfo(final int which) {
+        ProgresBar.setVisibility(View.VISIBLE);
+        NetworkService.getInstance()
+                .getJSONApi()
+                .OrderNew(App.UserAccessData.getToken())
+                .enqueue(new Callback<AnswerOrderNew>() {
+                    @Override
+                    public void onResponse(@NonNull Call<AnswerOrderNew> call, @NonNull Response<AnswerOrderNew> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            if (response.body().getStatus() == 200) {
+
+                                for (Map.Entry<Short, String> entry : response.body().getDefaultFields().entrySet()) {
+
+                                    if (!entry.getValue().equals("")) {
+                                        App.OrderInfo.setOD_ID(entry.getKey());
+                                        App.OrderInfo.setOD_Value(entry.getValue());
+                                        App.OrderInfo.setFieldValues(response.body().getFieldValues());
+                                        App.UserInfo = response.body().getUserInfo();
+
+                                        Hawk.put("UserInfo", App.UserInfo);
+                                        Hawk.put("OrderInfo",  App.OrderInfo);
+                                        break;
+                                    }
+                                }
+                                Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
+                                if (which == 0)
+                                    intent.putExtra("type_id", 1);
+                                else
+                                    intent.putExtra("type_id", (byte) (which + 2));
+                                ProgresBar.setVisibility(View.GONE);
+                                startActivity(intent);
+                            } else {
+                                ProgresBar.setVisibility(View.GONE);
+                                Toast.makeText(getContext(), R.string.auth_error, Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            ProgresBar.setVisibility(View.GONE);
+                            Toast.makeText(getContext(), R.string.auth_error, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<AnswerOrderNew> call, @NonNull Throwable t) {
+                        ProgresBar.setVisibility(View.GONE);
+                        Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

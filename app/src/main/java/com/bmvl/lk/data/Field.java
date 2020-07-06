@@ -5,12 +5,20 @@ import android.graphics.drawable.Drawable;
 public class Field {
 
     private byte Type;
+    private String[] SpinerData;
 
-    public Field(byte type, int entries, int column_id, String value, String hint) {
+    public Field(byte type, int entries, int column_id, String hint) {
         Type = type;
         this.entries = entries;
         this.column_id = column_id;
-        this.value = value;
+        Hint = hint;
+    }
+
+    public Field(byte type, String[] Data, int column_id, String hint) {
+        Type = type;
+        this.SpinerData = Data;
+        this.entries = -1;
+        this.column_id = column_id;
         Hint = hint;
     }
 
@@ -169,5 +177,13 @@ public class Field {
 
     public void setType(byte type) {
         Type = type;
+    }
+
+    public String[] getSpinerData() {
+        return SpinerData;
+    }
+
+    public void setSpinerData(String[] spinerData) {
+        SpinerData = spinerData;
     }
 }

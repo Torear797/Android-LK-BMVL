@@ -14,8 +14,6 @@ import com.bmvl.lk.Rest.AnswerOrderNew;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.UserInfo.OrderInfo;
 import com.bmvl.lk.Rest.UserInfo.UserAccess;
-import com.bmvl.lk.Rest.UserInfo.UserInfoCall;
-import com.bmvl.lk.data.models.LoggedInUser;
 
 import java.util.Map;
 
@@ -50,8 +48,8 @@ public class LoginViewModel extends ViewModel {
                             //App.UserAccessData = response.body();
                             assert response.body() != null;
                             if (response.body().getUser_id() != null)
-                               // getUserInfo(response.body(),context);
-                            getOrderNewInfo(response.body(), context);
+                                // getUserInfo(response.body(),context);
+                                getOrderNewInfo(response.body(), context);
 
                             else { //Пользователь ввел не верный лог/пас
                                 loginResult.setValue(new LoginResult(response.body().getText()));
@@ -90,7 +88,7 @@ public class LoginViewModel extends ViewModel {
 //                });
 //    }
 
-    private void getOrderNewInfo(final UserAccess accessData,final Context context) {
+    private void getOrderNewInfo(final UserAccess accessData, final Context context) {
         NetworkService.getInstance()
                 .getJSONApi()
                 .OrderNew(accessData.getToken())
@@ -99,23 +97,24 @@ public class LoginViewModel extends ViewModel {
                     public void onResponse(@NonNull Call<AnswerOrderNew> call, @NonNull Response<AnswerOrderNew> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             if (response.body().getStatus() == 200) {
-                                final Map<Short, String> defaultFields = response.body().getDefaultFields();
-
-                                for (Map.Entry<Short, String> entry : defaultFields.entrySet()) {
+                                for (Map.Entry<Short, String> entry : response.body().getDefaultFields().entrySet()) {
 
                                     if (!entry.getValue().equals("")) {
-                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo(entry.getKey(), entry.getValue()))));
+                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo(entry.getKey(), entry.getValue(), response.body().getFieldValues()))));
                                         break;
                                     }
                                 }
 
-                            }else
+                            } else
                                 loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
                         }
+                        else
+                            loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<AnswerOrderNew> call, @NonNull Throwable t) {
+                        Log.d("TAG","MSG",t);
                         loginResult.setValue(new LoginResult(context.getString(R.string.server_lost)));
                     }
                 });

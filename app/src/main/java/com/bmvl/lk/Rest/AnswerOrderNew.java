@@ -6,23 +6,23 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
 
-public class AnswerOrderNew extends StandardAnswer{
+public class AnswerOrderNew extends StandardAnswer {
 
     @SerializedName("defaultFields")
     @Expose
-   // private Map<Short, String> defaultFields;
     private Map<Short, String> defaultFields;
 
     @SerializedName("userInfo")
     @Expose
     private LoggedInUser UserInfo;
 
-//    @SerializedName("fieldValues")
-//    @Expose
-//  //  private Map<Short, String> fieldValues;
-//    private List<PairData> fieldValues;
+    public Map<Short, String[]> getFieldValues() {
+        return fieldValues;
+    }
 
-    public Map getDefaultFields() {
+    private Map<Short, String[]> fieldValues;
+
+    public Map<Short, String> getDefaultFields() {
         return defaultFields;
     }
 
@@ -30,7 +30,4 @@ public class AnswerOrderNew extends StandardAnswer{
         return UserInfo;
     }
 
-//    public List<PairData> getDefaultFields() {
-//        return defaultFields;
-//    }
 }

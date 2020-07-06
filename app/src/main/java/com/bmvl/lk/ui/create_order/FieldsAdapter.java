@@ -290,10 +290,10 @@ public class FieldsAdapter extends RecyclerView.Adapter {
 
                 break;
             } //Свич
-            case 4: //Акт
-               // ((SelectButtonHolder) holder).hint.setText(f.getHint());
-                if(f.getValue() != null && !f.getValue().equals("")){
-                  //  ((SelectButtonHolder) holder).path.setText(MessageFormat.format("{0}/{1}", NetworkService.getServerUrl(), f.getValue()));
+            case 4: {
+                // ((SelectButtonHolder) holder).hint.setText(f.getHint());
+                if (f.getValue() != null && !f.getValue().equals("")) {
+                    //  ((SelectButtonHolder) holder).path.setText(MessageFormat.format("{0}/{1}", NetworkService.getServerUrl(), f.getValue()));
 
                     ((SelectButtonHolder) holder).path.setText(android.text.Html.fromHtml("<u>Загруженный файл</u>"));
                     ((SelectButtonHolder) holder).path.setTextColor(Color.parseColor("#0066cc"));
@@ -303,9 +303,11 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                             inflater.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(MessageFormat.format("{0}/{1}", NetworkService.getServerUrl(), f.getValue()))));
                         }
                     });
-                           // ((SelectButtonHolder) holder).path.setText(MessageFormat.format("<a href=\"{0}", MessageFormat.format("{0}/{1}", NetworkService.getServerUrl(), f.getValue() + "\">Загруженный файл</a>")));
+                    // ((SelectButtonHolder) holder).path.setText(MessageFormat.format("<a href=\"{0}", MessageFormat.format("{0}/{1}", NetworkService.getServerUrl(), f.getValue() + "\">Загруженный файл</a>")));
                 }
+
                 break;
+            }//Акт
         }
     }
 

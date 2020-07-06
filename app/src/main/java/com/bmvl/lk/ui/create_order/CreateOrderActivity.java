@@ -115,8 +115,8 @@ public class CreateOrderActivity extends AppCompatActivity {
     } //Включает отображение таблицы проб
 
     private void addFieldOrderType1() {
-        Fields.add(new Field((byte) 1, R.array.target_research, 3, "", "Цель исследования/категория"));
-        Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), App.OrderInfo.getOD_Value(), "Оригиналы документов предоставлять")); //52. 63. 64
+        Fields.add(new Field((byte) 1, R.array.target_research, 3, "Цель исследования/категория"));
+        Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), "Оригиналы документов предоставлять")); //52. 63. 64
         Fields.add(new Field((byte) 3, 66, "", "Возврат образцов"));
         Fields.add(new Field((byte) 4, 0, act_of_selection, "Акт отбора"));
         Fields.add(new Field((byte) 5, 59, "", "Контрольный образец"));
@@ -126,7 +126,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     } //Заявка на исследования пищевых продуктов
 
     private void addFieldOrderType3() {
-        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "", "Цель исследования/категория"));
+        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "Цель исследования/категория"));
         Fields.add(new Field((byte) 3, 66, "", "Возврат образцов"));
         Fields.add(new Field((byte) 4, 0, act_of_selection, "Акт отбора"));
         Fields.add(new Field(24, "", "Сопроводительный документ", InputType.TYPE_CLASS_TEXT));
@@ -137,9 +137,9 @@ public class CreateOrderActivity extends AppCompatActivity {
     } //Заявка на исследование семян, почв, удобрений
 
     private void addFieldOrderType4() {
-        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "", "Цель исследования/категория"));
-        Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), App.OrderInfo.getOD_Value(), "Оригиналы документов предоставлять")); //52. 63. 64
-        Fields.add(new Field((byte) 1, R.array.Reserch_start, 97, "", "Исследование проводится")); //act_of_selection
+        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "Цель исследования/категория"));
+        Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), "Оригиналы документов предоставлять")); //52. 63. 64
+        Fields.add(new Field((byte) 1, R.array.Reserch_start, 97, "Исследование проводится")); //act_of_selection
         Fields.add(new Field((byte) 4, 0, act_of_selection, "Акт отбора"));
         Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
         Fields.add(new Field(10, "", "№", InputType.TYPE_CLASS_TEXT));
@@ -152,7 +152,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field(93, "", "Общее поголовье", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(98, "", "Дата предыдущего исследоваия", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
         Fields.add(new Field(99, "", "Результат предыдущего исследования", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field((byte) 1, R.array.hoz_zab, 97, "", "Хозяйство по вышеуказанному заболеванию"));
+        Fields.add(new Field((byte) 1, R.array.hoz_zab, 97, "Хозяйство по вышеуказанному заболеванию"));
         Fields.add(new Field(106, "", "Дата заболевания животного(ных)", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
         Fields.add(new Field(107, "", "Дата падежа", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
         Fields.add(new Field(108, "", "Клиническая картина", InputType.TYPE_CLASS_TEXT));
@@ -206,8 +206,8 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     private void addFieldPatternType1() {
         Fields.add(new Field(133, "", "Наименование шаблона", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "", "Цель исследования/категория"));
-        Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), App.OrderInfo.getOD_Value(), "Оригиналы документов предоставлять")); //52. 63. 64
+        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "Цель исследования/категория"));
+        Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), "Оригиналы документов предоставлять")); //52. 63. 64
         Fields.add(new Field((byte) 3, 66, "", "Возврат образцов"));
         Fields.add(new Field((byte) 5, 59, "", "Контрольный образец"));
         Fields.add(new Field(49, "", "Площадка", InputType.TYPE_CLASS_TEXT));
@@ -215,7 +215,7 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     private void addFieldPatternType3() {
         Fields.add(new Field(133, "", "Наименование шаблона", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "", "Цель исследования/категория"));
+        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "Цель исследования/категория"));
         Fields.add(new Field((byte) 3, 66, "", "Возврат образцов"));
         Fields.add(new Field(24, "", "Сопроводительный документ", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(9, "", "Владелец образцов", InputType.TYPE_CLASS_TEXT));
@@ -224,14 +224,14 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     private void addFieldPatternType4() {
         Fields.add(new Field(133, "", "Наименование шаблона", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "", "Цель исследования/категория"));
-        Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), App.OrderInfo.getOD_Value(), "Оригиналы документов предоставлять")); //52. 63. 64
-        Fields.add(new Field((byte) 1, R.array.Reserch_start, 97, "", "Исследование проводится")); //act_of_selection
+        Fields.add(new Field((byte) 1, R.array.target_research2, 3, "Цель исследования/категория"));
+        Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), "Оригиналы документов предоставлять")); //52. 63. 64
+        Fields.add(new Field((byte) 1, R.array.Reserch_start, 97, "Исследование проводится")); //act_of_selection
         Fields.add(new Field(24, "", "Сопроводительный документ", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(9, "", "Владелец образцов", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(49, "", "Площадка", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(93, "", "Общее поголовье", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field((byte) 1, R.array.hoz_zab, 97, "", "Хозяйство по вышеуказанному заболеванию"));
+        Fields.add(new Field((byte) 1, R.array.hoz_zab, 97, "Хозяйство по вышеуказанному заболеванию"));
         Fields.add(new Field(108, "", "Клиническая картина", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(109, "", "Данные патологического вскрытия", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(110, "", "Предположительный диагноз", InputType.TYPE_CLASS_TEXT));

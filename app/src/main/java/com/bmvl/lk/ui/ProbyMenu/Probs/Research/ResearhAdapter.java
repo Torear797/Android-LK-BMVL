@@ -31,10 +31,9 @@ import java.util.TreeMap;
 public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.ResearchItemHolder> {
     private LayoutInflater inflater;
     private TreeMap<Short, ResearchRest> researches; //Исследования
-    private List<Field> ResearchFields = new ArrayList<>();
+    //    private List<Field> ResearchFields = new ArrayList<>();
     private RecyclerView.RecycledViewPool viewPool;
 
-    private ResearchFieldAdapter adapter;
     private static String[] Indicators;
     private static List<Suggestion> suggestions;
     private static short materialId;
@@ -43,14 +42,19 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
         this.inflater = LayoutInflater.from(context);
         viewPool = new RecyclerView.RecycledViewPool();
         researches = ResearchesLise;
-        AddResearchFields();
+        //  AddResearchFields();
     }
 
-    private void AddResearchFields() {
-        ResearchFields.add(new Field((byte) 1, 0, "", "Показатель"));
-        ResearchFields.add(new Field((byte) 2, 1, "", "Метод испытаний"));
-        ResearchFields.add(new Field((byte) 3, 2, "", "Тип исследования"));
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
+
+//    private void AddResearchFields() {
+//        ResearchFields.add(new Field((byte) 1, 0, "", "Показатель"));
+//        ResearchFields.add(new Field((byte) 2, 1, "", "Метод испытаний"));
+//        ResearchFields.add(new Field((byte) 3, 2, "", "Тип исследования"));
+//    }
 
     @NonNull
     @Override
@@ -62,10 +66,13 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     @Override
     public void onBindViewHolder(ResearchItemHolder researchItemHolder, int i) {
         final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
-        adapter = new ResearchFieldAdapter(inflater.getContext(), ResearchFields, CurrentResearch, Indicators, suggestions, materialId);
+        ResearchFieldAdapter adapter = new ResearchFieldAdapter(inflater.getContext(), CurrentResearch, Indicators, suggestions, materialId, i + 1, researchItemHolder.Number);
         researchItemHolder.List.setAdapter(adapter);
 
-        researchItemHolder.Number.setText(MessageFormat.format("№ {0}", i + 1));
+        if (CurrentResearch.getIndicatorVal() != null && CurrentResearch.getMethodVal() != null && CurrentResearch.getTypeVal() != null)
+            researchItemHolder.Number.setText(MessageFormat.format("№ {0} - {1}", i + 1, inflater.getContext().getString(R.string.accreditation_ok)));
+        else
+            researchItemHolder.Number.setText(MessageFormat.format("№ {0} - {1}", i + 1, inflater.getContext().getString(R.string.accreditation_bad)));
 
         mItemManger.bindView(researchItemHolder.itemView, i);
     }

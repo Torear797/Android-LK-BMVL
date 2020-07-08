@@ -49,6 +49,11 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
         viewPool = new RecyclerView.RecycledViewPool();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

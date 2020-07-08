@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:mask="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
     style="@style/ClearFocus"
     android:layout_width="match_parent"
@@ -91,11 +92,14 @@
                         app:endIconDrawable="@drawable/ic_date_range_black_24dp"
                         app:endIconMode="custom">
 
-                        <com.google.android.material.textfield.TextInputEditText
+                        <br.com.sapereaude.maskedEditText.MaskedEditText
                             android:id="@+id/DataOt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="number" />
+                            android:inputType="date"
+                            android:typeface="monospace"
+                            app:allowed_chars="1234567890"
+                            app:mask="##.##.####" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -109,11 +113,14 @@
                         app:endIconDrawable="@drawable/ic_date_range_black_24dp"
                         app:endIconMode="custom">
 
-                        <com.google.android.material.textfield.TextInputEditText
+                        <br.com.sapereaude.maskedEditText.MaskedEditText
                             android:id="@+id/DataDo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="number" />
+                            android:inputType="date"
+                            android:typeface="monospace"
+                            app:allowed_chars="1234567890"
+                            app:mask="##.##.####" />
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>

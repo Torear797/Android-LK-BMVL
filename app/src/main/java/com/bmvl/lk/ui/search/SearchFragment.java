@@ -2,9 +2,9 @@ package com.bmvl.lk.ui.search;
 
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -20,7 +22,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.App;
@@ -32,6 +33,7 @@ import com.bmvl.lk.Rest.AnswerSearch;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.StandardAnswer;
+import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Orders;
@@ -40,35 +42,27 @@ import com.bmvl.lk.ui.order.OrderSwipeAdapter;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.orhanobut.hawk.Hawk;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 
+import br.com.sapereaude.maskedEditText.MaskedEditText;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.bmvl.lk.ui.order.OrderFragment.OrderAdapter;
-
 public class SearchFragment extends Fragment implements OnBackPressedListener {
-
-    // public static List<SearchField> Fields = new ArrayList<>();
- //   public static Map<String, String> Fields = new HashMap<>();
-    // private static GridLayoutManager mng_layout;
-    // private static SearchFieldsAdapter adapter;
     private static RecyclerView SearchList;
     private static List<Orders> SearchOrders = new ArrayList<>();
     private static OrderSwipeAdapter OrderSearchAdapter;
+    private static Calendar dateAndTime = Calendar.getInstance();
 
     public SearchFragment() {
     }
@@ -81,18 +75,6 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mng_layout = new GridLayoutManager(getContext(), 2);
-//        mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-//            @Override
-//            public int getSpanSize(int position) {
-//                if (position == 4 || position == 5) {
-//                    return 2;
-//                } else {
-//                    return 1;
-//                }
-//            }
-//        });
-//        adapter = new SearchFieldsAdapter(getContext());
     }
 
     public static SearchFragment newInstance() {
@@ -103,14 +85,18 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View MyView = inflater.inflate(R.layout.searchpanel, container, false);
 
-        // final RecyclerView recyclerView = MyView.findViewById(R.id.recyclerView);
         SearchList = MyView.findViewById(R.id.searchList);
         final Button SearchButton = MyView.findViewById(R.id.search_button);
 
         final TextInputEditText NumberOrder = MyView.findViewById(R.id.NumberOrder);
         final TextInputEditText NumberProtocol = MyView.findViewById(R.id.NumberProtocol);
-        final TextInputEditText DataOt = MyView.findViewById(R.id.DataOt);
-        final TextInputEditText DataDo = MyView.findViewById(R.id.DataDo);
+
+        final MaskedEditText DataOt = MyView.findViewById(R.id.DataOt);
+        final TextInputLayout DataOtLay = MyView.findViewById(R.id.DataOtLay);
+
+        final MaskedEditText DataDo = MyView.findViewById(R.id.DataDo);
+        final TextInputLayout DataDoLay = MyView.findViewById(R.id.DataDoLay);
+
         final TextInputEditText ContactFace = MyView.findViewById(R.id.ContactFace);
         final Spinner OrderType = MyView.findViewById(R.id.OrderType);
         final TextInputEditText Price = MyView.findViewById(R.id.Price);
@@ -121,6 +107,32 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
         initRecyclerView();
 
         // new MyTask(recyclerView).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        InputFilter[] filterArray = new InputFilter[1];
+////        filterArray[0] = new InputFilter.LengthFilter(10);
+////        DataOt.setFilters(filterArray);
+
+//        DataOt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(14)});
+//        DataOt.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                    switch (s.length()){
+//                        case 2:
+//                        case 5:
+//                            DataOt.setText(MessageFormat.format("{0} . ", DataOt.getText()));
+//                            DataOt.setSelection(Objects.requireNonNull(DataOt.getText()).length());
+//                          //  DataOt.setSelection(3);
+//                            break;
+//                    }
+//            }
+//        });
 
         SearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,7 +140,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
                 SearchButton.setEnabled(false);
 
                 String sort_name = "";
-                switch (Sort.getSelectedItemPosition()){
+                switch (Sort.getSelectedItemPosition()) {
                     case 0:
                         sort_name = "dateDESC";
                         break;
@@ -142,19 +154,6 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
 
                 NetworkService.getInstance()
                         .getJSONApi()
-//                        .Search(App.UserAccessData.getToken(),
-//                                Short.parseShort(Fields.get("id")),
-//                                Short.parseShort(Fields.get("protocolNumber")),
-//                                Fields.get("date[from]"),
-//                                Fields.get("date[to]"),
-//                                Fields.get("contactPersons"),
-//                                Byte.parseByte(Fields.get("orderType")),
-//                                Double.parseDouble(Fields.get("price[from]")),
-//                                Double.parseDouble(Fields.get("price[to]")),
-//                                Byte.parseByte(Fields.get("orderStatus")),
-//                                Fields.get("sort"),
-//                               (short)10,
-//                                (short)1
                         .Search(App.UserAccessData.getToken(),
                                 NumberOrder.getText().toString(),
                                 NumberProtocol.getText().toString(),
@@ -190,7 +189,49 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
                         });
             }
         });
+
+        DataSelectListener(DataDo, DataDoLay);
+        DataSelectListener(DataOt, DataOtLay);
         return MyView;
+    }
+
+    private void DataSelectListener(final MaskedEditText Data, TextInputLayout Layout) {
+        final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                ChangeData(year, monthOfYear, dayOfMonth, Data);
+            }
+        };
+        Layout.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(Objects.requireNonNull(getContext()), Datapicker,
+                        dateAndTime.get(Calendar.YEAR),
+                        dateAndTime.get(Calendar.MONTH),
+                        dateAndTime.get(Calendar.DAY_OF_MONTH))
+                        .show();
+            }
+        });
+
+    }
+
+    private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt) {
+        monthOfYear = monthOfYear + 1;
+//        dateAndTime.set(Calendar.YEAR, year);
+//        dateAndTime.set(Calendar.MONTH, monthOfYear);
+//        dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        int month = monthOfYear;
+        String formattedMonth = "" + month;
+        String formattedDayOfMonth = "" + dayOfMonth;
+
+        if (month < 10) {
+            formattedMonth = "0" + month;
+        }
+        if (dayOfMonth < 10) {
+            formattedDayOfMonth = "0" + dayOfMonth;
+        }
+
+        Edt.setText(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
     }
 
     @Override
@@ -230,15 +271,15 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
             public void onCopyOrder(final com.bmvl.lk.data.models.Orders order) {
                 NetworkService.getInstance()
                         .getJSONApi()
-                        .CopyOrder(App.UserAccessData.getToken(), order.getId(), (byte)0)
+                        .CopyOrder(App.UserAccessData.getToken(), order.getId(), (byte) 0)
                         .enqueue(new Callback<AnswerCopyOrder>() {
                             @Override
                             public void onResponse(@NonNull Call<AnswerCopyOrder> call, @NonNull Response<AnswerCopyOrder> response) {
                                 if (response.isSuccessful() && response.body() != null) {
                                     if (response.body().getStatus() == 200) {
-                                      //  List<Orders> insertlist = new ArrayList<>();
-                                     //   insertlist.add(new Orders(response.body().getOrderId(), order.getUser_id(), order.getType_id(), order.getStatus_id(), new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(new Date())));
-                                      //  OrderSearchAdapter.insertdata(insertlist, true);
+                                        //  List<Orders> insertlist = new ArrayList<>();
+                                        //   insertlist.add(new Orders(response.body().getOrderId(), order.getUser_id(), order.getType_id(), order.getStatus_id(), new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(new Date())));
+                                        //  OrderSearchAdapter.insertdata(insertlist, true);
                                         Snackbar.make(Objects.requireNonNull(getView()), R.string.order_copy, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                     }
                                 }
@@ -340,31 +381,4 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
             return false;
         }
     }
-
-//    private static class MyTask extends AsyncTask<Void, Void, String> {
-//        private RecyclerView recyclerView;
-//
-//        MyTask(RecyclerView List) {
-//            this.recyclerView = List;
-//        }
-//
-//        @Override
-//        protected String doInBackground(Void... params) {
-//            return "task finished";
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String result) {
-//            recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
-//            recyclerView.setHasFixedSize(true);
-//            recyclerView.setItemAnimator(new DefaultItemAnimator());
-//            recyclerView.setLayoutManager(mng_layout);
-//            recyclerView.setAdapter(adapter);
-//        }
-//    }
 }

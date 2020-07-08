@@ -61,6 +61,11 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull SimpleViewHolder simpleViewHolder, int i) {
         final ProbyRest CurrentProb = Probs.get(getPositionKey(i));
 

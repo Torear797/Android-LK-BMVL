@@ -233,8 +233,9 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
 
     private void AddSamplesForType1() {
         SampleFields.add(new Field(6, "", "Наименование образца, термическое состояние", InputType.TYPE_CLASS_TEXT));
-        SampleFields.add(new Field(22, "", "Дата выработки", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getActivity()).getDrawable(R.drawable.ic_date_range_black_24dp), true));
-        SampleFields.add(new Field(40, "", "Масса/объем образца", InputType.TYPE_CLASS_TEXT));
+        //SampleFields.add(new Field(22, "", "Дата выработки", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getActivity()).getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        SampleFields.add(new Field((byte) 8, 22, "", "Дата выработки"));
+        SampleFields.add(new Field(40, "", "Масса/объем образца", InputType.TYPE_CLASS_NUMBER));
         SampleFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)41), 41, " "));
         SampleFields.add(new Field((byte) 5, R.array.documents, 19, "НД на продукцию"));
         SampleFields.add(new Field((byte) 6, 0, "", ""));
@@ -308,7 +309,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         ProbFields.add(new Field((byte) 5, R.array.documents, 116, "На соответствие требованиям"));
         ProbFields.add(new Field(15, "", "Номер сейф пакета", InputType.TYPE_CLASS_NUMBER));
         ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)32), 32, "Состояние образца"));
-        ProbFields.add(new Field((byte) 1, R.array.transport, 60, "Транспорт"));
+        ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)60), 60, "Транспорт"));
         ProbFields.add(new Field(61, "", "", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(54, "", "Широта", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(55, "", "Долгота", InputType.TYPE_CLASS_TEXT));

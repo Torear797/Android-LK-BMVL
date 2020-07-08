@@ -90,13 +90,6 @@
         <item>Инструкция по применению набора для выявления ДНК ...</item>
     </string-array>
 
-    <string-array name="transport">
-        <item>Авто</item>
-        <item>ЖД</item>
-        <item>Авиа</item>
-        <item>Морской</item>
-    </string-array>
-
     <string-array name="Reserch_start">
         <item>Первично</item>
         <item>Повторно</item>
@@ -218,7 +211,7 @@
     <string name="notyfi_change_text">Уведомление прочтено!</string>
     <string name="no_permisssion_write">Нет разрешения на запись файла!</string>
     <string name="error_download">Ошибка скачивания!</string>
-    <string name="download_successfully">Документ успешно скачан!</string>
+    <string name="download_successfully">Документ скачан в папку загрузки!</string>
     <string name="order_copy">Заявка скопирована!</string>
     <string name="order_deleted">Заявка удалена!</string>
     <string name="save_text">Сохранить</string>
@@ -228,5 +221,8 @@
     <string name="research_error">У образца должно быть заполено хотя бы одно исследование.</string>
     <string name="MaterialNoSelect">Материал не выбран</string>
     <string name="MaterialNoSelectHeader">не выбрано</string>
+    <string name="indicatorValError">Показатель не заполнен</string>
+    <string name="accreditation_ok">Входит в область аккредитации</string>
+    <string name="accreditation_bad">Не входит в область аккредитации</string>
 
 </resources>

@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
+import com.bmvl.lk.ViewHolders.DataFieldHolder;
 import com.bmvl.lk.ViewHolders.OriginalDocHolder;
 import com.bmvl.lk.ViewHolders.SelectButtonHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
@@ -59,7 +60,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
-            case 1:
+            case 1: {
                 View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spiner, parent, false);
                 final SpinerHolder holder1 = new SpinerHolder(view1);
 
@@ -76,10 +77,12 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 holder1.spiner.setOnItemSelectedListener(itemSelectedListener);
 
                 return holder1;
-            case 2:
+            }//Спинер
+            case 2: {
                 View view2 = inflater.inflate(R.layout.item_original_doc, parent, false);
                 return new OriginalDocHolder(view2);
-            case 3:
+            }//DocOriginal
+            case 3: {
                 View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_check_button, parent, false);
                 final SwitchHolder holder3 = new SwitchHolder(view3);
 
@@ -90,13 +93,20 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 });
 
                 return holder3;
-            case 4:
+            } //item_check_button
+            case 4: {
                 View view4 = inflater.inflate(R.layout.item_button_select, parent, false);
                 return new SelectButtonHolder(view4);
-            case 5:
+            }//select btn
+            case 5: {
                 View view5 = inflater.inflate(R.layout.item_box_text, parent, false);
                 return new BoxAndTextHolder(view5);
-            default:
+            }//item_box_text
+            case 6: {
+                View view6 = inflater.inflate(R.layout.item_data_field, parent, false);
+                return new DataFieldHolder(view6);
+            }//item_box_text
+            default: {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_field, parent, false);
                 final TextViewHolder holder = new TextViewHolder(view);
 
@@ -120,6 +130,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 });
 
                 return holder;
+            }//EditText
         }
     }
 
@@ -146,26 +157,28 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 if (f.getIcon() != null) {
                     ((TextViewHolder) holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
                     ((TextViewHolder) holder).Layout.setEndIconDrawable(f.getIcon());
+                } else
 
-                    if (f.isData()) {
-                        final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field, f.getColumn_id());
-                            }
-                        };
-                        ((TextViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
-                                        dateAndTime.get(Calendar.YEAR),
-                                        dateAndTime.get(Calendar.MONTH),
-                                        dateAndTime.get(Calendar.DAY_OF_MONTH))
-                                        .show();
-                            }
-                        });
-
-                    }
-                } else if (f.isDoubleSize()) {
+//                    if (f.isData()) {
+//                        final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
+//                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//                                ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field, f.getColumn_id());
+//                            }
+//                        };
+//                        ((TextViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
+//                                        dateAndTime.get(Calendar.YEAR),
+//                                        dateAndTime.get(Calendar.MONTH),
+//                                        dateAndTime.get(Calendar.DAY_OF_MONTH))
+//                                        .show();
+//                            }
+//                        });
+//
+//                    }
+//                } else
+                    if (f.isDoubleSize()) {
                     ((TextViewHolder) holder).field.setGravity(Gravity.START | Gravity.TOP);
                     ((TextViewHolder) holder).field.setMinLines(4);
                     ((TextViewHolder) holder).field.setLines(6);
@@ -308,14 +321,34 @@ public class FieldsAdapter extends RecyclerView.Adapter {
 
                 break;
             }//Акт
+            case 6:{
+                ((DataFieldHolder) holder).Layout.setHint(f.getHint());
+                ((DataFieldHolder) holder).field.setText(OrderFields.get((short) f.getColumn_id()));
+
+                final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        ChangeData(year, monthOfYear, dayOfMonth, ((DataFieldHolder) holder).field, f.getColumn_id());
+                    }
+                };
+                ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
+                                dateAndTime.get(Calendar.YEAR),
+                                dateAndTime.get(Calendar.MONTH),
+                                dateAndTime.get(Calendar.DAY_OF_MONTH))
+                                .show();
+                    }
+                });
+            }//DataField
         }
     }
 
     private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt, int position) {
         monthOfYear = monthOfYear + 1;
-        dateAndTime.set(Calendar.YEAR, year);
-        dateAndTime.set(Calendar.MONTH, monthOfYear);
-        dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+//        dateAndTime.set(Calendar.YEAR, year);
+//        dateAndTime.set(Calendar.MONTH, monthOfYear);
+//        dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
         int month = monthOfYear;
         String formattedMonth = "" + month;
@@ -329,6 +362,8 @@ public class FieldsAdapter extends RecyclerView.Adapter {
         }
         OrderFields.put((short) position, MessageFormat.format("{0}.{1}.{2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
         Edt.setText(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
+        Edt.requestFocus();
+        Edt.setSelection(Edt.getText().length());
     }
 
     @Override

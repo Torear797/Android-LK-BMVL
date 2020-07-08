@@ -27,6 +27,7 @@ import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.ViewHolders.AutoCompleteTextViewHolder;
+import com.bmvl.lk.ViewHolders.DataFieldHolder;
 import com.bmvl.lk.ViewHolders.MultiSpinerHolder;
 import com.bmvl.lk.ViewHolders.SamplesPanelHolder;
 import com.bmvl.lk.ViewHolders.SelectButtonHolder;
@@ -174,6 +175,10 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             case 7:
                 View view7 = inflater.inflate(R.layout.item_research_list, parent, false);
                 return new SamplesPanelHolder(view7);
+            case 8:{
+                View view8 = inflater.inflate(R.layout.item_data_field, parent, false);
+                return new DataFieldHolder(view8);
+            }//DataField
             default:
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_field, parent, false);
                 final TextViewHolder holder = new TextViewHolder(view);
@@ -218,24 +223,24 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     ((TextViewHolder) holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
                     ((TextViewHolder) holder).Layout.setEndIconDrawable(f.getIcon());
 
-                    if (f.isData()) {
-                        final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field, f);
-                            }
-                        };
-                        ((TextViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
-                                        dateAndTime.get(Calendar.YEAR),
-                                        dateAndTime.get(Calendar.MONTH),
-                                        dateAndTime.get(Calendar.DAY_OF_MONTH))
-                                        .show();
-                            }
-                        });
-
-                    }
+//                    if (f.isData()) {
+//                        final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
+//                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//                                ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field, f);
+//                            }
+//                        };
+//                        ((TextViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
+//                                        dateAndTime.get(Calendar.YEAR),
+//                                        dateAndTime.get(Calendar.MONTH),
+//                                        dateAndTime.get(Calendar.DAY_OF_MONTH))
+//                                        .show();
+//                            }
+//                        });
+//
+//                    }
                 }
 
                 break;
@@ -346,6 +351,26 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 break;
             } // Иссследования
+            case 8:{
+                ((DataFieldHolder) holder).Layout.setHint(f.getHint());
+                ((DataFieldHolder) holder).field.setText(CurrentProb.getFields().get(String.valueOf(f.getColumn_id())));
+
+                final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        ChangeData(year, monthOfYear, dayOfMonth, ((DataFieldHolder) holder).field, f.getColumn_id());
+                    }
+                };
+                ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
+                                dateAndTime.get(Calendar.YEAR),
+                                dateAndTime.get(Calendar.MONTH),
+                                dateAndTime.get(Calendar.DAY_OF_MONTH))
+                                .show();
+                    }
+                });
+            }//DataField
         }
 
     }
@@ -356,11 +381,11 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
         else return 0;
     }
 
-    private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt, Field f) {
+    private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt, int position) {
         monthOfYear = monthOfYear + 1;
-        dateAndTime.set(Calendar.YEAR, year);
-        dateAndTime.set(Calendar.MONTH, monthOfYear);
-        dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+//        dateAndTime.set(Calendar.YEAR, year);
+//        dateAndTime.set(Calendar.MONTH, monthOfYear);
+//        dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
         int month = monthOfYear;
         String formattedMonth = "" + month;
@@ -373,8 +398,10 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             formattedDayOfMonth = "0" + dayOfMonth;
         }
 
-        CurrentProb.getFields().put(String.valueOf(f.getColumn_id()), MessageFormat.format("{0}.{1}.{2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
+        CurrentProb.getFields().put(String.valueOf(position), MessageFormat.format("{0}.{1}.{2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
         Edt.setText(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
+        Edt.requestFocus();
+        Edt.setSelection(Edt.getText().length());
     }
 
     @Override

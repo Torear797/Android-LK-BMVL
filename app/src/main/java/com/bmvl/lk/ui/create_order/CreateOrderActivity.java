@@ -120,7 +120,10 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field((byte) 3, 66, "", "Возврат образцов"));
         Fields.add(new Field((byte) 4, 0, act_of_selection, "Акт отбора"));
         Fields.add(new Field((byte) 5, 59, "", "Контрольный образец"));
-        Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+
+        //Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        Fields.add(new Field((byte) 6, 11, "", "Акт отбора от"));
+
         Fields.add(new Field(10, "", "№", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(49, "", "Площадка", InputType.TYPE_CLASS_TEXT));
     } //Заявка на исследования пищевых продуктов
@@ -132,7 +135,8 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field(24, "", "Сопроводительный документ", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(9, "", "Владелец образцов", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field((byte) 5, 59, "", "Контрольный образец"));
-        Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+       // Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        Fields.add(new Field((byte) 6, 11, "", "Акт отбора от"));
         Fields.add(new Field(10, "", "№", InputType.TYPE_CLASS_TEXT));
     } //Заявка на исследование семян, почв, удобрений
 
@@ -141,7 +145,8 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), "Оригиналы документов предоставлять")); //52. 63. 64
         Fields.add(new Field((byte) 1, R.array.Reserch_start, 97, "Исследование проводится")); //act_of_selection
         Fields.add(new Field((byte) 4, 0, act_of_selection, "Акт отбора"));
-        Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+       // Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        Fields.add(new Field((byte) 6, 11, "", "Акт отбора от"));
         Fields.add(new Field(10, "", "№", InputType.TYPE_CLASS_TEXT));
 
         Fields.add(new Field(24, "", "Сопроводительный документ", InputType.TYPE_CLASS_TEXT));
@@ -150,11 +155,14 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field(7, "", "Количество проб", InputType.TYPE_NULL));
         order.getFields().put((short) 7, "1");
         Fields.add(new Field(93, "", "Общее поголовье", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field(98, "", "Дата предыдущего исследоваия", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        //Fields.add(new Field(98, "", "Дата предыдущего исследоваия", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        Fields.add(new Field((byte) 6, 98, "", "Дата предыдущего исследоваия"));
         Fields.add(new Field(99, "", "Результат предыдущего исследования", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field((byte) 1, R.array.hoz_zab, 97, "Хозяйство по вышеуказанному заболеванию"));
-        Fields.add(new Field(106, "", "Дата заболевания животного(ных)", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
-        Fields.add(new Field(107, "", "Дата падежа", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+       // Fields.add(new Field(106, "", "Дата заболевания животного(ных)", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        Fields.add(new Field((byte) 6, 106, "", "Дата заболевания животного(ных)"));
+        //Fields.add(new Field(107, "", "Дата падежа", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        Fields.add(new Field((byte) 6, 107, "", "Дата падежа"));
         Fields.add(new Field(108, "", "Клиническая картина", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(109, "", "Данные патологического вскрытия", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(110, "", "Предположительный диагноз", InputType.TYPE_CLASS_TEXT));
@@ -165,7 +173,8 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field(123, "", "Сумма долга (руб)", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.rub)));
         Fields.add(new Field(117, "", "Номер заявки", InputType.TYPE_CLASS_NUMBER));
         Fields.add(new Field(134, "", "Счет на оплату №", InputType.TYPE_CLASS_TEXT));
-        Fields.add(new Field(124, "", "Срок уплаты", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        //Fields.add(new Field(124, "", "Срок уплаты", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        Fields.add(new Field((byte) 6, 124, "", "Срок уплаты"));
         Fields.add(new Field(119, "", true, "Текст", InputType.TYPE_TEXT_FLAG_MULTI_LINE));
     } //Гарантийное письмо
 
@@ -256,18 +265,26 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private boolean isFieldCorrect() {
+        //Проверка на согласие с условиями
         if (cbox.getVisibility() == View.VISIBLE && !cbox.isChecked()) {
             Toast.makeText(getApplicationContext(), R.string.accept_error, Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        if (order.getProby() != null)
+        //Проверка на наличие у заявки проб. Если пробы были удалены (все), вернется 0, а не null.
+        if (order.getProby() != null) {
             for (TreeMap.Entry<Short, ProbyRest> prob : order.getProby().entrySet()) {
-                if (!prob.getValue().isResearchCorrect()) {
-                    Toast.makeText(getApplicationContext(), R.string.research_error, Toast.LENGTH_SHORT).show();
+                //Проверка на наличие материалла
+                if(!prob.getValue().getFields().containsKey("5")&& !prob.getValue().getFields().containsKey("materialName")){
+                    Toast.makeText(getApplicationContext(), R.string.MaterialNoSelect, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                //Проверка на заполненность исследований
+                if (!prob.getValue().isResearchCorrect(getApplicationContext())) {
                     return false;
                 }
             }
+        }
 
         return true;
     }

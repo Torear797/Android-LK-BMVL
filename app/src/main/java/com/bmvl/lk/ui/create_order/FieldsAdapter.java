@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +33,8 @@ import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.data.Field;
+import com.bmvl.lk.data.models.Orders;
+import com.bmvl.lk.ui.order.OrderSwipeAdapter;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -41,14 +44,23 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.Objects;
 
+import static android.app.Activity.RESULT_OK;
+
 public class FieldsAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private static Calendar dateAndTime = Calendar.getInstance();
     private static Map<Short, String> OrderFields;
 
-    FieldsAdapter(Context context) {
+    private FieldsAdapter.ClickFieldListener onClickFieldListener;
+
+    FieldsAdapter(Context context, ClickFieldListener Listener) {
         this.inflater = LayoutInflater.from(context);
+        this.onClickFieldListener = Listener;
         OrderFields = CreateOrderActivity.order.getFields();
+    }
+
+    public interface ClickFieldListener {
+        void onLoadActOfSelection(TextView path);
     }
 
     @Override
@@ -318,6 +330,13 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                     });
                     // ((SelectButtonHolder) holder).path.setText(MessageFormat.format("<a href=\"{0}", MessageFormat.format("{0}/{1}", NetworkService.getServerUrl(), f.getValue() + "\">Загруженный файл</a>")));
                 }
+
+                ((SelectButtonHolder) holder).select_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onClickFieldListener.onLoadActOfSelection(((SelectButtonHolder) holder).path);
+                    }
+                });
 
                 break;
             }//Акт

@@ -13,7 +13,7 @@ public class PatternsPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        if(position == 0) return PatternsFragment.newInstance();
+        if (position == 0) return PatternsFragment.newInstance();
         else return StandartPatternsFragment.newInstance();
     }
 

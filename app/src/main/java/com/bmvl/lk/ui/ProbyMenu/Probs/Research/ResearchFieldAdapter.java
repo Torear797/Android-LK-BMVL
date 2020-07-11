@@ -303,9 +303,9 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
 
     private void InitAdapter(String[] mass, AutoCompleteTextView spiner) {
         if (mass != null) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(inflater.getContext(), android.R.layout.simple_spinner_item, mass);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spiner.setAdapter(adapter);
+           // ArrayAdapter<String> adapter = ;
+           // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spiner.setAdapter(new ArrayAdapter<>(inflater.getContext(), android.R.layout.simple_dropdown_item_1line, mass));
         }
     }
 

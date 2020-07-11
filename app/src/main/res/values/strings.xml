@@ -224,5 +224,7 @@
     <string name="indicatorValError">Показатель не заполнен</string>
     <string name="accreditation_ok">Входит в область аккредитации</string>
     <string name="accreditation_bad">Не входит в область аккредитации</string>
+    <string name="NoFileMeneger">Файловый менеджер не найден.</string>
+    <string name="ChoceFile">Выберите файл</string>
 
 </resources>

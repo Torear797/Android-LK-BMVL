@@ -94,7 +94,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
             else if (Orders.size() == 0) LoadOrders(Orders, (byte) 0);
             else UpdateOrders();
         }
-
     }
 
     public OrderFragment() {
@@ -203,13 +202,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                         break;
                                 }
                             }
-//                            else {
-//                                Hawk.deleteAll();
-//                                Intent intent = new Intent(getContext(), LoginActivity.class);
-//                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                startActivity(intent);
-//                                Objects.requireNonNull(getActivity()).finish();
-//                            }
                         } else swipeRefreshLayout.setRefreshing(false);
                         if (Orders.size() == 0) message.setVisibility(View.VISIBLE);
                         else message.setVisibility(View.GONE);
@@ -290,6 +282,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
             @Override
             public void onDownloadOrder(final int id) {
+                ProgresBar.setVisibility(View.VISIBLE);
                 if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     NetworkService.getInstance()
                             .getJSONApi()
@@ -305,15 +298,19 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                                 Toast.makeText(getContext(), R.string.error_download, Toast.LENGTH_SHORT).show();
                                         }
                                     }
+                                    ProgresBar.setVisibility(View.GONE);
                                 }
 
                                 @Override
                                 public void onFailure(@NonNull Call<AnswerDownloadOrder> call, @NonNull Throwable t) {
+                                    ProgresBar.setVisibility(View.GONE);
                                     Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
                                 }
                             });
-                } else
+                } else {
+                    ProgresBar.setVisibility(View.GONE);
                     Toast.makeText(getContext(), R.string.no_permisssion_write, Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -357,6 +354,11 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                     intent.putExtra(SendOrder.class.getSimpleName(), offlineOrders.get((short) order.getId()));
                     startActivity(intent);
                 }
+            }
+
+            @Override
+            public void onScrollToOrder(int position) {
+                recyclerView.smoothScrollToPosition(position+2);
             }
 
         };
@@ -409,7 +411,6 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
     @Override
     public void onBackPressed() {
-
     }
 
     private SwipeRefreshLayout.OnRefreshListener MyRefresh = new SwipeRefreshLayout.OnRefreshListener() {
@@ -435,9 +436,8 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0 || dy < 0 && fab.isShown()) {
+                if (dy > 0 || dy < 0 && fab.isShown())
                     fab.hide();
-                }
 
                 if (dy > 0 && (CurrentPage + 1) <= TotalPage) //check for scroll down
                 {
@@ -449,8 +449,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                     if (loading) {
                         if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
                             loading = false;
-                            List<Orders> insertlist = new ArrayList<>();
-                            LoadOrders(insertlist, (byte) 2);
+                            LoadOrders(new ArrayList<>(), (byte) 2);
                         }
                     }
                 }

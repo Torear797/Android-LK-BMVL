@@ -195,8 +195,8 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
                     if (loading) {
                         if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
                             loading = false;
-                            List<Notifications> insertlist = new ArrayList<>();
-                            InsertNotifications(insertlist, (byte) 2);
+                          //  List<Notifications> insertlist = ;
+                            InsertNotifications(new ArrayList<>(), (byte) 2);
                         }
                     }
                 }

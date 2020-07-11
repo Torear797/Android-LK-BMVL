@@ -8,5 +8,9 @@ public class AnswerSendOrder extends StandardAnswer {
 
     @SerializedName("order_id")
     @Expose
-    private String order_id;
+    private int order_id;
+
+    public int getOrder_id() {
+        return order_id;
+    }
 }

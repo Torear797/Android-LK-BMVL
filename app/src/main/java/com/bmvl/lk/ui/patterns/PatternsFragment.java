@@ -1,9 +1,7 @@
 package com.bmvl.lk.ui.patterns;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -21,7 +19,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.AnswerCopyOrder;
-import com.bmvl.lk.Rest.AnswerDownloadOrder;
 import com.bmvl.lk.Rest.AnswerOrderEdit;
 import com.bmvl.lk.Rest.AnswerPatterns;
 import com.bmvl.lk.Rest.NetworkService;
@@ -29,11 +26,8 @@ import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.data.models.Orders;
 import com.bmvl.lk.data.models.Pattern;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
-import com.bmvl.lk.ui.order.OrderFragment;
-import com.bmvl.lk.ui.order.OrderSwipeAdapter;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.util.Attributes;
@@ -42,11 +36,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.orhanobut.hawk.Hawk;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -78,6 +69,8 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
     @Override
     public void onResume() {
         super.onResume();
+        if (PatternAdapter != null)
+            PatternAdapter.notifyDataSetChanged();
         if (App.isOnline(Objects.requireNonNull(getContext()))) {
             if (Patterns.size() == 0) LoadPatterns(Patterns, (byte) 0);
             else UpdatePatterns();
@@ -111,6 +104,7 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
         else message.setVisibility(View.GONE);
 
         initRecyclerView();
+        // PatternAdapter.notifyDataSetChanged();
         recyclerView.scrollToPosition(0);
 
         YoYo.with(Techniques.Tada)
@@ -142,7 +136,7 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
                             if (response.body().getStatus() == 200) {
                                 TotalPage = response.body().getOrders().getTotal_pages();
                                 CurrentPage = response.body().getOrders().getCurrent();
-                                PatternAdapter.notifyDataSetChanged();
+                                //PatternAdapter.notifyDataSetChanged();
                                 NewList.addAll(response.body().getOrders().getPatterns());
                                 Hawk.put("PatternsList", NewList);
                                 switch (Type) {
@@ -328,6 +322,7 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
 
         };
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 10, (byte) 10));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
 
         PatternAdapter = new PatternAdapter(getContext(), Patterns, onClickListener);
@@ -341,9 +336,8 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0 || dy < 0 && fab.isShown()) {
-                    fab.hide();
-                }
+//                if (dy > 0 || dy < 0 && fab.isShown())
+//                    fab.hide();
 
                 if (dy > 0 && (CurrentPage + 1) <= TotalPage) //check for scroll down
                 {
@@ -355,8 +349,8 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
                     if (loading) {
                         if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
                             loading = false;
-                            List<Pattern> insertlist = new ArrayList<>();
-                            LoadPatterns(insertlist, (byte) 2);
+                            // List<Pattern> insertlist = ;
+                            LoadPatterns(new ArrayList<>(), (byte) 2);
                         }
                     }
                 }

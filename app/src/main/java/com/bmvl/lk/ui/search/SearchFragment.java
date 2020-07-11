@@ -7,13 +7,18 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -26,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.AnswerContactPersons;
 import com.bmvl.lk.Rest.AnswerCopyOrder;
 import com.bmvl.lk.Rest.AnswerDownloadOrder;
 import com.bmvl.lk.Rest.AnswerOrderEdit;
@@ -33,9 +39,9 @@ import com.bmvl.lk.Rest.AnswerSearch;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.StandardAnswer;
-import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.data.models.ContactPersons;
 import com.bmvl.lk.data.models.Orders;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.bmvl.lk.ui.order.OrderSwipeAdapter;
@@ -43,6 +49,7 @@ import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringTokenizer;
 
 import br.com.sapereaude.maskedEditText.MaskedEditText;
 import retrofit2.Call;
@@ -63,6 +71,9 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
     private static List<Orders> SearchOrders = new ArrayList<>();
     private static OrderSwipeAdapter OrderSearchAdapter;
     private static Calendar dateAndTime = Calendar.getInstance();
+    private static List<ContactPersons> ContactPersons;
+    private MultiAutoCompleteTextView ContactFace;
+    private static String ChosenContactPerson = "";
 
     public SearchFragment() {
     }
@@ -75,6 +86,14 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (App.isOnline(Objects.requireNonNull(getContext()))) {
+            getContactFaceList();
+        }
     }
 
     public static SearchFragment newInstance() {
@@ -97,7 +116,8 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
         final MaskedEditText DataDo = MyView.findViewById(R.id.DataDo);
         final TextInputLayout DataDoLay = MyView.findViewById(R.id.DataDoLay);
 
-        final TextInputEditText ContactFace = MyView.findViewById(R.id.ContactFace);
+        ContactFace = MyView.findViewById(R.id.ContactFace);
+
         final Spinner OrderType = MyView.findViewById(R.id.OrderType);
         final TextInputEditText Price = MyView.findViewById(R.id.Price);
         final TextInputEditText PriceDo = MyView.findViewById(R.id.PriceDo);
@@ -106,112 +126,189 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
 
         initRecyclerView();
 
-        // new MyTask(recyclerView).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//        InputFilter[] filterArray = new InputFilter[1];
-////        filterArray[0] = new InputFilter.LengthFilter(10);
-////        DataOt.setFilters(filterArray);
+        if (Hawk.contains("ContactPersons")) {
+            ContactPersons = Hawk.get("ContactPersons");
+            ContactFace.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+            ContactFace.setAdapter(new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_dropdown_item_1line, getMassivString()));
+        }
 
-//        DataOt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(14)});
-//        DataOt.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                    switch (s.length()){
-//                        case 2:
-//                        case 5:
-//                            DataOt.setText(MessageFormat.format("{0} . ", DataOt.getText()));
-//                            DataOt.setSelection(Objects.requireNonNull(DataOt.getText()).length());
-//                          //  DataOt.setSelection(3);
-//                            break;
-//                    }
-//            }
-//        });
+       // ContactFace.getAdapter().getItem(0).
 
-        SearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SearchButton.setEnabled(false);
+        SearchButton.setOnClickListener(v -> {
+            SearchButton.setEnabled(false);
 
-                String sort_name = "";
-                switch (Sort.getSelectedItemPosition()) {
-                    case 0:
-                        sort_name = "dateDESC";
-                        break;
-                    case 1:
-                        sort_name = "dateASC";
-                        break;
-                    case 2:
-                        sort_name = "status";
-                        break;
-                }
+            String sort_name = "";
+            switch (Sort.getSelectedItemPosition()) {
+                case 0:
+                    sort_name = "dateDESC";
+                    break;
+                case 1:
+                    sort_name = "dateASC";
+                    break;
+                case 2:
+                    sort_name = "status";
+                    break;
+            }
 
-                NetworkService.getInstance()
-                        .getJSONApi()
-                        .Search(App.UserAccessData.getToken(),
-                                NumberOrder.getText().toString(),
-                                NumberProtocol.getText().toString(),
-                                DataOt.getText().toString(),
-                                DataDo.getText().toString(),
-                                ContactFace.getText().toString(),
-                                ((byte) ((byte) OrderType.getSelectedItemPosition() + 1)),
-                                Price.getText().toString(),
-                                PriceDo.getText().toString(),
-                                ((byte) ((byte) Status.getSelectedItemPosition() + 1)),
-                                sort_name,
-                                (short) 10,
-                                (short) 1
-                        )
-                        .enqueue(new Callback<AnswerSearch>() {
-                            @Override
-                            public void onResponse(@NonNull Call<AnswerSearch> call, @NonNull Response<AnswerSearch> response) {
-                                if (response.isSuccessful() && response.body() != null) {
-                                    if (response.body().getStatus() == 200) {
-                                        SearchButton.setEnabled(true);
-                                        SearchOrders.clear();
-                                        SearchOrders.addAll(response.body().getOrders().getOrders());
-                                        OrderSearchAdapter.notifyDataSetChanged();
-                                    }
+            NetworkService.getInstance()
+                    .getJSONApi()
+                    .Search(App.UserAccessData.getToken(),
+                            NumberOrder.getText().toString(),
+                            NumberProtocol.getText().toString(),
+                            DataOt.getText().toString(),
+                            DataDo.getText().toString(),
+                            ChosenContactPerson,
+                            ((byte) ((byte) OrderType.getSelectedItemPosition() + 1)),
+                            Price.getText().toString(),
+                            PriceDo.getText().toString(),
+                            ((byte) ((byte) Status.getSelectedItemPosition() + 1)),
+                            sort_name,
+                            (short) 10,
+                            (short) 1
+                    )
+                    .enqueue(new Callback<AnswerSearch>() {
+                        @Override
+                        public void onResponse(@NonNull Call<AnswerSearch> call, @NonNull Response<AnswerSearch> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                if (response.body().getStatus() == 200) {
+                                    SearchButton.setEnabled(true);
+                                    SearchOrders.clear();
+                                    SearchOrders.addAll(response.body().getOrders().getOrders());
+                                    OrderSearchAdapter.notifyDataSetChanged();
                                 }
                             }
+                        }
 
-                            @Override
-                            public void onFailure(@NonNull Call<AnswerSearch> call, @NonNull Throwable t) {
-                                Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
-                                SearchButton.setEnabled(true);
-                            }
-                        });
-            }
+                        @Override
+                        public void onFailure(@NonNull Call<AnswerSearch> call, @NonNull Throwable t) {
+                            Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                            SearchButton.setEnabled(true);
+                        }
+                    });
         });
-
+        SelectContactPersonListener();
         DataSelectListener(DataDo, DataDoLay);
         DataSelectListener(DataOt, DataOtLay);
         return MyView;
     }
 
-    private void DataSelectListener(final MaskedEditText Data, TextInputLayout Layout) {
-        final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                ChangeData(year, monthOfYear, dayOfMonth, Data);
-            }
-        };
-        Layout.setEndIconOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(Objects.requireNonNull(getContext()), Datapicker,
-                        dateAndTime.get(Calendar.YEAR),
-                        dateAndTime.get(Calendar.MONTH),
-                        dateAndTime.get(Calendar.DAY_OF_MONTH))
-                        .show();
-            }
+    private void SelectContactPersonListener() {
+        ContactFace.setOnItemClickListener((parent, view, position, id) -> {
+            if(ChosenContactPerson.length() > 0) ChosenContactPerson += ",";
+            ChosenContactPerson += ContactPersons.get(position).getValue();
+         //   ContactFace.clearFocus();
         });
 
+        ContactFace.addTextChangedListener(textWatcher);
+    }
+
+    public TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {   }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (count == 0) {
+               StringTokenizer st = new StringTokenizer(ContactFace.getText().toString(), ",");
+                ContactFace.getText().clear();
+                ChosenContactPerson = "";
+              //  String buffer;
+                StringBuilder buf = new StringBuilder();
+
+                if(st.countTokens() > 1) {
+                    while (st.countTokens() - 1 > 0) {
+                        //buffer = st.nextToken();
+                        buf.delete(0,buf.length());
+                        buf.append(st.nextToken());
+                        if(buf.substring(0,1).equals(" "))
+                        buf.delete(0,1);
+
+                        ContactFace.setText(MessageFormat.format("{0}{1}", ContactFace.getText(), buf.toString()));
+                        ContactFace.setText(MessageFormat.format("{0}, ", ContactFace.getText()));
+
+                        if(ChosenContactPerson.length() > 0) ChosenContactPerson += ",";
+                        ChosenContactPerson += getIdForValue(buf.toString());
+
+                    }
+                }
+
+//                String Str = new String(ContactFace.getText().toString());
+//                String[] mass = Str.split(", ");
+//
+//                ContactFace.getText().clear();
+//                ChosenContactPerson = "";
+//
+//                if(mass.length > 1){
+//                    for (String value : mass) {
+//                        ContactFace.setText(MessageFormat.format("{0}{1}", ContactFace.getText(), value));
+//                        ContactFace.setText(MessageFormat.format("{0}, ", ContactFace.getText()));
+//
+//                        if (ChosenContactPerson.length() > 0) ChosenContactPerson += ",";
+//                        ChosenContactPerson += getIdForValue(value);
+//                    }
+//                }
+//
+                    Toast.makeText(getContext(), ChosenContactPerson, Toast.LENGTH_SHORT).show();
+                    ContactFace.setSelection(ContactFace.getText().length());
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
+    private String getIdForValue(String text){
+        for (ContactPersons persons: ContactPersons) {
+            if(persons.getText().equals(text)) {
+                return String.valueOf(persons.getValue());
+            }
+        }
+        return text;
+    }
+
+    private void getContactFaceList() {
+        NetworkService.getInstance()
+                .getJSONApi()
+                .getContactPersons(App.UserAccessData.getToken())
+                .enqueue(new Callback<AnswerContactPersons>() {
+                    @Override
+                    public void onResponse(@NonNull Call<AnswerContactPersons> call, @NonNull Response<AnswerContactPersons> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            if (response.body().getStatus() == 200) {
+                                ContactPersons = response.body().getContactPersons();
+                                Hawk.put("ContactPersons", ContactPersons);
+
+                                ContactFace.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+                                ContactFace.setAdapter(new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_dropdown_item_1line, getMassivString()));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<AnswerContactPersons> call, @NonNull Throwable t) {
+                    }
+                });
+    }
+
+    private String[] getMassivString() {
+        String[] mass = new String[ContactPersons.size()];
+        for (int i = 0; i < ContactPersons.size(); i++) {
+            if (ContactPersons.get(i).getText() != null)
+                mass[i] = ContactPersons.get(i).getText();
+            else
+                mass[i] = "null";
+        }
+        return mass;
+    }
+
+    private void DataSelectListener(final MaskedEditText Data, TextInputLayout Layout) {
+        final DatePickerDialog.OnDateSetListener Datapicker = (view, year, monthOfYear, dayOfMonth) -> ChangeData(year, monthOfYear, dayOfMonth, Data);
+        Layout.setEndIconOnClickListener(v -> new DatePickerDialog(Objects.requireNonNull(getContext()), Datapicker,
+                dateAndTime.get(Calendar.YEAR),
+                dateAndTime.get(Calendar.MONTH),
+                dateAndTime.get(Calendar.DAY_OF_MONTH))
+                .show());
     }
 
     private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt) {
@@ -354,6 +451,11 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
                                 }
                             });
                 }
+            }
+
+            @Override
+            public void onScrollToOrder(int position) {
+                SearchList.scrollToPosition(position);
             }
 
         };

@@ -7,14 +7,20 @@ import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.UserInfo.UserAccess;
 import com.bmvl.lk.Rest.UserInfo.UserInfoCall;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 public interface ServerApi {
     @FormUrlEncoded
@@ -139,4 +145,16 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("ajax/getMaterialsTree")
     Call<List<Material>> getMaterials(@Field("token") String token);
+
+    @Multipart
+    @POST("orders/uploadAct")
+    Call<ResponseBody> UploadAct(
+            @Part("token") RequestBody  token,
+            @Part("order_id") RequestBody order_id,
+            @Part("act_of_selection") RequestBody act_of_selection
+    );
+
+    @FormUrlEncoded
+    @POST("orders/search")
+    Call<AnswerContactPersons> getContactPersons(@Field("token") String token);
 }

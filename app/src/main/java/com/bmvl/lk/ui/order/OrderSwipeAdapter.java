@@ -54,6 +54,8 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         void onDownloadOrder(int id);
 
         void onEditOrder(Orders order);
+
+        void onScrollToOrder(int position);
     }
 
     @NonNull
@@ -152,6 +154,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
                     } else {
                         group.setVisibility(View.VISIBLE);
                         btnLinear.setOrientation(LinearLayout.VERTICAL);
+                        onOrderClickListener.onScrollToOrder(getLayoutPosition());
                     }
                 }
             });

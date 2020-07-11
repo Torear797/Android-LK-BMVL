@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -76,6 +77,8 @@ public class StandartPatternsFragment extends Fragment implements OnBackPressedL
     }
 
     private void UpdatePatterns() {
+        if(PatternAdapter != null)
+        PatternAdapter.notifyDataSetChanged();
         List<Pattern> insertlist = new ArrayList<>();
         CurrentPage = 0;
         LoadPatterns(insertlist, (byte) 1);
@@ -232,6 +235,7 @@ public class StandartPatternsFragment extends Fragment implements OnBackPressedL
 
         };
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 10, (byte) 10));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
 
         PatternAdapter = new PatternAdapter(getContext(), StandartPatterns, onClickListener);

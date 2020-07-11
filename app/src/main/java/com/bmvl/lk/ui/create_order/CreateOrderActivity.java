@@ -1,19 +1,26 @@
 package com.bmvl.lk.ui.create_order;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -30,6 +37,7 @@ import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.data.Field;
+import com.bmvl.lk.data.FileUtils;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Orders;
 import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
@@ -39,6 +47,9 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.gson.Gson;
 import com.orhanobut.hawk.Hawk;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,6 +59,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -66,6 +81,10 @@ public class CreateOrderActivity extends AppCompatActivity {
     private FrameLayout Frame;
     private byte status;
     public static boolean IsPattern;
+    private static final int LOAD_ACT_OF_SELECTION = 1;
+
+    private File FileActOfSelection;
+    private TextView pathForActOfselection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,11 +99,12 @@ public class CreateOrderActivity extends AppCompatActivity {
         bar = findViewById(R.id.ProgressBar);
 
         status = getIntent().getByteExtra("status", (byte) 0);
-        Log.d("STATUS", " " + status);
+        act_of_selection = getIntent().getStringExtra("ACT");
+        //  Log.d("STATUS", " " + status);
         IsPattern = getIntent().getBooleanExtra("Pattern", false);
         Edit = getIntent().getBooleanExtra("isEdit", false);
         if (!Edit) {
-            if(getIntent().getBooleanExtra("CreatePattern", false))
+            if (getIntent().getBooleanExtra("CreatePattern", false))
                 order = (SendOrder) getIntent().getSerializableExtra(SendOrder.class.getSimpleName());
             else
                 order = new SendOrder(getIntent().getByteExtra("type_id", (byte) 1));
@@ -135,7 +155,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field(24, "", "Сопроводительный документ", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field(9, "", "Владелец образцов", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field((byte) 5, 59, "", "Контрольный образец"));
-       // Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        // Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
         Fields.add(new Field((byte) 6, 11, "", "Акт отбора от"));
         Fields.add(new Field(10, "", "№", InputType.TYPE_CLASS_TEXT));
     } //Заявка на исследование семян, почв, удобрений
@@ -145,7 +165,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field((byte) 2, R.array.DocList, App.OrderInfo.getOD_ID(), "Оригиналы документов предоставлять")); //52. 63. 64
         Fields.add(new Field((byte) 1, R.array.Reserch_start, 97, "Исследование проводится")); //act_of_selection
         Fields.add(new Field((byte) 4, 0, act_of_selection, "Акт отбора"));
-       // Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        // Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
         Fields.add(new Field((byte) 6, 11, "", "Акт отбора от"));
         Fields.add(new Field(10, "", "№", InputType.TYPE_CLASS_TEXT));
 
@@ -159,7 +179,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field((byte) 6, 98, "", "Дата предыдущего исследоваия"));
         Fields.add(new Field(99, "", "Результат предыдущего исследования", InputType.TYPE_CLASS_TEXT));
         Fields.add(new Field((byte) 1, R.array.hoz_zab, 97, "Хозяйство по вышеуказанному заболеванию"));
-       // Fields.add(new Field(106, "", "Дата заболевания животного(ных)", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        // Fields.add(new Field(106, "", "Дата заболевания животного(ных)", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
         Fields.add(new Field((byte) 6, 106, "", "Дата заболевания животного(ных)"));
         //Fields.add(new Field(107, "", "Дата падежа", InputType.TYPE_DATETIME_VARIATION_DATE, getDrawable(R.drawable.ic_date_range_black_24dp), true));
         Fields.add(new Field((byte) 6, 107, "", "Дата падежа"));
@@ -275,7 +295,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         if (order.getProby() != null) {
             for (TreeMap.Entry<Short, ProbyRest> prob : order.getProby().entrySet()) {
                 //Проверка на наличие материалла
-                if(!prob.getValue().getFields().containsKey("5")&& !prob.getValue().getFields().containsKey("materialName")){
+                if (!prob.getValue().getFields().containsKey("5") && !prob.getValue().getFields().containsKey("materialName")) {
                     Toast.makeText(getApplicationContext(), R.string.MaterialNoSelect, Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -290,16 +310,17 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     public void sendAction(View view) {
-        if (isFieldCorrect()) {
-            view.setEnabled(false);
-            bar.setVisibility(View.VISIBLE);
-            if (order.getProby() != null)
-                DeleteEmptyFields();
-            if (!Edit)
-                SendOrder(view);
-            else
-                SaveOrder(view);
-        }
+        LoadActOfSelection(358);
+//        if (isFieldCorrect()) {
+//            view.setEnabled(false);
+//            bar.setVisibility(View.VISIBLE);
+//            if (order.getProby() != null)
+//                DeleteEmptyFields();
+//            if (!Edit)
+//                SendOrder(view);
+//            else
+//                SaveOrder(view);
+//        }
     }
 
     private void SaveOrder(final View view) {
@@ -419,8 +440,12 @@ public class CreateOrderActivity extends AppCompatActivity {
                             if (response.isSuccessful() && response.body() != null) {
                                 if (response.body().getStatus() == 200) {
                                     Toast.makeText(view.getContext(), "Заказ успешно создан!", Toast.LENGTH_SHORT).show();
-                                    ClearDate();
-                                    CreateOrderActivity.this.finish();
+                                    if (act_of_selection != null && !act_of_selection.equals(""))
+                                        LoadActOfSelection(response.body().getOrder_id());
+                                    else {
+                                        ClearDate();
+                                        CreateOrderActivity.this.finish();
+                                    }
                                 }
                             } else {
                                 view.setEnabled(true);
@@ -456,10 +481,67 @@ public class CreateOrderActivity extends AppCompatActivity {
         }
     }
 
+    private void LoadActOfSelection(int order_id) {
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), FileActOfSelection);
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", FileActOfSelection.getName(), requestBody);
+
+        RequestBody Token = RequestBody.create(okhttp3.MultipartBody.FORM, App.UserAccessData.getToken());
+        RequestBody id = RequestBody.create(okhttp3.MultipartBody.FORM, String.valueOf(order_id));
+
+        NetworkService.getInstance()
+                .getJSONApi()
+                .UploadAct(Token, id, requestBody)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                          //  if (response.body().getStatus() == 200)
+                            {
+                                Toast.makeText(getApplicationContext(), "Файл успешно загружен!", Toast.LENGTH_SHORT).show();
+                                //ClearDate();
+                               // CreateOrderActivity.this.finish();
+                            }
+                            //else Toast.makeText(getApplicationContext(), "Ммммм", Toast.LENGTH_SHORT).show();
+                        } else
+                            bar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                        Log.e("Upload error:", t.getMessage());
+                        bar.setVisibility(View.GONE);
+                    }
+                });
+    }
+
     private Short getPositionKey(int position, Map<Short, SendOrder> offlineOrders) {
         if (offlineOrders.size() > 0)
             return new ArrayList<>(offlineOrders.keySet()).get(position);
         else return 0;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case LOAD_ACT_OF_SELECTION:
+                if (resultCode == RESULT_OK) {
+                    if (data != null) {
+                        Uri uri = data.getData();
+                        Log.d("TAG", "File Uri: " + uri.toString());
+                        // Get the path
+                       // final String[] name = uri.getPath().split("/");
+                        //pathForActOfselection.setText(name[name.length - 1]);
+                        FileActOfSelection = FileUtils.getFile(this, uri);
+                        pathForActOfselection.setText(FileActOfSelection.getName());
+                       // act_of_selection = uri.toString();
+                      //  uriAct = uri;
+                    }
+                }
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private class MyTask extends AsyncTask<Void, Void, GridLayoutManager> {
@@ -472,7 +554,6 @@ public class CreateOrderActivity extends AppCompatActivity {
 
         @Override
         protected GridLayoutManager doInBackground(Void... params) {
-            act_of_selection = getIntent().getStringExtra("ACT");
             switch (order_id) {
                 case 1:
                     if (!IsPattern) {
@@ -524,7 +605,25 @@ public class CreateOrderActivity extends AppCompatActivity {
                     return 2;
                 }
             });
-            adapter = new FieldsAdapter(context);
+            FieldsAdapter.ClickFieldListener onClickFieldListener = new FieldsAdapter.ClickFieldListener() {
+                @Override
+                public void onLoadActOfSelection(TextView path) {
+                    pathForActOfselection = path;
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("*/*");
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+                    try {
+                        startActivityForResult(Intent.createChooser(intent,
+                                getString(R.string.ChoceFile)), LOAD_ACT_OF_SELECTION);
+                    } catch (android.content.ActivityNotFoundException ex) {
+
+                        Toast.makeText(getApplicationContext(), R.string.NoFileMeneger,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            };
+            adapter = new FieldsAdapter(context, onClickFieldListener);
             return mng_layout;
         }
 

@@ -203,6 +203,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                             Map<Short, ResearchRest> insertlist = new HashMap<>();
                             insertlist.put((short) (newid + 1), new ResearchRest(newid));
                             Adapter.insertdata(insertlist);
+                            Adapter.notifyDataSetChanged();
                             ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
                         } else
                             Toast.makeText(inflater.getContext(), inflater.getContext().getString(R.string.MaterialNoSelect), Toast.LENGTH_SHORT).show();

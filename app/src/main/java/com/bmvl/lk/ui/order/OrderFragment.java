@@ -35,6 +35,7 @@ import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.OrdersAnswer;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.StandardAnswer;
+import com.bmvl.lk.Rest.UserInfo.OrderInfo;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Orders;
@@ -502,19 +503,42 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                         if (response.isSuccessful() && response.body() != null) {
                             if (response.body().getStatus() == 200) {
 
-                                for (Map.Entry<Short, String> entry : response.body().getDefaultFields().entrySet()) {
 
-                                    if (!entry.getValue().equals("")) {
-                                        App.OrderInfo.setOD_ID(entry.getKey());
-                                        App.OrderInfo.setOD_Value(entry.getValue());
-                                        App.OrderInfo.setFieldValues(response.body().getFieldValues());
-                                        App.UserInfo = response.body().getUserInfo();
+                                if(!response.body().getDefaultFields().get((short) 52).equals(""))
+                                    App.OrderInfo = new OrderInfo((short)52,response.body().getDefaultFields().get((short) 52),response.body().getFieldValues(),true);
+                                else
+                                    if(!response.body().getDefaultFields().get((short) 63).equals("") && !response.body().getDefaultFields().get((short) 64).equals(""))
+                                        App.OrderInfo = new OrderInfo((short)64,response.body().getDefaultFields().get((short) 63),response.body().getDefaultFields().get((short) 64),response.body().getFieldValues());
+                                    else
+                                    if(!response.body().getDefaultFields().get((short) 63).equals(""))
+                                        App.OrderInfo = new OrderInfo((short)63,response.body().getDefaultFields().get((short) 63),response.body().getFieldValues(),false);
 
-                                        Hawk.put("UserInfo", App.UserInfo);
-                                        Hawk.put("OrderInfo",  App.OrderInfo);
-                                        break;
-                                    }
-                                }
+
+                                    if(response.body().getDefaultFields().containsKey((short)128) && !response.body().getDefaultFields().get((short)128).equals(""))
+                                        App.OrderInfo.setURL_SCAN_FILE(response.body().getDefaultFields().get((short)128));
+//                                for (Map.Entry<Short, String> entry : response.body().getDefaultFields().entrySet()) {
+//
+//                                    if (!entry.getValue().equals("")) {
+//                                        App.OrderInfo.setOD_ID(entry.getKey());
+//
+//                                        if(entry.getKey() == (short) 63)
+//                                        App.OrderInfo.setOD_Value(entry.getValue());
+//
+//                                        App.OrderInfo.setFieldValues(response.body().getFieldValues());
+//                                        App.UserInfo = response.body().getUserInfo();
+//
+//                                        Hawk.put("UserInfo", App.UserInfo);
+//                                        Hawk.put("OrderInfo",  App.OrderInfo);
+//
+//                                        if(!response.body().getDefaultFields().entrySet().contains((short)63)
+//                                                || !response.body().getDefaultFields().entrySet().contains((short)64))
+//                                        break;
+//                                    }
+//                                }
+                                App.UserInfo = response.body().getUserInfo();
+                                Hawk.put("UserInfo", App.UserInfo);
+                                Hawk.put("OrderInfo",  App.OrderInfo);
+
                                 Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
                                 if (which == 0)
                                     intent.putExtra("type_id", 1);

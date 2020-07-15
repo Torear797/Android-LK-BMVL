@@ -4,12 +4,14 @@ import com.bmvl.lk.Rest.Notify.NotificationsAnswer;
 import com.bmvl.lk.Rest.Order.AnswerSendOrder;
 import com.bmvl.lk.Rest.Order.OrdersAnswer;
 import com.bmvl.lk.Rest.Order.SendOrder;
+import com.bmvl.lk.Rest.UserInfo.OriginalDocument;
 import com.bmvl.lk.Rest.UserInfo.UserAccess;
 import com.bmvl.lk.Rest.UserInfo.UserInfoCall;
 
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -110,7 +112,7 @@ public interface ServerApi {
 
     @FormUrlEncoded
     @POST("orders/save")
-    Call<StandardAnswer> SaveOrder(@Field("token") String token, @Field("order") String order);
+    Call<AnswerSendOrder> SaveOrder(@Field("token") String token, @Field("order") String order);
 
     @FormUrlEncoded
     @POST("orders/save")
@@ -148,13 +150,55 @@ public interface ServerApi {
 
     @Multipart
     @POST("orders/uploadAct")
-    Call<ResponseBody> UploadAct(
+    Call<StandardAnswer> UploadAct(
             @Part("token") RequestBody  token,
             @Part("order_id") RequestBody order_id,
-            @Part("act_of_selection") RequestBody act_of_selection
+            @Part MultipartBody.Part act_of_selection
     );
 
     @FormUrlEncoded
     @POST("orders/search")
     Call<AnswerContactPersons> getContactPersons(@Field("token") String token);
+
+    @FormUrlEncoded
+    @POST("account/setDefaultFields")
+    Call<StandardAnswer> setDefaultFields(
+            @Field("token") String token,
+            @Field("defaultFields") String defaultFields
+    );
+
+    @Multipart
+    @POST("account/setDefaultFields")
+    Call<StandardAnswer> setDefaultFieldsWithScanFile(
+            @Part("token") RequestBody  token,
+            @Part("defaultFields") RequestBody defaultFields,
+            @Part MultipartBody.Part doverennost
+    );
+
+    @FormUrlEncoded
+    @POST("account/setNewPassword")
+    Call<StandardAnswer> setNewPassword(
+            @Field("token") String token,
+            @Field("oldPassword") String oldPassword,
+            @Field("newPassword") String newPassword,
+            @Field("repeatNewPassword") String repeatNewPassword
+    );
+
+    @FormUrlEncoded
+    @POST("account/saveAccount")
+    Call<StandardAnswer> saveAccountEmail(
+            @Field("token") String token,
+            @Field("email") String value
+    );
+
+    @FormUrlEncoded
+    @POST("account/saveAccount")
+    Call<StandardAnswer> saveAccountPhone(
+            @Field("token") String token,
+            @Field("phone") String value
+    );
+
+    @FormUrlEncoded
+    @POST("account/notificationSettings")
+    Call<AnswerNotifySettings> getNotifySetting(@Field("token") String token);
 }

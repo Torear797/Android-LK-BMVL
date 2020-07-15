@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.AnswerOrderNew;
 import com.bmvl.lk.Rest.NetworkService;
@@ -97,24 +98,31 @@ public class LoginViewModel extends ViewModel {
                     public void onResponse(@NonNull Call<AnswerOrderNew> call, @NonNull Response<AnswerOrderNew> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             if (response.body().getStatus() == 200) {
-                                for (Map.Entry<Short, String> entry : response.body().getDefaultFields().entrySet()) {
+//                                for (Map.Entry<Short, String> entry : response.body().getDefaultFields().entrySet()) {
+//
+//                                    if (!entry.getValue().equals("")) {
+//                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo(entry.getKey(), entry.getValue(), response.body().getFieldValues()))));
+//                                        break;
+//                                    }
+//                                }
 
-                                    if (!entry.getValue().equals("")) {
-                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo(entry.getKey(), entry.getValue(), response.body().getFieldValues()))));
-                                        break;
-                                    }
-                                }
+                                if (!response.body().getDefaultFields().get((short) 52).equals(""))
+                                    loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 52, response.body().getDefaultFields().get((short) 52), response.body().getFieldValues(), true))));
+                                else if (!response.body().getDefaultFields().get((short) 63).equals("") && !response.body().getDefaultFields().get((short) 64).equals(""))
+                                    loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 64, response.body().getDefaultFields().get((short) 63), response.body().getDefaultFields().get((short) 64), response.body().getFieldValues()))));
+                                else if (!response.body().getDefaultFields().get((short) 63).equals(""))
+                                    loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 63, response.body().getDefaultFields().get((short) 63), response.body().getFieldValues(), false))));
+
 
                             } else
                                 loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
-                        }
-                        else
+                        } else
                             loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<AnswerOrderNew> call, @NonNull Throwable t) {
-                        Log.d("TAG","MSG",t);
+                        Log.d("TAG", "MSG", t);
                         loginResult.setValue(new LoginResult(context.getString(R.string.server_lost)));
                     }
                 });
@@ -138,14 +146,12 @@ public class LoginViewModel extends ViewModel {
         if (username.contains("@")) {
             return Patterns.EMAIL_ADDRESS.matcher(username).matches();
         } else {
-            if (username.length() == 11)
+            if (username.length() == 16)
                 return Patterns.PHONE.matcher(username).matches();
-            // return !username.trim().isEmpty();
             return false;
         }
     }
 
-    // A placeholder password validation check
     private boolean isPasswordValid(String password) {
         return password != null && password.trim().length() > 5;
     }

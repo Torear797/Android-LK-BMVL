@@ -310,36 +310,42 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     public void sendAction(View view) {
-        LoadActOfSelection(358);
-//        if (isFieldCorrect()) {
-//            view.setEnabled(false);
-//            bar.setVisibility(View.VISIBLE);
-//            if (order.getProby() != null)
-//                DeleteEmptyFields();
-//            if (!Edit)
-//                SendOrder(view);
-//            else
-//                SaveOrder(view);
-//        }
+      ///  LoadActOfSelection(358);
+        if (isFieldCorrect()) {
+            view.setEnabled(false);
+            bar.setVisibility(View.VISIBLE);
+            if (order.getProby() != null)
+                DeleteEmptyFields();
+            if (!Edit)
+                SendOrder(view);
+            else
+                SaveOrder(view);
+        }
     }
 
     private void SaveOrder(final View view) {
         //String json = order.getJsonOrder();
         //   Hawk.put("obraz",json);
-        // Log.d("JSON", order.getJsonOrder());
+         Log.d("JSON", order.getJsonOrder());
 
         if (status != 11) {
             NetworkService.getInstance()
                     .getJSONApi()
                     .SaveOrder(App.UserAccessData.getToken(), order.getJsonOrder())
-                    .enqueue(new Callback<StandardAnswer>() {
+                    .enqueue(new Callback<AnswerSendOrder>() {
                         @Override
-                        public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
+                        public void onResponse(@NonNull Call<AnswerSendOrder> call, @NonNull Response<AnswerSendOrder> response) {
                             if (response.isSuccessful() && response.body() != null) {
                                 if (response.body().getStatus() == 200) {
                                     Toast.makeText(view.getContext(), R.string.order_isEdit, Toast.LENGTH_SHORT).show();
-                                    ClearDate();
-                                    CreateOrderActivity.this.finish();
+                                    if (FileActOfSelection != null)
+                                        LoadActOfSelection(response.body().getOrder_id());
+                                    else {
+                                        ClearDate();
+                                        CreateOrderActivity.this.finish();
+                                    }
+//                                    ClearDate();
+//                                    CreateOrderActivity.this.finish();
                                 }
                             } else {
                                 view.setEnabled(true);
@@ -349,7 +355,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
+                        public void onFailure(@NonNull Call<AnswerSendOrder> call, @NonNull Throwable t) {
                             view.setEnabled(true);
                             bar.setVisibility(View.GONE);
                             Toast.makeText(view.getContext(), R.string.error, Toast.LENGTH_SHORT).show();
@@ -440,7 +446,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                             if (response.isSuccessful() && response.body() != null) {
                                 if (response.body().getStatus() == 200) {
                                     Toast.makeText(view.getContext(), "Заказ успешно создан!", Toast.LENGTH_SHORT).show();
-                                    if (act_of_selection != null && !act_of_selection.equals(""))
+                                    if (FileActOfSelection != null)
                                         LoadActOfSelection(response.body().getOrder_id());
                                     else {
                                         ClearDate();
@@ -482,34 +488,32 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private void LoadActOfSelection(int order_id) {
+        RequestBody requestBody = RequestBody.create(FileActOfSelection, MediaType.parse("*/*"));
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("act_of_selection", FileActOfSelection.getName(), requestBody);
 
-        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), FileActOfSelection);
-        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", FileActOfSelection.getName(), requestBody);
-
-        RequestBody Token = RequestBody.create(okhttp3.MultipartBody.FORM, App.UserAccessData.getToken());
-        RequestBody id = RequestBody.create(okhttp3.MultipartBody.FORM, String.valueOf(order_id));
+        RequestBody Token = RequestBody.create(App.UserAccessData.getToken(),okhttp3.MultipartBody.FORM);
+        RequestBody id = RequestBody.create(String.valueOf(order_id),okhttp3.MultipartBody.FORM);
 
         NetworkService.getInstance()
                 .getJSONApi()
-                .UploadAct(Token, id, requestBody)
-                .enqueue(new Callback<ResponseBody>() {
+                .UploadAct(Token, id, fileToUpload)
+                .enqueue(new Callback<StandardAnswer>() {
                     @Override
-                    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                    public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                          //  if (response.body().getStatus() == 200)
+                           if (response.body().getStatus() == 200)
                             {
                                 Toast.makeText(getApplicationContext(), "Файл успешно загружен!", Toast.LENGTH_SHORT).show();
-                                //ClearDate();
-                               // CreateOrderActivity.this.finish();
+                                ClearDate();
+                                CreateOrderActivity.this.finish();
                             }
-                            //else Toast.makeText(getApplicationContext(), "Ммммм", Toast.LENGTH_SHORT).show();
                         } else
                             bar.setVisibility(View.GONE);
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                        Log.e("Upload error:", t.getMessage());
+                    public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
+                       // Log.e("Upload error:", t.getMessage());
                         bar.setVisibility(View.GONE);
                     }
                 });
@@ -527,15 +531,10 @@ public class CreateOrderActivity extends AppCompatActivity {
             case LOAD_ACT_OF_SELECTION:
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
-                        Uri uri = data.getData();
-                        Log.d("TAG", "File Uri: " + uri.toString());
-                        // Get the path
-                       // final String[] name = uri.getPath().split("/");
-                        //pathForActOfselection.setText(name[name.length - 1]);
-                        FileActOfSelection = FileUtils.getFile(this, uri);
+                       // Uri uri = data.getData();
+                      //  Log.d("TAG", "File Uri: " + uri.toString());
+                        FileActOfSelection = FileUtils.getFile(this, data.getData());
                         pathForActOfselection.setText(FileActOfSelection.getName());
-                       // act_of_selection = uri.toString();
-                      //  uriAct = uri;
                     }
                 }
                 break;

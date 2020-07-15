@@ -10,6 +10,10 @@
     <string name="profile">Профиль</string>
     <string name="Notice">Уведомления</string>
     <string name="people">Подчиненные</string>
+    <string name="old_password">Текущий пароль</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="repeat_password">Повторите пароль</string>
+    <string name="change_password_btn">Сменить пароль</string>
 
     <string name="s_numer">Номер заявки</string>
     <string name="s_numer_protocol">Номер протокола</string>
@@ -226,5 +230,20 @@
     <string name="accreditation_bad">Не входит в область аккредитации</string>
     <string name="NoFileMeneger">Файловый менеджер не найден.</string>
     <string name="ChoceFile">Выберите файл</string>
+    <string name="settings">Настройки</string>
+    <string name="desc_notify">Расширенные настройки</string>
+    <string name="orig_doc">Оригиналы документов</string>
+    <string name="orig_doc_desc">Оригиналы документов предоставлять</string>
+    <string name="data_save_ok">Данные успешно сохранены!</string>
+    <string name="data_save_error">Ошибка! Данные не сохранены!</string>
+    <string name="change_password">Безопасность</string>
+    <string name="change_password_desc">Смена пароля</string>
+
+    <string name="change_password_ok">Пароль успешно изменен</string>
+    <string name="change_password_error">Ошибка! Не удалось изменить пароль.</string>
+    <string name="type_notify">Тип уведомления</string>
+    <string name="inLK">В личном кабинете</string>
+    <string name="InEmail">На Email</string>
+    <string name="InSMS">На SMS</string>
 
 </resources>

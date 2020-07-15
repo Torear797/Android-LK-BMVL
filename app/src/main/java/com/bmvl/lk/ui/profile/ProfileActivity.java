@@ -6,7 +6,9 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +19,7 @@ import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.ui.MenuActivity;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.orhanobut.hawk.Hawk;
@@ -56,25 +59,26 @@ public class ProfileActivity extends AppCompatActivity {
         Email.setText(App.UserInfo.getEmail());
         Phone.setText(App.UserInfo.getPhone());
         Adress.setText(App.UserInfo.getAdress());
-//        Phone.setText("8 999 856 42 14");
-//        Adress.setText("ул. Есенина 22");
         inn.setText(App.UserInfo.getInn());
         bank_details.setText(App.UserInfo.getBank_details());
         Contract_number.setText(App.UserInfo.getContract_number());
         Contract_date.setText(App.UserInfo.getContract_date());
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                NetworkService.getInstance()
-                        .getJSONApi()
-                        .logout(App.UserAccessData.getToken(), Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID))
-                        .enqueue(new Callback<StandardAnswer>() {
-                            @Override
-                            public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
-                                if (response.isSuccessful()) {
-                                    StandardAnswer answer = response.body();
-                                    assert answer != null;
+        if (App.UserInfo.getEmail() == null || App.UserInfo.getEmail().equals(""))
+            EmailChangeListener(Email);
+
+        if (App.UserInfo.getPhone() == null || App.UserInfo.getPhone().equals(""))
+            PhoneChangeListener(Phone);
+
+        fab.setOnClickListener(view -> NetworkService.getInstance()
+                .getJSONApi()
+                .logout(App.UserAccessData.getToken(), Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID))
+                .enqueue(new Callback<StandardAnswer>() {
+                    @Override
+                    public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
+                        if (response.isSuccessful()) {
+                            StandardAnswer answer = response.body();
+                            assert answer != null;
 //                                    if (answer.getStatus() == 200) {
 //                                        Hawk.deleteAll();
 //
@@ -84,21 +88,19 @@ public class ProfileActivity extends AppCompatActivity {
 //                                        startActivity(intent);
 //                                        finish();
 //                                    }
-                                    exit();
-                                }
-                            }
+                            exit();
+                        }
+                    }
 
-                            @Override
-                            public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
-                                Snackbar.make(view, getString(R.string.server_lost), Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null).show();
-                            }
-                        });
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
+                        Snackbar.make(view, getString(R.string.server_lost), Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                }));
     }
 
-    private void exit(){
+    private void exit() {
         Hawk.deleteAll();
 
         Intent intent = new Intent(ProfileActivity.this, MenuActivity.class);
@@ -107,6 +109,7 @@ public class ProfileActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -118,4 +121,28 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    private void PhoneChangeListener(TextView txt) {
+        final ToggleButton changePhone = findViewById(R.id.changePhone);
+        changePhone.setVisibility(View.VISIBLE);
+        changePhone.setOnClickListener(v -> {
+            EditDialogFragment dialog = new EditDialogFragment(txt , changePhone);
+            Bundle args = new Bundle();
+            args.putBoolean("phone", true);
+            dialog.setArguments(args);
+            dialog.show(getSupportFragmentManager(), "phone");
+        });
+
+    }
+
+    private void EmailChangeListener(TextView txt) {
+        final ToggleButton changeEmail = findViewById(R.id.change_email);
+        changeEmail.setVisibility(View.VISIBLE);
+        changeEmail.setOnClickListener(v -> {
+            EditDialogFragment dialog = new EditDialogFragment(txt, changeEmail);
+            Bundle args = new Bundle();
+            args.putBoolean("phone", false);
+            dialog.setArguments(args);
+            dialog.show(getSupportFragmentManager(), "email");
+        });
+    }
 }

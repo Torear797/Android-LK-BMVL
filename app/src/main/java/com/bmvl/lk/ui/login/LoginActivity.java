@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,6 +27,8 @@ import com.bmvl.lk.ui.MenuActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.orhanobut.hawk.Hawk;
 
+import br.com.sapereaude.maskedEditText.MaskedEditText;
+
 public class LoginActivity extends AppCompatActivity {
 
     public static LoginViewModel loginViewModel;
@@ -40,38 +43,9 @@ public class LoginActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.Login_title);
         setSupportActionBar(toolbar);
 
-
-//        if (isAuth()) {
-//            loadingProgressBar.setVisibility(View.VISIBLE);
-////            loginButton.setVisibility(View.GONE);
-////            passwordEditText.setVisibility(View.GONE);
-////            usernameEditText.setVisibility(View.GONE);
-//            //  EnebledForm(false,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
-//            AccessIsObtained();
-////            NetworkService.getInstance()
-////                    .getJSONApi()
-////                    .releaseToken(App.UserAccessData.getToken(),ANDROID_ID)
-////                    .enqueue(new Callback<UserAccess>() {
-////                        @Override
-////                        public void onResponse(@NonNull Call<UserAccess> call, @NonNull Response<UserAccess> response) {
-////                            if (response.isSuccessful()) {
-////                                UserAccess Upduser = response.body();
-////                                if(Upduser.getStatus() == 200) {
-////                                    AccessIsObtained();
-////                                } else EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
-////                            } else EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
-////                        }
-////
-////                        @Override
-////                        public void onFailure(@NonNull Call<UserAccess> call, @NonNull Throwable t) {
-////                            EnebledForm(true,loginButton, passwordEditText, usernameEditText,loadingProgressBar);
-////                        }
-////                    });
-//        }
-
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
 
-        final EditText usernameEditText = findViewById(R.id.username);
+        final MaskedEditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.Create);
 
@@ -126,11 +100,21 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
+                if (count == 0 && usernameEditText.length() == 3 && usernameEditText.getMask().equals("+7(###)###-##-##")) {
+                    usernameEditText.setMask("####################");
+                    usernameEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                    usernameEditText.setText("");
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                if(s.length() == 1){
+                    if(Character.isDigit(s.charAt(0))){
+                        usernameEditText.setMask("+7(###)###-##-##");
+                        usernameEditText.setInputType(InputType.TYPE_CLASS_PHONE);
+                    }
+                }
                 loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
@@ -178,12 +162,5 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    private void EnebledForm(boolean flag, Button loginButton, EditText passwordEditText, EditText usernameEditText, ProgressBar loadingProgressBar) {
-        loginButton.setEnabled(flag);
-        passwordEditText.setEnabled(flag);
-        usernameEditText.setEnabled(flag);
-        if (!flag) loadingProgressBar.setVisibility(View.GONE);
     }
 }

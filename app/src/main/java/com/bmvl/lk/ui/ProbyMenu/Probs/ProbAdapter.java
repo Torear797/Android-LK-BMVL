@@ -133,34 +133,25 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
             buttonCopy = itemView.findViewById(R.id.create);
             btnDownload = itemView.findViewById(R.id.download);
 
-            head.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (ProbList.getVisibility() == View.VISIBLE)
-                        swipeLayout.setSwipeEnabled(true);
-                    else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close)
-                        swipeLayout.setSwipeEnabled(false);
+            head.setOnClickListener(view -> {
+                if (ProbList.getVisibility() == View.VISIBLE)
+                    swipeLayout.setSwipeEnabled(true);
+                else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close)
+                    swipeLayout.setSwipeEnabled(false);
 
-                    ProbList.setVisibility(ProbList.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-                }
+                ProbList.setVisibility(ProbList.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             });
 
-            buttonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    swipeLayout.close();
-                    closeAllItems();
-                    OnProbClickListener.onDeletedProb(getPositionKey(getLayoutPosition()));
-                }
+            buttonDelete.setOnClickListener(view -> {
+                swipeLayout.close();
+                closeAllItems();
+                OnProbClickListener.onDeletedProb(getPositionKey(getLayoutPosition()));
             });
 
-            btnDownload.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    swipeLayout.close();
-                    closeAllItems();
-                    OnProbClickListener.onDownloadProtocol(Objects.requireNonNull(Probs.get(getPositionKey(getLayoutPosition()))).getProtocol(), Objects.requireNonNull(Probs.get(getPositionKey(getLayoutPosition()))).getId());
-                }
+            btnDownload.setOnClickListener(view -> {
+                swipeLayout.close();
+                closeAllItems();
+                OnProbClickListener.onDownloadProtocol(Objects.requireNonNull(Probs.get(getPositionKey(getLayoutPosition()))).getProtocol(), Objects.requireNonNull(Probs.get(getPositionKey(getLayoutPosition()))).getId());
             });
 
             buttonCopy.setVisibility(View.GONE);

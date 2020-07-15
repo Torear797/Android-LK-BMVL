@@ -26,10 +26,15 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         if (App.isOnline(this) && isAuth) CheckToken();
         else {
-            Intent intent;
-            if (isAuth) intent = new Intent(getApplicationContext(), MenuActivity.class);
-            else intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+            //    Intent intent;
+
+//            if (isAuth) intent = new Intent(getApplicationContext(), MenuActivity.class);
+//            else intent = new Intent(this, LoginActivity.class);
+
+            if (isAuth) startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+            else startActivity(new Intent(this, LoginActivity.class));
+
+            //startActivity(intent);
             finish();
         }
     }
@@ -50,12 +55,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull Call<CheckTokenAnswer> call, @NonNull Response<CheckTokenAnswer> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                            Intent intent;
                             if (response.body().getStatus() == 200 && response.body().isActive())
-                                intent = new Intent(getApplicationContext(), MenuActivity.class);
+                                startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                             else
-                                intent = new Intent(getApplicationContext(), LoginActivity.class);
-                            startActivity(intent);
+                                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+
                             finish();
                         } else GoToLogin();
                     }

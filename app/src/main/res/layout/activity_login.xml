@@ -38,19 +38,28 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="50dp"
                 android:layout_marginEnd="24dp"
+                android:hint="@string/email"
                 app:boxStrokeColor="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.textfield.TextInputEditText
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/username"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:hint="@string/email"-->
+<!--                    android:inputType="textEmailAddress"-->
+<!--                    android:selectAllOnFocus="true"-->
+<!--                    android:text="user@mail.ru" />-->
+
+                <br.com.sapereaude.maskedEditText.MaskedEditText
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email"
-                    android:inputType="textEmailAddress"
-                    android:selectAllOnFocus="true"
-                    android:text="user@mail.ru" />
+                    android:typeface="monospace"
+                    android:text="user@mail.ru"
+                    app:mask="####################" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout

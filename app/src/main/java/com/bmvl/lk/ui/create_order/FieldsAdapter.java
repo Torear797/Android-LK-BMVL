@@ -228,20 +228,21 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 ((OriginalDocHolder) holder).spiner.setAdapter(adapterOriginalDoc);
                 ((OriginalDocHolder) holder).txtHint.setText(f.getHint());
 
-                OrderFields.put(App.OrderInfo.getOD_ID(), String.valueOf(App.OrderInfo.getOD_Value()));
+               // OrderFields.put(App.OrderInfo.getOD_ID(), String.valueOf(App.OrderInfo.getOD_Value()));
 
                 switch (App.OrderInfo.getOD_ID()) {
                     case 52:
                         ((OriginalDocHolder) holder).spiner.setSelection(0);
-                        ((OriginalDocHolder) holder).fieldAdres.setText(App.OrderInfo.getOD_Value());
+                        ((OriginalDocHolder) holder).fieldAdres.setText(App.OrderInfo.getFIO());
                         break;
                     case 63:
-                        ((OriginalDocHolder) holder).spiner.setSelection(1);
-                        ((OriginalDocHolder) holder).fieldAdres.setText(App.OrderInfo.getOD_Value());
+                        ((OriginalDocHolder) holder).spiner.setSelection(2);
+                        ((OriginalDocHolder) holder).fieldAdres.setText(App.OrderInfo.getOD_Adres());
+                        ((OriginalDocHolder) holder).fieldEmail.setText(App.OrderInfo.getOD_Email());
                         break;
                     case 64:
-                        ((OriginalDocHolder) holder).spiner.setSelection(2);
-                        ((OriginalDocHolder) holder).fieldEmail.setText(App.OrderInfo.getOD_Value());
+                        ((OriginalDocHolder) holder).spiner.setSelection(1);
+                        ((OriginalDocHolder) holder).fieldAdres.setText(App.OrderInfo.getOD_Adres());
                         break;
                 }
 
@@ -322,12 +323,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
 
                     ((SelectButtonHolder) holder).path.setText(android.text.Html.fromHtml("<u>Загруженный файл</u>"));
                     ((SelectButtonHolder) holder).path.setTextColor(Color.parseColor("#0066cc"));
-                    ((SelectButtonHolder) holder).path.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            inflater.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(MessageFormat.format("{0}/{1}", NetworkService.getServerUrl(), f.getValue()))));
-                        }
-                    });
+                    ((SelectButtonHolder) holder).path.setOnClickListener(v -> inflater.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(MessageFormat.format("{0}/{1}", NetworkService.getServerUrl(), f.getValue())))));
                     // ((SelectButtonHolder) holder).path.setText(MessageFormat.format("<a href=\"{0}", MessageFormat.format("{0}/{1}", NetworkService.getServerUrl(), f.getValue() + "\">Загруженный файл</a>")));
                 }
 

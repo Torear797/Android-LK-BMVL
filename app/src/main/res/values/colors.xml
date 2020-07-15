@@ -13,4 +13,5 @@
     <color name="backround_color_site">#f3f5f7</color>
     <color name="text_order_field_color">#616161</color>
     <color name="notify_old_color">#b8c4c8</color>
+    <color name="orange">#FF9800</color>
 </resources>

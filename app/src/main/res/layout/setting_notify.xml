@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include
+        android:id="@+id/include2"
+        layout="@layout/item_original_doc"></include>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/MaterialButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="@string/save_text"
+        app:cornerRadius="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/select"
+        app:strokeColor="@color/accent"
+        app:strokeWidth="1dp" />
 
     <TextView
         android:id="@+id/hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Акт отбора:"
+        android:text="Скан доверенности:"
         android:textColor="@color/text_order_field_color"
         app:layout_constraintBottom_toBottomOf="@+id/select"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/select" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/select"
@@ -23,7 +41,7 @@
         android:text="@string/Select_btn"
         app:cornerRadius="5dp"
         app:layout_constraintStart_toEndOf="@+id/hint"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include2"
         app:strokeColor="@color/accent"
         app:strokeWidth="1dp" />
 
@@ -32,12 +50,21 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
+        android:layout_marginEnd="5dp"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
         android:text="@string/file_no_select"
         android:textColor="@color/text_order_field_color"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/select"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/select"
         app:layout_constraintTop_toTopOf="@+id/select" />
+
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/group"
+        android:visibility="gone"
+        app:constraint_referenced_ids="path,select,hint" />
 </androidx.constraintlayout.widget.ConstraintLayout>

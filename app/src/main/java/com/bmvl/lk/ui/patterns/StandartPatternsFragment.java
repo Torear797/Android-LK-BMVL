@@ -238,7 +238,7 @@ public class StandartPatternsFragment extends Fragment implements OnBackPressedL
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
 
-        PatternAdapter = new PatternAdapter(getContext(), StandartPatterns, onClickListener);
+        PatternAdapter = new PatternAdapter(StandartPatterns, onClickListener);
         (PatternAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(PatternAdapter);
     }

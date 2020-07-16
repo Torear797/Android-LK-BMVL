@@ -325,7 +325,7 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
 
-        PatternAdapter = new PatternAdapter(getContext(), Patterns, onClickListener);
+        PatternAdapter = new PatternAdapter(Patterns, onClickListener);
         (PatternAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(PatternAdapter);
     }

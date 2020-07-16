@@ -1,6 +1,5 @@
 package com.bmvl.lk.ui.patterns;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
-import com.bmvl.lk.data.models.Orders;
 import com.bmvl.lk.data.models.Pattern;
-import com.bmvl.lk.ui.order.OrderSwipeAdapter;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.SimpleSwipeListener;
@@ -27,12 +24,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class PatternAdapter extends RecyclerSwipeAdapter<PatternAdapter.SimpleViewHolder> {
-    private LayoutInflater inflater;
     private static List<Pattern> Patterns;
     private PatternAdapter.OnPatternClickListener onPatternClickListener;
 
-    PatternAdapter(Context context, List<Pattern> list, OnPatternClickListener onPatternClickListener) {
-        this.inflater = LayoutInflater.from(context);
+    PatternAdapter(List<Pattern> list, OnPatternClickListener onPatternClickListener) {
         this.onPatternClickListener = onPatternClickListener;
         Patterns = list;
     }
@@ -48,8 +43,13 @@ public class PatternAdapter extends RecyclerSwipeAdapter<PatternAdapter.SimpleVi
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_pattern, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pattern, parent, false);
         return new SimpleViewHolder(view);
     }
 
@@ -57,7 +57,7 @@ public class PatternAdapter extends RecyclerSwipeAdapter<PatternAdapter.SimpleVi
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final Pattern pattern = Patterns.get(i);
         simpleViewHolder.Name.setText(pattern.getPatternName());
-        simpleViewHolder.Type.setText(inflater.getContext().getResources().getStringArray(R.array.order_name)[pattern.getType_id() - 1]);
+        simpleViewHolder.Type.setText(LayoutInflater.from(simpleViewHolder.Type.getContext()).getContext().getResources().getStringArray(R.array.order_name)[pattern.getType_id() - 1]);
         // simpleViewHolder.Date.setText(pattern.getDate());
 
         try {

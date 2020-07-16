@@ -23,7 +23,6 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.Rest.UserInfo.OriginalDocument;
-import com.bmvl.lk.ViewHolders.SelectButtonHolder;
 import com.bmvl.lk.data.FileUtils;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.google.android.material.button.MaterialButton;
@@ -76,7 +75,7 @@ public class SettingOriginalDocFragment extends Fragment implements OnBackPresse
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View MyView = inflater.inflate(R.layout.setting_notify, container, false);
+        View MyView = inflater.inflate(R.layout.fragment_setting_original_doc, container, false);
 
         final Spinner spiner = MyView.findViewById(R.id.spinner);
         final TextView HintSpiner = MyView.findViewById(R.id.hint);

@@ -16,12 +16,17 @@ import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.AnswerNotifySettings;
 import com.bmvl.lk.Rest.AnswerSearch;
+import com.bmvl.lk.Rest.Material;
 import com.bmvl.lk.Rest.NetworkService;
+import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.settings.ItemNotify;
+import com.google.android.material.button.MaterialButton;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,17 +49,56 @@ public class SettingNotifyFragment extends Fragment implements OnBackPressedList
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View MyView = inflater.inflate(R.layout.only_recyclerview, container, false);
+        View MyView = inflater.inflate(R.layout.setting_notify_fragment, container, false);
 
         SettingsList = MyView.findViewById(R.id.RecyclerView);
+        final MaterialButton save_btn = MyView.findViewById(R.id.MaterialButton);
 
 
         InitList();
+        save_btn.setOnClickListener(v -> {
+
+            Map<String, Map<String, String>> userNotifiactions = new HashMap<>();
+            Map<String, String> fields;
+            if(SettingsFields.size() == 7)
+            SettingsFields.remove(0);
+            for(ItemNotify item: SettingsFields){
+                fields = new HashMap<>();
+                fields.put("lk", (item.isLK() ? "1" : "0" ));
+                fields.put("email", (item.isEmail() ? "1" : "0"));
+                fields.put("sms", (item.isSMS() ? "1" : "0" ));
+
+                userNotifiactions.put(item.getColumnId(), fields);
+            }
+
+            Log.d("TAG", new Gson().toJson(userNotifiactions));
+            NetworkService.getInstance()
+                    .getJSONApi()
+                    .saveNotificationSettings(App.UserAccessData.getToken(), new Gson().toJson(userNotifiactions))
+                    .enqueue(new Callback<StandardAnswer>() {
+                        @Override
+                        public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                if (response.body().getStatus() == 200) {
+                                    Toast.makeText(getContext(), R.string.data_save_ok, Toast.LENGTH_SHORT).show();
+                                } else
+                                    Toast.makeText(getContext(), R.string.data_save_error, Toast.LENGTH_SHORT).show();
+                            } else
+                                Toast.makeText(getContext(), R.string.data_save_error, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
+                            Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+        });
         return MyView;
     }
 
     private void InitList(){
-        SettingsFields.add(new ItemNotify((byte) 1));
+       // SettingsFields.add(new ItemNotify((byte) 1));
 
         NetworkService.getInstance()
                 .getJSONApi()
@@ -85,6 +129,7 @@ public class SettingNotifyFragment extends Fragment implements OnBackPressedList
                     }
                 });
     }
+
     private String getNameField(String text){
         switch (text){
             case "newOrder":
@@ -109,7 +154,7 @@ public class SettingNotifyFragment extends Fragment implements OnBackPressedList
     }
 
     private void initRecyclerView() {
-        SettingsList.addItemDecoration(new SpacesItemDecoration((byte) 30, (byte) 10));
+        SettingsList.addItemDecoration(new SpacesItemDecoration((byte) 10, (byte) 10));
         SettingsList.setItemAnimator(new DefaultItemAnimator());
         SettingsList.setHasFixedSize(true);
 

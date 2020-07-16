@@ -50,7 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
-        SettingsList.addItemDecoration(new SpacesItemDecoration((byte) 30, (byte) 10));
+        SettingsList.addItemDecoration(new SpacesItemDecoration((byte) 10, (byte) 5));
         SettingsList.setItemAnimator(new DefaultItemAnimator());
         SettingsList.setHasFixedSize(true);
 
@@ -61,7 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
         };
 
-        adapter = new SettingsAdapter(getApplicationContext(), SettingsFields,onClickListener);
+        adapter = new SettingsAdapter(SettingsFields,onClickListener);
         SettingsList.setAdapter(adapter);
     }
 

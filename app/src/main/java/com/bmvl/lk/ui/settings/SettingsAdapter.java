@@ -17,11 +17,9 @@ import java.util.List;
 
 public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.SettingsHolder> {
     private static List<SettingsGroup> SettingsFields;
-    private LayoutInflater inflater;
     private OnClickListener onClickListener;
 
-    public SettingsAdapter(Context context, List<SettingsGroup> Contents, OnClickListener onClickListener) {
-        this.inflater = LayoutInflater.from(context);
+    public SettingsAdapter(List<SettingsGroup> Contents, OnClickListener onClickListener) {
         SettingsFields = Contents;
         this.onClickListener = onClickListener;
     }
@@ -33,7 +31,8 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Settin
     @NonNull
     @Override
     public SettingsAdapter.SettingsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_settings_group, parent, false);
+    //    View view = inflater.inflate(R.layout.item_settings_group, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_settings_group, parent, false);
         return new SettingsAdapter.SettingsHolder(view);
     }
 

@@ -63,7 +63,7 @@ public class GroupListFragment extends Fragment implements OnBackPressedListener
         SettingsAdapter.OnClickListener onClickListener = group -> {
         };
 
-        adapter = new SettingsAdapter(getContext(), SettingsFields,onClickListener);
+        adapter = new SettingsAdapter(SettingsFields,onClickListener);
         SettingsList.setAdapter(adapter);
     }
 }

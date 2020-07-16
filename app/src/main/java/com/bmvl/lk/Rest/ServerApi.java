@@ -201,4 +201,8 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("account/notificationSettings")
     Call<AnswerNotifySettings> getNotifySetting(@Field("token") String token);
+
+    @FormUrlEncoded
+    @POST("account/saveNotificationSettings")
+    Call<StandardAnswer> saveNotificationSettings(@Field("token") String token, @Field("userNotifications") String userNotifications);
 }

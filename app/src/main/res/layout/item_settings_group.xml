@@ -3,7 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/Group"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:padding="@dimen/activity_horizontal_margin"
+    android:clickable="true"
+    android:focusable="true">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/image_view"

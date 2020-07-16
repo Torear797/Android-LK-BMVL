@@ -17,7 +17,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.settings.SettingsActivity" android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.splash_screen.SplashScreenActivity"
             android:theme="@style/SplashTheme">
@@ -28,21 +27,22 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.create_order.CreateOrderActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.profile.ProfileActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.LoginActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.settings.SettingItemActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.MenuActivity"
             android:screenOrientation="portrait" />
     </application>
-
 </manifest>

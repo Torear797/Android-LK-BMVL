@@ -7,12 +7,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
-import com.bmvl.lk.ViewHolders.SelectButtonHolder;
 import com.bmvl.lk.ui.settings.ItemNotify;
-import com.bmvl.lk.ui.settings.SettingsGroup;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.util.List;
@@ -77,6 +77,8 @@ public class ItemSettingAdapter extends RecyclerView.Adapter {
     private class FieldHolder extends RecyclerView.ViewHolder {
         public TextView Name;
         public MaterialCheckBox LK, Email, SMS;
+        public MaterialCardView Card;
+        public Group group;
 
         public FieldHolder(@NonNull View itemView) {
             super(itemView);
@@ -85,6 +87,25 @@ public class ItemSettingAdapter extends RecyclerView.Adapter {
             LK = itemView.findViewById(R.id.LK);
             Email = itemView.findViewById(R.id.Email);
             SMS = itemView.findViewById(R.id.SMS);
+            Card = itemView.findViewById(R.id.Card);
+            group = itemView.findViewById(R.id.MaterialCheckBoxes);
+
+            LK.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                SettingsFields.get(getLayoutPosition()).setLK(isChecked);
+            });
+
+            Email.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                SettingsFields.get(getLayoutPosition()).setEmail(isChecked);
+            });
+
+            SMS.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                SettingsFields.get(getLayoutPosition()).setSMS(isChecked);
+            });
+
+            Card.setOnClickListener(v -> {
+                group.setVisibility(group.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+            });
+
         }
     }
 }

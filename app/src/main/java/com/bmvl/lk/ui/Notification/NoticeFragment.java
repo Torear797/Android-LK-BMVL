@@ -116,7 +116,7 @@ public class NoticeFragment extends Fragment implements OnBackPressedListener {
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 10, (byte) 10));
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        NotifiAdapter = new NotifiSwipeAdapter(getContext(), Notifi, onClickListener);
+        NotifiAdapter = new NotifiSwipeAdapter(Notifi, onClickListener);
         (NotifiAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(NotifiAdapter);
     }

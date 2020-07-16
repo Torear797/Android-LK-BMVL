@@ -1,6 +1,5 @@
 package com.bmvl.lk.ui.ProbyMenu.Probs;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,7 @@ import java.util.Objects;
 
 public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHolder> {
     private static Map<Short, ProbyRest> Probs; //Пробы
-    private LayoutInflater inflater;
+    //private LayoutInflater inflater;
     private RecyclerView.RecycledViewPool viewPool;
 
     private List<Field> ProbFields; //Поля пробы
@@ -38,8 +37,8 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 
     private OnProbClickListener OnProbClickListener; //Слушатель нажатий кнопок
 
-    ProbAdapter(Context context, List<Field> Fields, List<Field> sampleFields, OnProbClickListener Listener) {
-        this.inflater = LayoutInflater.from(context);
+    ProbAdapter(List<Field> Fields, List<Field> sampleFields, OnProbClickListener Listener) {
+       // this.inflater = LayoutInflater.from(context);
         Probs = CreateOrderActivity.order.getProby();
         this.OnProbClickListener = Listener;
         viewPool = new RecyclerView.RecycledViewPool();
@@ -56,7 +55,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_prob, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_prob, parent, false);
         return new ProbAdapter.SimpleViewHolder(view);
     }
 
@@ -77,7 +76,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         if (CurrentProb.getProtocol() != null)
             simpleViewHolder.btnDownload.setVisibility(View.VISIBLE);
 
-        String nameMaterial = inflater.getContext().getString(R.string.MaterialNoSelectHeader);
+        String nameMaterial = simpleViewHolder.infoProb.getContext().getString(R.string.MaterialNoSelectHeader);
         if (CurrentProb.getFields().containsKey("5"))
             nameMaterial = CurrentProb.getFields().get("materialName");
 
@@ -105,7 +104,6 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 
     private void initRecyclerView(SimpleViewHolder simpleViewHolder, ProbyRest CurrentProb) {
         final ProbFieldAdapter adapter = new ProbFieldAdapter(
-                inflater.getContext(),
                 ProbFields,
                 SampleFields,
                 CurrentProb,
@@ -160,7 +158,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
             ProbList.setItemAnimator(new DefaultItemAnimator());
             ProbList.setRecycledViewPool(viewPool);
             ProbList.setHasFixedSize(true);
-            final GridLayoutManager mng_layout = new GridLayoutManager(inflater.getContext(), 2);
+            final GridLayoutManager mng_layout = new GridLayoutManager(ProbList.getContext(), 2);
             mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {

@@ -47,6 +47,7 @@ public class PatternAdapter extends RecyclerSwipeAdapter<PatternAdapter.SimpleVi
         return position;
     }
 
+    @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pattern, parent, false);

@@ -19,18 +19,14 @@ import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Material;
 import com.bmvl.lk.Rest.NetworkService;
-import com.bmvl.lk.Rest.Order.OrdersAnswer;
 import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.data.TreeViewHolder.ProfileHolder;
-import com.bmvl.lk.data.TreeViewHolder.SelectableHeaderHolder;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.button.MaterialButton;
-import com.orhanobut.hawk.Hawk;
 import com.unnamed.b.atv.model.TreeNode;
 
 import java.io.File;
@@ -429,7 +425,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
                     break;
             }
 
-            adapter = new ProbAdapter(getContext(), ProbFields, SampleFields, onClickListener);
+            adapter = new ProbAdapter(ProbFields, SampleFields, onClickListener);
             (adapter).setMode(Attributes.Mode.Single);
             return null;
         }

@@ -3,10 +3,8 @@ package com.bmvl.lk.ui.ProbyMenu.Probs;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.bmvl.lk.Rest.Order.ProbyRest;
-import com.bmvl.lk.data.models.Proby;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class ProbDiffUtilCallback extends DiffUtil.Callback{

@@ -2,7 +2,6 @@ package com.bmvl.lk.ui.patterns;
 
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.bmvl.lk.data.models.Orders;
 import com.bmvl.lk.data.models.Pattern;
 
 import java.util.List;

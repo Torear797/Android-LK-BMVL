@@ -16,6 +16,8 @@ public class AnswerOrderNew extends StandardAnswer {
     @Expose
     private LoggedInUser UserInfo;
 
+    private boolean accountNotActive;
+
     public Map<Short, String[]> getFieldValues() {
         return fieldValues;
     }
@@ -30,4 +32,7 @@ public class AnswerOrderNew extends StandardAnswer {
         return UserInfo;
     }
 
+    public boolean isAccountNotActive() {
+        return accountNotActive;
+    }
 }

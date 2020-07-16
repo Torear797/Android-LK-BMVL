@@ -58,7 +58,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
@@ -366,7 +365,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 10, (byte) 10));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
-        OrderAdapter = new OrderSwipeAdapter(getContext(), Orders, onClickListener);
+        OrderAdapter = new OrderSwipeAdapter(Orders, onClickListener);
         (OrderAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(OrderAdapter);
     }

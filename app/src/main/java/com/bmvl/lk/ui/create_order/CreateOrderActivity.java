@@ -1,19 +1,14 @@
 package com.bmvl.lk.ui.create_order;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.InputType;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -48,8 +43,6 @@ import com.google.gson.Gson;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +55,6 @@ import java.util.TreeMap;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -622,7 +614,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                     }
                 }
             };
-            adapter = new FieldsAdapter(context, onClickFieldListener);
+            adapter = new FieldsAdapter(onClickFieldListener);
             return mng_layout;
         }
 

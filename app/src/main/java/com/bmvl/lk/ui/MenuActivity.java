@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,10 +20,8 @@ import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.UserInfo.OrderInfo;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.ui.Notification.NoticeFragment;
-import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.bmvl.lk.ui.login.LoginActivity;
 import com.bmvl.lk.ui.order.OrderFragment;
-import com.bmvl.lk.ui.patterns.PatternsFragment;
 import com.bmvl.lk.ui.patterns.PatternsMenu;
 import com.bmvl.lk.ui.profile.ProfileActivity;
 import com.bmvl.lk.ui.search.SearchFragment;

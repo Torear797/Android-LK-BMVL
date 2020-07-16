@@ -245,5 +245,7 @@
     <string name="inLK">В личном кабинете</string>
     <string name="InEmail">На Email</string>
     <string name="InSMS">На SMS</string>
+    <string name="accountNotActive">Ваша учетная запись не активна. Некоторые данные профиля не заполнены.
+Обратитесь к администратору или ответственному лицу организации.</string>
 
 </resources>

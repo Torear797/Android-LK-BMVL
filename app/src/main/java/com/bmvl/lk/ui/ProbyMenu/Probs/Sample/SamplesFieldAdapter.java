@@ -1,7 +1,6 @@
 package com.bmvl.lk.ui.ProbyMenu.Probs.Sample;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -40,7 +38,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SamplesFieldAdapter extends RecyclerView.Adapter {
-    private LayoutInflater inflater;
+    //   private LayoutInflater inflater;
     private RecyclerView.RecycledViewPool viewPool;
     private List<Field> SamplesField; //Поля образцов
 
@@ -54,8 +52,8 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
 
     private Map<String, String> ProbFields; //Поля пробы
 
-    SamplesFieldAdapter(Context context, List<Field> SamFields, SamplesRest Sample,Map<String, String> ProbFields) {
-        this.inflater = LayoutInflater.from(context);
+    SamplesFieldAdapter(List<Field> SamFields, SamplesRest Sample, Map<String, String> ProbFields) {
+        //   this.inflater = LayoutInflater.from(context);
         this.ProbFields = ProbFields;
         viewPool = new RecyclerView.RecycledViewPool();
         SamplesField = SamFields;
@@ -90,13 +88,13 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
 
                 return holder1;
             case 5:
-                View view5 = inflater.inflate(R.layout.item_multi_spinner, parent, false);
+                View view5 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_multi_spinner, parent, false);
                 return new MultiSpinerHolder(view5);
             case 6:
-                View view6 = inflater.inflate(R.layout.item_research_list, parent, false);
+                View view6 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_research_list, parent, false);
                 return new ResearchPanelHolder(view6);
-            case 8:{
-                View view8 = inflater.inflate(R.layout.item_data_field, parent, false);
+            case 8: {
+                View view8 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_data_field, parent, false);
                 return new DataFieldHolder(view8);
             }//DataField
             default:
@@ -140,13 +138,13 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
             }//Edittext
             case 1: {
                 if (f.getEntries() != -1) {
-                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
+                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(((SpinerHolder) holder).spiner.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     ((SpinerHolder) holder).spiner.setAdapter(adapter);
                     if (CurrentSample.getFields().containsKey((short) (f.getColumn_id())))
                         ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentSample.getFields().get((short) (f.getColumn_id()))));
                 } else {
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(inflater.getContext(), android.R.layout.simple_spinner_item, f.getSpinerData());
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item, f.getSpinerData());
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     ((SpinerHolder) holder).spiner.setAdapter(adapter);
                     if (CurrentSample.getFields().containsKey((short) (f.getColumn_id())))
@@ -158,7 +156,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 break;
             }//Spiner
             case 5: {
-                final List<String> items = Arrays.asList(inflater.getContext().getResources().getStringArray(f.getEntries()));
+                final List<String> items = Arrays.asList(((MultiSpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()));
                 MultiSpinner.MultiSpinnerListener onSelectedListener = new MultiSpinner.MultiSpinnerListener() {
                     public void onItemsSelected(boolean[] selected, String id) {
                         CurrentSample.getFields().put((short) f.getColumn_id(), id);
@@ -179,7 +177,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 break;
             }//Мультиспинер
             case 6: {
-                Adapter = new ResearhAdapter(inflater.getContext(), CurrentSample.getResearches());
+                Adapter = new ResearhAdapter(CurrentSample.getResearches());
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.setRecycledViewPool(viewPool);
@@ -206,34 +204,26 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                             Adapter.notifyDataSetChanged();
                             ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
                         } else
-                            Toast.makeText(inflater.getContext(), inflater.getContext().getString(R.string.MaterialNoSelect), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(((ResearchPanelHolder) holder).ResearchList.getContext(), ((ResearchPanelHolder) holder).ResearchList.getContext().getString(R.string.MaterialNoSelect), Toast.LENGTH_SHORT).show();
                     }
                 });
 
                 break;
             }//Исследования
-            case 8:{
+            case 8: {
                 ((DataFieldHolder) holder).Layout.setHint(f.getHint());
-                ((DataFieldHolder) holder).field.setText(CurrentSample.getFields().get((short)f.getColumn_id()));
+                ((DataFieldHolder) holder).field.setText(CurrentSample.getFields().get((short) f.getColumn_id()));
 
-                final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        ChangeData(year, monthOfYear, dayOfMonth, ((DataFieldHolder) holder).field, f.getColumn_id());
-                    }
-                };
-                ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
-                                dateAndTime.get(Calendar.YEAR),
-                                dateAndTime.get(Calendar.MONTH),
-                                dateAndTime.get(Calendar.DAY_OF_MONTH))
-                                .show();
-                    }
-                });
+                final DatePickerDialog.OnDateSetListener Datapicker = (view, year, monthOfYear, dayOfMonth) -> ChangeData(year, monthOfYear, dayOfMonth, ((DataFieldHolder) holder).field, f.getColumn_id());
+                ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(v -> new DatePickerDialog(Objects.requireNonNull(((DataFieldHolder) holder).Layout.getContext()), Datapicker,
+                        dateAndTime.get(Calendar.YEAR),
+                        dateAndTime.get(Calendar.MONTH),
+                        dateAndTime.get(Calendar.DAY_OF_MONTH))
+                        .show());
             }//DataField
         }
     }
+
     private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt, int position) {
         monthOfYear = monthOfYear + 1;
 //        dateAndTime.set(Calendar.YEAR, year);
@@ -251,7 +241,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
             formattedDayOfMonth = "0" + dayOfMonth;
         }
 
-        CurrentSample.getFields().put((short)(position), MessageFormat.format("{0}.{1}.{2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
+        CurrentSample.getFields().put((short) (position), MessageFormat.format("{0}.{1}.{2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
         Edt.setText(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
         Edt.requestFocus();
         Edt.setSelection(Edt.getText().length());

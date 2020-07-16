@@ -6,16 +6,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.Notification.NoticeFragment;
-import com.bmvl.lk.ui.create_order.CreateOrderActivity;
-import com.bmvl.lk.ui.settings.fragments.GroupListFragment;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.ArrayList;

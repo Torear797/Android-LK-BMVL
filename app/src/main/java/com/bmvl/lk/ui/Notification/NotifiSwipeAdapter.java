@@ -1,6 +1,5 @@
 package com.bmvl.lk.ui.Notification;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,22 +17,20 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleViewHolder> {
     private static List<Notifications> Notifi;
-    private LayoutInflater inflater;
+    //private LayoutInflater inflater;
 
     private OnNotifyClickListener onNotifyClickListener;
 
-    NotifiSwipeAdapter(Context context, List<Notifications> notifi, OnNotifyClickListener onNotifyClickListener) {
-        this.inflater = LayoutInflater.from(context);
+    NotifiSwipeAdapter(List<Notifications> notifi, OnNotifyClickListener onNotifyClickListener) {
+        //  this.inflater = LayoutInflater.from(context);
         this.onNotifyClickListener = onNotifyClickListener;
         Notifi = notifi;
     }
@@ -51,7 +48,8 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
     @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_notifi, parent, false);
+        //View view = inflater.inflate(R.layout.item_notifi, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notifi, parent, false);
         return new SimpleViewHolder(view);
     }
 
@@ -61,7 +59,7 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
         final Notifications notifi = Notifi.get(i);
         //simpleViewHolder.Data.setText(notifi.getDate());
         try {
-            simpleViewHolder.Data.setText(new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(notifi.getDate())));
+            simpleViewHolder.Data.setText(new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(notifi.getDate())));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -72,17 +70,16 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
 
         if (notifi.getStatus() == 0) {
             simpleViewHolder.status.setImageResource(R.drawable.ic_old_notifi);
-            simpleViewHolder.Data.setTextColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
-            simpleViewHolder.Event.setTextColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
-            simpleViewHolder.Order.setTextColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
+            simpleViewHolder.Data.setTextColor(simpleViewHolder.Data.getContext().getResources().getColor(R.color.notify_old_color));
+            simpleViewHolder.Event.setTextColor(simpleViewHolder.Event.getContext().getResources().getColor(R.color.notify_old_color));
+            simpleViewHolder.Order.setTextColor(simpleViewHolder.Order.getContext().getResources().getColor(R.color.notify_old_color));
             simpleViewHolder.swipeLayout.setSwipeEnabled(false);
-        } else
-            {
-                simpleViewHolder.status.setImageResource(R.drawable.ic_new_notifi);
-                simpleViewHolder.Data.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
-                simpleViewHolder.Event.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
-                simpleViewHolder.Order.setTextColor(inflater.getContext().getResources().getColor(R.color.text_order_field_color));
-            }
+        } else {
+            simpleViewHolder.status.setImageResource(R.drawable.ic_new_notifi);
+            simpleViewHolder.Data.setTextColor(simpleViewHolder.Data.getContext().getResources().getColor(R.color.text_order_field_color));
+            simpleViewHolder.Event.setTextColor(simpleViewHolder.Event.getContext().getResources().getColor(R.color.text_order_field_color));
+            simpleViewHolder.Order.setTextColor(simpleViewHolder.Order.getContext().getResources().getColor(R.color.text_order_field_color));
+        }
 
 
         simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
@@ -110,7 +107,7 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
         NotifyDiffUtilCallback diffUtilCallback = new NotifyDiffUtilCallback(Notifi, insertList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback, false);
         Notifi.addAll(insertList);
-       // CheckEmpty();
+        // CheckEmpty();
         diffResult.dispatchUpdatesTo(this);
     }
 
@@ -140,10 +137,10 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
             buttonRead.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                 final Notifications Notify = Notifi.get(getLayoutPosition());
+                    final Notifications Notify = Notifi.get(getLayoutPosition());
                     closeAllItems();
                     swipeLayout.close();
-                    if(Notify.getStatus() == 1) {
+                    if (Notify.getStatus() == 1) {
                         Notify.setStatus(0);
                         onNotifyClickListener.onNotifyClick(getLayoutPosition(), Notify.getId());
                     }

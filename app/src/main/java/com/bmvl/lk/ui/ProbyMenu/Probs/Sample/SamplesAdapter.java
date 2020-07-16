@@ -1,6 +1,5 @@
 package com.bmvl.lk.ui.ProbyMenu.Probs.Sample;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,7 @@ import java.util.Objects;
 import java.util.TreeMap;
 
 public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleViewHolder> {
-    private LayoutInflater inflater;
+   // private LayoutInflater inflater;
     private TreeMap<Short, SamplesRest> Samples; //Образцы
     private List<Field> SamplesField; //Поля образцов
     private RecyclerView.RecycledViewPool viewPool;
@@ -41,8 +40,8 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
 
     private SamplesFieldAdapter adapter;
 
-    public SamplesAdapter(Context context, List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList,Map<String, String> ProbFields) {
-        this.inflater = LayoutInflater.from(context);
+    public SamplesAdapter(List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList,Map<String, String> ProbFields) {
+      //  this.inflater = LayoutInflater.from(context);
         SamplesField = Samples;
         this.Samples = SamplesList;
         this.ProbFields = ProbFields;
@@ -57,14 +56,14 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view1 = inflater.inflate(R.layout.item_prob, parent, false);
+        View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_prob, parent, false);
         return new SimpleViewHolder(view1);
     }
 
     @Override
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final SamplesRest CurrentSample = Samples.get(getPositionKey(i));
-        adapter = new SamplesFieldAdapter(inflater.getContext(), SamplesField, CurrentSample, ProbFields);
+        adapter = new SamplesFieldAdapter(SamplesField, CurrentSample, ProbFields);
         simpleViewHolder.SampleList.setAdapter(adapter);
 
         if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {
@@ -76,7 +75,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
             simpleViewHolder.swipeLayout.setSwipeEnabled(false);
 
             if (!CreateOrderActivity.IsPattern) {
-                final GridLayoutManager mng_layout = new GridLayoutManager(inflater.getContext(), 2);
+                final GridLayoutManager mng_layout = new GridLayoutManager(simpleViewHolder.SampleList.getContext(), 2);
                 mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override
                     public int getSpanSize(int position) {

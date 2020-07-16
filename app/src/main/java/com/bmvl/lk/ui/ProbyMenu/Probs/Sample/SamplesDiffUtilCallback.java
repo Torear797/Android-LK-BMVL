@@ -2,12 +2,9 @@ package com.bmvl.lk.ui.ProbyMenu.Probs.Sample;
 
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
-import com.bmvl.lk.data.models.Samples;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class SamplesDiffUtilCallback extends DiffUtil.Callback{

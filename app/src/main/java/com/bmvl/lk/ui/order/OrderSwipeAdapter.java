@@ -1,7 +1,5 @@
 package com.bmvl.lk.ui.order;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,11 +30,11 @@ import java.util.Locale;
 
 public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.SimpleViewHolder> {
     private static List<Orders> Orders;
-    private LayoutInflater inflater;
+    // private LayoutInflater inflater;
     private OnOrderClickListener onOrderClickListener;
 
-    public OrderSwipeAdapter(Context context, List<Orders> Contents, OnOrderClickListener onOrderClickListener) {
-        this.inflater = LayoutInflater.from(context);
+    public OrderSwipeAdapter(List<Orders> Contents, OnOrderClickListener onOrderClickListener) {
+        //   this.inflater = LayoutInflater.from(context);
         Orders = Contents;
         this.onOrderClickListener = onOrderClickListener;
     }
@@ -61,7 +59,8 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
     @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_order, parent, false);
+        //  View view = inflater.inflate(R.layout.item_order, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_order, parent, false);
         return new SimpleViewHolder(view);
     }
 
@@ -69,8 +68,8 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final Orders Order = Orders.get(i);
         simpleViewHolder.Number.setText(MessageFormat.format("№ {0}", Order.getId()));
-        simpleViewHolder.Name.setText(inflater.getContext().getResources().getStringArray(R.array.order_name)[Order.getType_id() - 1]);
-        simpleViewHolder.Status.setText(inflater.getContext().getResources().getStringArray(R.array.order_statuses)[Order.getStatus_id() - 1]);
+        simpleViewHolder.Name.setText(simpleViewHolder.Name.getContext().getResources().getStringArray(R.array.order_name)[Order.getType_id() - 1]);
+        simpleViewHolder.Status.setText(simpleViewHolder.Status.getContext().getResources().getStringArray(R.array.order_statuses)[Order.getStatus_id() - 1]);
         simpleViewHolder.Adres.setText(App.UserInfo.getAdress());
         simpleViewHolder.Person.setText(App.UserInfo.getFIO());
         simpleViewHolder.PersonStatus.setText(App.UserInfo.getPosition());
@@ -86,7 +85,7 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
         if (Order.getStatus_id() == 11) {
             simpleViewHolder.buttonDownload.setVisibility(View.GONE);
             simpleViewHolder.buttonCopy.setVisibility(View.GONE);
-            simpleViewHolder.Card.setCardBackgroundColor(inflater.getContext().getResources().getColor(R.color.notify_old_color));
+            simpleViewHolder.Card.setCardBackgroundColor(simpleViewHolder.Card.getContext().getResources().getColor(R.color.notify_old_color));
         }
 
         simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
@@ -145,51 +144,36 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
             buttonDownload = itemView.findViewById(R.id.download);
 
 
-            Card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (group.getVisibility() == View.VISIBLE) {
-                        group.setVisibility(View.GONE);
-                        btnLinear.setOrientation(LinearLayout.HORIZONTAL);
-                    } else {
-                        group.setVisibility(View.VISIBLE);
-                        btnLinear.setOrientation(LinearLayout.VERTICAL);
-                        onOrderClickListener.onScrollToOrder(getLayoutPosition());
-                    }
+            Card.setOnClickListener(view -> {
+                if (group.getVisibility() == View.VISIBLE) {
+                    group.setVisibility(View.GONE);
+                    btnLinear.setOrientation(LinearLayout.HORIZONTAL);
+                } else {
+                    group.setVisibility(View.VISIBLE);
+                    btnLinear.setOrientation(LinearLayout.VERTICAL);
+                    onOrderClickListener.onScrollToOrder(getLayoutPosition());
                 }
             });
 
-            buttonOpen.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    closeAllItems();
-                    onOrderClickListener.onEditOrder(Orders.get(getLayoutPosition()));
-                }
+            buttonOpen.setOnClickListener(view -> {
+                closeAllItems();
+                onOrderClickListener.onEditOrder(Orders.get(getLayoutPosition()));
             });
 
 
-            buttonCopy.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    closeAllItems();
-                    onOrderClickListener.onCopyOrder(Orders.get(getLayoutPosition()));
-                }
+            buttonCopy.setOnClickListener(view -> {
+                closeAllItems();
+                onOrderClickListener.onCopyOrder(Orders.get(getLayoutPosition()));
             });
 
-            buttonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    closeAllItems();
-                    onOrderClickListener.onDeleteOrder(Orders.get(getLayoutPosition()).getId(), getLayoutPosition(), Orders.get(getLayoutPosition()).getStatus_id());
-                }
+            buttonDelete.setOnClickListener(view -> {
+                closeAllItems();
+                onOrderClickListener.onDeleteOrder(Orders.get(getLayoutPosition()).getId(), getLayoutPosition(), Orders.get(getLayoutPosition()).getStatus_id());
             });
 
-            buttonDownload.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    closeAllItems();
-                    onOrderClickListener.onDownloadOrder(Orders.get(getLayoutPosition()).getId());
-                }
+            buttonDownload.setOnClickListener(view -> {
+                closeAllItems();
+                onOrderClickListener.onDownloadOrder(Orders.get(getLayoutPosition()).getId());
             });
         }
     }

@@ -9,14 +9,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.AnswerOrderNew;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.UserInfo.OrderInfo;
 import com.bmvl.lk.Rest.UserInfo.UserAccess;
-
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,17 +42,25 @@ public class LoginViewModel extends ViewModel {
                 .enqueue(new Callback<UserAccess>() {
                     @Override
                     public void onResponse(@NonNull Call<UserAccess> call, @NonNull Response<UserAccess> response) {
-                        if (response.isSuccessful()) {
-                            //App.UserAccessData = response.body();
-                            assert response.body() != null;
-                            if (response.body().getUser_id() != null)
-                                // getUserInfo(response.body(),context);
-                                getOrderNewInfo(response.body(), context);
+                        if (response.isSuccessful() && response.body() != null) {
+//                            if (response.body().getUser_id() != null)
+//
+//
+//                            else {
+//                                //Пользователь ввел не верный лог/пас
+//                                loginResult.setValue(new LoginResult(response.body().getText()));
+//                            }
 
-                            else { //Пользователь ввел не верный лог/пас
-                                loginResult.setValue(new LoginResult(response.body().getText()));
-                                // loginResult.setValue(new LoginResult("Не верный логин/пароль!"));
+                            switch (response.body().getStatus()){
+                                case 200:
+                                    getOrderNewInfo(response.body(), context);
+                                    break;
+                                case 403:
+                                    if(response.body().isAccountNotActive())
+                                    loginResult.setValue(new LoginResult(context.getString(R.string.accountNotActive)));
+                                    break;
                             }
+
                         } else
                             loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
                     }
@@ -97,25 +102,42 @@ public class LoginViewModel extends ViewModel {
                     @Override
                     public void onResponse(@NonNull Call<AnswerOrderNew> call, @NonNull Response<AnswerOrderNew> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                            if (response.body().getStatus() == 200) {
-//                                for (Map.Entry<Short, String> entry : response.body().getDefaultFields().entrySet()) {
+//                            if (response.body().getStatus() == 200) {
+////                                for (Map.Entry<Short, String> entry : response.body().getDefaultFields().entrySet()) {
+////
+////                                    if (!entry.getValue().equals("")) {
+////                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo(entry.getKey(), entry.getValue(), response.body().getFieldValues()))));
+////                                        break;
+////                                    }
+////                                }
 //
-//                                    if (!entry.getValue().equals("")) {
-//                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo(entry.getKey(), entry.getValue(), response.body().getFieldValues()))));
-//                                        break;
-//                                    }
-//                                }
-
-                                if (!response.body().getDefaultFields().get((short) 52).equals(""))
-                                    loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 52, response.body().getDefaultFields().get((short) 52), response.body().getFieldValues(), true))));
-                                else if (!response.body().getDefaultFields().get((short) 63).equals("") && !response.body().getDefaultFields().get((short) 64).equals(""))
-                                    loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 64, response.body().getDefaultFields().get((short) 63), response.body().getDefaultFields().get((short) 64), response.body().getFieldValues()))));
-                                else if (!response.body().getDefaultFields().get((short) 63).equals(""))
-                                    loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 63, response.body().getDefaultFields().get((short) 63), response.body().getFieldValues(), false))));
+//                                if (!response.body().getDefaultFields().get((short) 52).equals(""))
+//                                    loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 52, response.body().getDefaultFields().get((short) 52), response.body().getFieldValues(), true))));
+//                                else if (!response.body().getDefaultFields().get((short) 63).equals("") && !response.body().getDefaultFields().get((short) 64).equals(""))
+//                                    loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 64, response.body().getDefaultFields().get((short) 63), response.body().getDefaultFields().get((short) 64), response.body().getFieldValues()))));
+//                                else if (!response.body().getDefaultFields().get((short) 63).equals(""))
+//                                    loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 63, response.body().getDefaultFields().get((short) 63), response.body().getFieldValues(), false))));
+//
+//
+//                            } else
+//                                loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
 
 
-                            } else
-                                loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
+                            switch (response.body().getStatus()){
+                                case 200:
+                                    if (!response.body().getDefaultFields().get((short) 52).equals(""))
+                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 52, response.body().getDefaultFields().get((short) 52), response.body().getFieldValues(), true))));
+                                    else if (!response.body().getDefaultFields().get((short) 63).equals("") && !response.body().getDefaultFields().get((short) 64).equals(""))
+                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 64, response.body().getDefaultFields().get((short) 63), response.body().getDefaultFields().get((short) 64), response.body().getFieldValues()))));
+                                    else if (!response.body().getDefaultFields().get((short) 63).equals(""))
+                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 63, response.body().getDefaultFields().get((short) 63), response.body().getFieldValues(), false))));
+                                    break;
+                                case 403:
+                                    if(response.body().isAccountNotActive())
+                                        loginResult.setValue(new LoginResult(context.getString(R.string.accountNotActive)));
+                                    break;
+                            }
+
                         } else
                             loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
                     }

@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.AnswerNotifySettings;
-import com.bmvl.lk.Rest.AnswerSearch;
-import com.bmvl.lk.Rest.Material;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.data.OnBackPressedListener;

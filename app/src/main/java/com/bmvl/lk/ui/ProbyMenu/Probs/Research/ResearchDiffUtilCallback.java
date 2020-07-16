@@ -3,10 +3,8 @@ package com.bmvl.lk.ui.ProbyMenu.Probs.Research;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.bmvl.lk.Rest.Order.ResearchRest;
-import com.bmvl.lk.data.models.Research;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class ResearchDiffUtilCallback extends DiffUtil.Callback {

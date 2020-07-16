@@ -1,7 +1,6 @@
 package com.bmvl.lk.ui.ProbyMenu.Probs;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -57,7 +56,7 @@ import retrofit2.Response;
 import static com.bmvl.lk.ui.ProbyMenu.Probs.ProbsFragment.Materials;
 
 public class ProbFieldAdapter extends RecyclerView.Adapter {
-    private LayoutInflater inflater;
+   // private LayoutInflater inflater;
     private static Calendar dateAndTime = Calendar.getInstance();
     private List<Field> ProbFields;
     private List<Field> SampleFields; //Поля Образцов
@@ -67,8 +66,8 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     private ProbyRest CurrentProb;
     private SamplesAdapter SamAdapter;
 
-    ProbFieldAdapter(Context context, List<Field> probFields, List<Field> sampleFields, ProbyRest prob, TextView header) {
-        this.inflater = LayoutInflater.from(context);
+    ProbFieldAdapter(List<Field> probFields, List<Field> sampleFields, ProbyRest prob, TextView header) {
+        //this.inflater = LayoutInflater.from(context);
         this.ProbHeader = header;
         viewPool = new RecyclerView.RecycledViewPool();
         ProbFields = probFields;
@@ -121,13 +120,13 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 });
                 return holder3;
             case 4:
-                View view4 = inflater.inflate(R.layout.item_button_select, parent, false);
+                View view4 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_button_select, parent, false);
                 return new SelectButtonHolder(view4);
             case 5:
-                View view5 = inflater.inflate(R.layout.item_multi_spinner, parent, false);
+                View view5 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_multi_spinner, parent, false);
                 return new MultiSpinerHolder(view5);
             case 6:
-                View view6 = inflater.inflate(R.layout.item_auto_compiete_textview, parent, false);
+                View view6 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_auto_compiete_textview, parent, false);
                 final AutoCompleteTextViewHolder holder6 = new AutoCompleteTextViewHolder(view6);
 
                 holder6.TextView.addTextChangedListener(new TextWatcher() {
@@ -151,7 +150,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                         } else {
                             CurrentProb.getFields().remove("5");
                             CurrentProb.getFields().remove("materialName");
-                            ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", inflater.getContext().getString(R.string.MaterialNoSelectHeader), CurrentProb.getSamples().size()));
+                            ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", ProbHeader.getContext().getString(R.string.MaterialNoSelectHeader), CurrentProb.getSamples().size()));
                         }
                     }
 
@@ -173,10 +172,10 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 return holder6;
             case 7:
-                View view7 = inflater.inflate(R.layout.item_research_list, parent, false);
+                View view7 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_research_list, parent, false);
                 return new SamplesPanelHolder(view7);
             case 8:{
-                View view8 = inflater.inflate(R.layout.item_data_field, parent, false);
+                View view8 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_data_field, parent, false);
                 return new DataFieldHolder(view8);
             }//DataField
             default:
@@ -213,7 +212,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
         switch (f.getType()) {
             case 0: {
                 if (f.getInputType() == InputType.TYPE_NULL)
-                    ((TextViewHolder) holder).Layout.setBoxBackgroundColor(inflater.getContext().getResources().getColor(R.color.field_inactive));
+                    ((TextViewHolder) holder).Layout.setBoxBackgroundColor(((TextViewHolder) holder).Layout.getContext().getResources().getColor(R.color.field_inactive));
 
                 ((TextViewHolder) holder).Layout.setHint(f.getHint());
                 ((TextViewHolder) holder).field.setInputType(f.getInputType());
@@ -248,14 +247,14 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             case 1: {
 
                 if (f.getEntries() != -1) {
-                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(inflater.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
+                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(((SpinerHolder) holder).spiner.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     ((SpinerHolder) holder).spiner.setAdapter(adapter);
 
                     if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
                         ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))));
                 } else {
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(inflater.getContext(), android.R.layout.simple_spinner_item, f.getSpinerData());
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item, f.getSpinerData());
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     ((SpinerHolder) holder).spiner.setAdapter(adapter);
 
@@ -280,7 +279,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 break;
             } //SelectButtonHolder
             case 5: {
-                final List<String> items = Arrays.asList(inflater.getContext().getResources().getStringArray(f.getEntries()));
+                final List<String> items = Arrays.asList( ((MultiSpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()));
                 MultiSpinner.MultiSpinnerListener onSelectedListener = new MultiSpinner.MultiSpinnerListener() {
                     public void onItemsSelected(boolean[] selected, String id) {
                         CurrentProb.getFields().put(String.valueOf(f.getColumn_id()), id);
@@ -308,7 +307,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 for (int i = 0; i < mMaterials.length; i++) {
                     mMaterials[i] = ProbsFragment.Materials.get(i).getText();
                 }
-                ((AutoCompleteTextViewHolder) holder).TextView.setAdapter(new ArrayAdapter<>(inflater.getContext(), android.R.layout.simple_spinner_item, mMaterials));
+                ((AutoCompleteTextViewHolder) holder).TextView.setAdapter(new ArrayAdapter<>(((AutoCompleteTextViewHolder) holder).TextView.getContext(), android.R.layout.simple_spinner_item, mMaterials));
                 ((AutoCompleteTextViewHolder) holder).TextView.setThreshold(3);
 
                 if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
@@ -327,7 +326,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 break;
             } //AutoCompieteTextview
             case 7: {
-                SamAdapter = new SamplesAdapter(inflater.getContext(), SampleFields, CurrentProb.getSamples(), CurrentProb.getFields());
+                SamAdapter = new SamplesAdapter(SampleFields, CurrentProb.getSamples(), CurrentProb.getFields());
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
                 ((SamplesPanelHolder) holder).SampleList.setRecycledViewPool(viewPool);
@@ -363,7 +362,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
+                        new DatePickerDialog(Objects.requireNonNull(((DataFieldHolder) holder).Layout.getContext()), Datapicker,
                                 dateAndTime.get(Calendar.YEAR),
                                 dateAndTime.get(Calendar.MONTH),
                                 dateAndTime.get(Calendar.DAY_OF_MONTH))

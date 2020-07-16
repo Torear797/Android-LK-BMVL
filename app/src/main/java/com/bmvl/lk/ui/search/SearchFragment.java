@@ -10,12 +10,10 @@ import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
@@ -462,7 +460,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
         SearchList.addItemDecoration(new SpacesItemDecoration((byte) 10, (byte) 10));
         SearchList.setItemAnimator(new DefaultItemAnimator());
         SearchList.setHasFixedSize(true);
-        OrderSearchAdapter = new OrderSwipeAdapter(getContext(), SearchOrders, onClickListener);
+        OrderSearchAdapter = new OrderSwipeAdapter(SearchOrders, onClickListener);
         (OrderSearchAdapter).setMode(Attributes.Mode.Single);
         SearchList.setAdapter(OrderSearchAdapter);
     }

@@ -1,6 +1,5 @@
 package com.bmvl.lk.ui.ProbyMenu.Probs.Research;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Suggestion;
-import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
@@ -29,7 +27,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.ResearchItemHolder> {
-    private LayoutInflater inflater;
+   // private LayoutInflater inflater;
     private TreeMap<Short, ResearchRest> researches; //Исследования
     //    private List<Field> ResearchFields = new ArrayList<>();
     private RecyclerView.RecycledViewPool viewPool;
@@ -38,8 +36,8 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     private static List<Suggestion> suggestions;
     private static short materialId;
 
-    public ResearhAdapter(Context context, TreeMap<Short, ResearchRest> ResearchesLise) {
-        this.inflater = LayoutInflater.from(context);
+    public ResearhAdapter(TreeMap<Short, ResearchRest> ResearchesLise) {
+      //  this.inflater = LayoutInflater.from(context);
         viewPool = new RecyclerView.RecycledViewPool();
         researches = ResearchesLise;
         //  AddResearchFields();
@@ -59,20 +57,20 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     @NonNull
     @Override
     public ResearchItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_prob, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_prob, parent, false);
         return new ResearchItemHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ResearchItemHolder researchItemHolder, int i) {
         final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
-        ResearchFieldAdapter adapter = new ResearchFieldAdapter(inflater.getContext(), CurrentResearch, Indicators, suggestions, materialId, i + 1, researchItemHolder.Number);
+        ResearchFieldAdapter adapter = new ResearchFieldAdapter(CurrentResearch, Indicators, suggestions, materialId, i + 1, researchItemHolder.Number);
         researchItemHolder.List.setAdapter(adapter);
 
         if (CurrentResearch.getIndicatorVal() != null && CurrentResearch.getMethodVal() != null && CurrentResearch.getTypeVal() != null)
-            researchItemHolder.Number.setText(MessageFormat.format("№ {0} - {1}", i + 1, inflater.getContext().getString(R.string.accreditation_ok)));
+            researchItemHolder.Number.setText(MessageFormat.format("№ {0} - {1}", i + 1, researchItemHolder.Number.getContext().getString(R.string.accreditation_ok)));
         else
-            researchItemHolder.Number.setText(MessageFormat.format("№ {0} - {1}", i + 1, inflater.getContext().getString(R.string.accreditation_bad)));
+            researchItemHolder.Number.setText(MessageFormat.format("№ {0} - {1}", i + 1, researchItemHolder.Number.getContext().getString(R.string.accreditation_bad)));
 
         mItemManger.bindView(researchItemHolder.itemView, i);
     }

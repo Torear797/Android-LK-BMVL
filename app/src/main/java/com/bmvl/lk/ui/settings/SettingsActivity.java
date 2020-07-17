@@ -38,10 +38,10 @@ public class SettingsActivity extends AppCompatActivity {
         initRecyclerView();
     }
 
-    private void InitList(){
-        SettingsFields.add(new SettingsGroup((byte) 0,R.drawable.ic_baseline_notifications_24, R.color.orange, R.string.Notice,R.string.desc_notify));
-        SettingsFields.add(new SettingsGroup((byte) 1,R.drawable.ic_baseline_work_24, Color.BLUE, R.string.orig_doc,R.string.orig_doc_desc));
-        SettingsFields.add(new SettingsGroup((byte) 2,R.drawable.ic_baseline_security_24, Color.DKGRAY, R.string.change_password,R.string.change_password_desc));
+    private void InitList() {
+        SettingsFields.add(new SettingsGroup((byte) 0, R.drawable.ic_baseline_notifications_24, R.color.orange, R.string.Notice, R.string.desc_notify));
+        SettingsFields.add(new SettingsGroup((byte) 1, R.drawable.ic_baseline_work_24, Color.BLUE, R.string.orig_doc, R.string.orig_doc_desc));
+        SettingsFields.add(new SettingsGroup((byte) 2, R.drawable.ic_baseline_security_24, Color.DKGRAY, R.string.change_password, R.string.change_password_desc));
     }
 
     private void initRecyclerView() {
@@ -52,11 +52,14 @@ public class SettingsActivity extends AppCompatActivity {
         SettingsAdapter.OnClickListener onClickListener = group -> {
             Intent intent = new Intent(SettingsActivity.this, SettingItemActivity.class);
             intent.putExtra("type_id", group.getId());
-            intent.putExtra("name", group.getName());
+            if (group.getId() != (byte) 2)
+                intent.putExtra("name", group.getName());
+            else
+                intent.putExtra("name", group.getDescription());
             startActivity(intent);
         };
 
-        adapter = new SettingsAdapter(SettingsFields,onClickListener);
+        adapter = new SettingsAdapter(SettingsFields, onClickListener);
         SettingsList.setAdapter(adapter);
     }
 

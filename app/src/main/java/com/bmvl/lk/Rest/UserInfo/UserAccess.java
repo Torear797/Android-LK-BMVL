@@ -17,8 +17,6 @@ public class UserAccess extends StandardAnswer {
     @Expose
     private String user_id;
 
-    private boolean accountNotActive;
-
     public UserAccess(String token, String exp, String user_id) {
         this.token = token;
         this.exp = exp;
@@ -31,25 +29,5 @@ public class UserAccess extends StandardAnswer {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public String getExp() {
-        return exp;
-    }
-
-    public void setExp(String exp) {
-        this.exp = exp;
-    }
-
-    public String getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
-    }
-
-    public boolean isAccountNotActive() {
-        return accountNotActive;
     }
 }

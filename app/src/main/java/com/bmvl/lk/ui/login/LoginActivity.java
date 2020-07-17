@@ -32,6 +32,8 @@ import br.com.sapereaude.maskedEditText.MaskedEditText;
 public class LoginActivity extends AppCompatActivity {
 
     public static LoginViewModel loginViewModel;
+    public Button loginButton;
+    //  private ProgressBar loadingProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,55 +49,51 @@ public class LoginActivity extends AppCompatActivity {
 
         final MaskedEditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.Create);
+        loginButton = findViewById(R.id.Create);
 
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
-            @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {        //Меняем состояние кнопки
-                if (loginFormState == null) {
-                    return;
-                }
+        loginViewModel.getLoginFormState().observe(this, loginFormState -> {        //Меняем состояние кнопки
+            if (loginFormState == null) {
+                return;
+            }
 
-                loginButton.setEnabled(loginFormState.isDataValid());
+            loginButton.setEnabled(loginFormState.isDataValid());
 
-                if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
-                }
-                if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
-                }
+            if (loginFormState.getUsernameError() != null) {
+                usernameEditText.setError(getString(loginFormState.getUsernameError()));
+            }
+            if (loginFormState.getPasswordError() != null) {
+                passwordEditText.setError(getString(loginFormState.getPasswordError()));
             }
         });
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {         //Обрабокта результата
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
+        //Обрабокта результата
+        loginViewModel.getLoginResult().observe(this, loginResult -> {
 
-                if (loginResult == null) {
-                    return;
-                }
-
+            if (loginResult == null) {
                 loadingProgressBar.setVisibility(View.GONE);
-
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                    return;
-                }
-
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
-                    //  updateUiWithUser();
-                }
-                setResult(Activity.RESULT_OK);
-
-                finish();
+                loginButton.setEnabled(true);
+                return;
             }
+
+            loadingProgressBar.setVisibility(View.GONE);
+
+            if (loginResult.getError() != null) {
+                showLoginFailed(loginResult.getError());
+                return;
+            }
+
+            if (loginResult.getSuccess() != null) {
+                updateUiWithUser(loginResult.getSuccess());
+                //  updateUiWithUser();
+            }
+            setResult(Activity.RESULT_OK);
+
+            finish();
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
             }
 
             @Override
@@ -109,8 +107,8 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.length() == 1){
-                    if(Character.isDigit(s.charAt(0))){
+                if (s.length() == 1) {
+                    if (Character.isDigit(s.charAt(0))) {
                         usernameEditText.setMask("+7(###)###-##-##");
                         usernameEditText.setInputType(InputType.TYPE_CLASS_PHONE);
                     }
@@ -123,24 +121,18 @@ public class LoginActivity extends AppCompatActivity {
         usernameEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
 
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString(), ANDROID_ID,getApplicationContext());
-                }
-                return false;
+        passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                loginViewModel.login(usernameEditText.getText().toString(),
+                        passwordEditText.getText().toString(), ANDROID_ID, getApplicationContext());
             }
+            return false;
         });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(), passwordEditText.getText().toString(), ANDROID_ID,getApplicationContext());
-            }
+        loginButton.setOnClickListener(v -> {
+            loginButton.setEnabled(false);
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            loginViewModel.login(usernameEditText.getText().toString(), passwordEditText.getText().toString(), ANDROID_ID, getApplicationContext());
         });
     }
 
@@ -155,6 +147,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showLoginFailed(String Error) {
+        loginButton.setEnabled(true);
         Toast.makeText(getApplicationContext(), Error, Toast.LENGTH_SHORT).show();
     }
 

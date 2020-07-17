@@ -17,6 +17,8 @@ import com.bmvl.lk.data.OnBackPressedListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,7 +30,6 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
 
     @Override
     public void onBackPressed() {
-
     }
 
     @Override
@@ -41,16 +42,27 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
 
         final MaterialButton change_btn = MyView.findViewById(R.id.Change);
 
+        StringBuilder token;
+        if(getActivity().getIntent().getStringExtra("token") != null)
+         token = new StringBuilder(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getStringExtra("token")));
+        else {
+             token = new StringBuilder();
+            token.append(App.UserAccessData.getToken());
+        }
+
         change_btn.setOnClickListener(v -> {
             NetworkService.getInstance()
                     .getJSONApi()
-                    .setNewPassword(App.UserAccessData.getToken(), String.valueOf(old_pas.getText()), String.valueOf(new_pas.getText()),String.valueOf(repeat_pas.getText()))
+                    .setNewPassword(token.toString(), String.valueOf(old_pas.getText()), String.valueOf(new_pas.getText()), String.valueOf(repeat_pas.getText()))
                     .enqueue(new Callback<StandardAnswer>() {
                         @Override
                         public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
                             if (response.isSuccessful() && response.body() != null) {
                                 if (response.body().getStatus() == 200) {
                                     Toast.makeText(getContext(), R.string.change_password_ok, Toast.LENGTH_SHORT).show();
+
+                                    if (Objects.requireNonNull(getActivity()).getIntent().getBooleanExtra("needChangePassword", false))
+                                        getActivity().finish();
                                 } else
                                     Toast.makeText(getContext(), R.string.change_password_error, Toast.LENGTH_SHORT).show();
                             } else

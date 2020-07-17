@@ -24,12 +24,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class PatternAdapter extends RecyclerSwipeAdapter<PatternAdapter.SimpleViewHolder> {
-    private static List<Pattern> Patterns;
+    private List<Pattern> Patterns;
     private PatternAdapter.OnPatternClickListener onPatternClickListener;
 
     PatternAdapter(List<Pattern> list, OnPatternClickListener onPatternClickListener) {
         this.onPatternClickListener = onPatternClickListener;
-        Patterns = list;
+        this.Patterns = list;
     }
 
     public interface OnPatternClickListener {

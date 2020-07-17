@@ -69,8 +69,8 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
     @Override
     public void onResume() {
         super.onResume();
-        if (PatternAdapter != null)
-            PatternAdapter.notifyDataSetChanged();
+//        if (PatternAdapter != null)
+//            PatternAdapter.notifyDataSetChanged();
         if (App.isOnline(Objects.requireNonNull(getContext()))) {
             if (Patterns.size() == 0) LoadPatterns(Patterns, (byte) 0);
             else UpdatePatterns();

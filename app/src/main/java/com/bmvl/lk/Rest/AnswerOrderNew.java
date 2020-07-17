@@ -35,4 +35,10 @@ public class AnswerOrderNew extends StandardAnswer {
     public boolean isAccountNotActive() {
         return accountNotActive;
     }
+
+    public boolean isNeedChangePassword() {
+        return needChangePassword;
+    }
+
+    private boolean needChangePassword;
 }

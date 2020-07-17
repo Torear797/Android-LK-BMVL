@@ -1,6 +1,7 @@
 package com.bmvl.lk.ui.login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.util.Patterns;
 
@@ -9,11 +10,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.AnswerOrderNew;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.UserInfo.OrderInfo;
 import com.bmvl.lk.Rest.UserInfo.UserAccess;
+import com.bmvl.lk.ui.settings.SettingItemActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,13 +54,23 @@ public class LoginViewModel extends ViewModel {
 //                                loginResult.setValue(new LoginResult(response.body().getText()));
 //                            }
 
-                            switch (response.body().getStatus()){
+                            switch (response.body().getStatus()) {
                                 case 200:
+                                  //  App.UserAccessData.setToken(response.body().getToken());
                                     getOrderNewInfo(response.body(), context);
                                     break;
                                 case 403:
-                                    if(response.body().isAccountNotActive())
+                                    //  if (response.body().isNeedChangePassword()) {
                                     loginResult.setValue(new LoginResult(context.getString(R.string.accountNotActive)));
+//                                        Intent intent = new Intent(context, SettingItemActivity.class);
+//                                        intent.putExtra("type_id", (byte) 2);
+//                                        intent.putExtra("name", R.string.change_password_desc);
+//                                        intent.putExtra("needChangePassword", true);
+//                                        context.startActivity(intent);
+                                    //  }
+                                    break;
+                                default:
+                                    loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
                                     break;
                             }
 
@@ -72,28 +85,6 @@ public class LoginViewModel extends ViewModel {
                 });
     }
 
-//    private void getUserInfo(final UserAccess accessData, final Context context) {
-//        NetworkService.getInstance()
-//                .getJSONApi()
-//                .getUserInfo(accessData.getToken())
-//                .enqueue(new Callback<UserInfoCall>() {
-//                    @Override
-//                    public void onResponse(@NonNull Call<UserInfoCall> call, @NonNull Response<UserInfoCall> response) {
-//                        if (response.isSuccessful()) {
-//                            //  App.UserInfo = response.body().getUserInfo();
-//                            assert response.body() != null;
-//                           // getOrderNewInfo(accessData);
-//                        } else
-//                            loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Call<UserInfoCall> call, @NonNull Throwable t) {
-//                        loginResult.setValue(new LoginResult(context.getString(R.string.server_lost)));
-//                    }
-//                });
-//    }
-
     private void getOrderNewInfo(final UserAccess accessData, final Context context) {
         NetworkService.getInstance()
                 .getJSONApi()
@@ -102,29 +93,9 @@ public class LoginViewModel extends ViewModel {
                     @Override
                     public void onResponse(@NonNull Call<AnswerOrderNew> call, @NonNull Response<AnswerOrderNew> response) {
                         if (response.isSuccessful() && response.body() != null) {
-//                            if (response.body().getStatus() == 200) {
-////                                for (Map.Entry<Short, String> entry : response.body().getDefaultFields().entrySet()) {
-////
-////                                    if (!entry.getValue().equals("")) {
-////                                        loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo(entry.getKey(), entry.getValue(), response.body().getFieldValues()))));
-////                                        break;
-////                                    }
-////                                }
-//
-//                                if (!response.body().getDefaultFields().get((short) 52).equals(""))
-//                                    loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 52, response.body().getDefaultFields().get((short) 52), response.body().getFieldValues(), true))));
-//                                else if (!response.body().getDefaultFields().get((short) 63).equals("") && !response.body().getDefaultFields().get((short) 64).equals(""))
-//                                    loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 64, response.body().getDefaultFields().get((short) 63), response.body().getDefaultFields().get((short) 64), response.body().getFieldValues()))));
-//                                else if (!response.body().getDefaultFields().get((short) 63).equals(""))
-//                                    loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 63, response.body().getDefaultFields().get((short) 63), response.body().getFieldValues(), false))));
-//
-//
-//                            } else
-//                                loginResult.setValue(new LoginResult(context.getString(R.string.auth_error)));
 
-
-                            switch (response.body().getStatus()){
-                                case 200:
+                            switch (response.body().getStatus()) {
+                                case 200: {
                                     if (!response.body().getDefaultFields().get((short) 52).equals(""))
                                         loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 52, response.body().getDefaultFields().get((short) 52), response.body().getFieldValues(), true))));
                                     else if (!response.body().getDefaultFields().get((short) 63).equals("") && !response.body().getDefaultFields().get((short) 64).equals(""))
@@ -132,10 +103,21 @@ public class LoginViewModel extends ViewModel {
                                     else if (!response.body().getDefaultFields().get((short) 63).equals(""))
                                         loginResult.setValue(new LoginResult(new LoggedInUserView(accessData, response.body().getUserInfo(), new OrderInfo((short) 63, response.body().getDefaultFields().get((short) 63), response.body().getFieldValues(), false))));
                                     break;
-                                case 403:
-                                    if(response.body().isAccountNotActive())
+                                }
+                                case 403: {
+                                    if (response.body().isAccountNotActive())
                                         loginResult.setValue(new LoginResult(context.getString(R.string.accountNotActive)));
+                                    else if (response.body().isNeedChangePassword()) {
+                                        Intent intent = new Intent(context, SettingItemActivity.class);
+                                        intent.putExtra("type_id", (byte) 2);
+                                        intent.putExtra("name", R.string.change_password_desc);
+                                        intent.putExtra("needChangePassword", true);
+                                        intent.putExtra("token", accessData.getToken());
+                                        context.startActivity(intent);
+                                        loginResult.setValue(null);
+                                    }
                                     break;
+                                }
                             }
 
                         } else
@@ -175,6 +157,6 @@ public class LoginViewModel extends ViewModel {
     }
 
     private boolean isPasswordValid(String password) {
-        return password != null && password.trim().length() > 5;
+        return password != null && password.trim().length() > 1;
     }
 }

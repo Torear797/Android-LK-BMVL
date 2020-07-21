@@ -312,16 +312,11 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
                     ((AutoCompleteTextViewHolder) holder).TextView.setText(CurrentProb.getFields().get("materialName"));
-                else
-                    ((AutoCompleteTextViewHolder) holder).TextView.setText(mMaterials[0]);
 
-                ((AutoCompleteTextViewHolder) holder).ChoceBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //        Toast.makeText(inflater.getContext(), "Выбор...", Toast.LENGTH_SHORT).show();
-                        ChoceMaterialDialogFragment dialog = new ChoceMaterialDialogFragment(((AutoCompleteTextViewHolder) holder).TextView);
-                        dialog.show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), "ChoceMaterialDialogFragment");
-                    }
+                ((AutoCompleteTextViewHolder) holder).ChoceBtn.setOnClickListener(v -> {
+                 //   ((AutoCompleteTextViewHolder) holder).TextView.setText(mMaterials[0]);
+                    ChoceMaterialDialogFragment dialog = new ChoceMaterialDialogFragment(((AutoCompleteTextViewHolder) holder).TextView);
+                    dialog.show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), "ChoceMaterialDialogFragment");
                 });
                 break;
             } //AutoCompieteTextview
@@ -354,21 +349,12 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 ((DataFieldHolder) holder).Layout.setHint(f.getHint());
                 ((DataFieldHolder) holder).field.setText(CurrentProb.getFields().get(String.valueOf(f.getColumn_id())));
 
-                final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        ChangeData(year, monthOfYear, dayOfMonth, ((DataFieldHolder) holder).field, f.getColumn_id());
-                    }
-                };
-                ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new DatePickerDialog(Objects.requireNonNull(((DataFieldHolder) holder).Layout.getContext()), Datapicker,
-                                dateAndTime.get(Calendar.YEAR),
-                                dateAndTime.get(Calendar.MONTH),
-                                dateAndTime.get(Calendar.DAY_OF_MONTH))
-                                .show();
-                    }
-                });
+                final DatePickerDialog.OnDateSetListener Datapicker = (view, year, monthOfYear, dayOfMonth) -> ChangeData(year, monthOfYear, dayOfMonth, ((DataFieldHolder) holder).field, f.getColumn_id());
+                ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(v -> new DatePickerDialog(Objects.requireNonNull(((DataFieldHolder) holder).Layout.getContext()), Datapicker,
+                        dateAndTime.get(Calendar.YEAR),
+                        dateAndTime.get(Calendar.MONTH),
+                        dateAndTime.get(Calendar.DAY_OF_MONTH))
+                        .show());
             }//DataField
         }
 

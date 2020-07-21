@@ -1,6 +1,7 @@
 package com.bmvl.lk.data.TreeViewHolder;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class ProfileHolder extends TreeNode.BaseNodeViewHolder<String> {
 
         return view;
     }
+
 
     @Override
     public void toggle(boolean active) {

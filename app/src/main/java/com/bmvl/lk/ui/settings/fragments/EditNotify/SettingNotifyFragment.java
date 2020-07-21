@@ -35,7 +35,6 @@ import retrofit2.Response;
 public class SettingNotifyFragment extends Fragment implements OnBackPressedListener {
     private RecyclerView SettingsList;
     private List<ItemNotify> SettingsFields = new ArrayList<>();
-    private ItemSettingAdapter adapter;
 
     public static Fragment newInstance() {
         return new SettingNotifyFragment();
@@ -69,7 +68,7 @@ public class SettingNotifyFragment extends Fragment implements OnBackPressedList
                 userNotifiactions.put(item.getColumnId(), fields);
             }
 
-            Log.d("TAG", new Gson().toJson(userNotifiactions));
+           // Log.d("TAG", new Gson().toJson(userNotifiactions));
             NetworkService.getInstance()
                     .getJSONApi()
                     .saveNotificationSettings(App.UserAccessData.getToken(), new Gson().toJson(userNotifiactions))
@@ -163,7 +162,7 @@ public class SettingNotifyFragment extends Fragment implements OnBackPressedList
 //            startActivity(intent);
 //        };
 
-        adapter = new ItemSettingAdapter(getContext(), SettingsFields);
+        ItemSettingAdapter adapter = new ItemSettingAdapter(getContext(), SettingsFields);
         SettingsList.setAdapter(adapter);
     }
 }

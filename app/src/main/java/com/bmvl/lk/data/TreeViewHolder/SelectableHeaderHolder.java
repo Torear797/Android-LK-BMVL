@@ -1,6 +1,8 @@
 package com.bmvl.lk.data.TreeViewHolder;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 
 import com.bmvl.lk.R;
 import com.unnamed.b.atv.model.TreeNode;
+import com.unnamed.b.atv.view.AndroidTreeView;
 
 public class SelectableHeaderHolder extends TreeNode.BaseNodeViewHolder<String> {
     private TextView tvValue;
@@ -17,6 +20,11 @@ public class SelectableHeaderHolder extends TreeNode.BaseNodeViewHolder<String> 
 
     public SelectableHeaderHolder(Context context) {
         super(context);
+    }
+
+    @Override
+    public void setTreeViev(AndroidTreeView treeViev) {
+        super.setTreeViev(treeViev);
     }
 
     @Override
@@ -47,21 +55,52 @@ public class SelectableHeaderHolder extends TreeNode.BaseNodeViewHolder<String> 
 //            }
 //        });
 //        nodeSelector.setChecked(node.isSelected());
+//        Field.setOnClickListener(v -> {
+//
+//        });
 
         return view;
+    }
+
+    public boolean getVisibilityNode() {
+        return Field.getVisibility() == View.VISIBLE;
+    }
+
+    public boolean isContaintsText(String text) {
+        if (tvValue != null)
+            return tvValue.getText().toString().toLowerCase().contains(text.toLowerCase());
+        return false;
+    }
+
+    public void setVisibilityNode(boolean isVisible, String text) {
+        if (Field != null) {
+            if (isVisible) {
+                Field.setVisibility(View.VISIBLE);
+                setBoldItalicText(text);
+            } else
+                Field.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void toggle(boolean active) {
         arrowView.setBackground(context.getDrawable(active ? R.drawable.ic_baseline_keyboard_arrow_down_24 : R.drawable.ic_baseline_keyboard_arrow_right_24));
-      //  Field.setBackgroundColor(active ? context.getResources().getColor(R.color.field) : Color.WHITE);
-
     }
 
-    @Override
-    public void toggleSelectionMode(boolean editModeEnabled) {
-//        nodeSelector.setVisibility(editModeEnabled ? View.VISIBLE : View.GONE);
-//        nodeSelector.setChecked(mNode.isSelected());
+    public void setBoldItalicText(String text) {
+        if (tvValue != null)
+            if (text.equals("")) {
+                tvValue.setTypeface(null, Typeface.NORMAL);
+                tvValue.setTextColor(context.getResources().getColor(R.color.text_order_field_color));
+            } else if (tvValue.getText().toString().toLowerCase().contains(text.toLowerCase())) {
+                tvValue.setTypeface(null, Typeface.BOLD_ITALIC);
+                tvValue.setTextColor(Color.RED);
+            }
+    }
+
+    public void changeSelected(boolean selected) {
+        if (Field != null)
+            Field.setBackgroundColor(selected ? context.getResources().getColor(R.color.field) : Color.WHITE);
     }
 
     @Override

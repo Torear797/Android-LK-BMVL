@@ -43,7 +43,7 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
         final MaterialButton change_btn = MyView.findViewById(R.id.Change);
 
         StringBuilder token;
-        if(getActivity().getIntent().getStringExtra("token") != null)
+        if(Objects.requireNonNull(getActivity()).getIntent().getStringExtra("token") != null)
          token = new StringBuilder(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getStringExtra("token")));
         else {
              token = new StringBuilder();
@@ -61,8 +61,8 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
                                 if (response.body().getStatus() == 200) {
                                     Toast.makeText(getContext(), R.string.change_password_ok, Toast.LENGTH_SHORT).show();
 
-                                    if (Objects.requireNonNull(getActivity()).getIntent().getBooleanExtra("needChangePassword", false))
-                                        getActivity().finish();
+                                 //   if (Objects.requireNonNull(getActivity()).getIntent().getBooleanExtra("needChangePassword", false))
+                                        Objects.requireNonNull(getActivity()).finish();
                                 } else
                                     Toast.makeText(getContext(), R.string.change_password_error, Toast.LENGTH_SHORT).show();
                             } else

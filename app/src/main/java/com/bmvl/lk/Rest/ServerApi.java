@@ -199,4 +199,8 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("account/saveNotificationSettings")
     Call<StandardAnswer> saveNotificationSettings(@Field("token") String token, @Field("userNotifications") String userNotifications);
+
+    @FormUrlEncoded
+    @POST("resetPassword")
+    Call<StandardAnswer> resetPassword(@Field("email") String email);
 }

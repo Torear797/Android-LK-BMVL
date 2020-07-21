@@ -75,18 +75,19 @@ public class MenuActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.profile:
-//               // Intent intent =;
-//                startActivity(new Intent(MenuActivity.this, ProfileActivity.class));
-//                break;
-//            case R.id.settings:
-//               // Intent intentS = ;
-//                UpdateOrderInfo(R.id.settings);
-//              //  startActivity(new Intent(MenuActivity.this, SettingsActivity.class));
-//                break;
-//        }
-        UpdateOrderInfo(item.getItemId());
+        switch (item.getItemId()) {
+            case R.id.profile:
+               // Intent intent =;
+                //startActivity(new Intent(MenuActivity.this, ProfileActivity.class));
+                UpdateOrderInfo(item.getItemId());
+                break;
+            case R.id.settings:
+               // Intent intentS = ;
+              // UpdateOrderInfo(R.id.settings);
+                startActivity(new Intent(MenuActivity.this, SettingsActivity.class));
+                break;
+        }
+        //UpdateOrderInfo(item.getItemId());
         return true;
     }
 
@@ -187,4 +188,5 @@ public class MenuActivity extends AppCompatActivity {
                     }
                 });
     }
+
 }

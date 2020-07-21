@@ -14,4 +14,5 @@
     <color name="text_order_field_color">#616161</color>
     <color name="notify_old_color">#b8c4c8</color>
     <color name="orange">#FF9800</color>
+    <color name="Link">#007bff</color>
 </resources>

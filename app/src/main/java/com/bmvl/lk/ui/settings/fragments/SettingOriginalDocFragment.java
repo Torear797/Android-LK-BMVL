@@ -32,6 +32,7 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -58,16 +59,14 @@ public class SettingOriginalDocFragment extends Fragment implements OnBackPresse
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        switch (requestCode) {
-            case SELECT_SCAN:
-                if (resultCode == RESULT_OK) {
-                    if (data != null) {
-                        ScanFile = FileUtils.getFile(getContext(), data.getData());
-                        PathScan.setText(ScanFile.getName());
-                        PathScan.setTextColor(getResources().getColor(R.color.text_order_field_color));
-                    }
+        if (requestCode == SELECT_SCAN) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    ScanFile = FileUtils.getFile(getContext(), data.getData());
+                    PathScan.setText(Objects.requireNonNull(ScanFile).getName());
+                    PathScan.setTextColor(getResources().getColor(R.color.text_order_field_color));
                 }
-                break;
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -116,19 +115,16 @@ public class SettingOriginalDocFragment extends Fragment implements OnBackPresse
                 break;
         }
 
-        if(App.OrderInfo.getURL_SCAN_FILE() != null){
+        if (App.OrderInfo.getURL_SCAN_FILE() != null) {
             PathScan.setText(android.text.Html.fromHtml("<u>Загруженный файл</u>"));
             PathScan.setTextColor(Color.parseColor("#0066cc"));
 
-          //  PathScan.setOnClickListener(v -> inflater.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(MessageFormat.format("{0}{1}", NetworkService.getServerUrl(), App.OrderInfo.getURL_SCAN_FILE())))));
-
             PathScan.setOnClickListener(v -> {
-                if(PathScan.getTextColors().getDefaultColor() == Color.parseColor("#0066cc"))
-                inflater.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(MessageFormat.format("{0}{1}", NetworkService.getServerUrl(), App.OrderInfo.getURL_SCAN_FILE()))));
+                if (PathScan.getTextColors().getDefaultColor() == Color.parseColor("#0066cc"))
+                    inflater.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(MessageFormat.format("{0}{1}", NetworkService.getServerUrl(), App.OrderInfo.getURL_SCAN_FILE()))));
             });
 
         }
-
 
         spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View itemSelected, int selectedItemPosition, long selectedId) {
@@ -179,29 +175,29 @@ public class SettingOriginalDocFragment extends Fragment implements OnBackPresse
 
             //  final Gson gson = new Gson();
 //                Log.d("TAG", gson.toJson(fields));
-            if(ScanFile != null)
+            if (ScanFile != null)
                 LoadScanFile(doc);
             else
-            NetworkService.getInstance()
-                    .getJSONApi()
-                    .setDefaultFields(App.UserAccessData.getToken(), new Gson().toJson(doc))
-                    .enqueue(new Callback<StandardAnswer>() {
-                        @Override
-                        public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
-                            if (response.isSuccessful() && response.body() != null) {
-                                if (response.body().getStatus() == 200) {
-                                    Toast.makeText(getContext(), R.string.data_save_ok, Toast.LENGTH_SHORT).show();
+                NetworkService.getInstance()
+                        .getJSONApi()
+                        .setDefaultFields(App.UserAccessData.getToken(), new Gson().toJson(doc))
+                        .enqueue(new Callback<StandardAnswer>() {
+                            @Override
+                            public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
+                                if (response.isSuccessful() && response.body() != null) {
+                                    if (response.body().getStatus() == 200) {
+                                        Toast.makeText(getContext(), R.string.data_save_ok, Toast.LENGTH_SHORT).show();
+                                    } else
+                                        Toast.makeText(getContext(), R.string.data_save_error, Toast.LENGTH_SHORT).show();
                                 } else
                                     Toast.makeText(getContext(), R.string.data_save_error, Toast.LENGTH_SHORT).show();
-                            } else
-                                Toast.makeText(getContext(), R.string.data_save_error, Toast.LENGTH_SHORT).show();
-                        }
+                            }
 
-                        @Override
-                        public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
-                            Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                            @Override
+                            public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
+                                Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
         });
 
@@ -222,13 +218,13 @@ public class SettingOriginalDocFragment extends Fragment implements OnBackPresse
         return MyView;
     }
 
-    private void LoadScanFile(OriginalDocument doc){
-        RequestBody requestBody = RequestBody.create(ScanFile,MediaType.parse("*/*"));
+    private void LoadScanFile(OriginalDocument doc) {
+        RequestBody requestBody = RequestBody.create(ScanFile, MediaType.parse("*/*"));
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("doverennost", ScanFile.getName(), requestBody);
 
-        RequestBody Token = RequestBody.create(App.UserAccessData.getToken(),okhttp3.MultipartBody.FORM);
+        RequestBody Token = RequestBody.create(App.UserAccessData.getToken(), okhttp3.MultipartBody.FORM);
 
-        RequestBody fields = RequestBody.create(new Gson().toJson(doc),okhttp3.MultipartBody.FORM);
+        RequestBody fields = RequestBody.create(new Gson().toJson(doc), okhttp3.MultipartBody.FORM);
 
         NetworkService.getInstance()
                 .getJSONApi()

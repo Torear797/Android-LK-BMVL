@@ -7,23 +7,20 @@ import android.provider.Settings;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.ui.MenuActivity;
+import com.bmvl.lk.ui.reset_password.ResetPasswordActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.orhanobut.hawk.Hawk;
 
@@ -98,6 +95,22 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
+                        passwordEditText.getText().toString());
+            }
+        };
+
+        TextWatcher afterTextChangedListenerLogin = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (count == 0 && usernameEditText.length() == 3 && usernameEditText.getMask().equals("+7(###)###-##-##")) {
                     usernameEditText.setMask("####################");
                     usernameEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
@@ -107,18 +120,17 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() == 1) {
-                    if (Character.isDigit(s.charAt(0))) {
-                        usernameEditText.setMask("+7(###)###-##-##");
-                        usernameEditText.setInputType(InputType.TYPE_CLASS_PHONE);
-                    }
+                if (s.toString().equals("+")) {
+                    usernameEditText.setMask("+7(###)###-##-##");
+                    usernameEditText.setInputType(InputType.TYPE_CLASS_PHONE);
+                    usernameEditText.setSelection(usernameEditText.getText().length());
                 }
                 loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
         };
 
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
+        usernameEditText.addTextChangedListener(afterTextChangedListenerLogin);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
 
         passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
@@ -152,8 +164,17 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void AccessIsObtained() {
-        Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
+        Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void resetPassword(View view) {
+        Intent intent = new Intent(this, ResetPasswordActivity.class);
+//        intent.putExtra("type_id", (byte) 2);
+//        intent.putExtra("name", R.string.change_password_desc);
+//        intent.putExtra("needChangePassword", true);
+//        intent.putExtra("token", accessData.getToken());
+        startActivity(intent);
     }
 }

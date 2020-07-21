@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/backround_color_site"
@@ -21,7 +21,12 @@
         android:background="#FFFFFF"
         app:cardCornerRadius="5dp"
         app:cardElevation="2dp"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/include"
+        app:layout_constraintStart_toEndOf="@+id/include"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container"
@@ -44,22 +49,23 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-<!--                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:id="@+id/username"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:hint="@string/email"-->
-<!--                    android:inputType="textEmailAddress"-->
-<!--                    android:selectAllOnFocus="true"-->
-<!--                    android:text="user@mail.ru" />-->
+                <!--                <com.google.android.material.textfield.TextInputEditText-->
+                <!--                    android:id="@+id/username"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:hint="@string/email"-->
+                <!--                    android:inputType="textEmailAddress"-->
+                <!--                    android:selectAllOnFocus="true"-->
+                <!--                    android:text="user@mail.ru" />-->
 
                 <br.com.sapereaude.maskedEditText.MaskedEditText
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:typeface="monospace"
                     android:singleLine="true"
-                    android:text="user@mail.ru"
+                    android:imeOptions="actionNext"
+                    android:nextFocusRight="@+id/password"
+                    android:typeface="monospace"
                     app:mask="####################" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -86,8 +92,7 @@
                     android:imeActionLabel="@string/action_sign_in"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
-                    android:selectAllOnFocus="true"
-                    android:text="ityfhg74" />
+                    android:selectAllOnFocus="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -96,25 +101,43 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@color/field_inactive"
-                android:visibility="gone"
                 android:foregroundGravity="center"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/Create"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="130dp"
-        android:enabled="true"
-        android:layout_marginStart="13dp"
-        android:layout_marginEnd="13dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:enabled="false"
         android:minHeight="60dp"
         android:text="@string/action_sign_in"
-        android:layout_gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Card"
         app:strokeColor="@color/accent"
         app:strokeWidth="1dp" />
-</FrameLayout>
+
+    <TextView
+        android:id="@+id/Recovery_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:textColor="@color/Link"
+        android:text="@string/Recovery_password_link"
+        android:onClick="resetPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Create" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

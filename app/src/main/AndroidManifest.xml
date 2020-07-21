@@ -17,6 +17,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ui.reset_password.ResetPasswordActivity" />
         <activity
             android:name=".ui.splash_screen.SplashScreenActivity"
             android:theme="@style/SplashTheme">
@@ -45,4 +46,5 @@
             android:name=".ui.MenuActivity"
             android:screenOrientation="portrait" />
     </application>
+
 </manifest>

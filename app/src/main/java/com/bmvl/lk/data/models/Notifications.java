@@ -27,14 +27,6 @@ public class Notifications {
         this.id = id;
     }
 
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
-
     public String getDate() {
         return date;
     }
@@ -61,10 +53,6 @@ public class Notifications {
 
     public String getEvent() {
         return event;
-    }
-
-    public void setEvent(String event) {
-        this.event = event;
     }
 
     public String getOrder_type() {

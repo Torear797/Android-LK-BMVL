@@ -14,6 +14,7 @@
     <string name="new_password">Новый пароль</string>
     <string name="repeat_password">Повторите пароль</string>
     <string name="change_password_btn">Сменить пароль</string>
+    <string name="invalid_email">Некорректная почта</string>
 
     <string name="s_numer">Номер заявки</string>
     <string name="s_numer_protocol">Номер протокола</string>
@@ -191,7 +192,7 @@
 
     <string name="Select_btn">Обзор…</string>
     <string name="file_no_select">Файл не выбран</string>
-    <string name="accept">Согласен с <a href="http://192.168.0.69/terms">условиями</a></string>
+    <string name="accept">Согласен с <a href="http://192.168.0.100/terms">условиями</a></string>
 
     <string name="add_prob">Новая проба</string>
     <string name="Indicator">Показатель</string>
@@ -244,8 +245,12 @@
     <string name="type_notify">Тип уведомления</string>
     <string name="inLK">В личном кабинете</string>
     <string name="InEmail">На Email</string>
-    <string name="InSMS">На SMS</string>
+    <string name="InSMS">По SMS</string>
     <string name="accountNotActive">Ваша учетная запись не активна. Некоторые данные профиля не заполнены.
 Обратитесь к администратору или ответственному лицу организации.</string>
+    <string name="Recovery_password_link">Восстановить пароль</string>
+    <string name="Recovery_password_title">Восстановление пароля</string>
+    <string name="input_email">Введите E-mail</string>
+    <string name="reset_password_btn_text">Отправить письмо с ссылкой для восстановления пароля</string>
 
 </resources>

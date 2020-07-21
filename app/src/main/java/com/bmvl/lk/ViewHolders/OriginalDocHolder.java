@@ -4,12 +4,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.google.android.material.textfield.TextInputEditText;
@@ -35,6 +37,28 @@ public class OriginalDocHolder extends RecyclerView.ViewHolder {
 
         fieldAdres = itemView.findViewById(R.id.AdresInput);
         LayoutAdres = itemView.findViewById(R.id.AdresLayout);
+
+        ArrayAdapter<CharSequence> adapterOriginalDoc = ArrayAdapter.createFromResource(spiner.getContext(), R.array.DocList, android.R.layout.simple_spinner_item);
+        adapterOriginalDoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spiner.setAdapter(adapterOriginalDoc);
+        txtHint.setText("Оригиналы документов предоставлять");
+
+        switch (App.OrderInfo.getOD_ID()) {
+            case 52:
+                spiner.setSelection(0);
+                fieldAdres.setText(App.OrderInfo.getFIO());
+                break;
+            case 63:
+                spiner.setSelection(1);
+                fieldAdres.setText(App.OrderInfo.getOD_Adres());
+                // ((OriginalDocHolder) holder).fieldEmail.setText(App.OrderInfo.getOD_Email());
+                break;
+            case 64:
+                spiner.setSelection(2);
+                fieldAdres.setText(App.OrderInfo.getOD_Adres());
+               fieldEmail.setText(App.OrderInfo.getOD_Email());
+                break;
+        }
 
 
        spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

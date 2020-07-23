@@ -36,7 +36,11 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -108,14 +112,17 @@ public class FieldsAdapter extends RecyclerView.Adapter {
             }//item_box_text
             case 6: {
                 View view6 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_data_field, parent, false);
-             //   return new DataFieldHolder(view6);
 
                 final DataFieldHolder holder = new DataFieldHolder(view6);
                     holder.field.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void afterTextChanged(Editable s) {
                             if (!String.valueOf(s).equals("") && s.toString().length() <=10)
-                                OrderFields.put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
+                            try {
+                                OrderFields.put(GetColumn_id(holder.getLayoutPosition()), new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(s.toString()))));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         @Override
@@ -288,20 +295,32 @@ public class FieldsAdapter extends RecyclerView.Adapter {
             }//Акт
             case 6: {
                 ((DataFieldHolder) holder).Layout.setHint(f.getHint());
-                ((DataFieldHolder) holder).field.setText(OrderFields.get((short) f.getColumn_id()));
 
-                final DatePickerDialog.OnDateSetListener Datapicker = (view, year, monthOfYear, dayOfMonth) -> ChangeData(year, monthOfYear, dayOfMonth, ((DataFieldHolder) holder).field, f.getColumn_id());
-                ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(v -> new DatePickerDialog(Objects.requireNonNull(((DataFieldHolder) holder).Layout.getContext()), Datapicker,
-                        dateAndTime.get(Calendar.YEAR),
-                        dateAndTime.get(Calendar.MONTH),
-                        dateAndTime.get(Calendar.DAY_OF_MONTH))
-                        .show());
+                if(OrderFields.containsKey((short) f.getColumn_id()))
+                try {
+                    ((DataFieldHolder) holder).field.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(Objects.requireNonNull(OrderFields.get((short) f.getColumn_id()))))));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+                final DatePickerDialog.OnDateSetListener Datapicker = (view, year, monthOfYear, dayOfMonth) -> ChangeData(year, monthOfYear, dayOfMonth, ((DataFieldHolder) holder).field);
+                if (f.getColumn_id() != 137) {
+                    ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(v -> new DatePickerDialog(Objects.requireNonNull(((DataFieldHolder) holder).Layout.getContext()), Datapicker,
+                            dateAndTime.get(Calendar.YEAR),
+                            dateAndTime.get(Calendar.MONTH),
+                            dateAndTime.get(Calendar.DAY_OF_MONTH))
+                            .show());
+                } else {
+                    ((DataFieldHolder) holder).field.setInputType(f.getInputType());
+                    ((DataFieldHolder) holder).Layout.setBoxBackgroundColor(((DataFieldHolder) holder).Layout.getContext().getResources().getColor(R.color.field_inactive));
+                }
                 break;
             }//DataField
         }
     }
 
-    private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt, int position) {
+    private void ChangeData(int year, int monthOfYear, int dayOfMonth, EditText Edt) {
         monthOfYear = monthOfYear + 1;
 //        dateAndTime.set(Calendar.YEAR, year);
 //        dateAndTime.set(Calendar.MONTH, monthOfYear);
@@ -317,8 +336,8 @@ public class FieldsAdapter extends RecyclerView.Adapter {
         if (dayOfMonth < 10) {
             formattedDayOfMonth = "0" + dayOfMonth;
         }
-        OrderFields.put((short) position, MessageFormat.format("{0}.{1}.{2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
-        Edt.setText(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
+        //OrderFields.put((short) position, MessageFormat.format("{2}-{1}-{0}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
+        Edt.setText(MessageFormat.format("{0}.{1}.{2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
         Edt.requestFocus();
         Edt.setSelection(Edt.getText().length());
     }

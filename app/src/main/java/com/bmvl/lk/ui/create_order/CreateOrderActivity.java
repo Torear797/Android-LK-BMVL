@@ -185,7 +185,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field(123, "", "Сумма долга (руб)", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.rub)));
         Fields.add(new Field(117, "", "Номер заявки", InputType.TYPE_CLASS_NUMBER));
         Fields.add(new Field(134, "", "Счет на оплату №", InputType.TYPE_CLASS_TEXT));
-        //Fields.add(new Field(124, "", "Срок уплаты", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
+        Fields.add(new Field((byte) 6, -1, "", "Дата создания заявки"));
         Fields.add(new Field((byte) 6, 124, "", "Срок уплаты"));
         Fields.add(new Field(119, "", true, "Текст", InputType.TYPE_TEXT_FLAG_MULTI_LINE));
     } //Гарантийное письмо
@@ -205,7 +205,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         //Заполнение полей на форме
         Fields.add(new Field(135, false, "Заявитель", InputType.TYPE_NULL));
         Fields.add(new Field(136, false, "Договор №", InputType.TYPE_NULL));
-        Fields.add(new Field(137, false, "от", InputType.TYPE_NULL));
+        Fields.add(new Field((byte)6, 137, "от", InputType.TYPE_NULL));
         Fields.add(new Field(138, false, "Адрес", InputType.TYPE_NULL));
         Fields.add(new Field(139, false, "ИНН", InputType.TYPE_NULL));
         Fields.add(new Field(140, false, "Телефон", InputType.TYPE_NULL));

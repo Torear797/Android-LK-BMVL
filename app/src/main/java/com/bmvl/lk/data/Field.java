@@ -45,6 +45,13 @@ public class Field {
         Type = type;
     }
 
+    public Field(byte type, int column_id, String hint, int inputType) {
+        Type = type;
+        this.column_id = column_id;
+        Hint = hint;
+        InputType = inputType;
+    }
+
     public int getEntries() {
         return entries;
     }

@@ -9,6 +9,8 @@
         android:id="@+id/TextLayout"
         style="@style/AutoCompleteTextViewStyle"
         android:layout_weight="20"
+        android:animationCache="true"
+        android:animateLayoutChanges="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

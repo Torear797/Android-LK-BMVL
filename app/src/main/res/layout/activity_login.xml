@@ -66,6 +66,7 @@
                     android:imeOptions="actionNext"
                     android:nextFocusRight="@+id/password"
                     android:typeface="monospace"
+                    android:selectAllOnFocus="true"
                     app:mask="####################" />
             </com.google.android.material.textfield.TextInputLayout>
 

@@ -241,6 +241,9 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         AddStandartFieldPart1();
         ProbFields.add(new Field((byte) 1,  App.OrderInfo.getFieldValues().get((short)25), 25, "Вид упаковки, наличие маркировки"));
         AddStandartFieldPart2();
+        ProbFields.add(new Field((byte) 9, 19));
+        ProbFields.add(new Field((byte) 10, 19));
+
         AddSamplesForType1();
         ProbFields.add(new Field((byte) 7));
     } //Поля пробы на исследование пищевых продуктов

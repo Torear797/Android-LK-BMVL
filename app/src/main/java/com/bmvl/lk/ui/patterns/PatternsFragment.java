@@ -171,36 +171,31 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
     }
 
     private void FabLisener() {
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
-                        .setTitle(R.string.new_pattern_title)
-                        .setItems(R.array.menu_patterns, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                byte choce = 1;
-                                switch (which) {
-                                    case 0:
-                                        choce = 1;//8
-                                        break;
-                                    case 1:
-                                        choce = 4;//9
-                                        break;
-                                    case 2:
-                                        choce = 3;//10
-                                        break;
-                                }
-                                Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
-                                intent.putExtra("type_id", choce);
-                                intent.putExtra("Pattern", true);
-                                startActivity(intent);
-                            }
-                        })
-                        .create()
-                        .show();
-            }
-        });
+        fab.setOnClickListener(v -> new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
+                .setTitle(R.string.new_pattern_title)
+                .setItems(R.array.menu_patterns, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        byte choce = 1;
+                        switch (which) {
+                            case 0:
+                                choce = 1;//8
+                                break;
+                            case 1:
+                                choce = 4;//9
+                                break;
+                            case 2:
+                                choce = 3;//10
+                                break;
+                        }
+                        Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
+                        intent.putExtra("type_id", choce);
+                        intent.putExtra("Pattern", true);
+                        startActivity(intent);
+                    }
+                })
+                .create()
+                .show());
     }
 
     private void initRecyclerView() {

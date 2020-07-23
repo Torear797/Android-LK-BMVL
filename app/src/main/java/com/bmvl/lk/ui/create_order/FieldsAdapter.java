@@ -41,14 +41,12 @@ import java.util.Map;
 import java.util.Objects;
 
 public class FieldsAdapter extends RecyclerView.Adapter {
-    // private LayoutInflater inflater;
     private static Calendar dateAndTime = Calendar.getInstance();
     private static Map<Short, String> OrderFields;
 
     private FieldsAdapter.ClickFieldListener onClickFieldListener;
 
     FieldsAdapter(ClickFieldListener Listener) {
-        //this.inflater = LayoutInflater.from(context);
         this.onClickFieldListener = Listener;
         OrderFields = CreateOrderActivity.order.getFields();
     }
@@ -110,8 +108,27 @@ public class FieldsAdapter extends RecyclerView.Adapter {
             }//item_box_text
             case 6: {
                 View view6 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_data_field, parent, false);
-                return new DataFieldHolder(view6);
-            }//item_box_text
+             //   return new DataFieldHolder(view6);
+
+                final DataFieldHolder holder = new DataFieldHolder(view6);
+                    holder.field.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            if (!String.valueOf(s).equals("") && s.toString().length() <=10)
+                                OrderFields.put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
+                        }
+
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                    });
+
+                return holder;
+            }//DataField
             default: {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_field, parent, false);
                 final TextViewHolder holder = new TextViewHolder(view);
@@ -279,6 +296,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                         dateAndTime.get(Calendar.MONTH),
                         dateAndTime.get(Calendar.DAY_OF_MONTH))
                         .show());
+                break;
             }//DataField
         }
     }

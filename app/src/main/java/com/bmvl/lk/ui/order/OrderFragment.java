@@ -159,6 +159,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         if (Orders.size() == 0) message.setVisibility(View.VISIBLE);
         else message.setVisibility(View.GONE);
 
+
         initRecyclerView();
         recyclerView.scrollToPosition(0);
 
@@ -358,7 +359,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
             @Override
             public void onScrollToOrder(int position) {
-                recyclerView.smoothScrollToPosition(position+2);
+                recyclerView.smoothScrollToPosition(position + 2);
             }
 
         };
@@ -503,18 +504,16 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                             if (response.body().getStatus() == 200) {
 
 
-                                if(!response.body().getDefaultFields().get((short) 52).equals(""))
-                                    App.OrderInfo = new OrderInfo((short)52,response.body().getDefaultFields().get((short) 52),response.body().getFieldValues(),true);
-                                else
-                                    if(!response.body().getDefaultFields().get((short) 63).equals("") && !response.body().getDefaultFields().get((short) 64).equals(""))
-                                        App.OrderInfo = new OrderInfo((short)64,response.body().getDefaultFields().get((short) 63),response.body().getDefaultFields().get((short) 64),response.body().getFieldValues());
-                                    else
-                                    if(!response.body().getDefaultFields().get((short) 63).equals(""))
-                                        App.OrderInfo = new OrderInfo((short)63,response.body().getDefaultFields().get((short) 63),response.body().getFieldValues(),false);
+                                if (!response.body().getDefaultFields().get((short) 52).equals(""))
+                                    App.OrderInfo = new OrderInfo((short) 52, response.body().getDefaultFields().get((short) 52), response.body().getFieldValues(), true);
+                                else if (!response.body().getDefaultFields().get((short) 63).equals("") && !response.body().getDefaultFields().get((short) 64).equals(""))
+                                    App.OrderInfo = new OrderInfo((short) 64, response.body().getDefaultFields().get((short) 63), response.body().getDefaultFields().get((short) 64), response.body().getFieldValues());
+                                else if (!response.body().getDefaultFields().get((short) 63).equals(""))
+                                    App.OrderInfo = new OrderInfo((short) 63, response.body().getDefaultFields().get((short) 63), response.body().getFieldValues(), false);
 
 
-                                    if(response.body().getDefaultFields().containsKey((short)128) && !response.body().getDefaultFields().get((short)128).equals(""))
-                                        App.OrderInfo.setURL_SCAN_FILE(response.body().getDefaultFields().get((short)128));
+                                if (response.body().getDefaultFields().containsKey((short) 128) && !response.body().getDefaultFields().get((short) 128).equals(""))
+                                    App.OrderInfo.setURL_SCAN_FILE(response.body().getDefaultFields().get((short) 128));
 //                                for (Map.Entry<Short, String> entry : response.body().getDefaultFields().entrySet()) {
 //
 //                                    if (!entry.getValue().equals("")) {
@@ -536,7 +535,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 //                                }
                                 App.UserInfo = response.body().getUserInfo();
                                 Hawk.put("UserInfo", App.UserInfo);
-                                Hawk.put("OrderInfo",  App.OrderInfo);
+                                Hawk.put("OrderInfo", App.OrderInfo);
 
                                 Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
                                 if (which == 0)

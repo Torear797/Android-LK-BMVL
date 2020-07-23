@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:mask="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
     style="@style/ClearFocus"
     android:layout_width="match_parent"
@@ -44,6 +43,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/field_marginEnd"
                         android:layout_weight="1"
+                        android:animateLayoutChanges="false"
+                        android:animationCache="true"
                         android:hint="Номер заявки">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -60,6 +61,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:animateLayoutChanges="false"
+                        android:animationCache="true"
                         android:hint="Номер протокола">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -88,6 +91,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/field_marginEnd"
                         android:layout_weight="1"
+                        android:animateLayoutChanges="false"
+                        android:animationCache="true"
                         android:hint="От"
                         app:endIconDrawable="@drawable/ic_date_range_black_24dp"
                         app:endIconMode="custom">
@@ -109,6 +114,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:animateLayoutChanges="false"
+                        android:animationCache="true"
                         android:hint="До"
                         app:endIconDrawable="@drawable/ic_date_range_black_24dp"
                         app:endIconMode="custom">
@@ -132,6 +139,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
+                    android:animateLayoutChanges="false"
+                    android:animationCache="true"
                     android:hint="Контактное лицо"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -141,7 +150,7 @@
                         android:id="@+id/ContactFace"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"/>
+                        android:inputType="text" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -186,7 +195,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/field_marginEnd"
                         android:layout_weight="1"
-                        android:hint="От"
+                        android:animateLayoutChanges="false"
+                        android:animationCache="true"
+                        android:hint="Цена от"
                         app:endIconDrawable="@drawable/rub"
                         app:endIconMode="custom">
 
@@ -204,7 +215,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="До"
+                        android:animateLayoutChanges="false"
+                        android:animationCache="true"
+                        android:hint="Цена до"
                         app:endIconDrawable="@drawable/rub"
                         app:endIconMode="custom">
 
@@ -312,6 +325,17 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_button" />
+            app:layout_constraintTop_toBottomOf="@+id/search_button">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_no_resoult"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:visibility="gone" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

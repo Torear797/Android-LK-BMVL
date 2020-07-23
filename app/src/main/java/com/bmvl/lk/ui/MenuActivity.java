@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
@@ -77,13 +76,13 @@ public class MenuActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.profile:
-               // Intent intent =;
+                // Intent intent =;
                 //startActivity(new Intent(MenuActivity.this, ProfileActivity.class));
                 UpdateOrderInfo(item.getItemId());
                 break;
             case R.id.settings:
-               // Intent intentS = ;
-              // UpdateOrderInfo(R.id.settings);
+                // Intent intentS = ;
+                // UpdateOrderInfo(R.id.settings);
                 startActivity(new Intent(MenuActivity.this, SettingsActivity.class));
                 break;
         }
@@ -93,9 +92,9 @@ public class MenuActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        FragmentManager fm = getSupportFragmentManager();
+      //  FragmentManager fm = getSupportFragmentManager();
         OnBackPressedListener backPressedListener = null;
-        for (Fragment fragment : fm.getFragments()) {
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment instanceof OnBackPressedListener) {
                 backPressedListener = (OnBackPressedListener) fragment;
                 break;
@@ -110,9 +109,9 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void loadFragment(Fragment fragment) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.nav_host_fragment, fragment);
-        ft.commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment, fragment)
+                .commit();
     }
 
     @Override

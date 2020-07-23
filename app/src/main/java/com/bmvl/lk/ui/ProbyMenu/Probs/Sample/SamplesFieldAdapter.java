@@ -95,7 +95,26 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 return new ResearchPanelHolder(view6);
             case 8: {
                 View view8 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_data_field, parent, false);
-                return new DataFieldHolder(view8);
+               // return new DataFieldHolder(view8);
+
+                final DataFieldHolder holder = new DataFieldHolder(view8);
+                holder.field.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (!String.valueOf(s).equals(""))
+                            CurrentSample.getFields().put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
+
+                return holder;
             }//DataField
             default:
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_field, parent, false);

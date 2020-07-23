@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ЛК БМВЛ</string>
     <string name="prompt_email">Email</string>
@@ -180,13 +181,6 @@
         <item>Типовые шаблоны</item>
     </string-array>
 
-    <array name="brob_menu_icons">
-        <item>@drawable/ic_prob</item>
-        <item>@drawable/ic_origin</item>
-        <item>@drawable/ic_info_black_24dp</item>
-        <item>@drawable/ic_security_black_24dp</item>
-    </array>
-
     <string name="contact_face">Контактное лицо</string>
     <string name="create_botton">Отправить</string>
 
@@ -252,5 +246,9 @@
     <string name="Recovery_password_title">Восстановление пароля</string>
     <string name="input_email">Введите E-mail</string>
     <string name="reset_password_btn_text">Отправить письмо с ссылкой для восстановления пароля</string>
+    <string name="search_no_resoult">Заявки не найдены!</string>
+    <string name="Origin">Происхождение</string>
+    <string name="PartyInfo">Информация о партии</string>
+    <string name="no_read_dop_menu">(недоступно для редактирования пока установлены общие параметры для всех проб)</string>
 
 </resources>

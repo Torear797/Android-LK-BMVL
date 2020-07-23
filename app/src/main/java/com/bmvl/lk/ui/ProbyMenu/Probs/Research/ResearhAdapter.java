@@ -27,9 +27,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.ResearchItemHolder> {
-   // private LayoutInflater inflater;
     private TreeMap<Short, ResearchRest> researches; //Исследования
-    //    private List<Field> ResearchFields = new ArrayList<>();
     private RecyclerView.RecycledViewPool viewPool;
 
     private static String[] Indicators;
@@ -37,10 +35,8 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     private static short materialId;
 
     public ResearhAdapter(TreeMap<Short, ResearchRest> ResearchesLise) {
-      //  this.inflater = LayoutInflater.from(context);
         viewPool = new RecyclerView.RecycledViewPool();
         researches = ResearchesLise;
-        //  AddResearchFields();
     }
 
     @Override
@@ -48,17 +44,10 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
         return position;
     }
 
-//    private void AddResearchFields() {
-//        ResearchFields.add(new Field((byte) 1, 0, "", "Показатель"));
-//        ResearchFields.add(new Field((byte) 2, 1, "", "Метод испытаний"));
-//        ResearchFields.add(new Field((byte) 3, 2, "", "Тип исследования"));
-//    }
-
     @NonNull
     @Override
     public ResearchItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_prob, parent, false);
-        return new ResearchItemHolder(view);
+        return new ResearchItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_prob, parent, false));
     }
 
     @Override
@@ -105,6 +94,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
         final SwipeLayout swipeLayout;
         final ImageView buttonDelete, createBtn;
         final RecyclerView List;
+        final ImageView arrow;
 
         ResearchItemHolder(@NonNull View itemView) {
             super(itemView);
@@ -120,27 +110,23 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
 
             Info.setVisibility(View.GONE);
             createBtn.setVisibility(View.GONE);
+            arrow = itemView.findViewById(R.id.arrow);
 
-            head.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (List.getVisibility() == View.VISIBLE)
-                        swipeLayout.setSwipeEnabled(true);
-                    else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close)
-                        swipeLayout.setSwipeEnabled(false);
-                    List.setVisibility(List.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-                }
+            head.setOnClickListener(view -> {
+                if (List.getVisibility() == View.VISIBLE)
+                    swipeLayout.setSwipeEnabled(true);
+                else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close)
+                    swipeLayout.setSwipeEnabled(false);
+                List.setVisibility(List.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                arrow.setImageResource(List.getVisibility() == View.VISIBLE ? R.drawable.ic_w_arrow_ap : R.drawable.ic_w_arrow_down);
             });
 
-            buttonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    swipeLayout.close();
-                    closeAllItems();
-                    TreeMap<Short, ResearchRest> insertlist = new TreeMap<>(researches);
-                    insertlist.remove(getPositionKey(getLayoutPosition()));
-                    updateList(insertlist);
-                }
+            buttonDelete.setOnClickListener(view -> {
+                swipeLayout.close();
+                closeAllItems();
+                TreeMap<Short, ResearchRest> insertlist = new TreeMap<>(researches);
+                insertlist.remove(getPositionKey(getLayoutPosition()));
+                updateList(insertlist);
             });
 
             List.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));

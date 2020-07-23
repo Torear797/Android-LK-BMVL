@@ -18,11 +18,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,6 +74,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
     private static List<ContactPersons> ContactPersons;
     private MultiAutoCompleteTextView ContactFace;
     private static String ChosenContactPerson = "";
+    private TextView message;
 
     public SearchFragment() {
     }
@@ -122,6 +125,10 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
         final Spinner Status = MyView.findViewById(R.id.Status);
         final Spinner Sort = MyView.findViewById(R.id.Sort);
 
+        final NestedScrollView Container = MyView.findViewById(R.id.scrollView);
+
+        message = MyView.findViewById(R.id.message);
+
         initRecyclerView();
 
         if (Hawk.contains("ContactPersons")) {
@@ -130,21 +137,22 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
             ContactFace.setAdapter(new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_dropdown_item_1line, getMassivString()));
         }
 
-       // ContactFace.getAdapter().getItem(0).
-
         SearchButton.setOnClickListener(v -> {
             SearchButton.setEnabled(false);
 
-            String sort_name = "";
+            StringBuilder sort_name = new StringBuilder();
             switch (Sort.getSelectedItemPosition()) {
                 case 0:
-                    sort_name = "dateDESC";
+                    sort_name.append("dateDESC");
+                   // sort_name = "dateDESC";
                     break;
                 case 1:
-                    sort_name = "dateASC";
+                    sort_name.append("dateASC");
+                  //  sort_name = "dateASC";
                     break;
                 case 2:
-                    sort_name = "status";
+                    sort_name.append("status");
+                   // sort_name = "status";
                     break;
             }
 
@@ -160,7 +168,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
                             Price.getText().toString(),
                             PriceDo.getText().toString(),
                             ((byte) ((byte) Status.getSelectedItemPosition() + 1)),
-                            sort_name,
+                            sort_name.toString(),
                             (short) 10,
                             (short) 1
                     )
@@ -169,12 +177,21 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
                         public void onResponse(@NonNull Call<AnswerSearch> call, @NonNull Response<AnswerSearch> response) {
                             if (response.isSuccessful() && response.body() != null) {
                                 if (response.body().getStatus() == 200) {
+                                    message.setVisibility(View.GONE);
                                     SearchButton.setEnabled(true);
                                     SearchOrders.clear();
                                     SearchOrders.addAll(response.body().getOrders().getOrders());
                                     OrderSearchAdapter.notifyDataSetChanged();
-                                }
+                                    if(SearchOrders.size() == 0) {
+                                        message.setVisibility(View.VISIBLE);
+                                        Container.postDelayed(() -> Container.fullScroll(NestedScrollView.FOCUS_DOWN), 100L);
+                                    }
+                                    else message.setVisibility(View.GONE);
+                                } else
+                                    Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
                             }
+                            else
+                                Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -194,7 +211,6 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
         ContactFace.setOnItemClickListener((parent, view, position, id) -> {
             if(ChosenContactPerson.length() > 0) ChosenContactPerson += ",";
             ChosenContactPerson += ContactPersons.get(position).getValue();
-         //   ContactFace.clearFocus();
         });
 
         ContactFace.addTextChangedListener(textWatcher);

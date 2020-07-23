@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -27,13 +25,16 @@ import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.ViewHolders.AutoCompleteTextViewHolder;
 import com.bmvl.lk.ViewHolders.DataFieldHolder;
+import com.bmvl.lk.ViewHolders.OriginHolder;
 import com.bmvl.lk.ViewHolders.MultiSpinerHolder;
+import com.bmvl.lk.ViewHolders.PartyInfoHolder;
 import com.bmvl.lk.ViewHolders.SamplesPanelHolder;
 import com.bmvl.lk.ViewHolders.SelectButtonHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.data.Field;
+import com.bmvl.lk.ui.ProbyMenu.PartyInfo.PartyInfoFragment;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
 import com.bmvl.lk.ui.create_order.ChoceMaterialDialogFragment;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
@@ -56,7 +57,6 @@ import retrofit2.Response;
 import static com.bmvl.lk.ui.ProbyMenu.Probs.ProbsFragment.Materials;
 
 public class ProbFieldAdapter extends RecyclerView.Adapter {
-   // private LayoutInflater inflater;
     private static Calendar dateAndTime = Calendar.getInstance();
     private List<Field> ProbFields;
     private List<Field> SampleFields; //Поля Образцов
@@ -67,7 +67,6 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     private SamplesAdapter SamAdapter;
 
     ProbFieldAdapter(List<Field> probFields, List<Field> sampleFields, ProbyRest prob, TextView header) {
-        //this.inflater = LayoutInflater.from(context);
         this.ProbHeader = header;
         viewPool = new RecyclerView.RecycledViewPool();
         ProbFields = probFields;
@@ -77,30 +76,44 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        return ProbFields.get(position).getType();
+        // return ProbFields.get(position).getType();
+
+        switch (ProbFields.get(position).getType()) {
+            case 1:
+                return R.layout.item_spiner;
+            case 3:
+                return R.layout.item_check_button;
+            case 4:
+                return R.layout.item_button_select;
+            case 5:
+                return R.layout.item_multi_spinner;
+            case 6:
+                return R.layout.item_auto_compiete_textview;
+            case 7:
+                return R.layout.item_research_list;
+            case 8:
+                return R.layout.item_data_field;
+            case 9:
+                return R.layout.item_origin;
+            case 10:
+                return R.layout.item_party_info;
+            default:
+                return R.layout.item_field;
+        }
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        switch (viewType) {
-            case 1:
-                View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spiner, parent, false);
-                final SpinerHolder holder1 = new SpinerHolder(view1);
+        View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
 
+        switch (viewType) {
+            case R.layout.item_spiner: {
+                final SpinerHolder holder1 = new SpinerHolder(view);
                 AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        String item = (String) parent.getItemAtPosition(position);
-                        CurrentProb.getFields().put(GetColumn_id(holder1.getLayoutPosition()), String.valueOf(item));
-
-//                        if (GetColumn_id(holder1.getLayoutPosition()).equals("5")) {
-//                            CurrentProb.getFields().put("materialName", String.valueOf(item));
-//                            CurrentProb.getFields().put("5", String.valueOf(position + 1));
-//                            ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", item, CurrentProb.getSamples().size()));
-//                            getIndicators(position + 1);
-//                        }
-
+                        CurrentProb.getFields().put(GetColumn_id(holder1.getLayoutPosition()), String.valueOf(parent.getItemAtPosition(position)));
                     }
 
                     @Override
@@ -110,25 +123,20 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 holder1.spiner.setOnItemSelectedListener(itemSelectedListener);
 
                 return holder1;
-            case 3:
-                View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_check_button, parent, false);
-                final SwitchHolder holder3 = new SwitchHolder(view3);
-                holder3.switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        CurrentProb.getFields().put(GetColumn_id(holder3.getLayoutPosition()), String.valueOf(isChecked));
-                    }
-                });
+            } //Spiner
+            case R.layout.item_check_button: {
+                final SwitchHolder holder3 = new SwitchHolder(view);
+                holder3.switchButton.setOnCheckedChangeListener((buttonView, isChecked) -> CurrentProb.getFields().put(GetColumn_id(holder3.getLayoutPosition()), String.valueOf(isChecked)));
                 return holder3;
-            case 4:
-                View view4 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_button_select, parent, false);
-                return new SelectButtonHolder(view4);
-            case 5:
-                View view5 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_multi_spinner, parent, false);
-                return new MultiSpinerHolder(view5);
-            case 6:
-                View view6 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_auto_compiete_textview, parent, false);
-                final AutoCompleteTextViewHolder holder6 = new AutoCompleteTextViewHolder(view6);
-
+            }//Swith
+            case R.layout.item_button_select: {
+                return new SelectButtonHolder(view);
+            }//SelectButton
+            case R.layout.item_multi_spinner: {
+                return new MultiSpinerHolder(view);
+            }//MultiSpinerHolder
+            case R.layout.item_auto_compiete_textview: {
+                final AutoCompleteTextViewHolder holder6 = new AutoCompleteTextViewHolder(view);
                 holder6.TextView.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
@@ -163,23 +171,40 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     }
                 });
 
-                holder6.TextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        holder6.TextView.clearFocus();
-                    }
-                });
+                holder6.TextView.setOnItemClickListener((parent1, MeView, position, id) -> holder6.TextView.clearFocus());
 
                 return holder6;
-            case 7:
-                View view7 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_research_list, parent, false);
-                return new SamplesPanelHolder(view7);
-            case 8:{
-                View view8 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_data_field, parent, false);
-                return new DataFieldHolder(view8);
+            }// Material
+            case R.layout.item_research_list: {
+                return new SamplesPanelHolder(view);
+            }//Список исследований
+            case R.layout.item_data_field: {
+                final DataFieldHolder holder = new DataFieldHolder(view);
+                    holder.field.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            if (!String.valueOf(s).equals(""))
+                                CurrentProb.getFields().put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
+                        }
+
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                    });
+
+                return holder;
             }//DataField
-            default:
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_field, parent, false);
+            case R.layout.item_origin: {
+                return new OriginHolder(view);
+            } //DopPanels Origin
+            case R.layout.item_party_info: {
+                return new PartyInfoHolder(view);
+            } //DopPanels Info
+            default: {
                 final TextViewHolder holder = new TextViewHolder(view);
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -198,6 +223,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 });
 
                 return holder;
+            }//EditText
         }
     }
 
@@ -210,7 +236,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
         final Field f = ProbFields.get(position);
 
         switch (f.getType()) {
-            case 0: {
+            case (byte) 0: {
                 if (f.getInputType() == InputType.TYPE_NULL)
                     ((TextViewHolder) holder).Layout.setBoxBackgroundColor(((TextViewHolder) holder).Layout.getContext().getResources().getColor(R.color.field_inactive));
 
@@ -221,30 +247,11 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 if (f.getIcon() != null) {
                     ((TextViewHolder) holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
                     ((TextViewHolder) holder).Layout.setEndIconDrawable(f.getIcon());
-
-//                    if (f.isData()) {
-//                        final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
-//                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-//                                ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field, f);
-//                            }
-//                        };
-//                        ((TextViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
-//                                        dateAndTime.get(Calendar.YEAR),
-//                                        dateAndTime.get(Calendar.MONTH),
-//                                        dateAndTime.get(Calendar.DAY_OF_MONTH))
-//                                        .show();
-//                            }
-//                        });
-//
-//                    }
                 }
 
                 break;
             } //Текстовое поле
-            case 1: {
+            case (byte) 1: {
 
                 if (f.getEntries() != -1) {
                     ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(((SpinerHolder) holder).spiner.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
@@ -266,7 +273,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 break;
             } //Spiner
-            case 3: {
+            case (byte) 3: {
                 ((SwitchHolder) holder).switchButton.setText(String.format("%s  ", f.getHint()));
 
                 if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
@@ -274,12 +281,12 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 break;
             } //Swith
-            case 4: {
+            case (byte) 4: {
                 ((SelectButtonHolder) holder).hint.setText(f.getHint());
                 break;
             } //SelectButtonHolder
-            case 5: {
-                final List<String> items = Arrays.asList( ((MultiSpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()));
+            case (byte) 5: {
+                final List<String> items = Arrays.asList(((MultiSpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()));
                 MultiSpinner.MultiSpinnerListener onSelectedListener = new MultiSpinner.MultiSpinnerListener() {
                     public void onItemsSelected(boolean[] selected, String id) {
                         CurrentProb.getFields().put(String.valueOf(f.getColumn_id()), id);
@@ -299,7 +306,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
                 break;
             } //Мультиспинер
-            case 6: {
+            case (byte) 6: {
                 ((AutoCompleteTextViewHolder) holder).Layout.setHint(f.getHint());
 
                 String[] mMaterials = new String[ProbsFragment.Materials.size()];
@@ -314,13 +321,13 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     ((AutoCompleteTextViewHolder) holder).TextView.setText(CurrentProb.getFields().get("materialName"));
 
                 ((AutoCompleteTextViewHolder) holder).ChoceBtn.setOnClickListener(v -> {
-                 //   ((AutoCompleteTextViewHolder) holder).TextView.setText(mMaterials[0]);
+                    //   ((AutoCompleteTextViewHolder) holder).TextView.setText(mMaterials[0]);
                     ChoceMaterialDialogFragment dialog = new ChoceMaterialDialogFragment(((AutoCompleteTextViewHolder) holder).TextView);
                     dialog.show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), "ChoceMaterialDialogFragment");
                 });
                 break;
             } //AutoCompieteTextview
-            case 7: {
+            case (byte) 7: {
                 SamAdapter = new SamplesAdapter(SampleFields, CurrentProb.getSamples(), CurrentProb.getFields());
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
@@ -328,15 +335,12 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {
                     //Добавление образца
-                    ((SamplesPanelHolder) holder).btnAddSample.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            short newid = getPositionKey(CurrentProb.getSamples().size() - 1, CurrentProb.getSamples());
-                            Map<Short, SamplesRest> insertlist = new HashMap<>();
-                            insertlist.put((short) (newid + 1), new SamplesRest(newid));
-                            SamAdapter.insertdata(insertlist);
-                            ((SamplesPanelHolder) holder).SampleList.smoothScrollToPosition(SamAdapter.getItemCount() - 1);
-                        }
+                    ((SamplesPanelHolder) holder).btnAddSample.setOnClickListener(v -> {
+                        short newid = getPositionKey(CurrentProb.getSamples().size() - 1, CurrentProb.getSamples());
+                        Map<Short, SamplesRest> insertlist = new HashMap<>();
+                        insertlist.put((short) (newid + 1), new SamplesRest(newid));
+                        SamAdapter.insertdata(insertlist);
+                        ((SamplesPanelHolder) holder).SampleList.smoothScrollToPosition(SamAdapter.getItemCount() - 1);
                     });
                 } else {
                     ((SamplesPanelHolder) holder).Header.setVisibility(View.GONE);
@@ -345,7 +349,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 break;
             } // Иссследования
-            case 8:{
+            case (byte) 8: {
                 ((DataFieldHolder) holder).Layout.setHint(f.getHint());
                 ((DataFieldHolder) holder).field.setText(CurrentProb.getFields().get(String.valueOf(f.getColumn_id())));
 
@@ -355,7 +359,37 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                         dateAndTime.get(Calendar.MONTH),
                         dateAndTime.get(Calendar.DAY_OF_MONTH))
                         .show());
+                break;
             }//DataField
+            case (byte) 9: {
+                //   PartyInfoFragment yfc = ;
+                //   Bundle bundle = new Bundle();
+                // bundle.putInt("tag", intInformation);
+                //  yfc.setArguments(bundle);
+                boolean ReadOnly = Boolean.parseBoolean(CreateOrderActivity.order.getFields().get((short) 120));
+                if(ReadOnly)((OriginHolder) holder).RightTxt.setText(R.string.no_read_dop_menu);
+                else ((OriginHolder) holder).RightTxt.setText("");
+                ((CreateOrderActivity) ((OriginHolder) holder).head.getContext()).getSupportFragmentManager().beginTransaction()
+                        .replace(((OriginHolder) holder).Frame.getId(), new PartyInfoFragment(
+                                (byte) 1,
+                                ReadOnly,
+                                CurrentProb.getFields()
+                        )).commit();
+
+                break;
+            }//DopPanel Origin
+            case (byte) 10: {
+                boolean ReadOnly = Boolean.parseBoolean(CreateOrderActivity.order.getFields().get((short) 121));
+                if(ReadOnly)((PartyInfoHolder) holder).RightTxt.setText(R.string.no_read_dop_menu);
+                else ((PartyInfoHolder) holder).RightTxt.setText("");
+                ((CreateOrderActivity) ((PartyInfoHolder) holder).head.getContext()).getSupportFragmentManager().beginTransaction()
+                        .replace(((PartyInfoHolder) holder).Frame.getId(), new PartyInfoFragment(
+                                (byte) 2,
+                                ReadOnly,
+                                CurrentProb.getFields()
+                        )).commit();
+                break;
+            }//DopPanel Info
         }
 
     }

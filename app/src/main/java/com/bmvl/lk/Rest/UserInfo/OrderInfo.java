@@ -38,14 +38,6 @@ public class OrderInfo {
         this.fieldValues = fieldValues;
     }
 
-    public void setOD_ID(Short OD_ID) {
-        this.OD_ID = OD_ID;
-    }
-
-    public void setFieldValues(Map<Short, String[]> fieldValues) {
-        this.fieldValues = fieldValues;
-    }
-
     public Short getOD_ID() {
         return OD_ID;
     }
@@ -58,23 +50,11 @@ public class OrderInfo {
         return OD_Adres;
     }
 
-    public void setOD_Adres(String OD_Adres) {
-        this.OD_Adres = OD_Adres;
-    }
-
     public String getOD_Email() {
         return OD_Email;
     }
 
-    public void setOD_Email(String OD_Email) {
-        this.OD_Email = OD_Email;
-    }
-
     public String getFIO() {
         return FIO;
-    }
-
-    public void setFIO(String FIO) {
-        this.FIO = FIO;
     }
 }

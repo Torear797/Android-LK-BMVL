@@ -31,7 +31,6 @@ import java.util.Objects;
 import java.util.TreeMap;
 
 public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleViewHolder> {
-   // private LayoutInflater inflater;
     private TreeMap<Short, SamplesRest> Samples; //Образцы
     private List<Field> SamplesField; //Поля образцов
     private RecyclerView.RecycledViewPool viewPool;
@@ -41,7 +40,6 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     private SamplesFieldAdapter adapter;
 
     public SamplesAdapter(List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList,Map<String, String> ProbFields) {
-      //  this.inflater = LayoutInflater.from(context);
         SamplesField = Samples;
         this.Samples = SamplesList;
         this.ProbFields = ProbFields;
@@ -114,6 +112,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
         final SwipeLayout swipeLayout;
         final ImageView buttonDelete, createBtn;
         final RecyclerView SampleList;
+        final ImageView arrow;
 
         SimpleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -126,41 +125,34 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
             swipeLayout = itemView.findViewById(R.id.swipe);
             buttonDelete = itemView.findViewById(R.id.trash);
             createBtn = itemView.findViewById(R.id.create);
+            arrow = itemView.findViewById(R.id.arrow);
 
-            head.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (SampleList.getVisibility() == View.VISIBLE)
-                        swipeLayout.setSwipeEnabled(true);
-                    else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close)
-                        swipeLayout.setSwipeEnabled(false);
-                    SampleList.setVisibility(SampleList.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-                }
+            head.setOnClickListener(view -> {
+                if (SampleList.getVisibility() == View.VISIBLE)
+                    swipeLayout.setSwipeEnabled(true);
+                else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close)
+                    swipeLayout.setSwipeEnabled(false);
+                SampleList.setVisibility(SampleList.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                arrow.setImageResource(SampleList.getVisibility() == View.VISIBLE ? R.drawable.ic_w_arrow_ap : R.drawable.ic_w_arrow_down);
             });
 
-            buttonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    swipeLayout.close();
-                    closeAllItems();
-                    TreeMap<Short, SamplesRest> insertlist = new TreeMap<>(Samples);
-                    insertlist.remove(getPositionKey(getLayoutPosition()));
-                    updateList(insertlist);
-                }
+            buttonDelete.setOnClickListener(view -> {
+                swipeLayout.close();
+                closeAllItems();
+                TreeMap<Short, SamplesRest> insertlist = new TreeMap<>(Samples);
+                insertlist.remove(getPositionKey(getLayoutPosition()));
+                updateList(insertlist);
             });
 
-            createBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    swipeLayout.close();
-                    closeAllItems();
-                    TreeMap<Short, SamplesRest> insertlist = new TreeMap<>();
-                    short newid = getPositionKey(Samples.size() - 1);
-                    SamplesRest insertSample = new SamplesRest(newid);
-                    insertSample.setData(Objects.requireNonNull(Samples.get(getPositionKey(getLayoutPosition()))).getFields(), Objects.requireNonNull(Samples.get(getPositionKey(getLayoutPosition()))).getResearches());
-                    insertlist.put((short) (newid + 1), insertSample);
-                    insertdata(insertlist);
-                }
+            createBtn.setOnClickListener(view -> {
+                swipeLayout.close();
+                closeAllItems();
+                TreeMap<Short, SamplesRest> insertlist = new TreeMap<>();
+                short newid = getPositionKey(Samples.size() - 1);
+                SamplesRest insertSample = new SamplesRest(newid);
+                insertSample.setData(Objects.requireNonNull(Samples.get(getPositionKey(getLayoutPosition()))).getFields(), Objects.requireNonNull(Samples.get(getPositionKey(getLayoutPosition()))).getResearches());
+                insertlist.put((short) (newid + 1), insertSample);
+                insertdata(insertlist);
             });
 
             SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));

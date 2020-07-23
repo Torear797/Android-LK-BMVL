@@ -3,4 +3,11 @@
     <declare-styleable name="MultiSpinner">
     <attr name="android:entries" />
 </declare-styleable>
+
+    <array name="brob_menu_icons">
+        <item>@drawable/ic_prob</item>
+        <item>@drawable/ic_origin</item>
+        <item>@drawable/ic_info_black_24dp</item>
+        <item>@drawable/ic_security_black_24dp</item>
+    </array>
 </resources>

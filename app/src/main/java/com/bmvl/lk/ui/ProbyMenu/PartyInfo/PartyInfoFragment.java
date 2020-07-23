@@ -1,7 +1,9 @@
 package com.bmvl.lk.ui.ProbyMenu.PartyInfo;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +22,33 @@ import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class PartyInfoFragment extends Fragment {
-    private static List<Field> PartyInfoFields = new ArrayList<>();
-    private static List<Field> OriginFields = new ArrayList<>();
-    private static byte TypeTabs;
-
+    private List<Field> PartyInfoFields = new ArrayList<>();
+    private List<Field> OriginFields = new ArrayList<>();
+    private byte TypeTabs; //Тип вкладки 1 - Происхождение, 2 - Информация о партии
     private GridLayoutManager mng_layout; //Задает табличную разметку
 
     private PartyInfoAdapter adapter;
     private OriginAdapter adapter2;
+    private Map<String, String> fields; //Поле fields текущей пробы. Нужно для заполнения полей Происхождение и Инормация о партии
 
-    public PartyInfoFragment() {
+   // private boolean Field; //Флаг отвечает за тип фрагмента - поле в пробе (true) или вкладка в меню (false).
+    private boolean ReadOnly; //Флаг - только для чтения.
+
+    public PartyInfoFragment(byte Type) {
+        this.TypeTabs = Type;
+        this.ReadOnly = false;
+    //    this.Field = false;
+    }
+
+    public PartyInfoFragment(byte Type, boolean read, Map<String, String> fieldsProb) {
+        this.TypeTabs = Type;
+      //  this.Field = field;
+        this.ReadOnly = read;
+        this.fields = fieldsProb;
     }
 
     @Override
@@ -59,28 +75,27 @@ public class PartyInfoFragment extends Fragment {
                     return 2;
                 }
             });
-            adapter = new PartyInfoAdapter(getContext(), PartyInfoFields);
+
+            adapter = new PartyInfoAdapter(PartyInfoFields, ReadOnly, fields);
         } else {
             AddOriginField(OriginFields);
-            OriginAdapter.OnOriginClickListener onClickListener = new OriginAdapter.OnOriginClickListener() {
-                @Override
-                public void onChangeOrigin(boolean isChecked) {
-                    List<Field> NewList = new ArrayList<>();
-                    if (isChecked)
-                        AddOriginFieldNoOrigin(NewList);
-                    else
-                        AddOriginField(NewList);
-
-                    adapter2.updateList(NewList);
-                }
-            };
-            adapter2 = new OriginAdapter(getContext(), OriginFields, onClickListener);
+            adapter2 = new OriginAdapter(OriginFields, onClickListener, ReadOnly, fields);
         }
     }
 
-    public static PartyInfoFragment newInstance(byte Type) {
-        TypeTabs = Type;
-        return new PartyInfoFragment();
+     OriginAdapter.OnOriginClickListener onClickListener = isChecked -> {
+         new Handler().post(new Runnable() { @Override public void run() {
+             List<Field> NewList = new ArrayList<>();
+             if (isChecked)
+                 AddOriginFieldNoOrigin(NewList);
+             else
+                 AddOriginField(NewList);
+             adapter2.updateList(NewList);
+         } });
+    };
+
+    public PartyInfoFragment newInstance(byte Type) {
+        return new PartyInfoFragment(Type);
     }
 
     @Override
@@ -95,8 +110,9 @@ public class PartyInfoFragment extends Fragment {
 
         if (TypeTabs == 2) {
             recyclerView.setHasFixedSize(true);
-            if(!CreateOrderActivity.IsPattern)
-            recyclerView.setLayoutManager(mng_layout);
+            if (!CreateOrderActivity.IsPattern)
+                recyclerView.setLayoutManager(mng_layout);
+
             recyclerView.setAdapter(adapter);
         } else
             recyclerView.setAdapter(adapter2);
@@ -115,7 +131,8 @@ public class PartyInfoFragment extends Fragment {
         NewList.add(new Field(46, "", "Адрес производства", InputType.TYPE_CLASS_TEXT));
         NewList.add(new Field(130, "", "Страна экспортер", InputType.TYPE_CLASS_TEXT));
         NewList.add(new Field(129, "", "Страна импортер", InputType.TYPE_CLASS_TEXT));
-        NewList.add(new Field((byte) 3, 120, "", "Применить для всех проб"));
+        if (fields == null)
+            NewList.add(new Field((byte) 3, 120, "", "Применить для всех проб"));
     }
 
     private void AddOriginFieldNoOrigin(List<Field> NewList) {
@@ -124,23 +141,26 @@ public class PartyInfoFragment extends Fragment {
         if (CreateOrderActivity.order_id != 4 && !CreateOrderActivity.IsPattern)
             NewList.add(new Field(19, "", "НД на производство", InputType.TYPE_CLASS_TEXT));
         NewList.add(new Field(58, "", "Номер и дата протокола изъятия/досмотра", InputType.TYPE_CLASS_TEXT));
-        NewList.add(new Field((byte) 3, 120, "", "Применить для всех проб"));
+        if (fields == null)
+            NewList.add(new Field((byte) 3, 120, "", "Применить для всех проб"));
     }
 
     private void AddPartyInfoFields() {
         PartyInfoFields.clear();
         if (!CreateOrderActivity.IsPattern) {
-            PartyInfoFields.add(new Field(43, "", "Ветеринарный документ от", InputType.TYPE_CLASS_NUMBER, Objects.requireNonNull(getContext()).getDrawable(R.drawable.ic_date_range_black_24dp), true));
+            PartyInfoFields.add(new Field((byte) 2, 43, "Ветеринарный документ от"));
             PartyInfoFields.add(new Field(42, "", "№", InputType.TYPE_CLASS_TEXT));
             PartyInfoFields.add(new Field(34, "", "Номер партии", InputType.TYPE_CLASS_TEXT));
             PartyInfoFields.add(new Field(36, "", "Масса (объем) партии", InputType.TYPE_CLASS_TEXT));
-            PartyInfoFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)37), 37, " "));
+
+            PartyInfoFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short) 37), 37, " "));
             PartyInfoFields.add(new Field(38, "", "Количество в партии", InputType.TYPE_CLASS_TEXT));
-            PartyInfoFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)39), 39, " "));
+            PartyInfoFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short) 39), 39, " "));
         }
         PartyInfoFields.add(new Field(44, "", "Упаковка партии", InputType.TYPE_CLASS_TEXT));
         PartyInfoFields.add(new Field(35, "", "Срок годности", InputType.TYPE_CLASS_TEXT));
         PartyInfoFields.add(new Field(33, "", true, "Примечание", InputType.TYPE_TEXT_FLAG_MULTI_LINE));
-        PartyInfoFields.add(new Field((byte) 3, 121, "", "Применить для всех проб"));
+        if (fields == null)
+            PartyInfoFields.add(new Field((byte) 3, 121, "", "Применить для всех проб"));
     }
 }

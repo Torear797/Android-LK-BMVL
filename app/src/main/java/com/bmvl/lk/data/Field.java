@@ -4,7 +4,19 @@ import android.graphics.drawable.Drawable;
 
 public class Field {
 
+    public Field(byte type, int column_id, String hint) {
+        Type = type;
+        this.column_id = column_id;
+        Hint = hint;
+    }
+
     private byte Type;
+
+    public Field(byte type, int column_id) {
+        Type = type;
+        this.column_id = column_id;
+    }
+
     private String[] SpinerData;
 
     public Field(byte type, int entries, int column_id, String hint) {
@@ -35,10 +47,6 @@ public class Field {
 
     public int getEntries() {
         return entries;
-    }
-
-    public void setEntries(int entries) {
-        this.entries = entries;
     }
 
     private int entries;
@@ -135,10 +143,6 @@ public class Field {
         return Doublesize;
     }
 
-    public void setDoubleSize(boolean enabled) {
-        Doublesize = enabled;
-    }
-
     public String getHint() {
         return Hint;
     }
@@ -149,18 +153,6 @@ public class Field {
 
     public int getInputType() {
         return InputType;
-    }
-
-    public void setInputType(int inputType) {
-        InputType = inputType;
-    }
-
-    public boolean isDoublesize() {
-        return Doublesize;
-    }
-
-    public void setDoublesize(boolean doublesize) {
-        Doublesize = doublesize;
     }
 
     public Drawable getIcon() {
@@ -181,9 +173,5 @@ public class Field {
 
     public String[] getSpinerData() {
         return SpinerData;
-    }
-
-    public void setSpinerData(String[] spinerData) {
-        SpinerData = spinerData;
     }
 }

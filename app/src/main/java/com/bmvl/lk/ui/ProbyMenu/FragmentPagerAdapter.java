@@ -21,7 +21,7 @@ public class FragmentPagerAdapter extends FragmentStateAdapter {
         switch (position) {
             case 1:
             case 2:
-                return PartyInfoFragment.newInstance((byte) position);
+                return new PartyInfoFragment((byte)position);
             default:
                 return ProbsFragment.newInstance();
         }

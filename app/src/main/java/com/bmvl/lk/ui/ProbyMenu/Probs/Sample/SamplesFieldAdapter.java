@@ -24,6 +24,7 @@ import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.data.Field;
+import com.bmvl.lk.data.StringSpinnerAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.MultiSpinner;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
 import com.daimajia.swipe.util.Attributes;
@@ -163,19 +164,19 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 break;
             }//Edittext
             case 1: {
+                StringSpinnerAdapter adapter;
                 if (f.getEntries() != -1) {
-                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(((SpinerHolder) holder).spiner.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    ((SpinerHolder) holder).spiner.setAdapter(adapter);
-                    if (CurrentSample.getFields().containsKey((short) (f.getColumn_id())))
-                        ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentSample.getFields().get((short) (f.getColumn_id()))));
+                    //ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(((SpinerHolder) holder).spiner.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
+                     adapter = new StringSpinnerAdapter(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item,((SpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()) , ((SpinerHolder) holder).spiner);
                 } else {
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item, f.getSpinerData());
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    ((SpinerHolder) holder).spiner.setAdapter(adapter);
-                    if (CurrentSample.getFields().containsKey((short) (f.getColumn_id())))
-                        ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentSample.getFields().get((short) (f.getColumn_id()))));
+                     adapter = new StringSpinnerAdapter(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item, f.getSpinerData(), ((SpinerHolder) holder).spiner);
+                    //  ArrayAdapter<String> adapter = new ArrayAdapter<>(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item, f.getSpinerData());
                 }
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ((SpinerHolder) holder).spiner.setAdapter(adapter);
+                if (CurrentSample.getFields().containsKey((short) (f.getColumn_id())))
+                    ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentSample.getFields().get((short) (f.getColumn_id()))));
+
 
 
                 ((SpinerHolder) holder).txtHint.setText(f.getHint());

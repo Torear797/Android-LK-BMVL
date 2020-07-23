@@ -316,7 +316,8 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
 
     private void AddStandartFieldPart2() {
         AddStandartFieldPart3();
-        ProbFields.add(new Field(12, "", "Дата и время отбора", InputType.TYPE_CLASS_TEXT));
+      //  ProbFields.add(new Field(12, "", "Дата и время отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field((byte) 8, 12, "Дата и время отбора"));
     }
 
     private void AddStandartFieldPart3() {

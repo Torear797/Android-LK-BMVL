@@ -31,6 +31,7 @@ import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.data.Field;
+import com.bmvl.lk.data.StringSpinnerAdapter;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -218,25 +219,14 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 break;
             } //Текстовое поле
             case 1: {
-                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(((SpinerHolder) holder).spiner.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
+               // ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(((SpinerHolder) holder).spiner.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
+                StringSpinnerAdapter adapter = new StringSpinnerAdapter(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item,((SpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()) , ((SpinerHolder) holder).spiner);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 ((SpinerHolder) holder).spiner.setAdapter(adapter);
                 ((SpinerHolder) holder).txtHint.setText(f.getHint());
 
-                if (OrderFields.containsKey((short) f.getColumn_id())) {
-
-//                    String[] id = inflater.getContext().getResources().getStringArray(f.getEntries());
-//                    int CurrentID = 0;
-//                    for (String name : id) {
-//                        if (name.equals(OrderFields.get((short) f.getColumn_id())))
-//                            break;
-//                        CurrentID++;
-//                    }
-//                    if(CurrentID < id.length)
+               // if (OrderFields.containsKey((short) f.getColumn_id()))
                     ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(OrderFields.get((short) f.getColumn_id())));
-                }
-                //else
-//                    CreateOrderActivity.order.getFields().put((short) f.getColumn_id(), String.valueOf(((SpinerHolder) holder).spiner.getSelectedItem()));
 
                 break;
             } //Одиночный спинер

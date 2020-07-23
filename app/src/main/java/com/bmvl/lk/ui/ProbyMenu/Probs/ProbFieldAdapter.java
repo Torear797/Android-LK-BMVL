@@ -34,6 +34,7 @@ import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
 import com.bmvl.lk.data.Field;
+import com.bmvl.lk.data.StringSpinnerAdapter;
 import com.bmvl.lk.ui.ProbyMenu.PartyInfo.PartyInfoFragment;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
 import com.bmvl.lk.ui.create_order.ChoceMaterialDialogFragment;
@@ -117,6 +118,8 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         CurrentProb.getFields().put(GetColumn_id(holder1.getLayoutPosition()), String.valueOf(parent.getItemAtPosition(position)));
+
+                        // ((StringSpinnerAdapter)holder1.spiner.getAdapter()).setSelection(position);
                     }
 
                     @Override
@@ -183,21 +186,21 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             }//Список исследований
             case R.layout.item_data_field: {
                 final DataFieldHolder holder = new DataFieldHolder(view);
-                    holder.field.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            if (!String.valueOf(s).equals(""))
-                                CurrentProb.getFields().put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
-                        }
+                holder.field.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (!String.valueOf(s).equals(""))
+                            CurrentProb.getFields().put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
+                    }
 
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        }
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
 
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        }
-                    });
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
 
                 return holder;
             }//DataField
@@ -212,7 +215,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if (!String.valueOf(s).equals("") && s.toString().length() <=10)
+                        if (!String.valueOf(s).equals("") && s.toString().length() <= 10)
                             try {
                                 CurrentProb.getFields().put(GetColumn_id(holder.getLayoutPosition()), new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(s.toString()))));
                             } catch (ParseException e) {
@@ -259,22 +262,24 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 break;
             } //Текстовое поле
             case (byte) 1: {
-
+                StringSpinnerAdapter adapter;
                 if (f.getEntries() != -1) {
-                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(((SpinerHolder) holder).spiner.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    ((SpinerHolder) holder).spiner.setAdapter(adapter);
-
-                    if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
-                        ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))));
+                    // CharSpinnerAdapter adapter = (CharSpinnerAdapter)ArrayAdapter.createFromResource(((SpinerHolder) holder).spiner.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
+                    // CharSpinnerAdapter adapter = new CharSpinnerAdapter(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item, f.getEntries(), ((SpinerHolder) holder).spiner);
+                    adapter = new StringSpinnerAdapter(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item, ((SpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()), ((SpinerHolder) holder).spiner);
                 } else {
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item, f.getSpinerData());
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    ((SpinerHolder) holder).spiner.setAdapter(adapter);
+                    adapter = new StringSpinnerAdapter(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item, f.getSpinerData(), ((SpinerHolder) holder).spiner);
 
-                    if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
-                        ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))));
+                    // ((SpinerHolder) holder).spiner.setAdapter(new StringSpinnerAdapter(((SpinerHolder) holder).spiner.getContext(),android.R.layout.simple_spinner_item, f.getSpinerData(), ((SpinerHolder) holder).spiner));
+                    //StringSpinnerAdapter adapter =;
+
                 }
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ((SpinerHolder) holder).spiner.setAdapter(adapter);
+
+                // if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
+                ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))));
+
 
                 ((SpinerHolder) holder).txtHint.setText(f.getHint());
 
@@ -358,14 +363,14 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             } // Иссследования
             case (byte) 8: {
                 ((DataFieldHolder) holder).Layout.setHint(f.getHint());
-             //   ((DataFieldHolder) holder).field.setText(CurrentProb.getFields().get(String.valueOf(f.getColumn_id())));
+                //   ((DataFieldHolder) holder).field.setText(CurrentProb.getFields().get(String.valueOf(f.getColumn_id())));
 
-                if(CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
-                try {
-                    ((DataFieldHolder) holder).field.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(Objects.requireNonNull(CurrentProb.getFields().get(String.valueOf(f.getColumn_id())))))));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
+                    try {
+                        ((DataFieldHolder) holder).field.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(Objects.requireNonNull(CurrentProb.getFields().get(String.valueOf(f.getColumn_id())))))));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
 
                 final DatePickerDialog.OnDateSetListener Datapicker = (view, year, monthOfYear, dayOfMonth) -> ChangeData(year, monthOfYear, dayOfMonth, ((DataFieldHolder) holder).field);
                 ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(v -> new DatePickerDialog(Objects.requireNonNull(((DataFieldHolder) holder).Layout.getContext()), Datapicker,
@@ -381,7 +386,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 // bundle.putInt("tag", intInformation);
                 //  yfc.setArguments(bundle);
                 boolean ReadOnly = Boolean.parseBoolean(CreateOrderActivity.order.getFields().get((short) 120));
-                if(ReadOnly)((OriginHolder) holder).RightTxt.setText(R.string.no_read_dop_menu);
+                if (ReadOnly) ((OriginHolder) holder).RightTxt.setText(R.string.no_read_dop_menu);
                 else ((OriginHolder) holder).RightTxt.setText("");
                 ((CreateOrderActivity) ((OriginHolder) holder).head.getContext()).getSupportFragmentManager().beginTransaction()
                         .replace(((OriginHolder) holder).Frame.getId(), new PartyInfoFragment(
@@ -394,7 +399,8 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             }//DopPanel Origin
             case (byte) 10: {
                 boolean ReadOnly = Boolean.parseBoolean(CreateOrderActivity.order.getFields().get((short) 121));
-                if(ReadOnly)((PartyInfoHolder) holder).RightTxt.setText(R.string.no_read_dop_menu);
+                if (ReadOnly)
+                    ((PartyInfoHolder) holder).RightTxt.setText(R.string.no_read_dop_menu);
                 else ((PartyInfoHolder) holder).RightTxt.setText("");
                 ((CreateOrderActivity) ((PartyInfoHolder) holder).head.getContext()).getSupportFragmentManager().beginTransaction()
                         .replace(((PartyInfoHolder) holder).Frame.getId(), new PartyInfoFragment(

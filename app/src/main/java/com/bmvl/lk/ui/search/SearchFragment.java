@@ -262,7 +262,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
 //                    }
 //                }
 //
-                    Toast.makeText(getContext(), ChosenContactPerson, Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(getContext(), ChosenContactPerson, Toast.LENGTH_SHORT).show();
                     ContactFace.setSelection(ContactFace.getText().length());
             }
         }

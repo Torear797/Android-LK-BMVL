@@ -133,7 +133,6 @@ public class CreateOrderActivity extends AppCompatActivity {
         Fields.add(new Field((byte) 4, 0, act_of_selection, "Акт отбора"));
         Fields.add(new Field((byte) 5, 59, "", "Контрольный образец"));
 
-        //Fields.add(new Field(11, "", "Акт отбора от", InputType.TYPE_CLASS_NUMBER, getDrawable(R.drawable.ic_date_range_black_24dp), true));
         Fields.add(new Field((byte) 6, 11, "", "Акт отбора от"));
 
         Fields.add(new Field(10, "", "№", InputType.TYPE_CLASS_TEXT));
@@ -223,6 +222,9 @@ public class CreateOrderActivity extends AppCompatActivity {
         order.getFields().put((short) 141, App.UserInfo.getEmail());
         order.getFields().put((short) 142, App.UserInfo.getFIO() + ", " + App.UserInfo.getPosition() + ", действующий на основании " + getBasisString());
 
+        //Инициализация полей Информация о партии и просихождение
+        order.getFields().put((short)120,"false");
+        order.getFields().put((short)121,"false");
     } //Базовые поля
 
     private void addFieldPatternType1() {

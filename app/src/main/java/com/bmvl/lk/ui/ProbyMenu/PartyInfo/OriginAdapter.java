@@ -65,7 +65,6 @@ class OriginAdapter extends RecyclerView.Adapter {
                     if (GetColumn_id(holder3.getLayoutPosition()) == (byte) 120)
                         ProbAdapter.adapter.notifyDataSetChanged();
                 });
-            holder3.switchButton.setChecked(false);
             return holder3;
         }
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_field, parent, false);
@@ -123,6 +122,7 @@ class OriginAdapter extends RecyclerView.Adapter {
                 else ((SwitchHolder) holder).switchButton.setEnabled(true);
 
                 // if (fields.containsKey((short) f.getColumn_id()))
+               //  ((SwitchHolder) holder).switchButton.setChecked(false);
                 if (fieldsProb == null || ReadOnly)
                     ((SwitchHolder) holder).switchButton.setChecked(Boolean.parseBoolean(fields.get((short) f.getColumn_id())));
                 else

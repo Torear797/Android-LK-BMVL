@@ -132,8 +132,6 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
                             ProbAdapter.adapter.notifyDataSetChanged();
                     });
 
-
-                holder3.switchButton.setChecked(false);
                 return holder3;
             }
             default: {
@@ -227,7 +225,8 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
                 try {
                     if ((fieldsProb == null || ReadOnly) && fields.containsKey((short)(f.getColumn_id())))
                     ((DataFieldHolder) holder).field.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(Objects.requireNonNull(fields.get((short)(f.getColumn_id())))))));
-                    else if(fieldsProb.containsKey(String.valueOf(f.getColumn_id())))
+                    else if(fieldsProb != null)
+                    if(fieldsProb.containsKey(String.valueOf(f.getColumn_id())))
                     ((DataFieldHolder) holder).field.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(Objects.requireNonNull(fieldsProb.get(String.valueOf(f.getColumn_id())))))));
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -251,6 +250,7 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
                 ((SwitchHolder) holder).switchButton.setText(String.format("%s  ", f.getHint()));
                 if (fields.containsKey((short) f.getColumn_id()))
                     ((SwitchHolder) holder).switchButton.setChecked(Boolean.parseBoolean(fields.get((short) f.getColumn_id())));
+                //else  ((SwitchHolder) holder).switchButton.setChecked(false);
 
                 if (ReadOnly) ((SwitchHolder) holder).switchButton.setEnabled(false);
                 else ((SwitchHolder) holder).switchButton.setEnabled(true);

@@ -5,6 +5,7 @@ import com.bmvl.lk.Rest.Order.AnswerSendOrder;
 import com.bmvl.lk.Rest.Order.OrdersAnswer;
 import com.bmvl.lk.Rest.UserInfo.UserAccess;
 import com.bmvl.lk.Rest.UserInfo.UserInfoCall;
+import com.bmvl.lk.data.models.Document;
 
 import java.util.List;
 
@@ -203,4 +204,20 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("resetPassword")
     Call<StandardAnswer> resetPassword(@Field("email") String email);
+
+    @FormUrlEncoded
+    @POST("ajax/getDocumentNames")
+    Call<List<Document>> getDocumentNames(@Field("token") String token);
+
+    @FormUrlEncoded
+    @POST("ajax/getCountries")
+    Call<AnswerCountries> getCountries(@Field("token") String token, @Field("query") String query);
+
+    @FormUrlEncoded
+    @POST("ajax/getRegions")
+    Call<AnswerCountries> getRegions(@Field("token") String token, @Field("country_name") String country_name, @Field("query") String query);
+
+    @FormUrlEncoded
+    @POST("ajax/getDistricts")
+    Call<AnswerCountries> getDistricts(@Field("token") String token, @Field("country_name") String country_name, @Field("region_name") String region_name, @Field("query") String query);
 }

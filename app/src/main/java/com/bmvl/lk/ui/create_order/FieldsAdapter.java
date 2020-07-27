@@ -95,11 +95,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_check_button, parent, false);
                 final SwitchHolder holder3 = new SwitchHolder(view3);
 
-                holder3.switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        OrderFields.put(GetColumn_id(holder3.getLayoutPosition()), String.valueOf(isChecked));
-                    }
-                });
+                holder3.switchButton.setOnCheckedChangeListener((buttonView, isChecked) -> OrderFields.put(GetColumn_id(holder3.getLayoutPosition()), String.valueOf(isChecked)));
 
                 return holder3;
             } //item_check_button
@@ -189,26 +185,6 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                     ((TextViewHolder) holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
                     ((TextViewHolder) holder).Layout.setEndIconDrawable(f.getIcon());
                 } else
-
-//                    if (f.isData()) {
-//                        final DatePickerDialog.OnDateSetListener Datapicker = new DatePickerDialog.OnDateSetListener() {
-//                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-//                                ChangeData(year, monthOfYear, dayOfMonth, ((TextViewHolder) holder).field, f.getColumn_id());
-//                            }
-//                        };
-//                        ((TextViewHolder) holder).Layout.setEndIconOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                new DatePickerDialog(Objects.requireNonNull(inflater.getContext()), Datapicker,
-//                                        dateAndTime.get(Calendar.YEAR),
-//                                        dateAndTime.get(Calendar.MONTH),
-//                                        dateAndTime.get(Calendar.DAY_OF_MONTH))
-//                                        .show();
-//                            }
-//                        });
-//
-//                    }
-//                } else
                     if (f.isDoubleSize()) {
                         ((TextViewHolder) holder).field.setGravity(Gravity.START | Gravity.TOP);
                         ((TextViewHolder) holder).field.setMinLines(4);

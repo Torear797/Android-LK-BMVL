@@ -71,7 +71,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_research_field, parent, false);
+        View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_auto_compiete_field, parent, false);
         final AutoCompleteFieldHolder holder1 = new AutoCompleteFieldHolder(view1);
 
         switch (viewType) {

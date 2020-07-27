@@ -250,5 +250,9 @@
     <string name="Origin">Происхождение</string>
     <string name="PartyInfo">Информация о партии</string>
     <string name="no_read_dop_menu">(недоступно для редактирования пока установлены общие параметры для всех проб)</string>
+    <string name="attention">Внимание</string>
+    <string name="drop_material_text">Вы действительно хотите изменить материал? Все добавленные образцы и исследования будут удалены.</string>
+    <string name="Continue">Продолжить</string>
+    <string name="cancel">Отмена</string>
 
 </resources>

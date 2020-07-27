@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.AnswerCountries;
 import com.bmvl.lk.Rest.Material;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.ProbyRest;
@@ -24,6 +25,7 @@ import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.data.models.SuggestionCountries;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.button.MaterialButton;
@@ -52,7 +54,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
     private List<Field> ProbFields = new ArrayList<>(); //Поля пробы
     private List<Field> SampleFields = new ArrayList<>(); //Поля Образцов
     public static List<Material> Materials = new ArrayList<>(); //Список материалов
-    public static TreeNode root; //Дерево материалов
+    public static String[] Countries; //Список стран
     private ProbAdapter adapter;
 
     public ProbsFragment() {
@@ -125,9 +127,30 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
 
 //        recyclerView.setAdapter(adapter);
 //        NewProbListener(AddProbBtn, adapter, recyclerView);
+
         getMaterialsList();
         new MyTask(recyclerView).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         return MyView;
+    }
+    private void getCountries(){
+        NetworkService.getInstance()
+                .getJSONApi()
+                .getCountries(App.UserAccessData.getToken(),"")
+                .enqueue(new Callback<AnswerCountries>() {
+                    @Override
+                    public void onResponse(@NonNull Call<AnswerCountries> call, @NonNull Response<AnswerCountries> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            Countries = new String[response.body().getSuggestions().size()];
+                            for(int i = 0; i <response.body().getSuggestions().size();i++){
+                                Countries[i] = response.body().getSuggestions().get(i).getValue();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<AnswerCountries> call, @NonNull Throwable t) {
+                    }
+                });
     }
 
     @Override
@@ -146,37 +169,11 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
                     public void onResponse(@NonNull Call<List<Material>> call, @NonNull Response<List<Material>> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             Materials = response.body();
-                            Collections.sort(Materials, new Comparator<Material>() {
-                                public int compare(Material obj1, Material obj2) {
-                                    return obj1.getText().compareToIgnoreCase(obj2.getText()); // To compare string values
-                                }
+                            Collections.sort(Materials, (obj1, obj2) -> {
+                                return obj1.getText().compareToIgnoreCase(obj2.getText()); // To compare string values
                             });
-
-//                            TreeNode Localroot = TreeNode.root();
-//                            TreeNode parent, child1,child2;
-//                            for (Material CurrentMaterial : Materials) {
-//                                if (CurrentMaterial.getParent().equals("#")) {
-//                                    parent = new TreeNode(CurrentMaterial.getText()).setViewHolder(new SelectableHeaderHolder(getActivity()));
-//
-//                                    for (Material Lvl1 : Materials) {
-//                                        if (Lvl1.getParent().equals(String.valueOf(CurrentMaterial.getId()))) {
-//                                            child1 = new TreeNode(Lvl1.getText()).setViewHolder(new SelectableHeaderHolder(getActivity()));
-//
-//                                            for (Material Lvl2 : Materials) {
-//                                                if (Lvl2.getParent().equals(String.valueOf(Lvl1.getId()))) {
-//                                                    child2 = new TreeNode(Lvl2.getText()).setViewHolder(new ProfileHolder(getActivity()));
-//                                                    child1.addChild(child2);
-//                                                }
-//                                            }
-//
-//                                            parent.addChild(child1);
-//                                        }
-//                                    }
-//                                    Localroot.addChild(parent);
-//                                }
-//                            }
-                           // root = Localroot;
                         }
+                        getCountries();
                     }
 
                     @Override
@@ -233,7 +230,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         SampleFields.add(new Field((byte) 8, 22, "", "Дата выработки"));
         SampleFields.add(new Field(40, "", "Масса/объем образца", InputType.TYPE_CLASS_NUMBER));
         SampleFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)41), 41, " "));
-        SampleFields.add(new Field((byte) 5, R.array.documents, 19, "НД на продукцию"));
+        SampleFields.add(new Field((byte) 5, 19, "НД на продукцию"));
         SampleFields.add(new Field((byte) 6, 0, "", ""));
     }
 
@@ -301,11 +298,8 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
     }
 
     private void AddStandartFieldPart1() {
-        // ProbFields.add(new Field((byte) 1, R.array.type_material, 5, "", "Вид материала"));
-
         ProbFields.add(new Field((byte) 6, 5, "", "Вид материала"));
-
-        ProbFields.add(new Field((byte) 5, R.array.documents, 116, "На соответствие требованиям"));
+        ProbFields.add(new Field((byte) 5, 116, "На соответствие требованиям"));
         ProbFields.add(new Field(15, "", "Номер сейф пакета", InputType.TYPE_CLASS_NUMBER));
         ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)32), 32, "Состояние образца"));
         ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)60), 60, "Транспорт"));
@@ -316,16 +310,19 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
 
     private void AddStandartFieldPart2() {
         AddStandartFieldPart3();
-      //  ProbFields.add(new Field(12, "", "Дата и время отбора", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field((byte) 8, 12, "Дата и время отбора"));
     }
 
     private void AddStandartFieldPart3() {
         ProbFields.add(new Field(74, "", "Наименование организации, проводившей отбор проб", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(75, "", "Адрес организации, проводившей отбор проб", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(27, "", "Страна отбора", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(28, "", "Регион отбора", InputType.TYPE_CLASS_TEXT));
-        ProbFields.add(new Field(57, "", "Район отбора", InputType.TYPE_CLASS_TEXT));
+//        ProbFields.add(new Field(27, "", "Страна отбора", InputType.TYPE_CLASS_TEXT));
+//        ProbFields.add(new Field(28, "", "Регион отбора", InputType.TYPE_CLASS_TEXT));
+//        ProbFields.add(new Field(57, "", "Район отбора", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field((byte)11, 27,  "Страна отбора"));
+        ProbFields.add(new Field((byte)11, 28,  "Регион отбора"));
+        ProbFields.add(new Field((byte)11, 57,  "Район отбора"));
+
         ProbFields.add(new Field(21, "", "Место отбора", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(18, "", "План и метод отбора образца", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(125, "", "Должность лица,проводившего отбор", InputType.TYPE_CLASS_TEXT));

@@ -14,17 +14,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.ViewHolders.DataFieldHolder;
+import com.bmvl.lk.ViewHolders.MultiChipChoceHoldeer;
 import com.bmvl.lk.ViewHolders.MultiSpinerHolder;
 import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
+import com.bmvl.lk.data.ContactsCompletionView;
 import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.StringSpinnerAdapter;
+import com.bmvl.lk.data.models.Document;
 import com.bmvl.lk.ui.ProbyMenu.Probs.MultiSpinner;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
 import com.daimajia.swipe.util.Attributes;
@@ -73,7 +77,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
-            case 1:
+            case 1: {
                 View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spiner, parent, false);
                 final SpinerHolder holder1 = new SpinerHolder(view1);
 
@@ -91,9 +95,11 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 holder1.spiner.setOnItemSelectedListener(itemSelectedListener);
 
                 return holder1;
+            } //Spiner
             case 5:
-                View view5 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_multi_spinner, parent, false);
-                return new MultiSpinerHolder(view5);
+                View view5 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_multi_chip_choce, parent, false);
+              //  return new MultiSpinerHolder(view5);
+            return new MultiChipChoceHoldeer(view5);
             case 6:
                 View view6 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_research_list, parent, false);
                 return new ResearchPanelHolder(view6);
@@ -124,7 +130,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
 
                 return holder;
             }//DataField
-            default:
+            default: {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_field, parent, false);
                 final TextViewHolder holder = new TextViewHolder(view);
 
@@ -145,6 +151,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 });
 
                 return holder;
+            }//EditText
         }
     }
 
@@ -183,24 +190,49 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 break;
             }//Spiner
             case 5: {
-                final List<String> items = Arrays.asList(((MultiSpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()));
-                MultiSpinner.MultiSpinnerListener onSelectedListener = new MultiSpinner.MultiSpinnerListener() {
-                    public void onItemsSelected(boolean[] selected, String id) {
-                        CurrentSample.getFields().put((short) f.getColumn_id(), id);
+//                final List<String> items = Arrays.asList(((MultiSpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()));
+//                MultiSpinner.MultiSpinnerListener onSelectedListener = (selected, id) -> CurrentSample.getFields().put((short) f.getColumn_id(), id);
+//                String selected = "";
+//                if (CurrentSample.getFields().containsKey((short) f.getColumn_id()))
+//                    selected = CurrentSample.getFields().get((short) f.getColumn_id());
+//
+//                assert selected != null;
+//                ((MultiSpinerHolder) holder).spiner.setItems(
+//                        items,
+//                        selected,
+//                        onSelectedListener,
+//                        f.getHint()
+//                );
+//
+//                ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
+               // final String[] items = ((MultiChipChoceHoldeer) holder).contactsCompletionView.getContext().getResources().getStringArray(f.getEntries());
+           //     ((MultiChipChoceHoldeer) holder).contactsCompletionView.setAdapter(new ArrayAdapter<>(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContext() , android.R.layout.simple_list_item_1, items));
+
+                ((MultiChipChoceHoldeer) holder).contactsCompletionView.setAdapter(new ArrayAdapter<>(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContext() , android.R.layout.simple_list_item_1, getStringMassivFromList(App.OrderInfo.getDocumentName())));
+
+                if (CurrentSample.getFields().containsKey((short)(f.getColumn_id())))
+                    SelectElements(CurrentSample.getFields().get((short)(f.getColumn_id())), ((MultiChipChoceHoldeer) holder).contactsCompletionView);
+                ((MultiChipChoceHoldeer) holder).textInputLayout.setHint(f.getHint());
+
+
+                ((MultiChipChoceHoldeer) holder).contactsCompletionView.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if(s.length() > 0) {
+                            StringBuilder str = new StringBuilder(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContentText().toString());
+                            str.delete(str.length() - 2, str.length());
+                            CurrentSample.getFields().put((short)(f.getColumn_id()), str.toString());
+                        }
                     }
-                };
-                String selected = "";
-                if (CurrentSample.getFields().containsKey((short) f.getColumn_id()))
-                    selected = CurrentSample.getFields().get((short) f.getColumn_id());
 
-                assert selected != null;
-                ((MultiSpinerHolder) holder).spiner.setItems(
-                        items,
-                        selected,
-                        onSelectedListener
-                );
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
 
-                ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
                 break;
             }//Мультиспинер
             case 6: {
@@ -255,6 +287,19 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                         dateAndTime.get(Calendar.DAY_OF_MONTH))
                         .show());
             }//DataField
+        }
+    }
+    private String[] getStringMassivFromList(List<Document> list){
+        String[] mass = new String[list.size()];
+        for(int i = 0; i < mass.length;i++){
+            mass[i] = list.get(i).getText();
+        }
+        return mass;
+    }
+
+    private void SelectElements(String containsKey, ContactsCompletionView View) {
+        for (String s : containsKey.split(",")) {
+            View.addObjectAsync(s);
         }
     }
 

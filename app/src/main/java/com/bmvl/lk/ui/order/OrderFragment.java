@@ -38,6 +38,7 @@ import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.Rest.UserInfo.OrderInfo;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.data.models.Document;
 import com.bmvl.lk.data.models.Orders;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.daimajia.androidanimations.library.Techniques;
@@ -147,7 +148,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         View MyView = inflater.inflate(R.layout.fragment_order, container, false);
         if (Hawk.contains("OrdersList")) Orders = Hawk.get("OrdersList");
         if (Hawk.contains("OfflineOrders"))
-            offlineOrders = new TreeMap<Short, SendOrder>((HashMap<Short, SendOrder>) Hawk.get("OfflineOrders"));
+            offlineOrders = new TreeMap<>((HashMap<Short, SendOrder>) Hawk.get("OfflineOrders"));
 
         recyclerView = MyView.findViewById(R.id.list);
         ProgresBar = MyView.findViewById(R.id.progressBar);
@@ -468,32 +469,47 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
     }
 
     private void FabLisener() {
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
-                        .setTitle(R.string.new_order_title)
-                        .setItems(R.array.order_types, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (!App.isOnline(getContext())) {
-                                    Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
-                                    if (which == 0)
-                                        intent.putExtra("type_id", 1);
-                                    else
-                                        intent.putExtra("type_id", (byte) (which + 2));
-                                    startActivity(intent);
-                                } else UpdateOrderInfo(which);
-                            }
-                        })
-                        .create()
-                        .show();
-            }
-        });
+        fab.setOnClickListener(v -> new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
+                .setTitle(R.string.new_order_title)
+                .setItems(R.array.order_types, (dialog, which) -> {
+                    if (!App.isOnline(getContext())) {
+                        Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
+                        if (which == 0)
+                            intent.putExtra("type_id", 1);
+                        else
+                            intent.putExtra("type_id", (byte) (which + 2));
+                        startActivity(intent);
+                    } else getDocumentNames(which);
+                })
+                .create()
+                .show());
+    }
+    private void getDocumentNames(final int which){
+        ProgresBar.setVisibility(View.VISIBLE);
+        NetworkService.getInstance()
+                .getJSONApi()
+                .getDocumentNames(App.UserAccessData.getToken())
+                .enqueue(new Callback<List<Document>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<Document>> call, @NonNull Response<List<Document>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                          UpdateOrderInfo(which,response.body() );
+                        } else {
+                            ProgresBar.setVisibility(View.GONE);
+                            Toast.makeText(getContext(), R.string.auth_error, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<Document>> call, @NonNull Throwable t) {
+                        ProgresBar.setVisibility(View.GONE);
+                        Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
-    private void UpdateOrderInfo(final int which) {
-        ProgresBar.setVisibility(View.VISIBLE);
+    private void UpdateOrderInfo(final int which, List<Document> list) {
+     //   ProgresBar.setVisibility(View.VISIBLE);
         NetworkService.getInstance()
                 .getJSONApi()
                 .OrderNew(App.UserAccessData.getToken())
@@ -511,28 +527,11 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                 else if (!response.body().getDefaultFields().get((short) 63).equals(""))
                                     App.OrderInfo = new OrderInfo((short) 63, response.body().getDefaultFields().get((short) 63), response.body().getFieldValues(), false);
 
+                                App.OrderInfo.setDocumentName(list);
 
                                 if (response.body().getDefaultFields().containsKey((short) 128) && !response.body().getDefaultFields().get((short) 128).equals(""))
                                     App.OrderInfo.setURL_SCAN_FILE(response.body().getDefaultFields().get((short) 128));
-//                                for (Map.Entry<Short, String> entry : response.body().getDefaultFields().entrySet()) {
-//
-//                                    if (!entry.getValue().equals("")) {
-//                                        App.OrderInfo.setOD_ID(entry.getKey());
-//
-//                                        if(entry.getKey() == (short) 63)
-//                                        App.OrderInfo.setOD_Value(entry.getValue());
-//
-//                                        App.OrderInfo.setFieldValues(response.body().getFieldValues());
-//                                        App.UserInfo = response.body().getUserInfo();
-//
-//                                        Hawk.put("UserInfo", App.UserInfo);
-//                                        Hawk.put("OrderInfo",  App.OrderInfo);
-//
-//                                        if(!response.body().getDefaultFields().entrySet().contains((short)63)
-//                                                || !response.body().getDefaultFields().entrySet().contains((short)64))
-//                                        break;
-//                                    }
-//                                }
+
                                 App.UserInfo = response.body().getUserInfo();
                                 Hawk.put("UserInfo", App.UserInfo);
                                 Hawk.put("OrderInfo", App.OrderInfo);

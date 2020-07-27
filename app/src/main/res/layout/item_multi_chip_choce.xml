@@ -1,0 +1,16 @@
+<com.google.android.material.textfield.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/TextInputLayout"
+    style="@style/AutoCompleteTextViewStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_weight="1"
+    android:animateLayoutChanges="false"
+    android:animationCache="true">
+
+    <com.bmvl.lk.data.ContactsCompletionView
+        android:id="@+id/ContactsCompletionView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</com.google.android.material.textfield.TextInputLayout>

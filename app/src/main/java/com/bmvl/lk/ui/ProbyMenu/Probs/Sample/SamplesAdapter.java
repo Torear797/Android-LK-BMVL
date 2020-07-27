@@ -161,7 +161,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
             swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
 
             SampleList.setRecycledViewPool(viewPool);
-            SampleList.setHasFixedSize(true);
+            //SampleList.setHasFixedSize(true);
         }
     }
 

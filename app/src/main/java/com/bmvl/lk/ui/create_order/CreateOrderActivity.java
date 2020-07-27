@@ -547,6 +547,7 @@ public class CreateOrderActivity extends AppCompatActivity {
 
         @Override
         protected GridLayoutManager doInBackground(Void... params) {
+            Fields.clear();
             switch (order_id) {
                 case 1:
                     if (!IsPattern) {

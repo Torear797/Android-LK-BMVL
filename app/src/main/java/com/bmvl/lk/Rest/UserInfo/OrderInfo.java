@@ -1,5 +1,8 @@
 package com.bmvl.lk.Rest.UserInfo;
 
+import com.bmvl.lk.data.models.Document;
+
+import java.util.List;
 import java.util.Map;
 
 public class OrderInfo {
@@ -7,6 +10,16 @@ public class OrderInfo {
     private String OD_Adres;
     private String OD_Email;
     private String FIO;
+
+    public List<Document> getDocumentName() {
+        return DocumentName;
+    }
+
+    public void setDocumentName(List<Document> documentName) {
+        DocumentName = documentName;
+    }
+
+    private List<Document> DocumentName;
 
     public String getURL_SCAN_FILE() {
         return URL_SCAN_FILE;

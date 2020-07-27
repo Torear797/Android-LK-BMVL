@@ -1,8 +1,7 @@
 package com.bmvl.lk.data;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.view.LayoutInflater;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -11,13 +10,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.bmvl.lk.R;
-
 public class StringSpinnerAdapter extends ArrayAdapter<String> {
     public StringSpinnerAdapter(Context context, int textViewResourceId, String[] objects, Spinner spiner) {
         super(context, textViewResourceId, objects);
         this.mySpinner = spiner;
     }
+
     private Spinner mySpinner;
 
 //    private int mSelectedIndex = -1;
@@ -28,11 +26,10 @@ public class StringSpinnerAdapter extends ArrayAdapter<String> {
 //    }
 
     @Override
-    public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent){
+    public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
 //        View spinnerItem = LayoutInflater.from(mySpinner.getContext()).inflate(spinerItem, null);
 ////
-////        TextView mytext = spinnerItem.findViewById(android.R.id.text1);
-////        mytext.setText(myArray[position]);
+
 ////
 ////        //int selected = Spinner.
 
@@ -41,12 +38,19 @@ public class StringSpinnerAdapter extends ArrayAdapter<String> {
 ////        }
 ////        return spinnerItem;
 
+
         View itemView = super.getDropDownView(position, convertView, parent);
 
+        TextView mytext = itemView.findViewById(android.R.id.text1);
+        //mytext.setText(myArray[position]);
+
+
         if (position == mySpinner.getSelectedItemPosition()) {
-            itemView.setBackgroundColor(getContext().getResources().getColor(R.color.field_inactive));
+            // itemView.setBackgroundColor(getContext().getResources().getColor(R.color.field_inactive));
+            mytext.setTypeface(null, Typeface.BOLD);
         } else {
-            itemView.setBackgroundColor(Color.TRANSPARENT);
+            // itemView.setBackgroundColor(Color.TRANSPARENT);
+            mytext.setTypeface(null, Typeface.NORMAL);
         }
         return itemView;
 

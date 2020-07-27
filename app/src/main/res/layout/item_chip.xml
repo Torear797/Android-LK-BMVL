@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><!--<TextView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:id="@+id/name"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:background="@drawable/round_corner_drawable"-->
+<!--    android:padding="5dp"-->
+<!--    android:textColor="@android:color/white"-->
+<!--    android:textSize="18sp" />-->
+
+<com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/some_chip"
+    style="@style/Widget.MaterialComponents.Chip.Choice"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:textColor="@android:color/white"
+    android:textSize="18sp"
+    app:chipBackgroundColor="@color/Link"
+    app:closeIconTint="@android:color/white" />
+
+<!--    app:closeIconEnabled="true"-->

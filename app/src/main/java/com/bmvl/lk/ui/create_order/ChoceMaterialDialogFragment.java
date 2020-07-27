@@ -42,8 +42,8 @@ public class ChoceMaterialDialogFragment extends DialogFragment {
     private AutoCompleteTextView autoCompleteTextView;
     private String LastValue;
     private TextView SelectNode;
-    private AndroidTreeView tView;
 
+    private AndroidTreeView tView;
     private TreeNode StandartTreeNode;
 
     public ChoceMaterialDialogFragment(AutoCompleteTextView textView) {

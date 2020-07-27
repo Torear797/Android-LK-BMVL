@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +36,7 @@ import com.bmvl.lk.Rest.AnswerSearch;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.StandardAnswer;
+import com.bmvl.lk.data.ContactsCompletionView;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.ContactPersons;
@@ -55,11 +53,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
-import java.util.StringTokenizer;
 
 import br.com.sapereaude.maskedEditText.MaskedEditText;
 import retrofit2.Call;
@@ -72,8 +72,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
     private static OrderSwipeAdapter OrderSearchAdapter;
     private static Calendar dateAndTime = Calendar.getInstance();
     private static List<ContactPersons> ContactPersons;
-    private MultiAutoCompleteTextView ContactFace;
-    private static String ChosenContactPerson = "";
+    private ContactsCompletionView ContactFace;
     private TextView message;
 
     public SearchFragment() {
@@ -118,6 +117,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
         final TextInputLayout DataDoLay = MyView.findViewById(R.id.DataDoLay);
 
         ContactFace = MyView.findViewById(R.id.ContactFace);
+        ContactFace.setThreshold(1);
 
         final Spinner OrderType = MyView.findViewById(R.id.OrderType);
         final TextInputEditText Price = MyView.findViewById(R.id.Price);
@@ -133,27 +133,45 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
 
         if (Hawk.contains("ContactPersons")) {
             ContactPersons = Hawk.get("ContactPersons");
-            ContactFace.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
-            ContactFace.setAdapter(new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_dropdown_item_1line, getMassivString()));
+            ContactFace.setAdapter(new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_list_item_1, getMassivString()));
         }
 
         SearchButton.setOnClickListener(v -> {
             SearchButton.setEnabled(false);
+          //  Toast.makeText(v.getContext(), ContactFace.getContentText().toString(), Toast.LENGTH_SHORT).show();
 
             StringBuilder sort_name = new StringBuilder();
             switch (Sort.getSelectedItemPosition()) {
                 case 0:
                     sort_name.append("dateDESC");
-                   // sort_name = "dateDESC";
                     break;
                 case 1:
                     sort_name.append("dateASC");
-                  //  sort_name = "dateASC";
                     break;
                 case 2:
                     sort_name.append("status");
-                   // sort_name = "status";
                     break;
+            }
+
+            StringBuilder Ot = new StringBuilder();
+            StringBuilder Do = new StringBuilder();
+            if (DataOt.getText().length() > 0) {
+                try {
+                    Ot.append(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(DataOt.getText().toString()))
+                    ));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Ot.append("");
+                }
+            }
+            if (DataDo.getText().length() > 0) {
+                try {
+                    Do.append(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(DataDo.getText().toString()))
+                    ));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Do.append("");
+                }
             }
 
             NetworkService.getInstance()
@@ -161,9 +179,9 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
                     .Search(App.UserAccessData.getToken(),
                             NumberOrder.getText().toString(),
                             NumberProtocol.getText().toString(),
-                            DataOt.getText().toString(),
-                            DataDo.getText().toString(),
-                            ChosenContactPerson,
+                            Ot.toString(),
+                            Do.toString(),
+                            getSelectedIdsValue(),
                             ((byte) ((byte) OrderType.getSelectedItemPosition() + 1)),
                             Price.getText().toString(),
                             PriceDo.getText().toString(),
@@ -178,20 +196,18 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
                             if (response.isSuccessful() && response.body() != null) {
                                 if (response.body().getStatus() == 200) {
                                     message.setVisibility(View.GONE);
-                                    SearchButton.setEnabled(true);
                                     SearchOrders.clear();
                                     SearchOrders.addAll(response.body().getOrders().getOrders());
                                     OrderSearchAdapter.notifyDataSetChanged();
-                                    if(SearchOrders.size() == 0) {
+                                    if (SearchOrders.size() == 0) {
                                         message.setVisibility(View.VISIBLE);
                                         Container.postDelayed(() -> Container.fullScroll(NestedScrollView.FOCUS_DOWN), 100L);
-                                    }
-                                    else message.setVisibility(View.GONE);
+                                    } else message.setVisibility(View.GONE);
                                 } else
                                     Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
-                            }
-                            else
+                            } else
                                 Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                            SearchButton.setEnabled(true);
                         }
 
                         @Override
@@ -201,84 +217,23 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
                         }
                     });
         });
-        SelectContactPersonListener();
+
         DataSelectListener(DataDo, DataDoLay);
         DataSelectListener(DataOt, DataOtLay);
         return MyView;
     }
 
-    private void SelectContactPersonListener() {
-        ContactFace.setOnItemClickListener((parent, view, position, id) -> {
-            if(ChosenContactPerson.length() > 0) ChosenContactPerson += ",";
-            ChosenContactPerson += ContactPersons.get(position).getValue();
-        });
-
-        ContactFace.addTextChangedListener(textWatcher);
-    }
-
-    public TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {   }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (count == 0) {
-               StringTokenizer st = new StringTokenizer(ContactFace.getText().toString(), ",");
-                ContactFace.getText().clear();
-                ChosenContactPerson = "";
-              //  String buffer;
-                StringBuilder buf = new StringBuilder();
-
-                if(st.countTokens() > 1) {
-                    while (st.countTokens() - 1 > 0) {
-                        //buffer = st.nextToken();
-                        buf.delete(0,buf.length());
-                        buf.append(st.nextToken());
-                        if(buf.substring(0,1).equals(" "))
-                        buf.delete(0,1);
-
-                        ContactFace.setText(MessageFormat.format("{0}{1}", ContactFace.getText(), buf.toString()));
-                        ContactFace.setText(MessageFormat.format("{0}, ", ContactFace.getText()));
-
-                        if(ChosenContactPerson.length() > 0) ChosenContactPerson += ",";
-                        ChosenContactPerson += getIdForValue(buf.toString());
-
-                    }
-                }
-
-//                String Str = new String(ContactFace.getText().toString());
-//                String[] mass = Str.split(", ");
-//
-//                ContactFace.getText().clear();
-//                ChosenContactPerson = "";
-//
-//                if(mass.length > 1){
-//                    for (String value : mass) {
-//                        ContactFace.setText(MessageFormat.format("{0}{1}", ContactFace.getText(), value));
-//                        ContactFace.setText(MessageFormat.format("{0}, ", ContactFace.getText()));
-//
-//                        if (ChosenContactPerson.length() > 0) ChosenContactPerson += ",";
-//                        ChosenContactPerson += getIdForValue(value);
-//                    }
-//                }
-//
-                  //  Toast.makeText(getContext(), ChosenContactPerson, Toast.LENGTH_SHORT).show();
-                    ContactFace.setSelection(ContactFace.getText().length());
+    private String getSelectedIdsValue() {
+        StringBuilder ids = new StringBuilder();
+        for (ContactPersons person : ContactPersons) {
+            if (person.getText().equals("")) continue;
+            if (ContactFace.getContentText().toString().contains(person.getText())) {
+                if (ids.length() > 0) ids.append(",");
+                ids.append(person.getValue());
             }
         }
 
-        @Override
-        public void afterTextChanged(Editable s) {
-        }
-    };
-
-    private String getIdForValue(String text){
-        for (ContactPersons persons: ContactPersons) {
-            if(persons.getText().equals(text)) {
-                return String.valueOf(persons.getValue());
-            }
-        }
-        return text;
+        return ids.toString();
     }
 
     private void getContactFaceList() {
@@ -292,9 +247,9 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
                             if (response.body().getStatus() == 200) {
                                 ContactPersons = response.body().getContactPersons();
                                 Hawk.put("ContactPersons", ContactPersons);
+                                ContactFace.setAdapter(new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_list_item_1, getMassivString()));
 
-                                ContactFace.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
-                                ContactFace.setAdapter(new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_dropdown_item_1line, getMassivString()));
+                                // ContactFace.addObjectAsync(ContactPersons.get(0).getText());
                             }
                         }
                     }
@@ -308,10 +263,9 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
     private String[] getMassivString() {
         String[] mass = new String[ContactPersons.size()];
         for (int i = 0; i < ContactPersons.size(); i++) {
-            if (ContactPersons.get(i).getText() != null)
+            if (ContactPersons.get(i).getText() != null && ContactPersons.get(i).getText().length() > 0)
                 mass[i] = ContactPersons.get(i).getText();
-            else
-                mass[i] = "null";
+            else mass[i] = "null";
         }
         return mass;
     }

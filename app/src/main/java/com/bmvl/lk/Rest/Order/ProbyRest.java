@@ -55,10 +55,6 @@ public class ProbyRest implements Serializable {
         return fields;
     }
 
-    public void setSamples(TreeMap<Short, SamplesRest> samples) {
-        this.samples = samples;
-    }
-
     public boolean isResearchCorrect(Context context) {
         //if(samples.size() <=0 || samples.get(sample_id).getResearches().size() <=0) return false;
         int sampleCount = samples.size();
@@ -86,12 +82,12 @@ public class ProbyRest implements Serializable {
 
     private Short getPositionKey(int position) {
         if (samples.size() > 0)
-            return new ArrayList<Short>(samples.keySet()).get(position);
+            return new ArrayList<>(samples.keySet()).get(position);
         else return 0;
     }
 
     private Short getPositionKeyR(int i, int j) {
-        return new ArrayList<Short>(samples.get(getPositionKey(i)).getResearches().keySet()).get(j);
+        return new ArrayList<>(samples.get(getPositionKey(i)).getResearches().keySet()).get(j);
     }
 
     public String getProtocol() {

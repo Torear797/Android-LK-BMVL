@@ -54,8 +54,8 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_prob, parent, false);
-        return new ProbAdapter.SimpleViewHolder(view);
+     //   View view = ;
+        return new ProbAdapter.SimpleViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_prob, parent, false));
     }
 
     @Override

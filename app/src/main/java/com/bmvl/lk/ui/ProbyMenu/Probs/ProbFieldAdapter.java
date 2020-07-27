@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -18,13 +19,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.AnswerCountries;
 import com.bmvl.lk.Rest.AnswerIndicators;
 import com.bmvl.lk.Rest.Material;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
-import com.bmvl.lk.ViewHolders.AutoCompleteTextViewHolder;
+import com.bmvl.lk.ViewHolders.AutoCompleteFieldHolder;
+import com.bmvl.lk.ViewHolders.MaterialFieldHolder;
 import com.bmvl.lk.ViewHolders.DataFieldHolder;
+import com.bmvl.lk.ViewHolders.MultiChipChoceHoldeer;
 import com.bmvl.lk.ViewHolders.OriginHolder;
 import com.bmvl.lk.ViewHolders.MultiSpinerHolder;
 import com.bmvl.lk.ViewHolders.PartyInfoHolder;
@@ -33,20 +37,24 @@ import com.bmvl.lk.ViewHolders.SelectButtonHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.SwitchHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
+import com.bmvl.lk.data.ContactsCompletionView;
 import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.StringSpinnerAdapter;
+import com.bmvl.lk.data.models.Document;
 import com.bmvl.lk.ui.ProbyMenu.PartyInfo.PartyInfoFragment;
+import com.bmvl.lk.ui.ProbyMenu.Probs.Research.Res;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
 import com.bmvl.lk.ui.create_order.ChoceMaterialDialogFragment;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.daimajia.swipe.util.Attributes;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +78,9 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     private ProbyRest CurrentProb;
     private SamplesAdapter SamAdapter;
 
+    private String[] Regions, Districts;
+    private int RegionPos, DistrictPos;
+
     ProbFieldAdapter(List<Field> probFields, List<Field> sampleFields, ProbyRest prob, TextView header) {
         this.ProbHeader = header;
         viewPool = new RecyclerView.RecycledViewPool();
@@ -80,8 +91,6 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        // return ProbFields.get(position).getType();
-
         switch (ProbFields.get(position).getType()) {
             case 1:
                 return R.layout.item_spiner;
@@ -90,9 +99,10 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             case 4:
                 return R.layout.item_button_select;
             case 5:
-                return R.layout.item_multi_spinner;
+                //return R.layout.item_multi_spinner;
+                return R.layout.item_multi_chip_choce;
             case 6:
-                return R.layout.item_auto_compiete_textview;
+                return R.layout.item_material_field;
             case 7:
                 return R.layout.item_research_list;
             case 8:
@@ -101,6 +111,8 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 return R.layout.item_origin;
             case 10:
                 return R.layout.item_party_info;
+            case 11:
+                return R.layout.item_auto_compiete_field;
             default:
                 return R.layout.item_field;
         }
@@ -141,30 +153,36 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             case R.layout.item_multi_spinner: {
                 return new MultiSpinerHolder(view);
             }//MultiSpinerHolder
-            case R.layout.item_auto_compiete_textview: {
-                final AutoCompleteTextViewHolder holder6 = new AutoCompleteTextViewHolder(view);
+            case R.layout.item_material_field: {
+                final MaterialFieldHolder holder6 = new MaterialFieldHolder(view);
                 holder6.TextView.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-//                        if (!String.valueOf(s).equals(""))
-//                            CurrentProb.getFields().put(GetColumn_id(holder6.getLayoutPosition()), String.valueOf(s));
-                        short id_m = -1;
-                        for (Material m : Materials) {
-                            if (m.getText().contentEquals(s)) {
-                                id_m = m.getId();
-                                break;
+                        if (!Objects.equals(CurrentProb.getFields().get("materialName"), s.toString())) {
+                            short id_m = -1;
+                            for (Material m : Materials) {
+                                if (m.getText().contentEquals(s)) {
+                                    id_m = m.getId();
+                                    break;
+                                }
                             }
-                        }
 
-                        if (GetColumn_id(holder6.getLayoutPosition()).equals("5") && id_m != -1) {
-                            CurrentProb.getFields().put("materialName", String.valueOf(s));
-                            CurrentProb.getFields().put("5", String.valueOf(id_m));
-                            ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", s, CurrentProb.getSamples().size()));
-                            getIndicators(id_m);
-                        } else {
-                            CurrentProb.getFields().remove("5");
-                            CurrentProb.getFields().remove("materialName");
-                            ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", ProbHeader.getContext().getString(R.string.MaterialNoSelectHeader), CurrentProb.getSamples().size()));
+                            if (CheckIndicators() && CurrentProb.getFields().containsKey("materialName") && id_m != -1) {
+                                OpenDialog(holder6.TextView, id_m);
+                            } else {
+
+                                if (GetColumn_id(holder6.getLayoutPosition()).equals("5") && id_m != -1) {
+                                    CurrentProb.getFields().put("materialName", String.valueOf(s));
+                                    CurrentProb.getFields().put("5", String.valueOf(id_m));
+                                    ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", s, CurrentProb.getSamples().size()));
+                                    getIndicators(id_m);
+                                }
+//                                else {
+//                                    CurrentProb.getFields().remove("5");
+//                                    CurrentProb.getFields().remove("materialName");
+//                                    ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", ProbHeader.getContext().getString(R.string.MaterialNoSelectHeader), CurrentProb.getSamples().size()));
+//                                }
+                            }
                         }
                     }
 
@@ -183,35 +201,9 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             }// Material
             case R.layout.item_research_list: {
                 return new SamplesPanelHolder(view);
-            }//Список исследований
+            }//Список Образцов
             case R.layout.item_data_field: {
                 final DataFieldHolder holder = new DataFieldHolder(view);
-                holder.field.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        if (!String.valueOf(s).equals(""))
-                            CurrentProb.getFields().put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
-                    }
-
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-                });
-
-                return holder;
-            }//DataField
-            case R.layout.item_origin: {
-                return new OriginHolder(view);
-            } //DopPanels Origin
-            case R.layout.item_party_info: {
-                return new PartyInfoHolder(view);
-            } //DopPanels Info
-            default: {
-                final TextViewHolder holder = new TextViewHolder(view);
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
@@ -233,8 +225,147 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 });
 
                 return holder;
+            }//DataField
+            case R.layout.item_origin: {
+                return new OriginHolder(view);
+            } //DopPanels Origin
+            case R.layout.item_party_info: {
+                return new PartyInfoHolder(view);
+            } //DopPanels Info
+            case R.layout.item_multi_chip_choce:{
+                return new MultiChipChoceHoldeer(view);
+            }
+            case R.layout.item_auto_compiete_field:{
+                final AutoCompleteFieldHolder holder = new AutoCompleteFieldHolder(view);
+                holder.TextView.setOnItemClickListener((parent1, MeView, position, id) -> {
+                    CurrentProb.getFields().put(GetColumn_id(holder.getLayoutPosition()), holder.TextView.getAdapter().getItem(position).toString());
+
+                    switch (ProbFields.get(holder.getLayoutPosition()).getColumn_id()){
+                        case 27:{
+                            Regions = null;
+                            Districts = null;
+                            CurrentProb.getFields().remove("28");
+                            CurrentProb.getFields().remove("57");
+                            notifyItemChanged(RegionPos);
+                            notifyItemChanged(DistrictPos);
+                            getRegions(holder.TextView.getAdapter().getItem(position).toString());
+                            break;
+                        }
+                        case 28:{
+                            Districts = null;
+                            CurrentProb.getFields().remove("57");
+                            notifyItemChanged(DistrictPos);
+                            getDistricts(holder.TextView.getAdapter().getItem(position).toString(),CurrentProb.getFields().get("27"));
+                            break;
+                        }
+                    }
+
+                    holder.TextView.clearFocus();
+                });
+                return holder;
+            }
+            default: {
+                final TextViewHolder holder = new TextViewHolder(view);
+                holder.field.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (!String.valueOf(s).equals(""))
+                            CurrentProb.getFields().put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
+
+                return holder;
             }//EditText
         }
+    }
+
+    private void getRegions(String country_name){
+        NetworkService.getInstance()
+                .getJSONApi()
+                .getRegions(App.UserAccessData.getToken(),country_name,"")
+                .enqueue(new Callback<AnswerCountries>() {
+                    @Override
+                    public void onResponse(@NonNull Call<AnswerCountries> call, @NonNull Response<AnswerCountries> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            Regions = new String[response.body().getSuggestions().size()];
+                            for(int i = 0; i <response.body().getSuggestions().size();i++){
+                                Regions[i] = response.body().getSuggestions().get(i).getValue();
+                            }
+                            notifyItemChanged(RegionPos);
+                            //notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<AnswerCountries> call, @NonNull Throwable t) {
+                    }
+                });
+    }
+
+    private void getDistricts(String region_name, String country_name){
+        NetworkService.getInstance()
+                .getJSONApi()
+                .getDistricts(App.UserAccessData.getToken(),country_name,region_name,"")
+                .enqueue(new Callback<AnswerCountries>() {
+                    @Override
+                    public void onResponse(@NonNull Call<AnswerCountries> call, @NonNull Response<AnswerCountries> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            Districts = new String[response.body().getSuggestions().size()];
+                            for(int i = 0; i <response.body().getSuggestions().size();i++){
+                                Districts[i] = response.body().getSuggestions().get(i).getValue();
+                            }
+                            notifyItemChanged(DistrictPos);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<AnswerCountries> call, @NonNull Throwable t) {
+                    }
+                });
+    }
+
+    private boolean CheckIndicators() {
+        if (CurrentProb.getSamples().size() > 0) return true;
+
+        for (short i = 0; i < CurrentProb.getSamples().size(); i++) {
+            if (Objects.requireNonNull(CurrentProb.getSamples().get(getPositionKey(i, CurrentProb.getSamples()))).getResearches().size() > 0)
+                return true;
+        }
+
+        return false;
+    }
+
+    private void OpenDialog(AutoCompleteTextView TextView, int id) {
+        new MaterialAlertDialogBuilder(TextView.getContext())
+                .setTitle(R.string.attention)
+                .setMessage(R.string.drop_material_text)
+                .setNegativeButton(R.string.cancel,
+                        (dialog, which) -> {
+                            TextView.setText(CurrentProb.getFields().get("materialName"));
+                        })
+                .setPositiveButton(R.string.Continue,
+                        (dialog, which) -> {
+                            CurrentProb.getSamples().clear();
+
+                            if (CreateOrderActivity.order_id == 1)
+                            CurrentProb.getSamples().put((short) 1, new SamplesRest((short) 0));
+
+                            SamAdapter.notifyDataSetChanged();
+
+                            CurrentProb.getFields().put("materialName", TextView.getText().toString());
+                            CurrentProb.getFields().put("5", String.valueOf(id));
+                            ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", TextView.getText().toString(), CurrentProb.getSamples().size()));
+                            getIndicators(id);
+                        })
+                .show();
     }
 
     private String GetColumn_id(int position) {
@@ -298,47 +429,75 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 break;
             } //SelectButtonHolder
             case (byte) 5: {
-                final List<String> items = Arrays.asList(((MultiSpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()));
-                MultiSpinner.MultiSpinnerListener onSelectedListener = new MultiSpinner.MultiSpinnerListener() {
-                    public void onItemsSelected(boolean[] selected, String id) {
-                        CurrentProb.getFields().put(String.valueOf(f.getColumn_id()), id);
-                    }
-                };
-                String selected = "";
+//                final List<String> items = Arrays.asList(((MultiSpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()));
+//                MultiSpinner.MultiSpinnerListener onSelectedListener = (selected, id) -> CurrentProb.getFields().put(String.valueOf(f.getColumn_id()), id);
+//                String selected = "";
+//                if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
+//                    selected = CurrentProb.getFields().get(String.valueOf(f.getColumn_id()));
+//
+//                assert selected != null;
+//                ((MultiSpinerHolder) holder).spiner.setItems(
+//                        items,
+//                        selected,
+//                        onSelectedListener,
+//                        f.getHint()
+//                );
+//
+//                ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
+
+              //  final String[] items = ((MultiChipChoceHoldeer) holder).contactsCompletionView.getContext().getResources().getStringArray(f.getEntries());
+                ((MultiChipChoceHoldeer) holder).contactsCompletionView.setAdapter(new ArrayAdapter<>(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContext() , android.R.layout.simple_list_item_1, getStringMassivFromList(App.OrderInfo.getDocumentName())));
+
                 if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
-                    selected = CurrentProb.getFields().get(String.valueOf(f.getColumn_id()));
+                    SelectElements(CurrentProb.getFields().get(String.valueOf(f.getColumn_id())), ((MultiChipChoceHoldeer) holder).contactsCompletionView);
+                ((MultiChipChoceHoldeer) holder).textInputLayout.setHint(f.getHint());
 
-                assert selected != null;
-                ((MultiSpinerHolder) holder).spiner.setItems(
-                        items,
-                        selected,
-                        onSelectedListener
-                );
+//                ((MultiChipChoceHoldeer) holder).contactsCompletionView.setOnItemClickListener((parent, arg1, pos, id) -> {
+//                    StringBuilder str = new StringBuilder(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContentText().toString().replace(" ",""));
+//                    str.delete(str.length()-1,str.length());
+//                    CurrentProb.getFields().put(String.valueOf(f.getColumn_id()), str.toString());
+//                });
+                ((MultiChipChoceHoldeer) holder).contactsCompletionView.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if(s.length() > 0) {
+                            StringBuilder str = new StringBuilder(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContentText().toString());
+                            str.delete(str.length() - 2, str.length());
+                            CurrentProb.getFields().put(String.valueOf(f.getColumn_id()), str.toString());
+                        }
+                    }
 
-                ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
                 break;
             } //Мультиспинер
             case (byte) 6: {
-                ((AutoCompleteTextViewHolder) holder).Layout.setHint(f.getHint());
+                ((MaterialFieldHolder) holder).Layout.setHint(f.getHint());
 
                 String[] mMaterials = new String[ProbsFragment.Materials.size()];
 
                 for (int i = 0; i < mMaterials.length; i++) {
                     mMaterials[i] = ProbsFragment.Materials.get(i).getText();
                 }
-                ((AutoCompleteTextViewHolder) holder).TextView.setAdapter(new ArrayAdapter<>(((AutoCompleteTextViewHolder) holder).TextView.getContext(), android.R.layout.simple_spinner_item, mMaterials));
-                ((AutoCompleteTextViewHolder) holder).TextView.setThreshold(3);
+                ((MaterialFieldHolder) holder).TextView.setAdapter(new ArrayAdapter<>(((MaterialFieldHolder) holder).TextView.getContext(), android.R.layout.simple_spinner_item, mMaterials));
+                ((MaterialFieldHolder) holder).TextView.setThreshold(2);
 
                 if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
-                    ((AutoCompleteTextViewHolder) holder).TextView.setText(CurrentProb.getFields().get("materialName"));
+                    ((MaterialFieldHolder) holder).TextView.setText(CurrentProb.getFields().get("materialName"));
 
-                ((AutoCompleteTextViewHolder) holder).ChoceBtn.setOnClickListener(v -> {
+                ((MaterialFieldHolder) holder).ChoceBtn.setOnClickListener(v -> {
                     //   ((AutoCompleteTextViewHolder) holder).TextView.setText(mMaterials[0]);
-                    ChoceMaterialDialogFragment dialog = new ChoceMaterialDialogFragment(((AutoCompleteTextViewHolder) holder).TextView);
-                    dialog.show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), "ChoceMaterialDialogFragment");
+                 //   ChoceMaterialDialogFragment dialog = ;
+                    new ChoceMaterialDialogFragment(((MaterialFieldHolder) holder).TextView).show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), "ChoceMaterialDialogFragment");
                 });
                 break;
-            } //AutoCompieteTextview
+            } //Materials Field
             case (byte) 7: {
                 SamAdapter = new SamplesAdapter(SampleFields, CurrentProb.getSamples(), CurrentProb.getFields());
                 (SamAdapter).setMode(Attributes.Mode.Single);
@@ -352,6 +511,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                         Map<Short, SamplesRest> insertlist = new HashMap<>();
                         insertlist.put((short) (newid + 1), new SamplesRest(newid));
                         SamAdapter.insertdata(insertlist);
+                      //  AddSamples();
                         ((SamplesPanelHolder) holder).SampleList.smoothScrollToPosition(SamAdapter.getItemCount() - 1);
                     });
                 } else {
@@ -360,7 +520,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 }
 
                 break;
-            } // Иссследования
+            } // Образцы
             case (byte) 8: {
                 ((DataFieldHolder) holder).Layout.setHint(f.getHint());
                 //   ((DataFieldHolder) holder).field.setText(CurrentProb.getFields().get(String.valueOf(f.getColumn_id())));
@@ -410,12 +570,58 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                         )).commit();
                 break;
             }//DopPanel Info
+            case (byte)11:{
+                ((AutoCompleteFieldHolder) holder).Layout.setHint(f.getHint());
+                ((AutoCompleteFieldHolder) holder).TextView.setThreshold(2);
+
+                //if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
+                ((AutoCompleteFieldHolder) holder).TextView.setText(CurrentProb.getFields().get(String.valueOf(f.getColumn_id())));
+
+                switch (f.getColumn_id()){
+                    case 27:{
+                        ((AutoCompleteFieldHolder) holder).TextView.setAdapter(new ArrayAdapter<>(((AutoCompleteFieldHolder) holder).TextView.getContext(), android.R.layout.simple_spinner_item, ProbsFragment.Countries));
+                        break;
+                    }
+                    case 28:{
+                        RegionPos = position;
+                        if(Regions != null){
+                            ((AutoCompleteFieldHolder) holder).TextView.setAdapter(new ArrayAdapter<>(((AutoCompleteFieldHolder) holder).TextView.getContext(), android.R.layout.simple_spinner_item, Regions));
+                            ((AutoCompleteFieldHolder) holder).Layout.setEnabled(true);
+                        } else
+                        ((AutoCompleteFieldHolder) holder).Layout.setEnabled(false);
+                        break;
+                    }
+                    case 57:{
+                        DistrictPos = position;
+                        if(Districts != null){
+                            ((AutoCompleteFieldHolder) holder).TextView.setAdapter(new ArrayAdapter<>(((AutoCompleteFieldHolder) holder).TextView.getContext(), android.R.layout.simple_spinner_item, Districts));
+                            ((AutoCompleteFieldHolder) holder).Layout.setEnabled(true);
+                        } else
+                        ((AutoCompleteFieldHolder) holder).Layout.setEnabled(false);
+                        break;
+                    }
+                }
+                break;
+            }
         }
 
     }
+    private String[] getStringMassivFromList(List<Document> list){
+        String[] mass = new String[list.size()];
+        for(int i = 0; i < mass.length;i++){
+            mass[i] = list.get(i).getText();
+        }
+        return mass;
+    }
+
+    private void SelectElements(String containsKey, ContactsCompletionView View) {
+        for (String s : containsKey.split(",")) {
+            View.addObjectAsync(s);
+        }
+    }
 
     private Short getPositionKey(int position, Map<Short, SamplesRest> Samples) {
-        if (Samples.size() > 0)
+        if (position > 0)
             return new ArrayList<>(Samples.keySet()).get(position);
         else return 0;
     }

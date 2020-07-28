@@ -57,6 +57,7 @@ public class ResearchRest implements Serializable {
 
     public ResearchRest(Short id) {
         this.id = id;
+        ClearAll();
     }
 
     public void ClearAll() {
@@ -64,18 +65,25 @@ public class ResearchRest implements Serializable {
         this.methodId = 0;
         this.methodNd = null;
         this.methodNdId = 0;
-        this.methodVal = null;
-        this.indicatorVal = null;
+        this.methodVal = "";
+        this.indicatorVal = "";
         this.indicatorId = 0;
         this.indicatorNd = null;
         this.indicatorNdId = 0;
         this.typeId = 0;
-        this.typeVal = null;
+        this.typeVal = "";
     }
 
     public void ClearType() {
         this.typeId = 0;
-        this.typeVal = null;
+        this.typeVal = "";
+    }
+
+    public boolean isComplete(){
+        return !this.indicatorVal.equals("") && !this.methodVal.equals("");
+    }
+    public boolean isAccreditation(){
+        return isComplete() && methodId != 0 &&  indicatorId != 0 && indicatorNd != null && indicatorNdId != 0;
     }
 
     public short getIndicatorId() {

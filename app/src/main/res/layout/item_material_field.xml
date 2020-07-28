@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:gravity="center"
-    >
+    android:gravity="center">
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/TextLayout"
         style="@style/AutoCompleteTextViewStyle"
         android:layout_weight="20"
         android:animationCache="true"
+        app:hintAnimationEnabled="false"
         android:animateLayoutChanges="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

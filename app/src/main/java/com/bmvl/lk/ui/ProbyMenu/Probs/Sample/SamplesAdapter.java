@@ -65,7 +65,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
         simpleViewHolder.SampleList.setAdapter(adapter);
 
         if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {
-            simpleViewHolder.NumberSample.setText(MessageFormat.format("№ {0}", getPositionKey(i)));
+            simpleViewHolder.NumberSample.setText(MessageFormat.format("№ {0}", i+1));
             simpleViewHolder.Info.setText("Образец");
         } else {
             simpleViewHolder.GreenHeader.setVisibility(View.GONE);

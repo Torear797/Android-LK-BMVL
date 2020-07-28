@@ -187,6 +187,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
 
 
                 ((SpinerHolder) holder).txtHint.setText(f.getHint());
+               // ((SpinerHolder) holder).layout.setHint(f.getHint());
                 break;
             }//Spiner
             case 5: {
@@ -248,23 +249,20 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 }
 
                 //Добавляет исследование
-                ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (ProbFields.containsKey("5")) {
-                            short size = (short) CurrentSample.getResearches().size();
-                            short newid = 0;
-                            if (size > 0)
-                                newid = getPositionKeyR(size - 1, CurrentSample.getResearches());
+                ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(v -> {
+                    if (ProbFields.containsKey("5")) {
+                        short size = (short) CurrentSample.getResearches().size();
+                        short newid = 0;
+                        if (size > 0)
+                            newid = getPositionKeyR(size - 1, CurrentSample.getResearches());
 
-                            Map<Short, ResearchRest> insertlist = new HashMap<>();
-                            insertlist.put((short) (newid + 1), new ResearchRest(newid));
-                            Adapter.insertdata(insertlist);
-                            Adapter.notifyDataSetChanged();
-                            ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
-                        } else
-                            Toast.makeText(((ResearchPanelHolder) holder).ResearchList.getContext(), ((ResearchPanelHolder) holder).ResearchList.getContext().getString(R.string.MaterialNoSelect), Toast.LENGTH_SHORT).show();
-                    }
+                        Map<Short, ResearchRest> insertlist = new HashMap<>();
+                        insertlist.put((short) (newid + 1), new ResearchRest(newid));
+                        Adapter.insertdata(insertlist);
+                        Adapter.notifyDataSetChanged();
+                        ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
+                    } else
+                        Toast.makeText(((ResearchPanelHolder) holder).ResearchList.getContext(), ((ResearchPanelHolder) holder).ResearchList.getContext().getString(R.string.MaterialNoSelect), Toast.LENGTH_SHORT).show();
                 });
 
                 break;

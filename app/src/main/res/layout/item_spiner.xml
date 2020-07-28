@@ -4,7 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <Spinner
+    <!--    <Spinner-->
+    <!--        android:id="@+id/spinner"-->
+    <!--        style="@style/MySpinner"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="61.5dp"-->
+    <!--        android:paddingTop="5dp"-->
+    <!--        android:spinnerMode="dialog"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <com.bmvl.lk.data.NoDefaultSpinner
         android:id="@+id/spinner"
         style="@style/MySpinner"
         android:layout_width="match_parent"
@@ -13,7 +24,8 @@
         android:spinnerMode="dialog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/hint"

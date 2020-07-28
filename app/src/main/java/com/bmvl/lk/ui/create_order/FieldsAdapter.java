@@ -200,6 +200,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 ((SpinerHolder) holder).spiner.setAdapter(adapter);
                 ((SpinerHolder) holder).txtHint.setText(f.getHint());
+               // ((SpinerHolder) holder).layout.setHint(f.getHint());
 
                // if (OrderFields.containsKey((short) f.getColumn_id()))
                     ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(OrderFields.get((short) f.getColumn_id())));

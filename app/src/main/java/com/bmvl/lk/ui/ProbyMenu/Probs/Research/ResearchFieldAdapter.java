@@ -2,6 +2,7 @@ package com.bmvl.lk.ui.ProbyMenu.Probs.Research;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,14 @@ import com.bmvl.lk.Rest.AnswerMethods;
 import com.bmvl.lk.Rest.AnswerTypes;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.ResearchRest;
+import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.Rest.SuggestionMethod;
 import com.bmvl.lk.Rest.SuggestionType;
 import com.bmvl.lk.ViewHolders.AutoCompleteFieldHolder;
+import com.bmvl.lk.ViewHolders.SpinerHolder;
+import com.bmvl.lk.ui.create_order.CreateOrderActivity;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -32,29 +37,20 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ResearchFieldAdapter extends RecyclerView.Adapter {
-   // private LayoutInflater inflater;
-   // private List<Field> ResearchFields; //Поля исследований
     private ResearchRest CurrentResearch; //текущий образец
-
-    private String[] Indicators;
-
     private short materialId;
-
-    private String[] MasMethods, MasTypes;
+    private String[] Indicators, MasMethods, MasTypes;
     private List<Suggestion> suggestions;
     private List<SuggestionMethod> suggestionsMethods;
     private List<SuggestionType> suggestionsTypes;
     private short indicatorId;
     private String indicatorNdId;
-    private AutoCompleteTextView SpinIndicator, SpinMethd, SpinType;
+    private AutoCompleteFieldHolder SpinIndicator, SpinMethd, SpinType;
     private boolean isCompleteResearch = false;
-
     private int ResearchPosition; // Номер исследования
     private TextView HeaderResearch; //Текст шапки исследований
 
-
     ResearchFieldAdapter(ResearchRest res, String[] mass, List<Suggestion> sug, short id, int pos, TextView txt) {
-        //this.inflater = LayoutInflater.from(context);
         this.ResearchPosition = pos;
         this.CurrentResearch = res;
         this.Indicators = mass;
@@ -77,39 +73,42 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
         switch (viewType) {
             case 0: {
                 holder1.TextView.setOnItemClickListener((parent1, view, position, id) -> {
-                    if (isCompleteResearch) {
-                        getMethods();
-                        return;
-                    }
+//                    if (isCompleteResearch) {
+//                        getMethods();
+//                        return;
+//                    }
 
-                    if (CurrentResearch.getIndicatorId() != suggestions.get(position).getId()) {
-//                            CurrentResearch.ClearAll();
-//                            SpinMethd.clearListSelection();
-//                            SpinType.clearListSelection();
-//                            SpinType.setText("");
-                        ClearTextFields(true, true);
-                        final Suggestion CurrentItem = suggestions.get(position);
+                    if (!CurrentResearch.getIndicatorVal().equals(suggestions.get(position).getValue())) {
+                        if (CurrentResearch.isComplete()) OpenDialog(false, position, "");
+                        else {
+                            ClearTextFields(true, false);
+                            final Suggestion CurrentItem = suggestions.get(position);
 
-                        CurrentResearch.setIndicatorId((short) CurrentItem.getId());
-                        CurrentResearch.setIndicatorVal(String.valueOf(parent1.getItemAtPosition(position)));
-                        CurrentResearch.setIndicatorNd(CurrentItem.getName_document());
-                        CurrentResearch.setIndicatorNdId(CurrentItem.getId_document());
+                            CurrentResearch.setIndicatorId((short) CurrentItem.getId());
+                            CurrentResearch.setIndicatorVal(String.valueOf(parent1.getItemAtPosition(position)));
+                            CurrentResearch.setIndicatorNd(CurrentItem.getName_document());
+                            CurrentResearch.setIndicatorNdId(CurrentItem.getId_document());
 
-                        indicatorId = (short) CurrentItem.getId();
-                        indicatorNdId = String.valueOf(CurrentItem.getId_document());
+                            indicatorId = (short) CurrentItem.getId();
+                            indicatorNdId = String.valueOf(CurrentItem.getId_document());
 
-                        getMethods();
-                    }
+                            getMethods();
+                        }
+                    } else if(MasMethods == null) getMethods();
                     holder1.TextView.clearFocus();
                 });
-                SpinIndicator = holder1.TextView;
+                SpinIndicator = holder1;
 
                 holder1.TextView.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
                         if (!isStandartValue((byte) 0, s.toString())) {
-                            ClearTextFields(true, true);
-                            CurrentResearch.setIndicatorVal(s.toString());
+                            if (CurrentResearch.isComplete())
+                                OpenDialog(true, 0, s.toString());
+                            else {
+                                ClearTextFields(true, true);
+                                CurrentResearch.setIndicatorVal(s.toString());
+                            }
                         }
                     }
 
@@ -125,33 +124,31 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
                 break;
             } //Показатель
             case 1: {
-                holder1.TextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (isCompleteResearch) {
-                            getTypes(CurrentResearch.getMethodId(), String.valueOf(CurrentResearch.getMethodNdId()));
-                            return;
-                        }
-
-                        //  if (CurrentResearch.getMethodVal() != null && !CurrentResearch.getMethodVal().equals(parent.getItemAtPosition(position))) {
-                        if (CurrentResearch.getMethodId() != suggestionsMethods.get(position).getId()) {
-                            ClearTextFields(false, true);
-                            final SuggestionMethod CurrentItem = suggestionsMethods.get(position);
-
-                            CurrentResearch.setMethodId(CurrentItem.getId());
-                            CurrentResearch.setMethodVal(String.valueOf(parent.getItemAtPosition(position)));
-                            CurrentResearch.setMethodNd(CurrentItem.getName_document());
-                            if (CurrentItem.getId_document() != null)
-                                CurrentResearch.setMethodNdId(CurrentItem.getId_document());
-                            else
-                                CurrentResearch.setMethodNdId((short) 0);
-
-                            getTypes(CurrentItem.getId(), String.valueOf(CurrentResearch.getMethodNdId()));
-                        }
-                        holder1.TextView.clearFocus();
+                holder1.TextView.setOnItemClickListener((parent13, view, position, id) -> {
+                    if (isCompleteResearch) {
+                        getTypes(CurrentResearch.getMethodId(), String.valueOf(CurrentResearch.getMethodNdId()));
+                        return;
                     }
+
+                    //  if (CurrentResearch.getMethodVal() != null && !CurrentResearch.getMethodVal().equals(parent.getItemAtPosition(position))) {
+                    if (!CurrentResearch.getMethodVal().equals(suggestionsMethods.get(position).getValue())) {
+                        ClearTextFields(false, false);
+                        final SuggestionMethod CurrentItem = suggestionsMethods.get(position);
+
+                        CurrentResearch.setMethodId(CurrentItem.getId());
+                        CurrentResearch.setMethodVal(String.valueOf(parent13.getItemAtPosition(position)));
+                        CurrentResearch.setMethodNd(CurrentItem.getName_document());
+                        if (CurrentItem.getId_document() != null)
+                            CurrentResearch.setMethodNdId(CurrentItem.getId_document());
+                        else
+                            CurrentResearch.setMethodNdId((short) 0);
+
+                        getTypes(CurrentItem.getId(), String.valueOf(CurrentResearch.getMethodNdId()));
+                    } else if(CurrentResearch.getMethodId() != 0)
+                        getTypes(CurrentResearch.getMethodId(), String.valueOf(CurrentResearch.getMethodNdId()));
+                    holder1.TextView.clearFocus();
                 });
-                SpinMethd = holder1.TextView;
+                SpinMethd = holder1;
 
                 holder1.TextView.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -178,22 +175,23 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
                 holder1.TextView.setOnItemClickListener((parent12, view, position, id) -> {
                     if (isCompleteResearch) return;
 
-                    if (CurrentResearch.getTypeId() != suggestionsTypes.get(position).getId()) {
+                    if (!CurrentResearch.getTypeVal().equals(suggestionsTypes.get(position).getValue())) {
                         final SuggestionType CurrentItem = suggestionsTypes.get(position);
                         CurrentResearch.setTypeId(CurrentItem.getId());
                         CurrentResearch.setTypeVal(String.valueOf(parent12.getItemAtPosition(position)));
+                        if (CurrentResearch.isAccreditation())
                         HeaderResearch.setText(MessageFormat.format("№ {0} - {1}", ResearchPosition, holder1.TextView.getContext().getString(R.string.accreditation_ok)));
                     }
                     holder1.TextView.clearFocus();
                 });
-                SpinType = holder1.TextView;
+                SpinType = holder1;
 
                 holder1.TextView.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
                         if (!isStandartValue((byte) 2, s.toString())) {
                             CurrentResearch.setTypeVal(s.toString());
-                            HeaderResearch.setText(MessageFormat.format("№ {0} - {1}", ResearchPosition, holder1.TextView.getContext().getString(R.string.accreditation_ok)));
+                            // HeaderResearch.setText(MessageFormat.format("№ {0} - {1}", ResearchPosition, holder1.TextView.getContext().getString(R.string.accreditation_ok)));
                         }
                     }
 
@@ -239,24 +237,60 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
         return false;
     }
 
-    private void ClearTextFields(boolean method, boolean Type) {
+    private void ClearTextFields(boolean method, boolean isEnabled) {
         if (method && SpinMethd != null) {
             CurrentResearch.ClearAll();
-            // SpinMethd.clearListSelection();
-            SpinMethd.setText("");
+            SpinMethd.Layout.setEnabled(isEnabled);
+            SpinMethd.TextView.setText("");
+            SpinMethd.TextView.setAdapter(null);
+          //  notifyItemChanged(1);
         }
-        if (Type && SpinType != null) {
+        if (SpinType != null) {
             CurrentResearch.ClearType();
-            //  SpinType.clearListSelection();
-            SpinType.setText("");
+            SpinType.Layout.setEnabled(isEnabled);
+            SpinType.TextView.setText("");
+            SpinType.TextView.setAdapter(null);
+          //  notifyItemChanged(2);
         }
+        if (!CurrentResearch.isAccreditation())
         HeaderResearch.setText(MessageFormat.format("№ {0} - {1}", ResearchPosition, HeaderResearch.getContext().getString(R.string.accreditation_bad)));
+    }
+
+    private void OpenDialog(boolean isEnabled, int position, String Value) {
+        if (SpinIndicator.TextView != null)
+            new MaterialAlertDialogBuilder(SpinIndicator.TextView.getContext())
+                    .setTitle(R.string.attention)
+                    .setMessage(R.string.drop_research_text)
+                    .setNegativeButton(R.string.cancel,
+                            (dialog, which) -> {
+                                SpinIndicator.TextView.setText(CurrentResearch.getIndicatorVal(),false);
+                            })
+                    .setPositiveButton(R.string.Continue,
+                            (dialog, which) -> {
+                                ClearTextFields(true, isEnabled);
+
+                                if (isEnabled) {
+                                    CurrentResearch.setIndicatorVal(Value);
+                                } else {
+                                    final Suggestion CurrentItem = suggestions.get(position);
+
+                                    CurrentResearch.setIndicatorId((short) CurrentItem.getId());
+                                    CurrentResearch.setIndicatorVal(CurrentItem.getValue());
+                                    CurrentResearch.setIndicatorNd(CurrentItem.getName_document());
+                                    CurrentResearch.setIndicatorNdId(CurrentItem.getId_document());
+
+                                    indicatorId = (short) CurrentItem.getId();
+                                    indicatorNdId = String.valueOf(CurrentItem.getId_document());
+                                    SpinIndicator.TextView.setSelection(position);
+
+                                    getMethods();
+                                }
+                            })
+                    .show();
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        //final Field f = ResearchFields.get(position);
-     //   ((AutoCompleteFieldHolder) holder).Layout.setHint(f.getHint());
         switch (position) {
             case 0:
                 ((AutoCompleteFieldHolder) holder).Layout.setHint("Показатель");
@@ -268,51 +302,43 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
                 ((AutoCompleteFieldHolder) holder).Layout.setHint("Тип исследования");
                 break;
         }
+        ((AutoCompleteFieldHolder) holder).Layout.setEnabled(false);
 
         if (CurrentResearch.getIndicatorVal() != null && CurrentResearch.getMethodVal() != null && CurrentResearch.getTypeVal() != null) {
             indicatorId = CurrentResearch.getIndicatorId();
             indicatorNdId = String.valueOf(CurrentResearch.getIndicatorNdId());
             isCompleteResearch = true;
-            if (position == 0)
-                InitAdapter(Indicators, ((AutoCompleteFieldHolder) holder).TextView);
 
             switch (position) {
                 case 0:
-                    ((AutoCompleteFieldHolder) holder).TextView.setText(CurrentResearch.getIndicatorVal());
+                    InitAdapter(Indicators, holder);
+                    ((AutoCompleteFieldHolder) holder).TextView.setText(CurrentResearch.getIndicatorVal(),false);
                     break;
                 case 1:
-                    ((AutoCompleteFieldHolder) holder).TextView.setText(CurrentResearch.getMethodVal());
+                    ((AutoCompleteFieldHolder) holder).TextView.setText(CurrentResearch.getMethodVal(),false);
                     break;
                 case 2:
-                    ((AutoCompleteFieldHolder) holder).TextView.setText(CurrentResearch.getTypeVal());
+                    ((AutoCompleteFieldHolder) holder).TextView.setText(CurrentResearch.getTypeVal(),false);
                     break;
             }
 
         } else if (position == 0)
-            InitAdapter(Indicators, ((AutoCompleteFieldHolder) holder).TextView);
-
+            InitAdapter(Indicators, holder);
     }
 
-    private void InitAdapter(String[] mass, AutoCompleteTextView spiner) {
+    private void InitAdapter(String[] mass, RecyclerView.ViewHolder holder) {
         if (mass != null) {
-           // ArrayAdapter<String> adapter = ;
-           // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spiner.setAdapter(new ArrayAdapter<>(spiner.getContext(), android.R.layout.simple_dropdown_item_1line, mass));
-        }
-    }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(((AutoCompleteFieldHolder) holder).TextView.getContext(), android.R.layout.simple_dropdown_item_1line, mass);
+            // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ((AutoCompleteFieldHolder) holder).TextView.setAdapter(adapter);
+            ((AutoCompleteFieldHolder) holder).Layout.setEnabled(true);
 
-//    private void InitAdapter(String[] mass, AutoCompleteTextView spiner, String text) {
-//        if (mass != null) {
-//            ArrayAdapter<String> adapter = new ArrayAdapter<>(inflater.getContext(), android.R.layout.simple_spinner_item, mass);
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            spiner.setAdapter(adapter);
-//            spiner.setText(text);
-//        }
-//    }
+            // spiner.
+        } else ((AutoCompleteFieldHolder) holder).Layout.setEnabled(false);
+    }
 
     @Override
     public int getItemCount() {
-        // return ResearchFields.size();
         return 3;
     }
 

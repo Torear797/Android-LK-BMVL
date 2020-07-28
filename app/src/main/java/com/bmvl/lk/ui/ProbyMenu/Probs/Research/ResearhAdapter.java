@@ -56,11 +56,17 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
         ResearchFieldAdapter adapter = new ResearchFieldAdapter(CurrentResearch, Indicators, suggestions, materialId, i + 1, researchItemHolder.Number);
         researchItemHolder.List.setAdapter(adapter);
 
-        if (CurrentResearch.getIndicatorVal() != null && CurrentResearch.getMethodVal() != null && CurrentResearch.getTypeVal() != null)
+        assert CurrentResearch != null;
+        if (CurrentResearch.isAccreditation())
             researchItemHolder.Number.setText(MessageFormat.format("№ {0} - {1}", i + 1, researchItemHolder.Number.getContext().getString(R.string.accreditation_ok)));
         else
             researchItemHolder.Number.setText(MessageFormat.format("№ {0} - {1}", i + 1, researchItemHolder.Number.getContext().getString(R.string.accreditation_bad)));
 
+        if(!CurrentResearch.isComplete()){
+            researchItemHolder.List.setVisibility(researchItemHolder.List.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+            researchItemHolder.arrow.setImageResource(researchItemHolder.List.getVisibility() == View.VISIBLE ? R.drawable.ic_w_arrow_ap : R.drawable.ic_w_arrow_down);
+            researchItemHolder.swipeLayout.setSwipeEnabled(false);
+        }
         mItemManger.bindView(researchItemHolder.itemView, i);
     }
 

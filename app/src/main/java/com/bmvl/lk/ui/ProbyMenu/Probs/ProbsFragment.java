@@ -300,7 +300,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
     private void AddStandartFieldPart1() {
         ProbFields.add(new Field((byte) 6, 5, "", "Вид материала"));
         ProbFields.add(new Field((byte) 5, 116, "На соответствие требованиям"));
-        ProbFields.add(new Field(15, "", "Номер сейф пакета", InputType.TYPE_CLASS_NUMBER));
+        ProbFields.add(new Field(15, "", "Номер сейф пакета", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)32), 32, "Состояние образца"));
         ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)60), 60, "Транспорт"));
         ProbFields.add(new Field(61, "", "", InputType.TYPE_CLASS_TEXT));

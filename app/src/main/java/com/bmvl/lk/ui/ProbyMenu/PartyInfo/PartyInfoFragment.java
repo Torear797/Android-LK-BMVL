@@ -34,19 +34,15 @@ public class PartyInfoFragment extends Fragment {
     private PartyInfoAdapter adapter;
     private OriginAdapter adapter2;
     private Map<String, String> fields; //Поле fields текущей пробы. Нужно для заполнения полей Происхождение и Инормация о партии
-
-   // private boolean Field; //Флаг отвечает за тип фрагмента - поле в пробе (true) или вкладка в меню (false).
     private boolean ReadOnly; //Флаг - только для чтения.
 
     public PartyInfoFragment(byte Type) {
         this.TypeTabs = Type;
         this.ReadOnly = false;
-    //    this.Field = false;
     }
 
     public PartyInfoFragment(byte Type, boolean read, Map<String, String> fieldsProb) {
         this.TypeTabs = Type;
-      //  this.Field = field;
         this.ReadOnly = read;
         this.fields = fieldsProb;
     }
@@ -126,11 +122,14 @@ public class PartyInfoFragment extends Fragment {
         if (CreateOrderActivity.order_id != 4 && !CreateOrderActivity.IsPattern)
             NewList.add(new Field(19, "", "НД на производство", InputType.TYPE_CLASS_TEXT));
         NewList.add(new Field(8, "", "Производитель", InputType.TYPE_CLASS_TEXT));
-        NewList.add(new Field(29, "", "Страна происхождения", InputType.TYPE_CLASS_TEXT));
-        NewList.add(new Field(30, "", "Регион происхождения", InputType.TYPE_CLASS_TEXT));
+
+        NewList.add(new Field((byte)11, 29,  "Страна происхождения"));
+        NewList.add(new Field((byte)11,30,  "Регион происхождения"));
+
         NewList.add(new Field(46, "", "Адрес производства", InputType.TYPE_CLASS_TEXT));
-        NewList.add(new Field(130, "", "Страна экспортер", InputType.TYPE_CLASS_TEXT));
-        NewList.add(new Field(129, "", "Страна импортер", InputType.TYPE_CLASS_TEXT));
+
+        NewList.add(new Field((byte)11, 130,  "Страна экспортер"));
+        NewList.add(new Field((byte)11, 129,  "Страна импортер"));
         if (fields == null)
             NewList.add(new Field((byte) 3, 120, "", "Применить для всех проб"));
     }

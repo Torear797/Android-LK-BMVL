@@ -205,6 +205,7 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 ((SpinerHolder) holder).spiner.setAdapter(adapter);
                 ((SpinerHolder) holder).txtHint.setVisibility(View.GONE);
+               // ((SpinerHolder) holder).layout.setHint(f.getHint());
                 if (fieldsProb == null || ReadOnly)
                     ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(fields.get((short) f.getColumn_id())));
                 else

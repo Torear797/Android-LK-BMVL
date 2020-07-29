@@ -2,13 +2,10 @@ package com.bmvl.lk.ui.ProbyMenu.Probs.Research;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,13 +17,10 @@ import com.bmvl.lk.Rest.AnswerMethods;
 import com.bmvl.lk.Rest.AnswerTypes;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.ResearchRest;
-import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.Rest.SuggestionMethod;
 import com.bmvl.lk.Rest.SuggestionType;
 import com.bmvl.lk.ViewHolders.AutoCompleteFieldHolder;
-import com.bmvl.lk.ViewHolders.SpinerHolder;
-import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.text.MessageFormat;
@@ -46,7 +40,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
     private short indicatorId;
     private String indicatorNdId;
     private AutoCompleteFieldHolder SpinIndicator, SpinMethd, SpinType;
-    private boolean isCompleteResearch = false;
+   // private boolean isCompleteResearch = false;
     private int ResearchPosition; // Номер исследования
     private TextView HeaderResearch; //Текст шапки исследований
 
@@ -102,7 +96,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
                 holder1.TextView.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if (!isStandartValue((byte) 0, s.toString())) {
+                        if (isNoStandardValue((byte) 0, s.toString())) {
                             if (CurrentResearch.isComplete())
                                 OpenDialog(true, 0, s.toString());
                             else {
@@ -125,10 +119,10 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
             } //Показатель
             case 1: {
                 holder1.TextView.setOnItemClickListener((parent13, view, position, id) -> {
-                    if (isCompleteResearch) {
-                        getTypes(CurrentResearch.getMethodId(), String.valueOf(CurrentResearch.getMethodNdId()));
-                        return;
-                    }
+//                    if (isCompleteResearch) {
+//                        getTypes(CurrentResearch.getMethodId(), String.valueOf(CurrentResearch.getMethodNdId()));
+//                        return;
+//                    }
 
                     //  if (CurrentResearch.getMethodVal() != null && !CurrentResearch.getMethodVal().equals(parent.getItemAtPosition(position))) {
                     if (!CurrentResearch.getMethodVal().equals(suggestionsMethods.get(position).getValue())) {
@@ -153,7 +147,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
                 holder1.TextView.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if (!isStandartValue((byte) 1, s.toString())) {
+                        if (isNoStandardValue((byte) 1, s.toString())) {
                             ClearTextFields(false, true);
                             CurrentResearch.setMethodVal(s.toString());
                         }
@@ -173,7 +167,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
             } //Метод
             case 2: {
                 holder1.TextView.setOnItemClickListener((parent12, view, position, id) -> {
-                    if (isCompleteResearch) return;
+                  //  if (isCompleteResearch) return;
 
                     if (!CurrentResearch.getTypeVal().equals(suggestionsTypes.get(position).getValue())) {
                         final SuggestionType CurrentItem = suggestionsTypes.get(position);
@@ -189,7 +183,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
                 holder1.TextView.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if (!isStandartValue((byte) 2, s.toString())) {
+                        if (isNoStandardValue((byte) 2, s.toString())) {
                             CurrentResearch.setTypeVal(s.toString());
                             // HeaderResearch.setText(MessageFormat.format("№ {0} - {1}", ResearchPosition, holder1.TextView.getContext().getString(R.string.accreditation_ok)));
                         }
@@ -211,30 +205,30 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
         return holder1;
     }
 
-    private boolean isStandartValue(byte TypeField, String value) {
+    private boolean isNoStandardValue(byte TypeField, String value) {
 
         switch (TypeField) {
             case 0:
                 if (suggestions != null)
                     for (Suggestion val : suggestions) {
-                        if (val.getValue().equals(value)) return true;
+                        if (val.getValue().equals(value)) return false;
                     }
                 break;
             case 1:
                 if (suggestionsMethods != null)
                     for (SuggestionMethod val : suggestionsMethods) {
-                        if (val.getValue().equals(value)) return true;
+                        if (val.getValue().equals(value)) return false;
                     }
                 break;
             case 2:
                 if (suggestionsTypes != null)
                     for (SuggestionType val : suggestionsTypes) {
-                        if (val.getValue().equals(value)) return true;
+                        if (val.getValue().equals(value)) return false;
                     }
                 break;
         }
 
-        return false;
+        return true;
     }
 
     private void ClearTextFields(boolean method, boolean isEnabled) {
@@ -262,9 +256,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
                     .setTitle(R.string.attention)
                     .setMessage(R.string.drop_research_text)
                     .setNegativeButton(R.string.cancel,
-                            (dialog, which) -> {
-                                SpinIndicator.TextView.setText(CurrentResearch.getIndicatorVal(),false);
-                            })
+                            (dialog, which) -> SpinIndicator.TextView.setText(CurrentResearch.getIndicatorVal(),false))
                     .setPositiveButton(R.string.Continue,
                             (dialog, which) -> {
                                 ClearTextFields(true, isEnabled);
@@ -307,7 +299,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
         if (CurrentResearch.getIndicatorVal() != null && CurrentResearch.getMethodVal() != null && CurrentResearch.getTypeVal() != null) {
             indicatorId = CurrentResearch.getIndicatorId();
             indicatorNdId = String.valueOf(CurrentResearch.getIndicatorNdId());
-            isCompleteResearch = true;
+           // isCompleteResearch = true;
 
             switch (position) {
                 case 0:
@@ -385,7 +377,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
                             }
                             suggestionsTypes = response.body().getSuggestions();
                             InitAdapter(MasTypes, SpinType);
-                            isCompleteResearch = false;
+                         //   isCompleteResearch = false;
                         }
                     }
 

@@ -28,14 +28,11 @@ import java.util.TreeMap;
 
 public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.ResearchItemHolder> {
     private TreeMap<Short, ResearchRest> researches; //Исследования
-    private RecyclerView.RecycledViewPool viewPool;
-
     private static String[] Indicators;
     private static List<Suggestion> suggestions;
     private static short materialId;
 
     public ResearhAdapter(TreeMap<Short, ResearchRest> ResearchesLise) {
-        viewPool = new RecyclerView.RecycledViewPool();
         researches = ResearchesLise;
     }
 
@@ -52,7 +49,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
 
     @Override
     public void onBindViewHolder(ResearchItemHolder researchItemHolder, int i) {
-        ResearchRest CurrentResearch = researches.get(getPositionKey(i));
+        final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
         ResearchFieldAdapter adapter = new ResearchFieldAdapter(CurrentResearch, Indicators, suggestions, materialId, i + 1, researchItemHolder.Number);
         researchItemHolder.List.setAdapter(adapter);
 
@@ -140,7 +137,6 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
 
             swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
 
-            List.setRecycledViewPool(viewPool);
             List.setHasFixedSize(true);
         }
     }

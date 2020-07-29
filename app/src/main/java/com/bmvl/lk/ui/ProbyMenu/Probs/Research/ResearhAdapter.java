@@ -17,6 +17,8 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
+import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesFieldAdapter;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -31,9 +33,13 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     private static String[] Indicators;
     private static List<Suggestion> suggestions;
     private static short materialId;
+    private SamplesAdapter SampleAdapter;
+    private int id_sample;
 
-    public ResearhAdapter(TreeMap<Short, ResearchRest> ResearchesLise) {
+    public ResearhAdapter(TreeMap<Short, ResearchRest> ResearchesLise, SamplesAdapter adapter, int id) {
         researches = ResearchesLise;
+        this.SampleAdapter = adapter;
+        this.id_sample = id;
     }
 
     @Override
@@ -48,9 +54,9 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     }
 
     @Override
-    public void onBindViewHolder(ResearchItemHolder researchItemHolder, int i) {
+    public void onBindViewHolder(@NonNull ResearchItemHolder researchItemHolder, int i) {
         final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
-        ResearchFieldAdapter adapter = new ResearchFieldAdapter(CurrentResearch, Indicators, suggestions, materialId, i + 1, researchItemHolder.Number);
+        ResearchFieldAdapter adapter = new ResearchFieldAdapter(CurrentResearch, Indicators, suggestions, materialId, i + 1, researchItemHolder, SampleAdapter, id_sample);
         researchItemHolder.List.setAdapter(adapter);
 
         assert CurrentResearch != null;
@@ -58,6 +64,8 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
             researchItemHolder.Number.setText(MessageFormat.format("№ {0} - {1}", i + 1, researchItemHolder.Number.getContext().getString(R.string.accreditation_ok)));
         else
             researchItemHolder.Number.setText(MessageFormat.format("№ {0} - {1}", i + 1, researchItemHolder.Number.getContext().getString(R.string.accreditation_bad)));
+
+        researchItemHolder.Info.setText(MessageFormat.format("Цена: {0}", CurrentResearch.getPrice()));
 
         if(!CurrentResearch.isComplete()){
             researchItemHolder.List.setVisibility(researchItemHolder.List.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
@@ -111,7 +119,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
             buttonDelete = itemView.findViewById(R.id.trash);
             createBtn = itemView.findViewById(R.id.create);
 
-            Info.setVisibility(View.GONE);
+            //Info.setVisibility(View.GONE);
             createBtn.setVisibility(View.GONE);
             arrow = itemView.findViewById(R.id.arrow);
 

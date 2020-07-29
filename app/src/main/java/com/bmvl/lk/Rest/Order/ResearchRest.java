@@ -177,4 +177,8 @@ public class ResearchRest implements Serializable {
     public String getTypeVal() {
         return typeVal;
     }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }

@@ -74,7 +74,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:minWidth="160dp"
-                android:text="Проба № 0"
+                android:text="№1 - Не йцвйцвйцвВходит в облесть аккредитации"
                 android:textColor="@android:color/white" />
 
             <TextView
@@ -82,6 +82,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:minWidth="120dp"
+                android:text="Цена 600 р"
                 android:textColor="@android:color/white" />
 
             <androidx.appcompat.widget.AppCompatImageView

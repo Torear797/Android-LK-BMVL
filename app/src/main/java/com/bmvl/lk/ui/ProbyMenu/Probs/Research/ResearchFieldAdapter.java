@@ -21,6 +21,8 @@ import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.Rest.SuggestionMethod;
 import com.bmvl.lk.Rest.SuggestionType;
 import com.bmvl.lk.ViewHolders.AutoCompleteFieldHolder;
+import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
+import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesFieldAdapter;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.text.MessageFormat;
@@ -42,15 +44,21 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
     private AutoCompleteFieldHolder SpinIndicator, SpinMethd, SpinType;
    // private boolean isCompleteResearch = false;
     private int ResearchPosition; // Номер исследования
-    private TextView HeaderResearch; //Текст шапки исследований
+   // private TextView HeaderResearch; //Текст шапки исследований
+    private ResearhAdapter.ResearchItemHolder ResearchHolder;
+    private SamplesAdapter SampleAdapter;
+    private int id_sample;
 
-    ResearchFieldAdapter(ResearchRest res, String[] mass, List<Suggestion> sug, short id, int pos, TextView txt) {
+    ResearchFieldAdapter(ResearchRest res, String[] mass, List<Suggestion> sug, short id, int pos, ResearhAdapter.ResearchItemHolder hol, SamplesAdapter adapter,int id_s) {
         this.ResearchPosition = pos;
         this.CurrentResearch = res;
         this.Indicators = mass;
         this.suggestions = sug;
         this.materialId = id;
-        this.HeaderResearch = txt;
+       // this.HeaderResearch = txt;
+        this.ResearchHolder = hol;
+        this.SampleAdapter = adapter;
+        this.id_sample = id_s;
     }
 
     @Override
@@ -173,8 +181,13 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
                         final SuggestionType CurrentItem = suggestionsTypes.get(position);
                         CurrentResearch.setTypeId(CurrentItem.getId());
                         CurrentResearch.setTypeVal(String.valueOf(parent12.getItemAtPosition(position)));
+                        CurrentResearch.setPrice(CurrentItem.getPrice());
+
                         if (CurrentResearch.isAccreditation())
-                        HeaderResearch.setText(MessageFormat.format("№ {0} - {1}", ResearchPosition, holder1.TextView.getContext().getString(R.string.accreditation_ok)));
+                            ResearchHolder.Number.setText(MessageFormat.format("№ {0} - {1}", ResearchPosition, holder1.TextView.getContext().getString(R.string.accreditation_ok)));
+
+                        ResearchHolder.Info.setText(MessageFormat.format("Цена: {0}", CurrentResearch.getPrice()));
+                        SampleAdapter.notifyItemChanged(id_sample);
                     }
                     holder1.TextView.clearFocus();
                 });
@@ -247,7 +260,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
           //  notifyItemChanged(2);
         }
         if (!CurrentResearch.isAccreditation())
-        HeaderResearch.setText(MessageFormat.format("№ {0} - {1}", ResearchPosition, HeaderResearch.getContext().getString(R.string.accreditation_bad)));
+            ResearchHolder.Number.setText(MessageFormat.format("№ {0} - {1}", ResearchPosition, ResearchHolder.Number.getContext().getString(R.string.accreditation_bad)));
     }
 
     private void OpenDialog(boolean isEnabled, int position, String Value) {

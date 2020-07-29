@@ -15,7 +15,7 @@ public class SamplesRest implements Serializable {
 
     @SerializedName("price")
     @Expose
-    private String price;
+    private double price;
 
     @SerializedName("fields")
     @Expose
@@ -27,7 +27,7 @@ public class SamplesRest implements Serializable {
 
     public SamplesRest(short id) {
         this.id = id;
-        this.price = "0";
+        this.price = 0;
         this.fields = new HashMap<>();
         this.researches = new TreeMap<>();
     }
@@ -44,8 +44,16 @@ public class SamplesRest implements Serializable {
         return id;
     }
 
-    public String getPrice() {
+    public double getPrice() {
+        RecalculatePrice();
         return price;
+    }
+
+    public void RecalculatePrice(){
+        this.price = 0;
+        for(Map.Entry<Short, ResearchRest> entry : researches.entrySet()) {
+            this.price += entry.getValue().getPrice();
+        }
     }
 
     public Map<Short, String> getFields() {

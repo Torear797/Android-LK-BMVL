@@ -12,4 +12,8 @@ public class SuggestionType {
     public short getId() {
         return id;
     }
+
+    public double getPrice() {
+        return price;
+    }
 }

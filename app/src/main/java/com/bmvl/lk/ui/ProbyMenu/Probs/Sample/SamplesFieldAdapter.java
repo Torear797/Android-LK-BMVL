@@ -63,13 +63,16 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
     private byte id_sample; //Порядковый номер образца - НЕ его id;
     private String[] Depth_of_selection;
 
-    SamplesFieldAdapter(List<Field> SamFields, SamplesRest Sample, Map<String, String> ProbFields, ProbyRest CurrentProb, byte id) {
+    private SamplesAdapter SampleAdapter;
+
+    SamplesFieldAdapter(List<Field> SamFields, SamplesRest Sample, Map<String, String> ProbFields, ProbyRest CurrentProb, byte id,SamplesAdapter adapter) {
         this.ProbFields = ProbFields;
         viewPool = new RecyclerView.RecycledViewPool();
         SamplesField = SamFields;
         CurrentSample = Sample;
         this.CurrentProb = CurrentProb;
         this.id_sample = id;
+        this.SampleAdapter = adapter;
     }
 
     @Override
@@ -275,7 +278,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 break;
             }//Мультиспинер
             case 6: {
-                Adapter = new ResearhAdapter(CurrentSample.getResearches());
+                Adapter = new ResearhAdapter(CurrentSample.getResearches(), SampleAdapter, id_sample);
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.setRecycledViewPool(viewPool);

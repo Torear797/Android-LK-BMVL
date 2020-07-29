@@ -64,12 +64,16 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     @Override
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final SamplesRest CurrentSample = Samples.get(getPositionKey(i));
-        adapter = new SamplesFieldAdapter(SamplesField, CurrentSample, ProbFields, CurrentProb, Byte.parseByte(String.valueOf(i)));
+
+        adapter = new SamplesFieldAdapter(SamplesField, CurrentSample, ProbFields, CurrentProb, Byte.parseByte(String.valueOf(i)), this);
         simpleViewHolder.SampleList.setAdapter(adapter);
 
         if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {
-            simpleViewHolder.NumberSample.setText(MessageFormat.format("№ {0}", i + 1));
-            simpleViewHolder.Info.setText("Образец");
+            simpleViewHolder.NumberSample.setText(MessageFormat.format("Образец № {0}", i + 1));
+
+            assert CurrentSample != null;
+            simpleViewHolder.Info.setText(MessageFormat.format("Цена: {0}", CurrentSample.getPrice()));
+
         } else {
             simpleViewHolder.GreenHeader.setVisibility(View.GONE);
             simpleViewHolder.SampleList.setVisibility(View.VISIBLE);

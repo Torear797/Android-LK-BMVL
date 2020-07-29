@@ -12,7 +12,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,10 +31,12 @@ import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.ViewHolders.AutoCompleteFieldHolder;
 import com.bmvl.lk.ViewHolders.DataFieldHolder;
 import com.bmvl.lk.ViewHolders.MaterialFieldHolder;
+import com.bmvl.lk.ViewHolders.MultiAutoCompleteHolder;
 import com.bmvl.lk.ViewHolders.MultiChipChoceHoldeer;
 import com.bmvl.lk.ViewHolders.MultiSpinerHolder;
 import com.bmvl.lk.ViewHolders.OriginHolder;
 import com.bmvl.lk.ViewHolders.PartyInfoHolder;
+import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
 import com.bmvl.lk.ViewHolders.SamplesPanelHolder;
 import com.bmvl.lk.ViewHolders.SelectButtonHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
@@ -77,8 +81,10 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     private ProbyRest CurrentProb;
     private SamplesAdapter SamAdapter;
 
-    private String[] Regions, Districts;
+    private String[] Regions, Districts, Depth_of_selection;
     private int RegionPos, DistrictPos;
+
+    public static int id_field_144 = 0; //id Глубины отбора. Для обновления поля.
 
     ProbFieldAdapter(List<Field> probFields, List<Field> sampleFields, ProbyRest prob, TextView header) {
         this.ProbHeader = header;
@@ -112,6 +118,8 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 return R.layout.item_party_info;
             case 11:
                 return R.layout.item_auto_compiete_field;
+            case 12:
+                return R.layout.item_multi_auto_complete;
             default:
                 return R.layout.item_field;
         }
@@ -280,6 +288,9 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 });
                 return holder;
             }
+            case R.layout.item_multi_auto_complete: {
+                return new MultiAutoCompleteHolder(view);
+            }
             default: {
                 final TextViewHolder holder = new TextViewHolder(view);
                 holder.field.addTextChangedListener(new TextWatcher() {
@@ -391,7 +402,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         final Field f = ProbFields.get(position);
 
         switch (f.getType()) {
@@ -408,6 +419,10 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     ((TextViewHolder) holder).Layout.setEndIconDrawable(f.getIcon());
                 }
 
+                if(f.getColumn_id() == 144) {
+                    id_field_144 = position;
+
+                }
                 break;
             } //Текстовое поле
             case (byte) 1: {
@@ -430,8 +445,8 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))));
 
 
-                  ((SpinerHolder) holder).txtHint.setText(f.getHint());
-               // ((SpinerHolder) holder).layout.setHint(f.getHint());
+                ((SpinerHolder) holder).txtHint.setText(f.getHint());
+                // ((SpinerHolder) holder).layout.setHint(f.getHint());
 
                 break;
             } //Spiner
@@ -518,7 +533,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 break;
             } //Materials Field
             case (byte) 7: {
-                SamAdapter = new SamplesAdapter(SampleFields, CurrentProb.getSamples(), CurrentProb.getFields());
+                SamAdapter = new SamplesAdapter(SampleFields, CurrentProb);
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
                 ((SamplesPanelHolder) holder).SampleList.setRecycledViewPool(viewPool);
@@ -526,12 +541,30 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {
                     //Добавление образца
                     ((SamplesPanelHolder) holder).btnAddSample.setOnClickListener(v -> {
-                        short newid = getPositionKey(CurrentProb.getSamples().size() - 1, CurrentProb.getSamples());
-                        Map<Short, SamplesRest> insertlist = new HashMap<>();
-                        insertlist.put((short) (newid + 1), new SamplesRest(newid));
-                        SamAdapter.insertdata(insertlist);
-                        //  AddSamples();
-                        ((SamplesPanelHolder) holder).SampleList.smoothScrollToPosition(SamAdapter.getItemCount() - 1);
+                        if (CurrentProb.getFields().containsKey("5")) {
+                            short newid = getPositionKey(CurrentProb.getSamples().size() - 1, CurrentProb.getSamples());
+                            Map<Short, SamplesRest> insertlist = new HashMap<>();
+                            insertlist.put((short) (newid + 1), new SamplesRest(newid));
+                            SamAdapter.insertdata(insertlist);
+                              //SamAdapter.AddSample(newid);
+                           // SamAdapter.notifyDataSetChanged();
+
+                            //Инициализация глубины отбора
+                            if(CreateOrderActivity.order_id == 3) {
+                                //Образец №" + 1 + ": "
+
+                                if(CurrentProb.getFields().containsKey("144") && Objects.requireNonNull(CurrentProb.getFields().get("144")).length() > 2)
+                                CurrentProb.getFields().put("144", CurrentProb.getFields().get("144")+", "+"Образец №"+(CurrentProb.getSamples().size())+": ");
+                                else
+                                    CurrentProb.getFields().put("144", "Образец №"+(CurrentProb.getSamples().size())+": ");
+
+                                ProbAdapter.adapter.notifyItemChanged(ProbFieldAdapter.id_field_144);
+                            }
+
+                            //  AddSamples();
+                            //  ((SamplesPanelHolder) holder).SampleList.smoothScrollToPosition(SamAdapter.getItemCount() - 1);
+                        } else
+                            Toast.makeText(((SamplesPanelHolder) holder).SampleList.getContext(), ((SamplesPanelHolder) holder).SampleList.getContext().getString(R.string.MaterialNoSelect), Toast.LENGTH_SHORT).show();
                     });
                 } else {
                     ((SamplesPanelHolder) holder).Header.setVisibility(View.GONE);
@@ -618,6 +651,33 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     }
                 }
                 break;
+            } //AutoCompleteFieldHolder
+            case (byte)12:{
+                ((MultiAutoCompleteHolder) holder).Layout.setHint(f.getHint());
+                ((MultiAutoCompleteHolder) holder).TextView.setText(CurrentProb.getFields().get(String.valueOf(f.getColumn_id())));
+                ((MultiAutoCompleteHolder) holder).TextView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+                //((MultiAutoCompleteHolder) holder).TextView.setAdapter(new ArrayAdapter<>(, android.R.layout.simple_spinner_item, Regions));
+
+                if(CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id()))) {
+                    Depth_of_selection = Objects.requireNonNull(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))).split(", ");
+
+                    ((MultiAutoCompleteHolder) holder).TextView.setAdapter(new ArrayAdapter<>(((MultiAutoCompleteHolder) holder).TextView.getContext(),
+                            android.R.layout.simple_dropdown_item_1line, Depth_of_selection));
+
+                    ((MultiAutoCompleteHolder) holder).TextView.setText(CurrentProb.getFields().get(String.valueOf(f.getColumn_id())));
+                }
+
+                if(f.getColumn_id() == 144) {
+                    id_field_144 = position;
+                    //((MultiAutoCompleteHolder) holder).Layout.setEnabled(false);
+                    ((MultiAutoCompleteHolder) holder).TextView.setThreshold(1000);
+                    ((MultiAutoCompleteHolder) holder).TextView.setInputType(InputType.TYPE_NULL);
+                    ((MultiAutoCompleteHolder) holder).Layout.setEndIconActivated(false);
+                    ((MultiAutoCompleteHolder) holder).Layout.setEndIconCheckable(false);
+                    //((MultiAutoCompleteHolder) holder).TextView.selectAll();
+
+                }
+                break;
             }
         }
 
@@ -638,7 +698,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     }
 
     private Short getPositionKey(int position, Map<Short, SamplesRest> Samples) {
-        if (position > 0)
+        if (Samples.size() > 0)
             return new ArrayList<>(Samples.keySet()).get(position);
         else return 0;
     }

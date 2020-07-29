@@ -16,12 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.ViewHolders.DataFieldHolder;
 import com.bmvl.lk.ViewHolders.MultiChipChoceHoldeer;
-import com.bmvl.lk.ViewHolders.MultiSpinerHolder;
 import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
 import com.bmvl.lk.ViewHolders.TextViewHolder;
@@ -29,7 +29,8 @@ import com.bmvl.lk.data.ContactsCompletionView;
 import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.StringSpinnerAdapter;
 import com.bmvl.lk.data.models.Document;
-import com.bmvl.lk.ui.ProbyMenu.Probs.MultiSpinner;
+import com.bmvl.lk.ui.ProbyMenu.Probs.ProbAdapter;
+import com.bmvl.lk.ui.ProbyMenu.Probs.ProbFieldAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
 import com.daimajia.swipe.util.Attributes;
 
@@ -46,7 +47,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SamplesFieldAdapter extends RecyclerView.Adapter {
-    //   private LayoutInflater inflater;
     private RecyclerView.RecycledViewPool viewPool;
     private List<Field> SamplesField; //Поля образцов
 
@@ -59,13 +59,17 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
     private Integer buffer_id;
 
     private Map<String, String> ProbFields; //Поля пробы
+    private ProbyRest CurrentProb; //текущая проба
+    private byte id_sample; //Порядковый номер образца - НЕ его id;
+    private String[] Depth_of_selection;
 
-    SamplesFieldAdapter(List<Field> SamFields, SamplesRest Sample, Map<String, String> ProbFields) {
-        //   this.inflater = LayoutInflater.from(context);
+    SamplesFieldAdapter(List<Field> SamFields, SamplesRest Sample, Map<String, String> ProbFields, ProbyRest CurrentProb, byte id) {
         this.ProbFields = ProbFields;
         viewPool = new RecyclerView.RecycledViewPool();
         SamplesField = SamFields;
         CurrentSample = Sample;
+        this.CurrentProb = CurrentProb;
+        this.id_sample = id;
     }
 
     @Override
@@ -96,22 +100,24 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
 
                 return holder1;
             } //Spiner
-            case 5:
+            case 5: {
                 View view5 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_multi_chip_choce, parent, false);
-              //  return new MultiSpinerHolder(view5);
-            return new MultiChipChoceHoldeer(view5);
-            case 6:
+                //  return new MultiSpinerHolder(view5);
+                return new MultiChipChoceHoldeer(view5);
+            }
+            case 6: {
                 View view6 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_research_list, parent, false);
                 return new ResearchPanelHolder(view6);
+            }
             case 8: {
                 View view8 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_data_field, parent, false);
-               // return new DataFieldHolder(view8);
+                // return new DataFieldHolder(view8);
 
                 final DataFieldHolder holder = new DataFieldHolder(view8);
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if (!String.valueOf(s).equals("") && s.toString().length() <=10)
+                        if (!String.valueOf(s).equals("") && s.toString().length() <= 10)
                             try {
                                 CurrentSample.getFields().put(GetColumn_id(holder.getLayoutPosition()), new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(s.toString()))));
                             } catch (ParseException e) {
@@ -137,8 +143,30 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if (!String.valueOf(s).equals(""))
+                        if (!String.valueOf(s).equals("")) {
+                            if (CurrentSample.getFields().containsKey(GetColumn_id(holder.getLayoutPosition())))
+                                if (Objects.equals(CurrentSample.getFields().get(GetColumn_id(holder.getLayoutPosition())), s.toString()))
+                                    return;
                             CurrentSample.getFields().put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
+
+                            if (GetColumn_id(holder.getLayoutPosition()) == 144 && ProbFieldAdapter.id_field_144 != 0) {
+
+                                if (CurrentProb.getFields().containsKey("144")) {
+                                    Depth_of_selection = Objects.requireNonNull(CurrentProb.getFields().get("144")).split(", ");
+                                   // if (id_sample <= Depth_of_selection.length - 1)
+                                        Depth_of_selection[id_sample] = "Образец №" + (id_sample + 1) + ": " + s.toString();
+//                                    else {
+//                                        String[] NewDeepMas = new String[CurrentProb.getSamples().size()];
+//                                        System.arraycopy(Depth_of_selection, 0, NewDeepMas, 0, Depth_of_selection.length);
+//                                        NewDeepMas[id_sample] = "Образец №" + (id_sample + 1) + ": " + s.toString();
+//                                        Depth_of_selection = NewDeepMas;
+//                                    }
+                                }
+
+                                CurrentProb.getFields().put("144", ArrayToString());
+                                ProbAdapter.adapter.notifyItemChanged(ProbFieldAdapter.id_field_144);
+                            }
+                        }
                     }
 
                     @Override
@@ -155,12 +183,23 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
         }
     }
 
+    private String ArrayToString() {
+        StringBuilder string = new StringBuilder();
+        for (String deep : Depth_of_selection) {
+            if (deep != null && !deep.equals("")) {
+                if (string.length() > 0) string.append(", ");
+                string.append(deep);
+            }
+        }
+        return string.toString();
+    }
+
     private short GetColumn_id(int position) {
         return (short) (SamplesField.get(position).getColumn_id());
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final Field f = SamplesField.get(position);
         switch (f.getType()) {
             case 0: {
@@ -174,9 +213,9 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 StringSpinnerAdapter adapter;
                 if (f.getEntries() != -1) {
                     //ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(((SpinerHolder) holder).spiner.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
-                     adapter = new StringSpinnerAdapter(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item,((SpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()) , ((SpinerHolder) holder).spiner);
+                    adapter = new StringSpinnerAdapter(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item, ((SpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()), ((SpinerHolder) holder).spiner);
                 } else {
-                     adapter = new StringSpinnerAdapter(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item, f.getSpinerData(), ((SpinerHolder) holder).spiner);
+                    adapter = new StringSpinnerAdapter(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item, f.getSpinerData(), ((SpinerHolder) holder).spiner);
                     //  ArrayAdapter<String> adapter = new ArrayAdapter<>(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item, f.getSpinerData());
                 }
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -185,9 +224,8 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                     ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(CurrentSample.getFields().get((short) (f.getColumn_id()))));
 
 
-
                 ((SpinerHolder) holder).txtHint.setText(f.getHint());
-               // ((SpinerHolder) holder).layout.setHint(f.getHint());
+                // ((SpinerHolder) holder).layout.setHint(f.getHint());
                 break;
             }//Spiner
             case 5: {
@@ -206,23 +244,23 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
 //                );
 //
 //                ((MultiSpinerHolder) holder).txtHint.setText(f.getHint());
-               // final String[] items = ((MultiChipChoceHoldeer) holder).contactsCompletionView.getContext().getResources().getStringArray(f.getEntries());
-           //     ((MultiChipChoceHoldeer) holder).contactsCompletionView.setAdapter(new ArrayAdapter<>(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContext() , android.R.layout.simple_list_item_1, items));
+                // final String[] items = ((MultiChipChoceHoldeer) holder).contactsCompletionView.getContext().getResources().getStringArray(f.getEntries());
+                //     ((MultiChipChoceHoldeer) holder).contactsCompletionView.setAdapter(new ArrayAdapter<>(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContext() , android.R.layout.simple_list_item_1, items));
 
-                ((MultiChipChoceHoldeer) holder).contactsCompletionView.setAdapter(new ArrayAdapter<>(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContext() , android.R.layout.simple_list_item_1, getStringMassivFromList(App.OrderInfo.getDocumentName())));
+                ((MultiChipChoceHoldeer) holder).contactsCompletionView.setAdapter(new ArrayAdapter<>(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContext(), android.R.layout.simple_list_item_1, getStringMassivFromList(App.OrderInfo.getDocumentName())));
 
-                if (CurrentSample.getFields().containsKey((short)(f.getColumn_id())))
-                    SelectElements(CurrentSample.getFields().get((short)(f.getColumn_id())), ((MultiChipChoceHoldeer) holder).contactsCompletionView);
+                if (CurrentSample.getFields().containsKey((short) (f.getColumn_id())))
+                    SelectElements(CurrentSample.getFields().get((short) (f.getColumn_id())), ((MultiChipChoceHoldeer) holder).contactsCompletionView);
                 ((MultiChipChoceHoldeer) holder).textInputLayout.setHint(f.getHint());
 
 
                 ((MultiChipChoceHoldeer) holder).contactsCompletionView.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if(s.length() > 0) {
+                        if (s.length() > 0) {
                             StringBuilder str = new StringBuilder(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContentText().toString());
                             str.delete(str.length() - 2, str.length());
-                            CurrentSample.getFields().put((short)(f.getColumn_id()), str.toString());
+                            CurrentSample.getFields().put((short) (f.getColumn_id()), str.toString());
                         }
                     }
 
@@ -251,16 +289,12 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 //Добавляет исследование
                 ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(v -> {
                     if (ProbFields.containsKey("5")) {
-                        short size = (short) CurrentSample.getResearches().size();
-                        short newid = 0;
-                        if (size > 0)
-                            newid = getPositionKeyR(size - 1, CurrentSample.getResearches());
-
+                        short newid = getPositionKeyR(CurrentSample.getResearches());
                         Map<Short, ResearchRest> insertlist = new HashMap<>();
                         insertlist.put((short) (newid + 1), new ResearchRest(newid));
                         Adapter.insertdata(insertlist);
                         Adapter.notifyDataSetChanged();
-                        ((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
+                        //((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
                     } else
                         Toast.makeText(((ResearchPanelHolder) holder).ResearchList.getContext(), ((ResearchPanelHolder) holder).ResearchList.getContext().getString(R.string.MaterialNoSelect), Toast.LENGTH_SHORT).show();
                 });
@@ -269,14 +303,14 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
             }//Исследования
             case 8: {
                 ((DataFieldHolder) holder).Layout.setHint(f.getHint());
-             //   ((DataFieldHolder) holder).field.setText(CurrentSample.getFields().get((short) f.getColumn_id()));
+                //   ((DataFieldHolder) holder).field.setText(CurrentSample.getFields().get((short) f.getColumn_id()));
 
-                if(CurrentSample.getFields().containsKey((short)(f.getColumn_id())))
-                try {
-                    ((DataFieldHolder) holder).field.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(Objects.requireNonNull(CurrentSample.getFields().get((short)(f.getColumn_id())))))));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                if (CurrentSample.getFields().containsKey((short) (f.getColumn_id())))
+                    try {
+                        ((DataFieldHolder) holder).field.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(Objects.requireNonNull(CurrentSample.getFields().get((short) (f.getColumn_id())))))));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
 
                 final DatePickerDialog.OnDateSetListener Datapicker = (view, year, monthOfYear, dayOfMonth) -> ChangeData(year, monthOfYear, dayOfMonth, ((DataFieldHolder) holder).field);
                 ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(v -> new DatePickerDialog(Objects.requireNonNull(((DataFieldHolder) holder).Layout.getContext()), Datapicker,
@@ -287,9 +321,10 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
             }//DataField
         }
     }
-    private String[] getStringMassivFromList(List<Document> list){
+
+    private String[] getStringMassivFromList(List<Document> list) {
         String[] mass = new String[list.size()];
-        for(int i = 0; i < mass.length;i++){
+        for (int i = 0; i < mass.length; i++) {
             mass[i] = list.get(i).getText();
         }
         return mass;
@@ -318,7 +353,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
             formattedDayOfMonth = "0" + dayOfMonth;
         }
 
-      //  CurrentSample.getFields().put((short) (position), MessageFormat.format("{2}-{1}-{0}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
+        //  CurrentSample.getFields().put((short) (position), MessageFormat.format("{2}-{1}-{0}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
         Edt.setText(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
         Edt.requestFocus();
         Edt.setSelection(Edt.getText().length());
@@ -334,9 +369,9 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private Short getPositionKeyR(int position, Map<Short, ResearchRest> List) {
+    private Short getPositionKeyR(Map<Short, ResearchRest> List) {
         if (List.size() > 0)
-            return new ArrayList<>(List.keySet()).get(position);
+            return new ArrayList<>(List.keySet()).get(List.size() - 1);
         else return 0;
     }
 

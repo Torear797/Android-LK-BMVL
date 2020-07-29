@@ -184,22 +184,20 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
 
     private void NewProbListener(final MaterialButton AddProbBtn, final ProbAdapter adapter, final RecyclerView recyclerView) {
         AddProbBtn.setVisibility(View.VISIBLE);
-        AddProbBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Map<Short, ProbyRest> insertlist = new HashMap<>();
-                final short newid = getPositionKey(CreateOrderActivity.order.getProby().size() - 1, CreateOrderActivity.order.getProby());
-                insertlist.put((short) (newid + 1), new ProbyRest(newid));
-                adapter.insertdata(insertlist);
-                Objects.requireNonNull(CreateOrderActivity.order.getProby().get((short) (newid + 1))).addSample((short) 1, new SamplesRest((short) 0));
+        AddProbBtn.setOnClickListener(view -> {
+            Map<Short, ProbyRest> insertlist = new HashMap<>();
+            final short newid = getPositionKey(CreateOrderActivity.order.getProby().size() - 1, CreateOrderActivity.order.getProby());
+            insertlist.put((short) (newid + 1), new ProbyRest(newid));
+            adapter.insertdata(insertlist);
+            Objects.requireNonNull(CreateOrderActivity.order.getProby().get((short) (newid + 1))).addSample((short) 1, new SamplesRest((short) 0));
 
-                if (CreateOrderActivity.order_id == 4) {
-                    CreateOrderActivity.order.getFields().put((short) 7, String.valueOf(CreateOrderActivity.order.getProby().size()));
-                    CreateOrderActivity.adapter.notifyItemChanged(18);
-                }
-
-                recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+            if (CreateOrderActivity.order_id == 4) {
+                CreateOrderActivity.order.getFields().put((short) 7, String.valueOf(CreateOrderActivity.order.getProby().size()));
+                CreateOrderActivity.adapter.notifyItemChanged(18);
             }
+
+            adapter.notifyDataSetChanged();
+           // recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
         });
     }
 
@@ -211,6 +209,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
 
     private void AddProb() {
         CreateOrderActivity.order.addProb((short) 1, new ProbyRest((short) 0));
+        if(CreateOrderActivity.order_id == 1)
         Objects.requireNonNull(CreateOrderActivity.order.getProby().get((short) (1))).addSample((short) 1, new SamplesRest((short) 0));
     } //Создает первую пробу и первый образец
 
@@ -251,6 +250,8 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         AddStandartFieldPart2();
         ProbFields.add(new Field(143, "", "Кадастровый номер участка", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(144, "", "Глубина отбора", InputType.TYPE_NULL));
+       // ProbFields.add(new Field((byte) 12,144, "Глубина отбора"));
+
         ProbFields.add(new Field(145, "", "Площадь с которой отобрано", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)146), 146, " "));
         ProbFields.add(new Field(68, "", "Особые условия доставки проб", InputType.TYPE_CLASS_TEXT));
@@ -334,12 +335,12 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         SampleFields.add(new Field(6, "", "Наименование доставленного материала", InputType.TYPE_CLASS_TEXT));
         SampleFields.add(new Field(112, "", "Инвентарный номер, описание", InputType.TYPE_CLASS_TEXT));
         SampleFields.add(new Field(144, "", "Глубина отбора", InputType.TYPE_CLASS_TEXT));
-        SampleFields.add(new Field((byte) 6, 0, "", ""));
+        SampleFields.add(new Field((byte) 6, 0));
     }
 
     private void AddSamplesForPatternType1() {
         SampleFields.add(new Field(6, "", "Наименование образца, термическое состояние", InputType.TYPE_CLASS_TEXT));
-        SampleFields.add(new Field((byte) 5, R.array.documents, 19, "НД на продукцию"));
+        SampleFields.add(new Field((byte) 5, 19, "НД на продукцию"));
         SampleFields.add(new Field((byte) 6, 0, "", ""));
     }
 

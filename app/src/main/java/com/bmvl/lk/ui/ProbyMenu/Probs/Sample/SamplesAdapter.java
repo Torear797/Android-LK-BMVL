@@ -15,10 +15,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.ui.ProbyMenu.Probs.ProbAdapter;
+import com.bmvl.lk.ui.ProbyMenu.Probs.ProbFieldAdapter;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
@@ -33,17 +36,17 @@ import java.util.TreeMap;
 public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleViewHolder> {
     private TreeMap<Short, SamplesRest> Samples; //Образцы
     private List<Field> SamplesField; //Поля образцов
-    private RecyclerView.RecycledViewPool viewPool;
-
+    //  private RecyclerView.RecycledViewPool viewPool;
     private Map<String, String> ProbFields; //Поля пробы
-
     private SamplesFieldAdapter adapter;
+    private ProbyRest CurrentProb;
 
-    public SamplesAdapter(List<Field> Samples, TreeMap<Short, SamplesRest> SamplesList,Map<String, String> ProbFields) {
+    public SamplesAdapter(List<Field> Samples, ProbyRest CurrentProb) {
         SamplesField = Samples;
-        this.Samples = SamplesList;
-        this.ProbFields = ProbFields;
-        viewPool = new RecyclerView.RecycledViewPool();
+        this.Samples = CurrentProb.getSamples();
+        this.ProbFields = CurrentProb.getFields();
+        this.CurrentProb = CurrentProb;
+        //  viewPool = new RecyclerView.RecycledViewPool();
     }
 
     @Override
@@ -54,18 +57,18 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_prob, parent, false);
-        return new SimpleViewHolder(view1);
+        //  View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_prob, parent, false);
+        return new SimpleViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_prob, parent, false));
     }
 
     @Override
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final SamplesRest CurrentSample = Samples.get(getPositionKey(i));
-        adapter = new SamplesFieldAdapter(SamplesField, CurrentSample, ProbFields);
+        adapter = new SamplesFieldAdapter(SamplesField, CurrentSample, ProbFields, CurrentProb, Byte.parseByte(String.valueOf(i)));
         simpleViewHolder.SampleList.setAdapter(adapter);
 
         if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {
-            simpleViewHolder.NumberSample.setText(MessageFormat.format("№ {0}", i+1));
+            simpleViewHolder.NumberSample.setText(MessageFormat.format("№ {0}", i + 1));
             simpleViewHolder.Info.setText("Образец");
         } else {
             simpleViewHolder.GreenHeader.setVisibility(View.GONE);
@@ -141,6 +144,13 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
                 closeAllItems();
                 TreeMap<Short, SamplesRest> insertlist = new TreeMap<>(Samples);
                 insertlist.remove(getPositionKey(getLayoutPosition()));
+
+
+                if (CurrentProb.getFields().containsKey("144")) {
+                    CurrentProb.getFields().put("144", ArrayToString(getLayoutPosition(), Objects.requireNonNull(CurrentProb.getFields().get("144")).split(", ")));
+                    ProbAdapter.adapter.notifyItemChanged(ProbFieldAdapter.id_field_144);
+                }
+
                 updateList(insertlist);
             });
 
@@ -160,13 +170,30 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
 
             swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
 
-            SampleList.setRecycledViewPool(viewPool);
+            // SampleList.setRecycledViewPool(viewPool);
             //SampleList.setHasFixedSize(true);
         }
     }
 
+    private String ArrayToString(int delete_item, String[] mass) {
+        StringBuilder string = new StringBuilder();
+       // StringBuilder NewItem;
+        boolean ItemIsDelete = false;
+        for (int i = 0; i < mass.length; i++) {
+            if (i != delete_item) {
+                if (string.length() > 0) string.append(", ");
+                if(ItemIsDelete)
+                mass[i] = mass[i].replace("Образец №"+(i+1),"Образец №"+(i));
+                string.append(mass[i]);
+            } else
+                ItemIsDelete = true;
+        }
+        return string.toString();
+    }
+
     public void UpdateAdapter(List<Suggestion> suggestions, int id) {
-        adapter.UpdateAdapter(suggestions, id);
+        if (adapter != null)
+            adapter.UpdateAdapter(suggestions, id);
     }
 
     public void insertdata(Map<Short, SamplesRest> insertList) {
@@ -182,5 +209,10 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
         Samples.clear();
         Samples.putAll(newList);
         diffResult.dispatchUpdatesTo(this);
+    }
+
+    public void AddSample(short newid) {
+        Samples.put((short) (newid + 1), new SamplesRest(newid));
+        notifyDataSetChanged();
     }
 }

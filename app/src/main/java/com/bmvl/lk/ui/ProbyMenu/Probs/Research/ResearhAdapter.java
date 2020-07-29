@@ -52,7 +52,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
 
     @Override
     public void onBindViewHolder(ResearchItemHolder researchItemHolder, int i) {
-        final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
+        ResearchRest CurrentResearch = researches.get(getPositionKey(i));
         ResearchFieldAdapter adapter = new ResearchFieldAdapter(CurrentResearch, Indicators, suggestions, materialId, i + 1, researchItemHolder.Number);
         researchItemHolder.List.setAdapter(adapter);
 

@@ -19,17 +19,20 @@ public class SamplesRest implements Serializable {
 
     @SerializedName("fields")
     @Expose
-    private Map<Short, String> fields = new HashMap<>();
+    private Map<Short, String> fields;
 
     @SerializedName("researches")
     @Expose
-    private TreeMap<Short, ResearchRest> researches = new TreeMap<>();
+    private TreeMap<Short, ResearchRest> researches;
 
     public SamplesRest(short id) {
         this.id = id;
         this.price = "0";
+        this.fields = new HashMap<>();
+        this.researches = new TreeMap<>();
     }
-    public void DeleteSamplesFields(){
+
+    public void DeleteSamplesFields() {
         this.fields = null;
     }
 

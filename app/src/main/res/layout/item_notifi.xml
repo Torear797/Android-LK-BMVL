@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipeNotifi"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,11 +12,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:orientation="vertical"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:orientation="vertical">
+        android:paddingBottom="5dp">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/read"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -46,11 +47,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
-                android:text="2019-12-13"
+                tools:text="2019-12-13"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/status_notifi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,14 +62,15 @@
 
             <TextView
                 android:id="@+id/Order_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
-                android:paddingEnd="50dp"
-                android:text="Информационное письмо"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/status_notifi"
-                app:layout_constraintTop_toBottomOf="@+id/Data_notifi" />
+                app:layout_constraintTop_toBottomOf="@+id/Data_notifi"
+                tools:text="Информационное письмо" />
 
             <TextView
                 android:id="@+id/event"
@@ -76,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:text="Создание заявки"
+                tools:text="Создание заявки"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/Order_name"
                 app:layout_constraintTop_toBottomOf="@+id/Order_name" />

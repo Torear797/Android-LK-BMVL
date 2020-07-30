@@ -93,4 +93,13 @@ public class ProbyRest implements Serializable {
     public String getProtocol() {
         return protocol;
     }
+
+    public double getPrice(){
+        double price = 0;
+        for(Map.Entry<Short, SamplesRest> entry : samples.entrySet()) {
+            entry.getValue().RecalculatePrice();
+            price += entry.getValue().getPrice();
+        }
+        return price;
+    }
 }

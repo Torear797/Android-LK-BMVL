@@ -2,14 +2,21 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/backround_color_site"
     style="@style/ClearFocus"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backround_color_site">
 
-    <include
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/include"
-        layout="@layout/toolbar" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include layout="@layout/toolbar" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/Card"
@@ -49,24 +56,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <!--                <com.google.android.material.textfield.TextInputEditText-->
-                <!--                    android:id="@+id/username"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:hint="@string/email"-->
-                <!--                    android:inputType="textEmailAddress"-->
-                <!--                    android:selectAllOnFocus="true"-->
-                <!--                    android:text="user@mail.ru" />-->
-
                 <br.com.sapereaude.maskedEditText.MaskedEditText
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
                     android:imeOptions="actionNext"
                     android:nextFocusRight="@+id/password"
-                    android:typeface="monospace"
                     android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:typeface="monospace"
                     app:mask="####################" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -133,10 +131,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textSize="18sp"
-        android:textColor="@color/Link"
-        android:text="@string/Recovery_password_link"
         android:onClick="resetPassword"
+        android:text="@string/Recovery_password_link"
+        android:textColor="@color/Link"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Create" />

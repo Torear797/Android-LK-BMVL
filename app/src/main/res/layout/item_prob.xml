@@ -15,43 +15,44 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/download"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
             android:layout_weight="1"
+            android:background="#18D120"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:visibility="gone"
-            android:background="#18D120"
-            android:layout_marginStart="5dp"
-            android:src="@drawable/ic_file_download_black_24dp" />
+            android:src="@drawable/ic_file_download_black_24dp"
+            android:visibility="gone" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/create"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:background="#752DF1"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_marginStart="5dp"
             android:src="@drawable/ic_note_add_black_24dp" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/trash"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:background="#FF5534"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_marginStart="5dp"
             android:src="@drawable/ic_delete_white_24dp" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/Header"
+        android:nestedScrollingEnabled="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -74,7 +75,6 @@
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:minWidth="160dp"
-                android:text="№1 - Не йцвйцвйцвВходит в облесть аккредитации"
                 android:textColor="@android:color/white" />
 
             <TextView
@@ -83,7 +83,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:minWidth="120dp"
-                android:text="Цена 600 р"
                 android:textColor="@android:color/white" />
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -91,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_w_arrow_down"/>
+                android:src="@drawable/ic_w_arrow_down" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -99,6 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
+            android:nestedScrollingEnabled="true"
             app:layoutManager="LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

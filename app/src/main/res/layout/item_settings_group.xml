@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/Group"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -29,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:text="Уведомление"
+        tools:text="Уведомление"
         android:textColor="@android:color/black"
         android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@+id/image_view"
@@ -40,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="Расширенные настройки"
+        tools:text="Расширенные настройки"
         android:textSize="13sp"
         app:layout_constraintStart_toStartOf="@+id/Name"
         app:layout_constraintTop_toBottomOf="@+id/Name" />

@@ -87,7 +87,7 @@ public class SettingOriginalDocFragment extends Fragment implements OnBackPresse
 
         final MaterialButton Save_Btn = MyView.findViewById(R.id.MaterialButton);
 
-        final Group group = (Group) MyView.findViewById(R.id.group);
+        final Group group = MyView.findViewById(R.id.group);
         final MaterialButton SelectScan_Btn = MyView.findViewById(R.id.select);
         PathScan = MyView.findViewById(R.id.path);
 

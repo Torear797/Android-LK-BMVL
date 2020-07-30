@@ -19,7 +19,7 @@ import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.settings.ItemNotify;
+import com.bmvl.lk.data.models.ItemNotify;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 
@@ -146,8 +146,7 @@ public class SettingNotifyFragment extends Fragment implements OnBackPressedList
     }
 
     private boolean getBooleanValue(byte value){
-        if(value == (byte)0) return false;
-        else return true;
+        return value != (byte) 0;
     }
 
     private void initRecyclerView() {
@@ -162,7 +161,7 @@ public class SettingNotifyFragment extends Fragment implements OnBackPressedList
 //            startActivity(intent);
 //        };
 
-        ItemSettingAdapter adapter = new ItemSettingAdapter(getContext(), SettingsFields);
+        ItemSettingAdapter adapter = new ItemSettingAdapter(SettingsFields);
         SettingsList.setAdapter(adapter);
     }
 }

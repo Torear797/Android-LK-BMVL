@@ -20,7 +20,7 @@
             android:focusable="true"
             android:padding="@dimen/activity_horizontal_margin">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/profile_name_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
             android:focusable="true"
             android:padding="@dimen/activity_horizontal_margin">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/img_mail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -96,11 +96,11 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:background="@drawable/ic_baseline_edit_24"
-                android:visibility="gone"
                 android:checked="true"
                 android:padding="6dp"
                 android:textOff=""
-                android:textOn="" />
+                android:textOn=""
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -112,7 +112,7 @@
             android:focusable="true"
             android:padding="@dimen/activity_horizontal_margin">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/img_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -148,11 +148,11 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:background="@drawable/ic_baseline_edit_24"
-                android:visibility="gone"
                 android:checked="true"
                 android:padding="6dp"
                 android:textOff=""
-                android:textOn="" />
+                android:textOn=""
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -164,7 +164,7 @@
             android:focusable="true"
             android:padding="@dimen/activity_horizontal_margin">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/img_adres"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -204,7 +204,7 @@
             android:focusable="true"
             android:padding="@dimen/activity_horizontal_margin">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/img_contr_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -242,7 +242,7 @@
             android:focusable="true"
             android:padding="@dimen/activity_horizontal_margin">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/img_contr_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -282,7 +282,7 @@
             android:focusable="true"
             android:padding="@dimen/activity_horizontal_margin">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/img_bank"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -320,7 +320,7 @@
             android:focusable="true"
             android:padding="@dimen/activity_horizontal_margin">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/img_inn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

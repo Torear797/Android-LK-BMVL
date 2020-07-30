@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.bmvl.lk.App;
 import com.bmvl.lk.R;
@@ -28,6 +27,8 @@ import com.bmvl.lk.ui.settings.SettingsActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.orhanobut.hawk.Hawk;
+
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -92,7 +93,7 @@ public class MenuActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-      //  FragmentManager fm = getSupportFragmentManager();
+        //  FragmentManager fm = getSupportFragmentManager();
         OnBackPressedListener backPressedListener = null;
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment instanceof OnBackPressedListener) {
@@ -150,14 +151,14 @@ public class MenuActivity extends AppCompatActivity {
                         if (response.isSuccessful() && response.body() != null) {
                             if (response.body().getStatus() == 200) {
 
-                                if (!response.body().getDefaultFields().get((short) 52).equals(""))
+                                if (!Objects.equals(response.body().getDefaultFields().get((short) 52), ""))
                                     App.OrderInfo = new OrderInfo((short) 52, response.body().getDefaultFields().get((short) 52), response.body().getFieldValues(), true);
-                                else if (!response.body().getDefaultFields().get((short) 63).equals("") && !response.body().getDefaultFields().get((short) 64).equals(""))
+                                else if (!Objects.equals(response.body().getDefaultFields().get((short) 63), "") && !Objects.equals(response.body().getDefaultFields().get((short) 64), ""))
                                     App.OrderInfo = new OrderInfo((short) 64, response.body().getDefaultFields().get((short) 63), response.body().getDefaultFields().get((short) 64), response.body().getFieldValues());
-                                else if (!response.body().getDefaultFields().get((short) 63).equals(""))
+                                else if (!Objects.equals(response.body().getDefaultFields().get((short) 63), ""))
                                     App.OrderInfo = new OrderInfo((short) 63, response.body().getDefaultFields().get((short) 63), response.body().getFieldValues(), false);
 
-                                if (response.body().getDefaultFields().containsKey((short) 128) && !response.body().getDefaultFields().get((short) 128).equals(""))
+                                if (response.body().getDefaultFields().containsKey((short) 128) && !Objects.equals(response.body().getDefaultFields().get((short) 128), ""))
                                     App.OrderInfo.setURL_SCAN_FILE(response.body().getDefaultFields().get((short) 128));
 
                                 App.UserInfo = response.body().getUserInfo();

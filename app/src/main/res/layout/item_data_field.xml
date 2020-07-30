@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    app:hintAnimationEnabled="false"
     app:endIconDrawable="@drawable/ic_date_range_black_24dp"
-    app:endIconMode="custom">
+    app:endIconMode="custom"
+    app:hintAnimationEnabled="false">
 
     <br.com.sapereaude.maskedEditText.MaskedEditText
         android:id="@+id/TextInput"

@@ -55,7 +55,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
     private List<Field> SampleFields = new ArrayList<>(); //Поля Образцов
     public static List<Material> Materials = new ArrayList<>(); //Список материалов
     public static String[] Countries; //Список стран
-    private ProbAdapter adapter;
+    public static ProbAdapter adapter;
 
     public ProbsFragment() {
     }
@@ -196,7 +196,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
                 CreateOrderActivity.adapter.notifyItemChanged(18);
             }
 
-            adapter.notifyDataSetChanged();
+         //   adapter.notifyDataSetChanged();
            // recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
         });
     }

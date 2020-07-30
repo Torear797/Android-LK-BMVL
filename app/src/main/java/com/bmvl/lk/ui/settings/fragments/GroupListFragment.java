@@ -16,7 +16,7 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.ui.settings.SettingsAdapter;
-import com.bmvl.lk.ui.settings.SettingsGroup;
+import com.bmvl.lk.data.models.SettingsGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,6 @@ import java.util.List;
 public class GroupListFragment extends Fragment implements OnBackPressedListener {
     private RecyclerView SettingsList;
     private List<SettingsGroup> SettingsFields = new ArrayList<>();
-    private SettingsAdapter adapter;
 
     public static Fragment newInstance() {
         return new GroupListFragment();
@@ -61,7 +60,7 @@ public class GroupListFragment extends Fragment implements OnBackPressedListener
         SettingsAdapter.OnClickListener onClickListener = group -> {
         };
 
-        adapter = new SettingsAdapter(SettingsFields,onClickListener);
+        SettingsAdapter adapter = new SettingsAdapter(SettingsFields, onClickListener);
         SettingsList.setAdapter(adapter);
     }
 }

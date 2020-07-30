@@ -1,4 +1,4 @@
-package com.bmvl.lk.ui.settings;
+package com.bmvl.lk.data.models;
 
 public class ItemNotify {
     private String Name;
@@ -7,10 +7,6 @@ public class ItemNotify {
     private boolean Email;
     private boolean SMS;
     private byte type;
-
-    public ItemNotify(byte type) {
-        this.type = type;
-    }
 
     public ItemNotify(String name, String columnId, boolean LK, boolean email, boolean SMS) {
         Name = name;
@@ -31,10 +27,6 @@ public class ItemNotify {
 
     public String getColumnId() {
         return ColumnId;
-    }
-
-    public void setColumnId(String columnId) {
-        ColumnId = columnId;
     }
 
     public boolean isLK() {

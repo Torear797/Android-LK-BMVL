@@ -31,6 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:baselineAligned="false"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -43,10 +44,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/field_marginEnd"
                         android:layout_weight="1"
-                        app:hintAnimationEnabled="false"
                         android:animateLayoutChanges="false"
                         android:animationCache="true"
-                        android:hint="Номер заявки">
+                        android:hint="@string/order_number"
+                        app:hintAnimationEnabled="false">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/NumberOrder"
@@ -62,10 +63,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        app:hintAnimationEnabled="false"
                         android:animateLayoutChanges="false"
                         android:animationCache="true"
-                        android:hint="Номер протокола">
+                        android:hint="@string/protocol_number"
+                        app:hintAnimationEnabled="false">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/NumberProtocol"
@@ -81,6 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:baselineAligned="false"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -95,10 +97,10 @@
                         android:layout_weight="1"
                         android:animateLayoutChanges="false"
                         android:animationCache="true"
-                        app:hintAnimationEnabled="false"
-                        android:hint="От"
+                        android:hint="@string/Ot"
                         app:endIconDrawable="@drawable/ic_date_range_black_24dp"
-                        app:endIconMode="custom">
+                        app:endIconMode="custom"
+                        app:hintAnimationEnabled="false">
 
                         <br.com.sapereaude.maskedEditText.MaskedEditText
                             android:id="@+id/DataOt"
@@ -119,10 +121,10 @@
                         android:layout_weight="1"
                         android:animateLayoutChanges="false"
                         android:animationCache="true"
-                        app:hintAnimationEnabled="false"
-                        android:hint="До"
+                        android:hint="@string/Do"
                         app:endIconDrawable="@drawable/ic_date_range_black_24dp"
-                        app:endIconMode="custom">
+                        app:endIconMode="custom"
+                        app:hintAnimationEnabled="false">
 
                         <br.com.sapereaude.maskedEditText.MaskedEditText
                             android:id="@+id/DataDo"
@@ -145,8 +147,8 @@
                     android:layout_weight="1"
                     android:animateLayoutChanges="false"
                     android:animationCache="true"
+                    android:hint="@string/contact_face"
                     app:hintAnimationEnabled="false"
-                    android:hint="Контактное лицо"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
@@ -177,8 +179,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="5dp"
-                    android:text="Вид заказа"
-                    android:textSize="12dp"
+                    android:text="@string/order_type"
+                    android:textSize="12sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/OrderType" />
 
@@ -187,6 +189,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:baselineAligned="false"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -201,10 +204,10 @@
                         android:layout_weight="1"
                         android:animateLayoutChanges="false"
                         android:animationCache="true"
-                        app:hintAnimationEnabled="false"
-                        android:hint="Цена от"
+                        android:hint="@string/price_ot"
                         app:endIconDrawable="@drawable/rub"
-                        app:endIconMode="custom">
+                        app:endIconMode="custom"
+                        app:hintAnimationEnabled="false">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/Price"
@@ -222,10 +225,10 @@
                         android:layout_weight="1"
                         android:animateLayoutChanges="false"
                         android:animationCache="true"
-                        app:hintAnimationEnabled="false"
-                        android:hint="Цена до"
+                        android:hint="@string/price_do"
                         app:endIconDrawable="@drawable/rub"
-                        app:endIconMode="custom">
+                        app:endIconMode="custom"
+                        app:hintAnimationEnabled="false">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/PriceDo"
@@ -286,8 +289,8 @@
                             android:layout_height="18dp"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="5dp"
-                            android:text="Порядок сортировки"
-                            android:textSize="12dp"
+                            android:text="@string/sort_type"
+                            android:textSize="12sp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -300,8 +303,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="5dp"
-                    android:text="Статус"
-                    android:textSize="12dp"
+                    android:text="@string/status"
+                    android:textSize="12sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/linearLayout5" />
 

@@ -14,9 +14,12 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.ResearchRest;
+import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.ui.ProbyMenu.Probs.ProbAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesFieldAdapter;
 import com.daimajia.swipe.SwipeLayout;
@@ -33,13 +36,22 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     private static String[] Indicators;
     private static List<Suggestion> suggestions;
     private static short materialId;
-    private SamplesAdapter SampleAdapter;
-    private int id_sample;
 
-    public ResearhAdapter(TreeMap<Short, ResearchRest> ResearchesLise, SamplesAdapter adapter, int id) {
-        researches = ResearchesLise;
-        this.SampleAdapter = adapter;
-        this.id_sample = id;
+    private TextView SamplesHeader;
+    private SamplesRest CurrentSample; //Текущий образец
+    private TextView ProbHeader;
+    private ProbyRest CurrentProb; //текущая проба
+
+    public ResearhAdapter(List<Suggestion> list, int id_m, TextView s_header, SamplesRest Sample, ProbyRest CurrentProb,TextView p_header) {
+        researches = Sample.getResearches();
+
+        this.SamplesHeader = s_header;
+        this.CurrentSample = Sample;
+
+        this.ProbHeader = p_header;
+        this.CurrentProb = CurrentProb;
+
+        UpdateIndicators(list, id_m);
     }
 
     @Override
@@ -56,7 +68,8 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     @Override
     public void onBindViewHolder(@NonNull ResearchItemHolder researchItemHolder, int i) {
         final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
-        ResearchFieldAdapter adapter = new ResearchFieldAdapter(CurrentResearch, Indicators, suggestions, materialId, i + 1, researchItemHolder, SampleAdapter, id_sample);
+        ResearchFieldAdapter adapter = new ResearchFieldAdapter(CurrentResearch, Indicators, suggestions, materialId, i + 1,
+                researchItemHolder, SamplesHeader,CurrentSample, ProbHeader, CurrentProb);
         researchItemHolder.List.setAdapter(adapter);
 
         assert CurrentResearch != null;
@@ -65,7 +78,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
         else
             researchItemHolder.Number.setText(MessageFormat.format("№ {0} - {1}", i + 1, researchItemHolder.Number.getContext().getString(R.string.accreditation_bad)));
 
-        researchItemHolder.Info.setText(MessageFormat.format("Цена: {0}", CurrentResearch.getPrice()));
+        researchItemHolder.Info.setText(MessageFormat.format("Цена: {0} руб.", CurrentResearch.getPrice()));
 
         if(!CurrentResearch.isComplete()){
             researchItemHolder.List.setVisibility(researchItemHolder.List.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
@@ -76,12 +89,15 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     }
 
     public void UpdateIndicators(List<Suggestion> sug, int id) {
+        if(sug == null)return;
         suggestions = sug;
         materialId = (short) id;
 
         Indicators = new String[sug.size()];
         for (int i = 0; i < sug.size(); i++)
             Indicators[i] = sug.get(i).getValue();
+
+//        adapter.notifyDataSetChanged();
     }
 
     private Short getPositionKey(int position) {

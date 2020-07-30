@@ -50,31 +50,29 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
             token.append(App.UserAccessData.getToken());
         }
 
-        change_btn.setOnClickListener(v -> {
-            NetworkService.getInstance()
-                    .getJSONApi()
-                    .setNewPassword(token.toString(), String.valueOf(old_pas.getText()), String.valueOf(new_pas.getText()), String.valueOf(repeat_pas.getText()))
-                    .enqueue(new Callback<StandardAnswer>() {
-                        @Override
-                        public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
-                            if (response.isSuccessful() && response.body() != null) {
-                                if (response.body().getStatus() == 200) {
-                                    Toast.makeText(getContext(), R.string.change_password_ok, Toast.LENGTH_SHORT).show();
+        change_btn.setOnClickListener(v -> NetworkService.getInstance()
+                .getJSONApi()
+                .setNewPassword(token.toString(), String.valueOf(old_pas.getText()), String.valueOf(new_pas.getText()), String.valueOf(repeat_pas.getText()))
+                .enqueue(new Callback<StandardAnswer>() {
+                    @Override
+                    public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            if (response.body().getStatus() == 200) {
+                                Toast.makeText(getContext(), R.string.change_password_ok, Toast.LENGTH_SHORT).show();
 
-                                 //   if (Objects.requireNonNull(getActivity()).getIntent().getBooleanExtra("needChangePassword", false))
-                                        Objects.requireNonNull(getActivity()).finish();
-                                } else
-                                    Toast.makeText(getContext(), R.string.change_password_error, Toast.LENGTH_SHORT).show();
+                             //   if (Objects.requireNonNull(getActivity()).getIntent().getBooleanExtra("needChangePassword", false))
+                                    Objects.requireNonNull(getActivity()).finish();
                             } else
                                 Toast.makeText(getContext(), R.string.change_password_error, Toast.LENGTH_SHORT).show();
-                        }
+                        } else
+                            Toast.makeText(getContext(), R.string.change_password_error, Toast.LENGTH_SHORT).show();
+                    }
 
-                        @Override
-                        public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
-                            Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
+                        Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                    }
+                }));
         return MyView;
     }
 }

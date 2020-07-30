@@ -1,6 +1,5 @@
 package com.bmvl.lk.ui.settings.fragments.EditNotify;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
-import com.bmvl.lk.ui.settings.ItemNotify;
+import com.bmvl.lk.data.models.ItemNotify;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.checkbox.MaterialCheckBox;
 
@@ -21,10 +20,9 @@ import java.util.List;
 
 public class ItemSettingAdapter extends RecyclerView.Adapter {
     private List<ItemNotify> SettingsFields;
-    private LayoutInflater inflater;
 
-    public ItemSettingAdapter(Context context, List<ItemNotify> Contents) {
-        this.inflater = LayoutInflater.from(context);
+    public ItemSettingAdapter(List<ItemNotify> Contents) {
+        // LayoutInflater inflater = LayoutInflater.from(context);
         SettingsFields = Contents;
     }
 
@@ -51,7 +49,7 @@ public class ItemSettingAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final ItemNotify item = SettingsFields.get(position);
-      //  if (item.getType() == (byte) 0)
+        //  if (item.getType() == (byte) 0)
         {
             ((FieldHolder) holder).Name.setText(MessageFormat.format("{0}({1})", item.getName(), getChecBoxTextStatus(item)));
             ((FieldHolder) holder).Email.setChecked(item.isEmail());
@@ -60,15 +58,15 @@ public class ItemSettingAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private String getChecBoxTextStatus(ItemNotify item){
+    private String getChecBoxTextStatus(ItemNotify item) {
         StringBuilder status = new StringBuilder();
-        if(item.isLK()) status.append("в ЛК");
+        if (item.isLK()) status.append("в ЛК");
 
-        if(status.length() > 0 && item.isEmail()) status.append(", ");
-        if(item.isEmail()) status.append("на Email");
+        if (status.length() > 0 && item.isEmail()) status.append(", ");
+        if (item.isEmail()) status.append("на Email");
 
-        if(status.length() > 0 && item.isSMS()) status.append(", ");
-        if(item.isSMS()) status.append("по SMS");
+        if (status.length() > 0 && item.isSMS()) status.append(", ");
+        if (item.isSMS()) status.append("по SMS");
 
         return status.toString();
     }
@@ -77,19 +75,6 @@ public class ItemSettingAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         return SettingsFields.size();
-    }
-
-    private class HeaderHolder extends RecyclerView.ViewHolder {
-        public TextView Name, LK, Email, SMS;
-
-        public HeaderHolder(@NonNull View itemView) {
-            super(itemView);
-
-            Name = itemView.findViewById(R.id.txt_type);
-            LK = itemView.findViewById(R.id.txt_LK);
-            Email = itemView.findViewById(R.id.txt_email);
-            SMS = itemView.findViewById(R.id.txt_SMS);
-        }
     }
 
     private class FieldHolder extends RecyclerView.ViewHolder {

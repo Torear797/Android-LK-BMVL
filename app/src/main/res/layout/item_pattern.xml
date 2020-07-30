@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -15,7 +16,7 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -25,7 +26,7 @@
             android:layout_weight="1"
             android:src="@drawable/ic_edit_black_24dp" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/copy"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -35,7 +36,7 @@
             android:layout_weight="1"
             android:src="@drawable/ic_content_copy_black_24dp" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/create"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -47,7 +48,7 @@
             android:layout_weight="1"
             android:src="@drawable/ic_note_add_black_24dp" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/delete"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -80,10 +81,11 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:fontFamily="sans-serif"
-                android:paddingEnd="20dp"
+
                 android:textAlignment="textStart"
                 android:textColor="#535353"
                 android:textSize="12sp"
+                tools:text="wefkwelfiwelkfnwkefwef"
                 app:layout_constraintEnd_toStartOf="@+id/Data"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

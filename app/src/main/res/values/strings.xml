@@ -16,14 +16,13 @@
     <string name="repeat_password">Повторите пароль</string>
     <string name="change_password_btn">Сменить пароль</string>
     <string name="invalid_email">Некорректная почта</string>
-
     <string name="s_numer">Номер заявки</string>
     <string name="s_numer_protocol">Номер протокола</string>
-    <string name="ot">Дата от</string>
-    <string name="Do">Дата до</string>
+    <string name="Ot">От</string>
+    <string name="Do">До</string>
     <string name="email">Email или Телефон</string>
-    <string name="price_ot">Цена От</string>
-    <string name="price_do">Цена До</string>
+    <string name="price_ot">Цена от</string>
+    <string name="price_do">Цена до</string>
     <string name="Login_title">Авторизация</string>
     <string name="new_order_title">Выберите тип заявки</string>
     <string name="new_pattern_title">Выберите тип шаблона</string>
@@ -79,9 +78,9 @@
     </string-array>
 
     <string-array name="menu_patterns">
-        <item>Шаблон заявки на исследование пищевых продуктов и ...</item>
-        <item>Шаблон сопроводительного письма (заявка на исследо...</item>
-        <item>Шаблон заявки на исследование семян, почв, удобрен...</item>
+        <item>Шаблон заявки на исследование пищевых продуктов и …</item>
+        <item>Шаблон сопроводительного письма (заявка на исследо…</item>
+        <item>Шаблон заявки на исследование семян, почв, удобрен…</item>
     </string-array>
 
     <string-array name="order_name">
@@ -92,9 +91,9 @@
         <item>Гарантийное письмо</item>
         <item>Информационное письмо</item>
         <item>Запрос</item>
-        <item>Шаблон заявки на исследование пищевых продуктов и ...</item>
-        <item>Шаблон сопроводительного письма (заявка на исследо...</item>
-        <item>Шаблон заявки на исследование семян, почв, удобрен...</item>
+        <item>Шаблон заявки на исследование пищевых продуктов и …</item>
+        <item>Шаблон сопроводительного письма (заявка на исследо…</item>
+        <item>Шаблон заявки на исследование семян, почв, удобрен…</item>
     </string-array>
 
     <string-array name="order_statuses">
@@ -129,7 +128,6 @@
         <item>Типовые шаблоны</item>
     </string-array>
 
-    <string name="contact_face">Контактное лицо</string>
     <string name="create_botton">Отправить</string>
     <string name="Select_btn">Обзор…</string>
     <string name="file_no_select">Файл не выбран</string>
@@ -200,5 +198,17 @@
     <string name="drop_research_text">Вы действительно хотите изменить показатель? Все данные по этому показателю будут удалены.</string>
     <string name="Continue">Продолжить</string>
     <string name="cancel">Отмена</string>
+    <string name="scan_doc">Скан доверенности:</string>
+    <string name="place_save_kr">Место хранения контрольного образца</string>
+    <string name="kr">Контрольный образец</string>
+    <string name="act_selected_text">Акт отбора:</string>
+    <string name="Method_isp">Метод испытаний</string>
+    <string name="Type_research">Тип исследования</string>
+    <string name="order_number">Номер заявки</string>
+    <string name="protocol_number">Номер протокола</string>
+    <string name="contact_face">Контактное лицо</string>
+    <string name="order_type">Вид заказа</string>
+    <string name="sort_type">Порядок сортировки</string>
+    <string name="status">Статус</string>
 
 </resources>

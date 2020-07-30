@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     tools:context="ui.order.OrderFragment"
     tools:layout_editor_absoluteX="125dp"
-    tools:layout_editor_absoluteY="105dp"
-    >
+    tools:layout_editor_absoluteY="105dp">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/SwipeRefreshLayout"
@@ -38,13 +37,13 @@
         android:layout_marginEnd="@dimen/myfab_margin"
         android:layout_marginBottom="@dimen/myfab_margin"
         android:fitsSystemWindows="false"
-        app:tint="@android:color/white"
         android:src="@drawable/ic_add_black_24dp"
-        app:borderWidth="0dp"
         app:backgroundTint="@color/colorPrimary"
+        app:borderWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:rippleColor="@color/colorPrimary_dark" />
+        app:rippleColor="@color/colorPrimary_dark"
+        app:tint="@android:color/white" />
 
     <TextView
         android:id="@+id/empty_msg"

@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backround_color_site"
-    android:clipToPadding="false"
     tools:context=".ui.create_order.CreateOrderActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -17,7 +16,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-    <include layout="@layout/toolbar"/>
+
+        <include layout="@layout/toolbar" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -38,82 +38,83 @@
             app:cardCornerRadius="2dp"
             app:cardElevation="2dp"
             app:cardUseCompatPadding="true">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            style="@style/ClearFocus"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/Order_name"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 style="@style/ClearFocus"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="10dp"
-                android:textColor="#555555"
-                android:textSize="17sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="match_parent">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/Create"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginEnd="10dp"
-                android:onClick="sendAction"
-                android:text="@string/create_botton"
-                app:cornerRadius="5dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:strokeColor="@color/accent"
-                app:strokeWidth="1dp" />
+                <TextView
+                    android:id="@+id/Order_name"
+                    style="@style/ClearFocus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:textColor="#555555"
+                    android:textSize="17sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/FieldList"
-                style="@style/ClearFocus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/Order_name">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/Create"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginEnd="10dp"
+                    android:onClick="sendAction"
+                    android:text="@string/create_botton"
+                    app:cornerRadius="5dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:strokeColor="@color/accent"
+                    app:strokeWidth="1dp" />
 
-            </androidx.recyclerview.widget.RecyclerView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/FieldList"
+                    style="@style/ClearFocus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/Order_name">
 
-            <FrameLayout
-                android:id="@+id/Menu_proby_fragment"
-                style="@style/ClearFocus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/Create"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/FieldList" />
+                </androidx.recyclerview.widget.RecyclerView>
 
-            <com.google.android.material.checkbox.MaterialCheckBox
-                android:id="@+id/AcceptcheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@string/accept"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/Create" />
+                <FrameLayout
+                    android:id="@+id/Menu_proby_fragment"
+                    style="@style/ClearFocus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@+id/Create"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/FieldList" />
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/AcceptcheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/accept"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/Create" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
     </androidx.core.widget.NestedScrollView>
 
     <ProgressBar
         android:id="@+id/ProgressBar"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

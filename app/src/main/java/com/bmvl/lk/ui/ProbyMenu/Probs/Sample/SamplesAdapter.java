@@ -28,6 +28,7 @@ import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -41,12 +42,23 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     private SamplesFieldAdapter adapter;
     private ProbyRest CurrentProb;
 
-    public SamplesAdapter(List<Field> Samples, ProbyRest CurrentProb) {
+    private List<Suggestion> suggestions; //Материалы;
+    private int idChoceMaterial; //id выбранного материала
+
+    private Map<String, Integer> ProbFieldIds; //id полей для обновлений
+    private TextView ProbHeader;
+
+
+    public SamplesAdapter(List<Field> Samples, ProbyRest CurrentProb,List<Suggestion> list, int id, Map<String, Integer> fields, TextView Header) {
         SamplesField = Samples;
         this.Samples = CurrentProb.getSamples();
         this.ProbFields = CurrentProb.getFields();
         this.CurrentProb = CurrentProb;
         //  viewPool = new RecyclerView.RecycledViewPool();
+        this.suggestions = list;
+        this.idChoceMaterial = id;
+        this.ProbFieldIds = fields;
+        this.ProbHeader = Header;
     }
 
     @Override
@@ -65,14 +77,15 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final SamplesRest CurrentSample = Samples.get(getPositionKey(i));
 
-        adapter = new SamplesFieldAdapter(SamplesField, CurrentSample, ProbFields, CurrentProb, Byte.parseByte(String.valueOf(i)), this);
+        adapter = new SamplesFieldAdapter(SamplesField, CurrentSample, ProbFields, CurrentProb, Byte.parseByte(String.valueOf(i)), suggestions,idChoceMaterial,ProbFieldIds,  simpleViewHolder.Info, ProbHeader);
         simpleViewHolder.SampleList.setAdapter(adapter);
 
         if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {
             simpleViewHolder.NumberSample.setText(MessageFormat.format("Образец № {0}", i + 1));
 
             assert CurrentSample != null;
-            simpleViewHolder.Info.setText(MessageFormat.format("Цена: {0}", CurrentSample.getPrice()));
+            CurrentSample.RecalculatePrice();
+            simpleViewHolder.Info.setText(MessageFormat.format("Цена: {0} руб.", CurrentSample.getPrice()));
 
         } else {
             simpleViewHolder.GreenHeader.setVisibility(View.GONE);
@@ -152,7 +165,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
 
                 if (CurrentProb.getFields().containsKey("144")) {
                     CurrentProb.getFields().put("144", ArrayToString(getLayoutPosition(), Objects.requireNonNull(CurrentProb.getFields().get("144")).split(", ")));
-                    ProbAdapter.adapter.notifyItemChanged(ProbFieldAdapter.id_field_144);
+                    ProbAdapter.adapter.notifyItemChanged(ProbFieldIds.get("144"));
                 }
 
                 updateList(insertlist);
@@ -196,8 +209,10 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     }
 
     public void UpdateAdapter(List<Suggestion> suggestions, int id) {
-        if (adapter != null)
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
             adapter.UpdateAdapter(suggestions, id);
+        }
     }
 
     public void insertdata(Map<Short, SamplesRest> insertList) {

@@ -1,4 +1,4 @@
-package com.bmvl.lk.ui.settings;
+package com.bmvl.lk.data.models;
 
 public class SettingsGroup {
     private byte id;

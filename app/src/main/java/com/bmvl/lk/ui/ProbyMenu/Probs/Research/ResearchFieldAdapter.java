@@ -16,11 +16,14 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.AnswerMethods;
 import com.bmvl.lk.Rest.AnswerTypes;
 import com.bmvl.lk.Rest.NetworkService;
+import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.ResearchRest;
+import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.Rest.SuggestionMethod;
 import com.bmvl.lk.Rest.SuggestionType;
 import com.bmvl.lk.ViewHolders.AutoCompleteFieldHolder;
+import com.bmvl.lk.ui.ProbyMenu.Probs.ProbAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesFieldAdapter;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -42,23 +45,26 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
     private short indicatorId;
     private String indicatorNdId;
     private AutoCompleteFieldHolder SpinIndicator, SpinMethd, SpinType;
-   // private boolean isCompleteResearch = false;
     private int ResearchPosition; // Номер исследования
-   // private TextView HeaderResearch; //Текст шапки исследований
     private ResearhAdapter.ResearchItemHolder ResearchHolder;
-    private SamplesAdapter SampleAdapter;
-    private int id_sample;
+    private SamplesRest CurrentSample; //Текущий образец
+    private TextView SamplesHeader;
 
-    ResearchFieldAdapter(ResearchRest res, String[] mass, List<Suggestion> sug, short id, int pos, ResearhAdapter.ResearchItemHolder hol, SamplesAdapter adapter,int id_s) {
+    private TextView ProbHeader;
+    private ProbyRest CurrentProb; //текущая проба
+
+    ResearchFieldAdapter(ResearchRest res, String[] mass, List<Suggestion> sug, short id, int pos, ResearhAdapter.ResearchItemHolder hol,
+                        TextView s_header,SamplesRest Sample, TextView p_header, ProbyRest CurrentProb) {
         this.ResearchPosition = pos;
         this.CurrentResearch = res;
         this.Indicators = mass;
         this.suggestions = sug;
         this.materialId = id;
-       // this.HeaderResearch = txt;
         this.ResearchHolder = hol;
-        this.SampleAdapter = adapter;
-        this.id_sample = id_s;
+        this.SamplesHeader = s_header;
+        this.CurrentSample = Sample;
+        this.ProbHeader = p_header;
+        this.CurrentProb = CurrentProb;
     }
 
     @Override
@@ -187,7 +193,13 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
                             ResearchHolder.Number.setText(MessageFormat.format("№ {0} - {1}", ResearchPosition, holder1.TextView.getContext().getString(R.string.accreditation_ok)));
 
                         ResearchHolder.Info.setText(MessageFormat.format("Цена: {0}", CurrentResearch.getPrice()));
-                        SampleAdapter.notifyItemChanged(id_sample);
+                       // SampleAdapter.notifyItemChanged(id_sample);
+                        SamplesHeader.setText(MessageFormat.format("Цена: {0} руб.", CurrentSample.getNewPrice()));
+
+                        ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1} шт. Цена {2} руб.", CurrentProb.getFields().get("materialName"), CurrentProb.getSamples().size(),
+                                CurrentProb.getPrice()
+                        ));
+                        //probAdapter.notifyItemChanged(CurrentProbId);
                     }
                     holder1.TextView.clearFocus();
                 });
@@ -261,6 +273,8 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
         }
         if (!CurrentResearch.isAccreditation())
             ResearchHolder.Number.setText(MessageFormat.format("№ {0} - {1}", ResearchPosition, ResearchHolder.Number.getContext().getString(R.string.accreditation_bad)));
+
+        ResearchHolder.Info.setText(MessageFormat.format("Цена: {0} руб.", CurrentResearch.getPrice()));
     }
 
     private void OpenDialog(boolean isEnabled, int position, String Value) {

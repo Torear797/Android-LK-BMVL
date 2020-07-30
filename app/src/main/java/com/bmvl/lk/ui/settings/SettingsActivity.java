@@ -17,8 +17,7 @@ import com.bmvl.lk.Rest.AnswerOrderNew;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.UserInfo.OrderInfo;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.MenuActivity;
-import com.bmvl.lk.ui.profile.ProfileActivity;
+import com.bmvl.lk.data.models.SettingsGroup;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.orhanobut.hawk.Hawk;
 
@@ -33,7 +32,6 @@ import retrofit2.Response;
 public class SettingsActivity extends AppCompatActivity {
     private RecyclerView SettingsList;
     private List<SettingsGroup> SettingsFields = new ArrayList<>();
-    private SettingsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,30 +60,26 @@ public class SettingsActivity extends AppCompatActivity {
         SettingsList.setItemAnimator(new DefaultItemAnimator());
         SettingsList.setHasFixedSize(true);
 
-        SettingsAdapter.OnClickListener onClickListener = group -> {
-//            Intent intent = new Intent(SettingsActivity.this, SettingItemActivity.class);
-//            intent.putExtra("type_id", group.getId());
-//            if (group.getId() != (byte) 2)
-//                intent.putExtra("name", group.getName());
-//            else
-//                intent.putExtra("name", group.getDescription());
-//            startActivity(intent);
-            UpdateOrderInfo(group);
-        };
+        //            Intent intent = new Intent(SettingsActivity.this, SettingItemActivity.class);
+        //            intent.putExtra("type_id", group.getId());
+        //            if (group.getId() != (byte) 2)
+        //                intent.putExtra("name", group.getName());
+        //            else
+        //                intent.putExtra("name", group.getDescription());
+        //            startActivity(intent);
+        SettingsAdapter.OnClickListener onClickListener = this::UpdateOrderInfo;
 
-        adapter = new SettingsAdapter(SettingsFields, onClickListener);
+        SettingsAdapter adapter = new SettingsAdapter(SettingsFields, onClickListener);
         SettingsList.setAdapter(adapter);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void UpdateOrderInfo(SettingsGroup group) {
@@ -98,14 +92,14 @@ public class SettingsActivity extends AppCompatActivity {
                         if (response.isSuccessful() && response.body() != null) {
                             if (response.body().getStatus() == 200) {
 
-                                if (!response.body().getDefaultFields().get((short) 52).equals(""))
+                                if (!Objects.equals(response.body().getDefaultFields().get((short) 52), ""))
                                     App.OrderInfo = new OrderInfo((short) 52, response.body().getDefaultFields().get((short) 52), response.body().getFieldValues(), true);
-                                else if (!response.body().getDefaultFields().get((short) 63).equals("") && !response.body().getDefaultFields().get((short) 64).equals(""))
+                                else if (!Objects.equals(response.body().getDefaultFields().get((short) 63), "") && !Objects.equals(response.body().getDefaultFields().get((short) 64), ""))
                                     App.OrderInfo = new OrderInfo((short) 64, response.body().getDefaultFields().get((short) 63), response.body().getDefaultFields().get((short) 64), response.body().getFieldValues());
-                                else if (!response.body().getDefaultFields().get((short) 63).equals(""))
+                                else if (!Objects.equals(response.body().getDefaultFields().get((short) 63), ""))
                                     App.OrderInfo = new OrderInfo((short) 63, response.body().getDefaultFields().get((short) 63), response.body().getFieldValues(), false);
 
-                                if (response.body().getDefaultFields().containsKey((short) 128) && !response.body().getDefaultFields().get((short) 128).equals(""))
+                                if (response.body().getDefaultFields().containsKey((short) 128) && !Objects.equals(response.body().getDefaultFields().get((short) 128), ""))
                                     App.OrderInfo.setURL_SCAN_FILE(response.body().getDefaultFields().get((short) 128));
 
                                 App.UserInfo = response.body().getUserInfo();

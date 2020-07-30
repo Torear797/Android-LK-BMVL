@@ -45,6 +45,10 @@ public class SamplesRest implements Serializable {
     }
 
     public double getPrice() {
+        return price;
+    }
+
+    public double getNewPrice() {
         RecalculatePrice();
         return price;
     }

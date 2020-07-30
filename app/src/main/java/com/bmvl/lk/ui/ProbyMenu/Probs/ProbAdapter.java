@@ -29,7 +29,7 @@ import java.util.Objects;
 
 public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHolder> {
     private static Map<Short, ProbyRest> Probs; //Пробы
-    private RecyclerView.RecycledViewPool viewPool;
+    // private RecyclerView.RecycledViewPool viewPool;
 
     private List<Field> ProbFields; //Поля пробы
     private List<Field> SampleFields; //Поля Образцов
@@ -37,10 +37,12 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     private OnProbClickListener OnProbClickListener; //Слушатель нажатий кнопок
     public static ProbFieldAdapter adapter;
 
+    private boolean ExpandProb = false;
+
     ProbAdapter(List<Field> Fields, List<Field> sampleFields, OnProbClickListener Listener) {
         Probs = CreateOrderActivity.order.getProby();
         this.OnProbClickListener = Listener;
-        viewPool = new RecyclerView.RecycledViewPool();
+        // viewPool = new RecyclerView.RecycledViewPool();
         ProbFields = Fields;
         SampleFields = sampleFields;
     }
@@ -54,7 +56,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-     //   View view = ;
+        //   View view = ;
         return new ProbAdapter.SimpleViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_prob, parent, false));
     }
 
@@ -67,8 +69,8 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     public void onBindViewHolder(@NonNull SimpleViewHolder simpleViewHolder, int i) {
         final ProbyRest CurrentProb = Probs.get(getPositionKey(i));
 
-        if(simpleViewHolder.ProbList.getAdapter() == null) //под вопросом. Будут проблемы - убрать.
-        initRecyclerView(simpleViewHolder, CurrentProb);
+        if (simpleViewHolder.ProbList.getAdapter() == null) //под вопросом. Будут проблемы - убрать.
+            initRecyclerView(simpleViewHolder, CurrentProb);
 
         simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", i + 1));
 
@@ -76,14 +78,30 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         if (CurrentProb.getProtocol() != null)
             simpleViewHolder.btnDownload.setVisibility(View.VISIBLE);
 
-        String nameMaterial = simpleViewHolder.infoProb.getContext().getString(R.string.MaterialNoSelectHeader);
-        if (CurrentProb.getFields().containsKey("5"))
-            nameMaterial = CurrentProb.getFields().get("materialName");
+        if(ExpandProb){
+            simpleViewHolder.swipeLayout.setSwipeEnabled(false);
+            simpleViewHolder.ProbList.setVisibility(simpleViewHolder.ProbList.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+            simpleViewHolder.arrow.setImageResource(simpleViewHolder.ProbList.getVisibility() == View.VISIBLE ? R.drawable.ic_w_arrow_ap : R.drawable.ic_w_arrow_down);
+            ExpandProb = false;
+        }
 
-        simpleViewHolder.infoProb.setText(MessageFormat.format("Вид материала: {0} Образцов: {1}", nameMaterial, CurrentProb.getSamples().size()));
-      //  simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+        StringBuilder nameMaterial;
+        if (CurrentProb.getFields().containsKey("materialName"))
+            nameMaterial = new StringBuilder(Objects.requireNonNull(CurrentProb.getFields().get("materialName")));
+        else
+            nameMaterial = new StringBuilder(simpleViewHolder.infoProb.getContext().getString(R.string.MaterialNoSelectHeader));
+
+        simpleViewHolder.infoProb.setText(MessageFormat.format("Вид материала: {0} Образцов: {1} шт. Цена {2} руб.", nameMaterial, CurrentProb.getSamples().size(),
+                CurrentProb.getPrice()
+        ));
+        //  simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
 
         mItemManger.bindView(simpleViewHolder.itemView, i);
+    }
+
+    public void ExpandProb(int position) {
+        ExpandProb = true;
+        notifyItemChanged(position);
     }
 
     @Override
@@ -107,8 +125,9 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
                 ProbFields,
                 SampleFields,
                 CurrentProb,
-                simpleViewHolder.infoProb
+                simpleViewHolder
         );
+        simpleViewHolder.ProbList.setNestedScrollingEnabled(false);
         simpleViewHolder.ProbList.setAdapter(adapter);
     }
 
@@ -159,15 +178,15 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 
             ProbList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 5));
             ProbList.setItemAnimator(new DefaultItemAnimator());
-            ProbList.setRecycledViewPool(viewPool);
-           // ProbList.setHasFixedSize(true);
+            //  ProbList.setRecycledViewPool(viewPool);
+            // ProbList.setHasFixedSize(true);
             final GridLayoutManager mng_layout = new GridLayoutManager(ProbList.getContext(), 2);
             mng_layout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
                     if (position >= 4 && position <= 7) return 1;
 
-                    if(!CreateOrderActivity.IsPattern) {
+                    if (!CreateOrderActivity.IsPattern) {
                         if ((CreateOrderActivity.order_id == 3) && (position == 22 || position == 23))
                             return 1;
                     } else if ((CreateOrderActivity.order_id == 1 || CreateOrderActivity.order_id == 3) && (position == 21 || position == 22))

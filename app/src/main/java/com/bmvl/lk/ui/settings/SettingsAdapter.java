@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.data.models.SettingsGroup;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
@@ -30,9 +31,9 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Settin
     @NonNull
     @Override
     public SettingsAdapter.SettingsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    //    View view = inflater.inflate(R.layout.item_settings_group, parent, false);
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_settings_group, parent, false);
-        return new SettingsAdapter.SettingsHolder(view);
+        //    View view = inflater.inflate(R.layout.item_settings_group, parent, false);
+        // View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_settings_group, parent, false);
+        return new SettingsAdapter.SettingsHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_settings_group, parent, false));
     }
 
     @Override
@@ -60,9 +61,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Settin
             Name = view.findViewById(R.id.Name);
             Description = view.findViewById(R.id.Description);
             group = view.findViewById(R.id.Group);
-            group.setOnClickListener(view1 -> {
-                onClickListener.onDeleteOrder(SettingsFields.get(getLayoutPosition()));
-            });
+            group.setOnClickListener(view1 -> onClickListener.onDeleteOrder(SettingsFields.get(getLayoutPosition())));
         }
     }
 }

@@ -12,7 +12,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,10 +65,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/searchList"
+            style="@style/ClearFocus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/ClearFocus"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

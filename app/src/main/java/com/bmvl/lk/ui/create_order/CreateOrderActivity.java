@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -35,6 +36,9 @@ import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.FileUtils;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Orders;
+import com.bmvl.lk.ui.ProbyMenu.Probs.ProbAdapter;
+import com.bmvl.lk.ui.ProbyMenu.Probs.ProbFieldAdapter;
+import com.bmvl.lk.ui.ProbyMenu.Probs.ProbsFragment;
 import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
 import com.bmvl.lk.ui.order.OrderFragment;
 import com.google.android.material.button.MaterialButton;
@@ -77,6 +81,9 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     private File FileActOfSelection;
     private TextView pathForActOfselection;
+    public static NestedScrollView nestedScrollView;
+
+    public static boolean NoChoiceField = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +96,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         cbox = findViewById(R.id.AcceptcheckBox);
         Frame = findViewById(R.id.Menu_proby_fragment);
         bar = findViewById(R.id.ProgressBar);
+        nestedScrollView = findViewById(R.id.scrollView2);
 
         status = getIntent().getByteExtra("status", (byte) 0);
         act_of_selection = getIntent().getStringExtra("ACT");
@@ -268,28 +276,37 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                ClearDate();
-                this.finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            ClearDate();
+            this.finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private boolean isFieldCorrect() {
         //Проверка на согласие с условиями
         if (cbox.getVisibility() == View.VISIBLE && !cbox.isChecked()) {
+            //nestedScrollView.scrollTo(0, nestedScrollView.getBottom());
             Toast.makeText(getApplicationContext(), R.string.accept_error, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         //Проверка на наличие у заявки проб. Если пробы были удалены (все), вернется 0, а не null.
         if (order.getProby() != null) {
+            int ProbPosition = 0;
             for (TreeMap.Entry<Short, ProbyRest> prob : order.getProby().entrySet()) {
                 //Проверка на наличие материалла
                 if (!prob.getValue().getFields().containsKey("5") && !prob.getValue().getFields().containsKey("materialName")) {
+                    //ProbAdapter.adapter.setCursor("materialName");
+                    if(ProbAdapter.adapter.getPositionList() != null)
+                        if(ProbAdapter.adapter.getIdForField("materialName") != -1) {
+                            NoChoiceField = true;
+                            ProbsFragment.adapter.ExpandProb(ProbPosition);
+                            ProbAdapter.adapter.notifyItemChanged(ProbAdapter.adapter.getIdForField("materialName"));
+                          //  nestedScrollView.scrollBy(0,25);
+                        }
+
                     Toast.makeText(getApplicationContext(), R.string.MaterialNoSelect, Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -297,6 +314,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                 if (!prob.getValue().isResearchCorrect(getApplicationContext())) {
                     return false;
                 }
+                ProbPosition++;
             }
         }
 
@@ -599,22 +617,19 @@ public class CreateOrderActivity extends AppCompatActivity {
                     return 2;
                 }
             });
-            FieldsAdapter.ClickFieldListener onClickFieldListener = new FieldsAdapter.ClickFieldListener() {
-                @Override
-                public void onLoadActOfSelection(TextView path) {
-                    pathForActOfselection = path;
-                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                    intent.setType("*/*");
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+            FieldsAdapter.ClickFieldListener onClickFieldListener = path -> {
+                pathForActOfselection = path;
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-                    try {
-                        startActivityForResult(Intent.createChooser(intent,
-                                getString(R.string.ChoceFile)), LOAD_ACT_OF_SELECTION);
-                    } catch (android.content.ActivityNotFoundException ex) {
+                try {
+                    startActivityForResult(Intent.createChooser(intent,
+                            getString(R.string.ChoceFile)), LOAD_ACT_OF_SELECTION);
+                } catch (android.content.ActivityNotFoundException ex) {
 
-                        Toast.makeText(getApplicationContext(), R.string.NoFileMeneger,
-                                Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(getApplicationContext(), R.string.NoFileMeneger,
+                            Toast.LENGTH_SHORT).show();
                 }
             };
             adapter = new FieldsAdapter(onClickFieldListener);
@@ -626,7 +641,7 @@ public class CreateOrderActivity extends AppCompatActivity {
             final RecyclerView recyclerView = findViewById(R.id.FieldList);
             recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
             recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setHasFixedSize(true);
+           // recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(result);
             recyclerView.setAdapter(adapter);
         }

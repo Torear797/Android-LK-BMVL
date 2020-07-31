@@ -71,7 +71,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     public void onBindViewHolder(@NonNull SimpleViewHolder simpleViewHolder, int i) {
         final ProbyRest CurrentProb = Probs.get(getPositionKey(i));
 
-        if (simpleViewHolder.ProbList.getAdapter() == null) //под вопросом. Будут проблемы - убрать.
+       // if (simpleViewHolder.ProbList.getAdapter() == null) //под вопросом. Будут проблемы - убрать.
             initRecyclerView(simpleViewHolder, CurrentProb);
 
         simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", i + 1));

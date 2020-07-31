@@ -3,6 +3,7 @@ package com.bmvl.lk.ui.ProbyMenu.Probs;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 
     private OnProbClickListener OnProbClickListener; //Слушатель нажатий кнопок
     public static ProbFieldAdapter adapter;
+    public static ProbAdapter probAdapter;
 
     private boolean ExpandProb = false;
 
@@ -45,6 +47,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         // viewPool = new RecyclerView.RecycledViewPool();
         ProbFields = Fields;
         SampleFields = sampleFields;
+        probAdapter = this;
     }
 
     public interface OnProbClickListener {
@@ -56,7 +59,6 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //   View view = ;
         return new ProbAdapter.SimpleViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_prob, parent, false));
     }
 
@@ -79,10 +81,10 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
             simpleViewHolder.btnDownload.setVisibility(View.VISIBLE);
 
         if(ExpandProb){
-            simpleViewHolder.swipeLayout.setSwipeEnabled(false);
-            simpleViewHolder.ProbList.setVisibility(simpleViewHolder.ProbList.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-            simpleViewHolder.arrow.setImageResource(simpleViewHolder.ProbList.getVisibility() == View.VISIBLE ? R.drawable.ic_w_arrow_ap : R.drawable.ic_w_arrow_down);
             ExpandProb = false;
+            simpleViewHolder.swipeLayout.setSwipeEnabled(false);
+            simpleViewHolder.ProbList.setVisibility(View.VISIBLE);
+            simpleViewHolder.arrow.setImageResource(R.drawable.ic_w_arrow_ap);
         }
 
         StringBuilder nameMaterial;
@@ -127,8 +129,9 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
                 CurrentProb,
                 simpleViewHolder
         );
-        simpleViewHolder.ProbList.setNestedScrollingEnabled(false);
+        //simpleViewHolder.ProbList.setNestedScrollingEnabled(false);
         simpleViewHolder.ProbList.setAdapter(adapter);
+       // simpleViewHolder.ProbList.scrollToPosition(6);
     }
 
     class SimpleViewHolder extends RecyclerView.ViewHolder {

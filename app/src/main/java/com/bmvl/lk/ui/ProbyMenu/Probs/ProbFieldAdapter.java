@@ -90,8 +90,6 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     private Map<String, Integer> id_fields = new HashMap<>(); //id полей для обновлений
 
     private List<Suggestion> suggestions; //Материалы;
-    private int idChoceMaterial;
-    private RecyclerView ProbList;
 
     ProbFieldAdapter(List<Field> probFields, List<Field> sampleFields, ProbyRest prob, ProbAdapter.SimpleViewHolder holder) {
         this.ProbHeader = holder.infoProb;
@@ -99,7 +97,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
         ProbFields = probFields;
         SampleFields = sampleFields;
         CurrentProb = prob;
-        this.ProbList = holder.ProbList;
+        //  RecyclerView probList = holder.ProbList;
     }
 
     @Override
@@ -324,14 +322,22 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public Map<String, Integer> getPositionList(){
+    public Map<String, Integer> getPositionList() {
         return id_fields;
     }
 
-    public int getIdForField(String id){
-        if(id_fields.containsKey(id))
-        return id_fields.get(id);
+    public int getIdForField(String id) {
+        if (id_fields.containsKey(id))
+            return id_fields.get(id);
         else return -1;
+    }
+
+    public List<Suggestion> getIndicatorList() {
+        return suggestions;
+    }
+
+    public List<Field> getSamplesFields() {
+        return SampleFields;
     }
 
     private void getRegions(String country_name) {
@@ -444,8 +450,16 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 if (f.getColumn_id() == 144) {
                     id_fields.put("144", position);
                     //id_field_144 = position;
-
                 }
+
+//                if (position == ProbFields.size() - 2)
+//                    id_fields.put("LastField", position);
+//
+//                if (CreateOrderActivity.NoChoiceSamples) {
+//                    CreateOrderActivity.NoChoiceSamples = false;
+//                    ((TextViewHolder) holder).field.setFocusableInTouchMode(true);
+//                    ((TextViewHolder) holder).field.requestFocus();
+//                }
                 break;
             } //Текстовое поле
             case (byte) 1: {
@@ -549,15 +563,9 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
                     ((MaterialFieldHolder) holder).TextView.setText(CurrentProb.getFields().get("materialName"));
 
-                if(CreateOrderActivity.NoChoiceField){
-                    CreateOrderActivity.NoChoiceField = false;
-
-                   // ProbList.smoothScrollToPosition(position+5);
-                 //   CreateOrderActivity.nestedScrollView.fullScroll(3);
-                  //  CreateOrderActivity.nestedScrollView.scrollTo(0, position + 10);
-                   // CreateOrderActivity.nestedScrollView.scrollTo(0,2000);
-                   // ((MaterialFieldHolder) holder).TextView.requestFocus();
-                    ProbList.scrollTo(0, 2000);
+                if (CreateOrderActivity.NoChoiceMaterial) {
+                    CreateOrderActivity.NoChoiceMaterial = false;
+                    ((MaterialFieldHolder) holder).TextView.requestFocus();
                 }
 
                 ((MaterialFieldHolder) holder).ChoceBtn.setOnClickListener(v -> {
@@ -568,7 +576,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 break;
             } //Materials Field
             case (byte) 7: {
-                SamAdapter = new SamplesAdapter(SampleFields, CurrentProb, suggestions, idChoceMaterial, id_fields, ProbHeader);
+                SamAdapter = new SamplesAdapter(SampleFields, CurrentProb, suggestions, id_fields, ProbHeader);
                 (SamAdapter).setMode(Attributes.Mode.Single);
                 ((SamplesPanelHolder) holder).SampleList.setAdapter(SamAdapter);
                 id_fields.put("SampleList", position);
@@ -626,6 +634,14 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                         dateAndTime.get(Calendar.MONTH),
                         dateAndTime.get(Calendar.DAY_OF_MONTH))
                         .show());
+
+//                if (position == ProbFields.size() - 2)
+//                    id_fields.put("LastField", position);
+//
+//                if (CreateOrderActivity.NoChoiceSamples) {
+//                    CreateOrderActivity.NoChoiceSamples = false;
+//                    ((DataFieldHolder) holder).field.setSelection(0);
+//                }
                 break;
             }//DataField
             case (byte) 9: {
@@ -776,7 +792,6 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     public void onResponse(@NonNull Call<AnswerIndicators> call, @NonNull Response<AnswerIndicators> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             suggestions = response.body().getSuggestions();
-                            idChoceMaterial = id;
                             // Log.d("ID", id+"/");
                             //  SamAdapter.notifyDataSetChanged();
                             // SamAdapter.UpdateAdapter(response.body().getSuggestions(), id);

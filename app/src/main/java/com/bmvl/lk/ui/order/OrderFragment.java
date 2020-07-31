@@ -2,7 +2,6 @@ package com.bmvl.lk.ui.order;
 
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -148,7 +147,8 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         View MyView = inflater.inflate(R.layout.fragment_order, container, false);
         if (Hawk.contains("OrdersList")) Orders = Hawk.get("OrdersList");
         if (Hawk.contains("OfflineOrders"))
-            offlineOrders = new TreeMap<>((HashMap<Short, SendOrder>) Hawk.get("OfflineOrders"));
+            //offlineOrders = new TreeMap<>((HashMap<Short, SendOrder>) Hawk.get("OfflineOrders"));
+            offlineOrders = Hawk.get("OfflineOrders");
 
         recyclerView = MyView.findViewById(R.id.list);
         ProgresBar = MyView.findViewById(R.id.progressBar);
@@ -372,7 +372,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         recyclerView.setAdapter(OrderAdapter);
     }
 
-    private boolean checkPermissions() {
+    private void checkPermissions() {
         int result;
         String[] permissions = new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -389,9 +389,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         }
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 0);
-            return false;
         }
-        return true;
     }
 
     private boolean SavePhpWordFile(String base64String, int id) {
@@ -484,7 +482,8 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                 .create()
                 .show());
     }
-    private void getDocumentNames(final int which){
+
+    private void getDocumentNames(final int which) {
         ProgresBar.setVisibility(View.VISIBLE);
         NetworkService.getInstance()
                 .getJSONApi()
@@ -493,7 +492,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                     @Override
                     public void onResponse(@NonNull Call<List<Document>> call, @NonNull Response<List<Document>> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                          UpdateOrderInfo(which,response.body() );
+                            UpdateOrderInfo(which, response.body());
                         } else {
                             ProgresBar.setVisibility(View.GONE);
                             Toast.makeText(getContext(), R.string.auth_error, Toast.LENGTH_SHORT).show();
@@ -509,7 +508,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
     }
 
     private void UpdateOrderInfo(final int which, List<Document> list) {
-     //   ProgresBar.setVisibility(View.VISIBLE);
+        //   ProgresBar.setVisibility(View.VISIBLE);
         NetworkService.getInstance()
                 .getJSONApi()
                 .OrderNew(App.UserAccessData.getToken())
@@ -520,16 +519,16 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                             if (response.body().getStatus() == 200) {
 
 
-                                if (!response.body().getDefaultFields().get((short) 52).equals(""))
+                                if (!Objects.equals(response.body().getDefaultFields().get((short) 52), ""))
                                     App.OrderInfo = new OrderInfo((short) 52, response.body().getDefaultFields().get((short) 52), response.body().getFieldValues(), true);
-                                else if (!response.body().getDefaultFields().get((short) 63).equals("") && !response.body().getDefaultFields().get((short) 64).equals(""))
+                                else if (!Objects.equals(response.body().getDefaultFields().get((short) 63), "") && !Objects.equals(response.body().getDefaultFields().get((short) 64), ""))
                                     App.OrderInfo = new OrderInfo((short) 64, response.body().getDefaultFields().get((short) 63), response.body().getDefaultFields().get((short) 64), response.body().getFieldValues());
-                                else if (!response.body().getDefaultFields().get((short) 63).equals(""))
+                                else if (!Objects.equals(response.body().getDefaultFields().get((short) 63), ""))
                                     App.OrderInfo = new OrderInfo((short) 63, response.body().getDefaultFields().get((short) 63), response.body().getFieldValues(), false);
 
                                 App.OrderInfo.setDocumentName(list);
 
-                                if (response.body().getDefaultFields().containsKey((short) 128) && !response.body().getDefaultFields().get((short) 128).equals(""))
+                                if (response.body().getDefaultFields().containsKey((short) 128) && !Objects.equals(response.body().getDefaultFields().get((short) 128), ""))
                                     App.OrderInfo.setURL_SCAN_FILE(response.body().getDefaultFields().get((short) 128));
 
                                 App.UserInfo = response.body().getUserInfo();

@@ -60,18 +60,15 @@ public class ProbyRest implements Serializable {
         int sampleCount = samples.size();
         int ResearchSize;
         if (sampleCount <= 0) {
-            Toast.makeText(context, R.string.research_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.no_samples_error, Toast.LENGTH_SHORT).show();
             return false;
         }
         for (short i = 0; i < sampleCount; i++) {
             ResearchSize = Objects.requireNonNull(samples.get(getPositionKey(i))).getResearches().size();
             if (ResearchSize <= 0) return false;
             for (int j = 0; j < ResearchSize; j++) {
-//                if (Objects.requireNonNull(samples.get(getPositionKey(i))).getResearches().get(getPositionKeyR(i, j)).getTypeVal() == null)
-//                    return false;
-//                if (Objects.requireNonNull(samples.get(getPositionKey(i))).getResearches().get(getPositionKeyR(i, j)).getMethodVal() == null)
-//                    return false;
-                if (Objects.requireNonNull(samples.get(getPositionKey(i))).getResearches().get(getPositionKeyR(i, j)).getIndicatorVal() == null) {
+
+                if (Objects.requireNonNull(Objects.requireNonNull(samples.get(getPositionKey(i))).getResearches().get(getPositionKeyR(i, j))).getIndicatorVal() == null) {
                     Toast.makeText(context, R.string.indicatorValError, Toast.LENGTH_SHORT).show();
                     return false;
                 }

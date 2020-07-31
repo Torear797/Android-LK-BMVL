@@ -43,20 +43,18 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     private ProbyRest CurrentProb;
 
     private List<Suggestion> suggestions; //Материалы;
-    private int idChoceMaterial; //id выбранного материала
 
     private Map<String, Integer> ProbFieldIds; //id полей для обновлений
     private TextView ProbHeader;
 
 
-    public SamplesAdapter(List<Field> Samples, ProbyRest CurrentProb,List<Suggestion> list, int id, Map<String, Integer> fields, TextView Header) {
+    public SamplesAdapter(List<Field> Samples, ProbyRest CurrentProb,List<Suggestion> list, Map<String, Integer> fields, TextView Header) {
         SamplesField = Samples;
         this.Samples = CurrentProb.getSamples();
         this.ProbFields = CurrentProb.getFields();
         this.CurrentProb = CurrentProb;
         //  viewPool = new RecyclerView.RecycledViewPool();
         this.suggestions = list;
-        this.idChoceMaterial = id;
         this.ProbFieldIds = fields;
         this.ProbHeader = Header;
     }
@@ -77,7 +75,7 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final SamplesRest CurrentSample = Samples.get(getPositionKey(i));
 
-        adapter = new SamplesFieldAdapter(SamplesField, CurrentSample, ProbFields, CurrentProb, Byte.parseByte(String.valueOf(i)), suggestions,idChoceMaterial,ProbFieldIds,  simpleViewHolder.Info, ProbHeader);
+        adapter = new SamplesFieldAdapter(SamplesField, CurrentSample, ProbFields, CurrentProb, Byte.parseByte(String.valueOf(i)), suggestions,ProbFieldIds,  simpleViewHolder.Info, ProbHeader);
         simpleViewHolder.SampleList.setAdapter(adapter);
 
         if (CreateOrderActivity.order_id != 1 && CreateOrderActivity.order_id != 8) {
@@ -206,13 +204,6 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
                 ItemIsDelete = true;
         }
         return string.toString();
-    }
-
-    public void UpdateAdapter(List<Suggestion> suggestions, int id) {
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-            adapter.UpdateAdapter(suggestions, id);
-        }
     }
 
     public void insertdata(Map<Short, SamplesRest> insertList) {

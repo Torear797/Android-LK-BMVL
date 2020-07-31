@@ -62,16 +62,16 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
     private String[] Depth_of_selection;
 
     private List<Suggestion> suggestions; //Материалы;
-    private int idChoceMaterial; //id выбранного материала
 
     private Map<String, Integer> ProbFieldIds; //id полей для обновлений
 
     private TextView SamplesHeader;
     private TextView ProbHeader;
 
+
     SamplesFieldAdapter(List<Field> SamFields, SamplesRest Sample,
                         Map<String, String> ProbFields,
-                        ProbyRest CurrentProb, byte id,List<Suggestion> list, int id_m, Map<String, Integer> fields, TextView s_header, TextView p_header) {
+                        ProbyRest CurrentProb, byte id, List<Suggestion> list, Map<String, Integer> fields, TextView s_header, TextView p_header) {
         this.ProbFields = ProbFields;
         viewPool = new RecyclerView.RecycledViewPool();
         SamplesField = SamFields;
@@ -79,7 +79,6 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
         this.CurrentProb = CurrentProb;
         this.id_sample = id;
         this.suggestions = list;
-        this.idChoceMaterial = id_m;
         this.ProbFieldIds = fields;
         this.SamplesHeader = s_header;
         this.ProbHeader = p_header;
@@ -166,8 +165,8 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
 
                                 if (CurrentProb.getFields().containsKey("144")) {
                                     Depth_of_selection = Objects.requireNonNull(CurrentProb.getFields().get("144")).split(", ");
-                                   // if (id_sample <= Depth_of_selection.length - 1)
-                                        Depth_of_selection[id_sample] = "Образец №" + (id_sample + 1) + ": " + s.toString();
+                                    // if (id_sample <= Depth_of_selection.length - 1)
+                                    Depth_of_selection[id_sample] = "Образец №" + (id_sample + 1) + ": " + s.toString();
 //                                    else {
 //                                        String[] NewDeepMas = new String[CurrentProb.getSamples().size()];
 //                                        System.arraycopy(Depth_of_selection, 0, NewDeepMas, 0, Depth_of_selection.length);
@@ -288,7 +287,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 break;
             }//Мультиспинер
             case 6: {
-                Adapter = new ResearhAdapter(suggestions,idChoceMaterial, SamplesHeader, CurrentSample, CurrentProb, ProbHeader);
+                Adapter = new ResearhAdapter(suggestions, SamplesHeader, CurrentSample, CurrentProb, ProbHeader);
                 (Adapter).setMode(Attributes.Mode.Single);
                 ((ResearchPanelHolder) holder).ResearchList.setAdapter(Adapter);
                 ((ResearchPanelHolder) holder).ResearchList.setRecycledViewPool(viewPool);
@@ -296,15 +295,18 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
 
                 //Добавляет исследование
                 ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(v -> {
-                    if (ProbFields.containsKey("5")) {
+                    if (ProbFields.containsKey("5") && suggestions != null) {
                         short newid = getPositionKeyR(CurrentSample.getResearches());
                         Map<Short, ResearchRest> insertlist = new HashMap<>();
                         insertlist.put((short) (newid + 1), new ResearchRest(newid));
                         Adapter.insertdata(insertlist);
-                       // Adapter.notifyDataSetChanged();
+                        // Adapter.notifyDataSetChanged();
                         //((ResearchPanelHolder) holder).ResearchList.smoothScrollToPosition(Adapter.getItemCount() - 1);
-                    } else
+                    } else {
+                        if (suggestions == null && ProbFields.containsKey("5"))
+                            ProbAdapter.adapter.notifyItemChanged(ProbAdapter.adapter.getIdForField("SampleList"));
                         Toast.makeText(((ResearchPanelHolder) holder).ResearchList.getContext(), ((ResearchPanelHolder) holder).ResearchList.getContext().getString(R.string.MaterialNoSelect), Toast.LENGTH_SHORT).show();
+                    }
                 });
 
                 break;
@@ -365,18 +367,6 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
         Edt.setText(MessageFormat.format("{0} . {1} . {2}", formattedDayOfMonth, formattedMonth, String.valueOf(year)));
         Edt.requestFocus();
         Edt.setSelection(Edt.getText().length());
-    }
-
-    void UpdateAdapter(List<Suggestion> suggestions, int id) {
-        if (Adapter != null) {
-            Adapter.notifyDataSetChanged();
-            Adapter.UpdateIndicators(suggestions, id);
-            //Adapter.notifyDataSetChanged();
-        }
-//        else {
-//            buffer_sug = suggestions;
-//            buffer_id = id;
-//        }
     }
 
     private Short getPositionKeyR(Map<Short, ResearchRest> List) {

@@ -91,7 +91,7 @@ public class ChoceMaterialDialogFragment extends DialogFragment {
 
         return builder
                 .setTitle("Выбор материала")
-                .setIcon(android.R.drawable.ic_dialog_info)
+             //   .setIcon(android.R.drawable.ic_dialog_info)
                 .setView(MyView)
                 .setPositiveButton("Выбрать", (dialog, which) -> {
                     autoCompleteTextView.setText(LastValue);

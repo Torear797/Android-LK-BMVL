@@ -33,16 +33,14 @@ import java.util.TreeMap;
 
 public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.ResearchItemHolder> {
     private TreeMap<Short, ResearchRest> researches; //Исследования
-    private static String[] Indicators;
-    private static List<Suggestion> suggestions;
-    private static short materialId;
+    private List<Suggestion> suggestions;
 
     private TextView SamplesHeader;
     private SamplesRest CurrentSample; //Текущий образец
     private TextView ProbHeader;
     private ProbyRest CurrentProb; //текущая проба
 
-    public ResearhAdapter(List<Suggestion> list, int id_m, TextView s_header, SamplesRest Sample, ProbyRest CurrentProb,TextView p_header) {
+    public ResearhAdapter(List<Suggestion> list, TextView s_header, SamplesRest Sample, ProbyRest CurrentProb,TextView p_header) {
         researches = Sample.getResearches();
 
         this.SamplesHeader = s_header;
@@ -50,8 +48,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
 
         this.ProbHeader = p_header;
         this.CurrentProb = CurrentProb;
-
-        UpdateIndicators(list, id_m);
+        this.suggestions = list;
     }
 
     @Override
@@ -68,7 +65,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     @Override
     public void onBindViewHolder(@NonNull ResearchItemHolder researchItemHolder, int i) {
         final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
-        ResearchFieldAdapter adapter = new ResearchFieldAdapter(CurrentResearch, Indicators, suggestions, materialId, i + 1,
+        ResearchFieldAdapter adapter = new ResearchFieldAdapter(CurrentResearch, suggestions, i + 1,
                 researchItemHolder, SamplesHeader,CurrentSample, ProbHeader, CurrentProb);
         researchItemHolder.List.setAdapter(adapter);
 
@@ -86,18 +83,6 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
             researchItemHolder.swipeLayout.setSwipeEnabled(false);
         }
         mItemManger.bindView(researchItemHolder.itemView, i);
-    }
-
-    public void UpdateIndicators(List<Suggestion> sug, int id) {
-        if(sug == null)return;
-        suggestions = sug;
-        materialId = (short) id;
-
-        Indicators = new String[sug.size()];
-        for (int i = 0; i < sug.size(); i++)
-            Indicators[i] = sug.get(i).getValue();
-
-//        adapter.notifyDataSetChanged();
     }
 
     private Short getPositionKey(int position) {

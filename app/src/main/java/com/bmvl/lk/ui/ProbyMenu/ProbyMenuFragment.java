@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -30,12 +29,9 @@ public class ProbyMenuFragment extends Fragment {
         final TabLayout tabLayout = MyView.findViewById(R.id.tabLayout);
         viewPager.setAdapter(createAdapter());
         new TabLayoutMediator(tabLayout, viewPager,
-                new TabLayoutMediator.TabConfigurationStrategy() {
-                    @Override
-                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                        tab.setText(getResources().getStringArray(R.array.brob_menu_titles)[position]);
-                        tab.setIcon(getResources().obtainTypedArray(R.array.brob_menu_icons).getDrawable(position));
-                    }
+                (tab, position) -> {
+                    tab.setText(getResources().getStringArray(R.array.brob_menu_titles)[position]);
+                    tab.setIcon(getResources().obtainTypedArray(R.array.brob_menu_icons).getDrawable(position));
                 }).attach();
         return MyView;
     }

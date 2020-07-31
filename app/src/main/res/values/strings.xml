@@ -162,6 +162,7 @@
     <string name="error">Ошибка</string>
     <string name="accept_error">Для сохранения заявки вы должны согласиться с условиям.</string>
     <string name="research_error">У образца должно быть заполено хотя бы одно исследование.</string>
+    <string name="no_samples_error">У пробы должен быть хотябы 1 образец.</string>
     <string name="MaterialNoSelect">Материал не выбран</string>
     <string name="MaterialNoSelectHeader">не выбрано</string>
     <string name="indicatorValError">Показатель не заполнен</string>

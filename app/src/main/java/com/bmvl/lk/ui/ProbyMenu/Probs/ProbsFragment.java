@@ -189,6 +189,8 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
             final short newid = getPositionKey(CreateOrderActivity.order.getProby().size() - 1, CreateOrderActivity.order.getProby());
             insertlist.put((short) (newid + 1), new ProbyRest(newid));
             adapter.insertdata(insertlist);
+
+            if(CreateOrderActivity.order_id == 1)
             Objects.requireNonNull(CreateOrderActivity.order.getProby().get((short) (newid + 1))).addSample((short) 1, new SamplesRest((short) 0));
 
             if (CreateOrderActivity.order_id == 4) {
@@ -196,7 +198,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
                 CreateOrderActivity.adapter.notifyItemChanged(18);
             }
 
-         //   adapter.notifyDataSetChanged();
+            //adapter.notifyDataSetChanged();
            // recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
         });
     }
@@ -376,6 +378,11 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
                     insertlist.remove(id);
                     adapter.updateList(insertlist);
 
+                    CreateOrderActivity.order.getProby().remove(id);
+                   // adapter.notifyItemRemoved(pos);
+                  //  adapter.notifyDataSetChanged();
+
+                    //Изменение поля кол-во проб
                     if (CreateOrderActivity.order_id == 4) {
                         CreateOrderActivity.order.getFields().put((short) 7, String.valueOf(CreateOrderActivity.order.getProby().size()));
                         CreateOrderActivity.adapter.notifyItemChanged(18);

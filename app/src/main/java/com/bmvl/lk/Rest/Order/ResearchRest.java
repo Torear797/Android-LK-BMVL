@@ -1,5 +1,7 @@
 package com.bmvl.lk.Rest.Order;
 
+import android.util.Log;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -80,7 +82,7 @@ public class ResearchRest implements Serializable {
     }
 
     public boolean isComplete(){
-        return !this.indicatorVal.equals("") && !this.methodVal.equals("");
+        return !this.indicatorVal.equals("") && !this.methodVal.equals("") && this.indicatorVal.length() > 1 && this.methodVal.length() > 1;
     }
     public boolean isAccreditation(){
         return isComplete() && methodId != 0 &&  indicatorId != 0 && indicatorNd != null && indicatorNdId != 0;

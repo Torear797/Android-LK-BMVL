@@ -1,6 +1,7 @@
 package com.bmvl.lk.ui.create_order;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,8 +33,10 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.AnswerSendOrder;
 import com.bmvl.lk.Rest.Order.ProbyRest;
+import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.StandardAnswer;
+import com.bmvl.lk.ViewHolders.MaterialFieldHolder;
 import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.FileUtils;
 import com.bmvl.lk.data.SpacesItemDecoration;
@@ -39,10 +44,12 @@ import com.bmvl.lk.data.models.Orders;
 import com.bmvl.lk.ui.ProbyMenu.Probs.ProbAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.ProbFieldAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.ProbsFragment;
+import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SampleItemDialog;
 import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
 import com.bmvl.lk.ui.order.OrderFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.orhanobut.hawk.Hawk;
 
@@ -81,9 +88,9 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     private File FileActOfSelection;
     private TextView pathForActOfselection;
-    public static NestedScrollView nestedScrollView;
 
-    public static boolean NoChoiceField = false;
+    public static boolean NoChoiceMaterial= false;
+    public static boolean NoChoiceSamples= false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +103,6 @@ public class CreateOrderActivity extends AppCompatActivity {
         cbox = findViewById(R.id.AcceptcheckBox);
         Frame = findViewById(R.id.Menu_proby_fragment);
         bar = findViewById(R.id.ProgressBar);
-        nestedScrollView = findViewById(R.id.scrollView2);
 
         status = getIntent().getByteExtra("status", (byte) 0);
         act_of_selection = getIntent().getStringExtra("ACT");
@@ -212,7 +218,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         //Заполнение полей на форме
         Fields.add(new Field(135, false, "Заявитель", InputType.TYPE_NULL));
         Fields.add(new Field(136, false, "Договор №", InputType.TYPE_NULL));
-        Fields.add(new Field((byte)6, 137, "от", InputType.TYPE_NULL));
+        Fields.add(new Field((byte) 6, 137, "от", InputType.TYPE_NULL));
         Fields.add(new Field(138, false, "Адрес", InputType.TYPE_NULL));
         Fields.add(new Field(139, false, "ИНН", InputType.TYPE_NULL));
         Fields.add(new Field(140, false, "Телефон", InputType.TYPE_NULL));
@@ -231,8 +237,8 @@ public class CreateOrderActivity extends AppCompatActivity {
         order.getFields().put((short) 142, App.UserInfo.getFIO() + ", " + App.UserInfo.getPosition() + ", действующий на основании " + getBasisString());
 
         //Инициализация полей Информация о партии и просихождение
-        order.getFields().put((short)120,"false");
-        order.getFields().put((short)121,"false");
+        order.getFields().put((short) 120, "false");
+        order.getFields().put((short) 121, "false");
     } //Базовые поля
 
     private void addFieldPatternType1() {
@@ -298,21 +304,42 @@ public class CreateOrderActivity extends AppCompatActivity {
             for (TreeMap.Entry<Short, ProbyRest> prob : order.getProby().entrySet()) {
                 //Проверка на наличие материалла
                 if (!prob.getValue().getFields().containsKey("5") && !prob.getValue().getFields().containsKey("materialName")) {
-                    //ProbAdapter.adapter.setCursor("materialName");
-                    if(ProbAdapter.adapter.getPositionList() != null)
-                        if(ProbAdapter.adapter.getIdForField("materialName") != -1) {
-                            NoChoiceField = true;
+                    if (ProbAdapter.adapter.getPositionList() != null)
+                        if (ProbAdapter.adapter.getIdForField("materialName") != -1) {
+                            NoChoiceMaterial = true;
                             ProbsFragment.adapter.ExpandProb(ProbPosition);
                             ProbAdapter.adapter.notifyItemChanged(ProbAdapter.adapter.getIdForField("materialName"));
-                          //  nestedScrollView.scrollBy(0,25);
                         }
 
                     Toast.makeText(getApplicationContext(), R.string.MaterialNoSelect, Toast.LENGTH_SHORT).show();
                     return false;
                 }
+
                 //Проверка на заполненность исследований
-                if (!prob.getValue().isResearchCorrect(getApplicationContext())) {
+                if (prob.getValue().getSamples().size() == 0) {
+                    ProbsFragment.adapter.ExpandProb(ProbPosition);
+                    NoChoiceSamples = true;
+                    ProbAdapter.adapter.notifyItemChanged(ProbAdapter.adapter.getIdForField("LastField"));
+                    Toast.makeText(getApplicationContext(), R.string.no_samples_error, Toast.LENGTH_SHORT).show();
                     return false;
+                } else {
+                    int ResearchSize;
+                    for (short i = 0; i < prob.getValue().getSamples().size(); i++) {
+                        ResearchSize = Objects.requireNonNull(prob.getValue().getSamples().get(getPositionKeyS(i, prob.getValue().getSamples()))).getResearches().size();
+
+                        if (ResearchSize == 0) {
+                            Toast.makeText(getApplicationContext(), R.string.research_error, Toast.LENGTH_SHORT).show();
+                            OpenSampleItemDialog(prob.getValue(), prob.getValue().getSamples().get(getPositionKeyS(i, prob.getValue().getSamples())), Byte.parseByte(String.valueOf(i + 1)));
+                            return false;
+                        } else
+                            for (int j = 0; j < ResearchSize; j++) {
+                                if (!Objects.requireNonNull(Objects.requireNonNull(prob.getValue().getSamples().get(getPositionKeyS(i, prob.getValue().getSamples()))).getResearches().get(getPositionKeyR(i, j, prob.getValue().getSamples()))).isComplete()) {
+                                    Toast.makeText(getApplicationContext(), R.string.indicatorValError, Toast.LENGTH_SHORT).show();
+                                    OpenSampleItemDialog(prob.getValue(), prob.getValue().getSamples().get(getPositionKeyS(i, prob.getValue().getSamples())), Byte.parseByte(String.valueOf(i + 1)));
+                                    return false;
+                                }
+                            }
+                    }
                 }
                 ProbPosition++;
             }
@@ -321,8 +348,32 @@ public class CreateOrderActivity extends AppCompatActivity {
         return true;
     }
 
+    private void OpenSampleItemDialog(ProbyRest prob, SamplesRest Sample, byte pos) {
+        new SampleItemDialog(ProbAdapter.adapter.getSamplesFields(), prob, Sample, pos, ProbAdapter.adapter.getIndicatorList())
+                .show(getSupportFragmentManager(), "SampleItemDialog");
+
+//        SampleItemDialog dialog = new SampleItemDialog(ProbAdapter.adapter.getSamplesFields(), prob, Sample, pos, ProbAdapter.adapter.getIndicatorList());
+//        dialog.show(getSupportFragmentManager(), "SampleItemDialog");
+
+//        dialog.getDialog().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
+//        dialog.getWindow().clearFlags( WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+//        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+    }
+
+    private Short getPositionKeyS(int position, TreeMap<Short, SamplesRest> samples) {
+        if (samples.size() > 0)
+            return new ArrayList<>(samples.keySet()).get(position);
+        else return 0;
+    }
+
+    private Short getPositionKeyR(int i, int j, TreeMap<Short, SamplesRest> samples) {
+        return new ArrayList<>(samples.get(getPositionKeyS(i, samples)).getResearches().keySet()).get(j);
+    }
+
     public void sendAction(View view) {
-      ///  LoadActOfSelection(358);
+        ///  LoadActOfSelection(358);
         if (isFieldCorrect()) {
             view.setEnabled(false);
             bar.setVisibility(View.VISIBLE);
@@ -338,7 +389,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     private void SaveOrder(final View view) {
         //String json = order.getJsonOrder();
         //   Hawk.put("obraz",json);
-         Log.d("JSON", order.getJsonOrder());
+        Log.d("JSON", order.getJsonOrder());
 
         if (status != 11) {
             NetworkService.getInstance()
@@ -503,8 +554,8 @@ public class CreateOrderActivity extends AppCompatActivity {
         RequestBody requestBody = RequestBody.create(FileActOfSelection, MediaType.parse("*/*"));
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("act_of_selection", FileActOfSelection.getName(), requestBody);
 
-        RequestBody Token = RequestBody.create(App.UserAccessData.getToken(),okhttp3.MultipartBody.FORM);
-        RequestBody id = RequestBody.create(String.valueOf(order_id),okhttp3.MultipartBody.FORM);
+        RequestBody Token = RequestBody.create(App.UserAccessData.getToken(), okhttp3.MultipartBody.FORM);
+        RequestBody id = RequestBody.create(String.valueOf(order_id), okhttp3.MultipartBody.FORM);
 
         NetworkService.getInstance()
                 .getJSONApi()
@@ -513,8 +564,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                           if (response.body().getStatus() == 200)
-                            {
+                            if (response.body().getStatus() == 200) {
                                 Toast.makeText(getApplicationContext(), "Файл успешно загружен!", Toast.LENGTH_SHORT).show();
                                 ClearDate();
                                 CreateOrderActivity.this.finish();
@@ -525,7 +575,7 @@ public class CreateOrderActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
-                       // Log.e("Upload error:", t.getMessage());
+                        // Log.e("Upload error:", t.getMessage());
                         bar.setVisibility(View.GONE);
                     }
                 });
@@ -543,8 +593,8 @@ public class CreateOrderActivity extends AppCompatActivity {
             case LOAD_ACT_OF_SELECTION:
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
-                       // Uri uri = data.getData();
-                      //  Log.d("TAG", "File Uri: " + uri.toString());
+                        // Uri uri = data.getData();
+                        //  Log.d("TAG", "File Uri: " + uri.toString());
                         FileActOfSelection = FileUtils.getFile(this, data.getData());
                         pathForActOfselection.setText(FileActOfSelection.getName());
                     }
@@ -641,7 +691,7 @@ public class CreateOrderActivity extends AppCompatActivity {
             final RecyclerView recyclerView = findViewById(R.id.FieldList);
             recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
             recyclerView.setItemAnimator(new DefaultItemAnimator());
-           // recyclerView.setHasFixedSize(true);
+            // recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(result);
             recyclerView.setAdapter(adapter);
         }

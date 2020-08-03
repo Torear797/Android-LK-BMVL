@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +35,6 @@ import com.bmvl.lk.ViewHolders.MultiChipChoceHoldeer;
 import com.bmvl.lk.ViewHolders.MultiSpinerHolder;
 import com.bmvl.lk.ViewHolders.OriginHolder;
 import com.bmvl.lk.ViewHolders.PartyInfoHolder;
-import com.bmvl.lk.ViewHolders.ResearchPanelHolder;
 import com.bmvl.lk.ViewHolders.SamplesPanelHolder;
 import com.bmvl.lk.ViewHolders.SelectButtonHolder;
 import com.bmvl.lk.ViewHolders.SpinerHolder;
@@ -85,6 +82,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     private String[] Regions, Districts, Depth_of_selection;
     private int RegionPos, DistrictPos;
 
+
     // public static int id_field_144 = 0; //id Глубины отбора. Для обновления поля.
 
     private Map<String, Integer> id_fields = new HashMap<>(); //id полей для обновлений
@@ -93,11 +91,9 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
     ProbFieldAdapter(List<Field> probFields, List<Field> sampleFields, ProbyRest prob, ProbAdapter.SimpleViewHolder holder) {
         this.ProbHeader = holder.infoProb;
-        //  viewPool = new RecyclerView.RecycledViewPool();
         ProbFields = probFields;
         SampleFields = sampleFields;
         CurrentProb = prob;
-        //  RecyclerView probList = holder.ProbList;
     }
 
     @Override
@@ -409,7 +405,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                         (dialog, which) -> {
                             CurrentProb.getSamples().clear();
                             CurrentProb.getFields().remove("144");
-                            ProbAdapter.adapter.notifyItemChanged(id_fields.get("144"));
+                            notifyItemChanged(id_fields.get("144"));
 
                             if (CreateOrderActivity.order_id == 1)
                                 CurrentProb.getSamples().put((short) 1, new SamplesRest((short) 0));
@@ -523,16 +519,11 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     SelectElements(Objects.requireNonNull(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))), ((MultiChipChoceHoldeer) holder).contactsCompletionView);
                 ((MultiChipChoceHoldeer) holder).textInputLayout.setHint(f.getHint());
 
-//                ((MultiChipChoceHoldeer) holder).contactsCompletionView.setOnItemClickListener((parent, arg1, pos, id) -> {
-//                    StringBuilder str = new StringBuilder(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContentText().toString().replace(" ",""));
-//                    str.delete(str.length()-1,str.length());
-//                    CurrentProb.getFields().put(String.valueOf(f.getColumn_id()), str.toString());
-//                });
                 ((MultiChipChoceHoldeer) holder).contactsCompletionView.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
                         if (s.length() > 0) {
-                            StringBuilder str = new StringBuilder(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContentText().toString());
+                            StringBuilder str = new StringBuilder(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContentText());
                             str.delete(str.length() - 2, str.length());
                             CurrentProb.getFields().put(String.valueOf(f.getColumn_id()), str.toString());
                         }
@@ -568,11 +559,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     ((MaterialFieldHolder) holder).TextView.requestFocus();
                 }
 
-                ((MaterialFieldHolder) holder).ChoceBtn.setOnClickListener(v -> {
-                    //   ((AutoCompleteTextViewHolder) holder).TextView.setText(mMaterials[0]);
-                    //   ChoceMaterialDialogFragment dialog = ;
-                    new ChoceMaterialDialogFragment(((MaterialFieldHolder) holder).TextView).show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), "ChoceMaterialDialogFragment");
-                });
+                ((MaterialFieldHolder) holder).ChoceBtn.setOnClickListener(v -> new ChoceMaterialDialogFragment(((MaterialFieldHolder) holder).TextView).show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), "ChoceMaterialDialogFragment"));
                 break;
             } //Materials Field
             case (byte) 7: {
@@ -602,7 +589,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                                 else
                                     CurrentProb.getFields().put("144", "Образец №" + (CurrentProb.getSamples().size()) + ": ");
 
-                                ProbAdapter.adapter.notifyItemChanged(id_fields.get("144"));
+                                notifyItemChanged(id_fields.get("144"));
                             }
 
                             //  AddSamples();
@@ -634,14 +621,6 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                         dateAndTime.get(Calendar.MONTH),
                         dateAndTime.get(Calendar.DAY_OF_MONTH))
                         .show());
-
-//                if (position == ProbFields.size() - 2)
-//                    id_fields.put("LastField", position);
-//
-//                if (CreateOrderActivity.NoChoiceSamples) {
-//                    CreateOrderActivity.NoChoiceSamples = false;
-//                    ((DataFieldHolder) holder).field.setSelection(0);
-//                }
                 break;
             }//DataField
             case (byte) 9: {
@@ -792,11 +771,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     public void onResponse(@NonNull Call<AnswerIndicators> call, @NonNull Response<AnswerIndicators> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             suggestions = response.body().getSuggestions();
-                            // Log.d("ID", id+"/");
-                            //  SamAdapter.notifyDataSetChanged();
-                            // SamAdapter.UpdateAdapter(response.body().getSuggestions(), id);
-                            // ProbAdapter.adapter.notifyDataSetChanged();
-                            ProbAdapter.adapter.notifyItemChanged(id_fields.get("SampleList"));
+                            notifyItemChanged(id_fields.get("SampleList"));
                         }
                     }
 

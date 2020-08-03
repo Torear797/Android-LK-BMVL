@@ -127,7 +127,7 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
 
 //        recyclerView.setAdapter(adapter);
 //        NewProbListener(AddProbBtn, adapter, recyclerView);
-
+        
         getMaterialsList();
         new MyTask(recyclerView).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         return MyView;

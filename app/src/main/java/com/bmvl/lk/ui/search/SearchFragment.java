@@ -155,7 +155,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
 
             StringBuilder Ot = new StringBuilder();
             StringBuilder Do = new StringBuilder();
-            if (DataOt.getText().length() > 0) {
+            if (Objects.requireNonNull(DataOt.getText()).length() > 0) {
                 try {
                     Ot.append(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(DataOt.getText().toString()))
                     ));
@@ -164,7 +164,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
                     Ot.append("");
                 }
             }
-            if (DataDo.getText().length() > 0) {
+            if (Objects.requireNonNull(DataDo.getText()).length() > 0) {
                 try {
                     Do.append(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(DataDo.getText().toString()))
                     ));
@@ -177,14 +177,14 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
             NetworkService.getInstance()
                     .getJSONApi()
                     .Search(App.UserAccessData.getToken(),
-                            NumberOrder.getText().toString(),
-                            NumberProtocol.getText().toString(),
+                            String.valueOf(NumberOrder.getText()),
+                            String.valueOf(NumberProtocol.getText()),
                             Ot.toString(),
                             Do.toString(),
                             getSelectedIdsValue(),
                             ((byte) ((byte) OrderType.getSelectedItemPosition() + 1)),
-                            Price.getText().toString(),
-                            PriceDo.getText().toString(),
+                            String.valueOf(Price.getText()),
+                            String.valueOf(PriceDo.getText()),
                             ((byte) ((byte) Status.getSelectedItemPosition() + 1)),
                             sort_name.toString(),
                             (short) 10,
@@ -227,7 +227,7 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
         StringBuilder ids = new StringBuilder();
         for (ContactPersons person : ContactPersons) {
             if (person.getText().equals("")) continue;
-            if (ContactFace.getContentText().toString().contains(person.getText())) {
+            if (String.valueOf(ContactFace.getContentText()).contains(person.getText())) {
                 if (ids.length() > 0) ids.append(",");
                 ids.append(person.getValue());
             }

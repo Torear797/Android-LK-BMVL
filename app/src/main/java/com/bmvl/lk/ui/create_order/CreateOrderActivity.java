@@ -1,7 +1,7 @@
 package com.bmvl.lk.ui.create_order;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,8 +10,6 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,20 +34,17 @@ import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.StandardAnswer;
-import com.bmvl.lk.ViewHolders.MaterialFieldHolder;
 import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.FileUtils;
 import com.bmvl.lk.data.SpacesItemDecoration;
 import com.bmvl.lk.data.models.Orders;
 import com.bmvl.lk.ui.ProbyMenu.Probs.ProbAdapter;
-import com.bmvl.lk.ui.ProbyMenu.Probs.ProbFieldAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.ProbsFragment;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SampleItemDialog;
 import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
 import com.bmvl.lk.ui.order.OrderFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.orhanobut.hawk.Hawk;
 
@@ -75,7 +70,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     public static List<Field> Fields = new ArrayList<>(); //Поля заявки
     public static byte order_id;
     private ProgressBar bar;
-    private MaterialCheckBox cbox;
+    private MaterialCheckBox c_box_accept_rules;
 
     public static SendOrder order;
     private boolean Edit; //Флаг, истина - заявка редактируется.
@@ -87,10 +82,12 @@ public class CreateOrderActivity extends AppCompatActivity {
     private static final int LOAD_ACT_OF_SELECTION = 1;
 
     private File FileActOfSelection;
-    private TextView pathForActOfselection;
+    private TextView pathForActOfSelection;
 
-    public static boolean NoChoiceMaterial= false;
-    public static boolean NoChoiceSamples= false;
+    private NestedScrollView nestedScrollView;
+
+    public static boolean NoChoiceMaterial = false;
+    public static boolean NoChoiceSamples = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,9 +97,11 @@ public class CreateOrderActivity extends AppCompatActivity {
         final TextView OrderName = findViewById(R.id.Order_name);
         final Toolbar toolbar = findViewById(R.id.toolbar);
         //    final RecyclerView recyclerView = findViewById(R.id.FieldList);
-        cbox = findViewById(R.id.AcceptcheckBox);
+        c_box_accept_rules = findViewById(R.id.AcceptcheckBox);
         Frame = findViewById(R.id.Menu_proby_fragment);
         bar = findViewById(R.id.ProgressBar);
+
+        nestedScrollView = findViewById(R.id.scrollView2);
 
         status = getIntent().getByteExtra("status", (byte) 0);
         act_of_selection = getIntent().getStringExtra("ACT");
@@ -118,7 +117,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         } else {
             order = (SendOrder) getIntent().getSerializableExtra(SendOrder.class.getSimpleName());
             assert order != null;
-            Log.d("JSON", order.getJsonOrder());
+            //   Log.d("JSON", order.getJsonOrder());
             toolbar.setTitle(R.string.edit_order);
             final MaterialButton btn = findViewById(R.id.Create);
             btn.setText(R.string.save_text);
@@ -134,8 +133,8 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private void EnableTable(FrameLayout Frame) {
-        cbox.setVisibility(View.VISIBLE);
-        cbox.setMovementMethod(LinkMovementMethod.getInstance());
+        c_box_accept_rules.setVisibility(View.VISIBLE);
+        c_box_accept_rules.setMovementMethod(LinkMovementMethod.getInstance());
         Frame.setVisibility(View.VISIBLE);
         loadFragment(ProbyMenuFragment.newInstance());
     } //Включает отображение таблицы проб
@@ -292,7 +291,7 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     private boolean isFieldCorrect() {
         //Проверка на согласие с условиями
-        if (cbox.getVisibility() == View.VISIBLE && !cbox.isChecked()) {
+        if (c_box_accept_rules.getVisibility() == View.VISIBLE && !c_box_accept_rules.isChecked()) {
             //nestedScrollView.scrollTo(0, nestedScrollView.getBottom());
             Toast.makeText(getApplicationContext(), R.string.accept_error, Toast.LENGTH_SHORT).show();
             return false;
@@ -311,6 +310,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                             ProbAdapter.adapter.notifyItemChanged(ProbAdapter.adapter.getIdForField("materialName"));
                         }
 
+                    nestedScrollView.post(() -> nestedScrollView.scrollTo(0, 2500));
                     Toast.makeText(getApplicationContext(), R.string.MaterialNoSelect, Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -319,7 +319,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                 if (prob.getValue().getSamples().size() == 0) {
                     ProbsFragment.adapter.ExpandProb(ProbPosition);
                     NoChoiceSamples = true;
-                    ProbAdapter.adapter.notifyItemChanged(ProbAdapter.adapter.getIdForField("LastField"));
+                    nestedScrollView.post(() -> nestedScrollView.fullScroll(View.FOCUS_DOWN));
                     Toast.makeText(getApplicationContext(), R.string.no_samples_error, Toast.LENGTH_SHORT).show();
                     return false;
                 } else {
@@ -351,15 +351,6 @@ public class CreateOrderActivity extends AppCompatActivity {
     private void OpenSampleItemDialog(ProbyRest prob, SamplesRest Sample, byte pos) {
         new SampleItemDialog(ProbAdapter.adapter.getSamplesFields(), prob, Sample, pos, ProbAdapter.adapter.getIndicatorList())
                 .show(getSupportFragmentManager(), "SampleItemDialog");
-
-//        SampleItemDialog dialog = new SampleItemDialog(ProbAdapter.adapter.getSamplesFields(), prob, Sample, pos, ProbAdapter.adapter.getIndicatorList());
-//        dialog.show(getSupportFragmentManager(), "SampleItemDialog");
-
-//        dialog.getDialog().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-
-//        dialog.getWindow().clearFlags( WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-//        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
     }
 
     private Short getPositionKeyS(int position, TreeMap<Short, SamplesRest> samples) {
@@ -369,7 +360,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private Short getPositionKeyR(int i, int j, TreeMap<Short, SamplesRest> samples) {
-        return new ArrayList<>(samples.get(getPositionKeyS(i, samples)).getResearches().keySet()).get(j);
+        return new ArrayList<>(Objects.requireNonNull(samples.get(getPositionKeyS(i, samples))).getResearches().keySet()).get(j);
     }
 
     public void sendAction(View view) {
@@ -451,12 +442,12 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private Short getPositionKeySamples(int position, int prob) {
-        if (Objects.requireNonNull(order.getProby().get(getPositionKeyProbs(prob))).getSamples().size() > 0)
-            return new ArrayList<>(Objects.requireNonNull(order.getProby().get(getPositionKeyProbs(prob))).getSamples().keySet()).get(position);
+        if (Objects.requireNonNull(order.getProby().get(getPositionKeyProb(prob))).getSamples().size() > 0)
+            return new ArrayList<>(Objects.requireNonNull(order.getProby().get(getPositionKeyProb(prob))).getSamples().keySet()).get(position);
         else return 0;
     }
 
-    private Short getPositionKeyProbs(int position) {
+    private Short getPositionKeyProb(int position) {
         if (order.getProby().size() > 0)
             return new ArrayList<>(order.getProby().keySet()).get(position);
         else return 0;
@@ -466,10 +457,10 @@ public class CreateOrderActivity extends AppCompatActivity {
         final int ProbSize = order.getProby().size();
         int SamplesSize;
         for (int i = 0; i < ProbSize; i++) {
-            SamplesSize = Objects.requireNonNull(order.getProby().get(getPositionKeyProbs((short) i))).getSamples().size();
+            SamplesSize = Objects.requireNonNull(order.getProby().get(getPositionKeyProb((short) i))).getSamples().size();
             for (int j = 0; j < SamplesSize; j++) {
-                if (Objects.requireNonNull(Objects.requireNonNull(order.getProby().get(getPositionKeyProbs((short) i))).getSamples().get(getPositionKeySamples(j, i))).getFields().size() <= 0) {
-                    Objects.requireNonNull(Objects.requireNonNull(order.getProby().get(getPositionKeyProbs((short) i))).getSamples().get(getPositionKeySamples(j, i))).DeleteSamplesFields();
+                if (Objects.requireNonNull(Objects.requireNonNull(order.getProby().get(getPositionKeyProb((short) i))).getSamples().get(getPositionKeySamples(j, i))).getFields().size() <= 0) {
+                    Objects.requireNonNull(Objects.requireNonNull(order.getProby().get(getPositionKeyProb((short) i))).getSamples().get(getPositionKeySamples(j, i))).DeleteSamplesFields();
                     break;
                 }
             }
@@ -589,22 +580,19 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        switch (requestCode) {
-            case LOAD_ACT_OF_SELECTION:
-                if (resultCode == RESULT_OK) {
-                    if (data != null) {
-                        // Uri uri = data.getData();
-                        //  Log.d("TAG", "File Uri: " + uri.toString());
-                        FileActOfSelection = FileUtils.getFile(this, data.getData());
-                        pathForActOfselection.setText(FileActOfSelection.getName());
-                    }
+        if (requestCode == LOAD_ACT_OF_SELECTION) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    FileActOfSelection = FileUtils.getFile(this, data.getData());
+                    pathForActOfSelection.setText(Objects.requireNonNull(FileActOfSelection).getName());
                 }
-                break;
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class MyTask extends AsyncTask<Void, Void, GridLayoutManager> {
         //  private RecyclerView recyclerView;
         private Context context;
@@ -668,7 +656,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                 }
             });
             FieldsAdapter.ClickFieldListener onClickFieldListener = path -> {
-                pathForActOfselection = path;
+                pathForActOfSelection = path;
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("*/*");
                 intent.addCategory(Intent.CATEGORY_OPENABLE);

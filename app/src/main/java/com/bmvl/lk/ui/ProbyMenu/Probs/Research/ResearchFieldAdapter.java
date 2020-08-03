@@ -33,7 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ResearchFieldAdapter extends RecyclerView.Adapter {
+public class ResearchFieldAdapter extends RecyclerView.Adapter<com.bmvl.lk.ViewHolders.AutoCompleteFieldHolder> {
     private ResearchRest CurrentResearch; //текущий образец
     private short materialId;
     private String[] Indicators, MasMethods, MasTypes;
@@ -63,7 +63,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
         this.ProbHeader = p_header;
         this.CurrentProb = CurrentProb;
 
-        if(sug != null) {
+        if (sug != null) {
             Indicators = new String[sug.size()];
             for (int i = 0; i < sug.size(); i++)
                 Indicators[i] = sug.get(i).getValue();
@@ -77,7 +77,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AutoCompleteFieldHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_auto_compiete_field, parent, false);
         final AutoCompleteFieldHolder holder1 = new AutoCompleteFieldHolder(view1);
 
@@ -195,13 +195,14 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
 
                         if (SamplesHeader != null)
                             SamplesHeader.setText(MessageFormat.format("Цена: {0} руб.", CurrentSample.getNewPrice()));
-                        else ProbAdapter.adapter.notifyItemChanged(ProbAdapter.adapter.getIdForField("SampleList"));
+                        else
+                            ProbAdapter.adapter.notifyItemChanged(ProbAdapter.adapter.getIdForField("SampleList"));
 
                         if (ProbHeader != null)
                             ProbHeader.setText(MessageFormat.format("Вид материала: {0} Образцов: {1} шт. Цена {2} руб.", CurrentProb.getFields().get("materialName"), CurrentProb.getSamples().size(),
                                     CurrentProb.getPrice()
                             ));
-                         else  ProbAdapter.probAdapter.notifyDataSetChanged();
+                        else ProbAdapter.probAdapter.notifyDataSetChanged();
                     }
                     holder1.TextView.clearFocus();
                 });
@@ -311,19 +312,19 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AutoCompleteFieldHolder holder, int position) {
         switch (position) {
             case 0:
-                ((AutoCompleteFieldHolder) holder).Layout.setHint("Показатель");
+                holder.Layout.setHint("Показатель");
                 break;
             case 1:
-                ((AutoCompleteFieldHolder) holder).Layout.setHint("Метод испытаний");
+                holder.Layout.setHint("Метод испытаний");
                 break;
             case 2:
-                ((AutoCompleteFieldHolder) holder).Layout.setHint("Тип исследования");
+                holder.Layout.setHint("Тип исследования");
                 break;
         }
-        ((AutoCompleteFieldHolder) holder).Layout.setEnabled(false);
+        holder.Layout.setEnabled(false);
 
         if (CurrentResearch.getIndicatorVal() != null && CurrentResearch.getMethodVal() != null && CurrentResearch.getTypeVal() != null) {
             indicatorId = CurrentResearch.getIndicatorId();
@@ -333,13 +334,13 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter {
             switch (position) {
                 case 0:
                     InitAdapter(Indicators, holder);
-                    ((AutoCompleteFieldHolder) holder).TextView.setText(CurrentResearch.getIndicatorVal(), false);
+                    holder.TextView.setText(CurrentResearch.getIndicatorVal(), false);
                     break;
                 case 1:
-                    ((AutoCompleteFieldHolder) holder).TextView.setText(CurrentResearch.getMethodVal(), false);
+                    holder.TextView.setText(CurrentResearch.getMethodVal(), false);
                     break;
                 case 2:
-                    ((AutoCompleteFieldHolder) holder).TextView.setText(CurrentResearch.getTypeVal(), false);
+                    holder.TextView.setText(CurrentResearch.getTypeVal(), false);
                     break;
             }
 

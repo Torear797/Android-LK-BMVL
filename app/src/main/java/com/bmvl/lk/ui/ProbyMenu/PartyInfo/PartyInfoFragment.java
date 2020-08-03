@@ -101,7 +101,7 @@ public class PartyInfoFragment extends Fragment {
 
         final RecyclerView recyclerView = MyView.findViewById(R.id.List);
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 15));
-
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         if (TypeTabs == 2) {

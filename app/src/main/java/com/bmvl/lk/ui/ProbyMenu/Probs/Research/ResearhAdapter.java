@@ -19,9 +19,6 @@ import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.data.SpacesItemDecoration;
-import com.bmvl.lk.ui.ProbyMenu.Probs.ProbAdapter;
-import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesAdapter;
-import com.bmvl.lk.ui.ProbyMenu.Probs.Sample.SamplesFieldAdapter;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -40,12 +37,10 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     private TextView ProbHeader;
     private ProbyRest CurrentProb; //текущая проба
 
-    public ResearhAdapter(List<Suggestion> list, TextView s_header, SamplesRest Sample, ProbyRest CurrentProb,TextView p_header) {
-        researches = Sample.getResearches();
-
+    public ResearhAdapter(List<Suggestion> list, TextView s_header, SamplesRest Sample, ProbyRest CurrentProb, TextView p_header) {
+        this.researches = Sample.getResearches();
         this.SamplesHeader = s_header;
         this.CurrentSample = Sample;
-
         this.ProbHeader = p_header;
         this.CurrentProb = CurrentProb;
         this.suggestions = list;
@@ -66,7 +61,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
     public void onBindViewHolder(@NonNull ResearchItemHolder researchItemHolder, int i) {
         final ResearchRest CurrentResearch = researches.get(getPositionKey(i));
         ResearchFieldAdapter adapter = new ResearchFieldAdapter(CurrentResearch, suggestions, i + 1,
-                researchItemHolder, SamplesHeader,CurrentSample, ProbHeader, CurrentProb);
+                researchItemHolder, SamplesHeader, CurrentSample, ProbHeader, CurrentProb);
         researchItemHolder.List.setAdapter(adapter);
 
         assert CurrentResearch != null;
@@ -77,7 +72,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
 
         researchItemHolder.Info.setText(MessageFormat.format("Цена: {0} руб.", CurrentResearch.getPrice()));
 
-        if(!CurrentResearch.isComplete()){
+        if (!CurrentResearch.isComplete()) {
             researchItemHolder.List.setVisibility(researchItemHolder.List.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             researchItemHolder.arrow.setImageResource(researchItemHolder.List.getVisibility() == View.VISIBLE ? R.drawable.ic_w_arrow_ap : R.drawable.ic_w_arrow_down);
             researchItemHolder.swipeLayout.setSwipeEnabled(false);

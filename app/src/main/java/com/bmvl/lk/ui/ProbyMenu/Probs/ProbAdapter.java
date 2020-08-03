@@ -85,6 +85,11 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
             simpleViewHolder.swipeLayout.setSwipeEnabled(false);
             simpleViewHolder.ProbList.setVisibility(View.VISIBLE);
             simpleViewHolder.arrow.setImageResource(R.drawable.ic_w_arrow_ap);
+
+            simpleViewHolder.ProbList.post(() -> {
+                simpleViewHolder.ProbList.scrollToPosition(adapter.getItemCount() - 1);
+                // Here adapter.getItemCount()== child count
+            });
         }
 
         StringBuilder nameMaterial;
@@ -130,6 +135,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
                 simpleViewHolder
         );
         //simpleViewHolder.ProbList.setNestedScrollingEnabled(false);
+        simpleViewHolder.ProbList.setNestedScrollingEnabled(false);
         simpleViewHolder.ProbList.setAdapter(adapter);
        // simpleViewHolder.ProbList.scrollToPosition(6);
     }

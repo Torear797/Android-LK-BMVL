@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,7 +20,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bmvl.lk.App;
 import com.bmvl.lk.R;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.ViewHolders.DataFieldHolder;
@@ -40,7 +38,6 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -62,16 +59,34 @@ public class FieldsAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        return CreateOrderActivity.Fields.get(position).getType();
+        //  return CreateOrderActivity.Fields.get(position).getType();
+
+        switch (CreateOrderActivity.Fields.get(position).getType()) {
+            case 1:
+                return R.layout.item_spiner;
+            case 2:
+                return R.layout.item_original_doc;
+            case 3:
+                return R.layout.item_check_button;
+            case 4:
+                return R.layout.item_button_select;
+            case 5:
+                return R.layout.item_box_text;
+            case 6:
+                return R.layout.item_data_field;
+            default:
+                return R.layout.item_field;
+        }
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        final View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+
         switch (viewType) {
-            case 1: {
-                View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spiner, parent, false);
-                final SpinerHolder holder1 = new SpinerHolder(view1);
+            case R.layout.item_spiner: {
+                final SpinerHolder holder1 = new SpinerHolder(view);
 
                 AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -87,56 +102,46 @@ public class FieldsAdapter extends RecyclerView.Adapter {
 
                 return holder1;
             }//Спинер
-            case 2: {
-                View view2 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_original_doc, parent, false);
-                return new OriginalDocHolder(view2);
+            case R.layout.item_original_doc: {
+                return new OriginalDocHolder(view);
             }//DocOriginal
-            case 3: {
-                View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_check_button, parent, false);
-                final SwitchHolder holder3 = new SwitchHolder(view3);
-
+            case R.layout.item_check_button: {
+                final SwitchHolder holder3 = new SwitchHolder(view);
                 holder3.switchButton.setOnCheckedChangeListener((buttonView, isChecked) -> OrderFields.put(GetColumn_id(holder3.getLayoutPosition()), String.valueOf(isChecked)));
-
                 return holder3;
             } //item_check_button
-            case 4: {
-                View view4 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_button_select, parent, false);
-                return new SelectButtonHolder(view4);
+            case R.layout.item_button_select: {
+                return new SelectButtonHolder(view);
             }//select btn
-            case 5: {
-                View view5 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_box_text, parent, false);
-                return new BoxAndTextHolder(view5);
+            case R.layout.item_box_text: {
+                return new BoxAndTextHolder(view);
             }//item_box_text
-            case 6: {
-                View view6 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_data_field, parent, false);
-
-                final DataFieldHolder holder = new DataFieldHolder(view6);
-                    holder.field.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            if (!String.valueOf(s).equals("") && s.toString().length() <=10)
+            case R.layout.item_data_field: {
+                final DataFieldHolder holder = new DataFieldHolder(view);
+                holder.field.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (!String.valueOf(s).equals("") && s.toString().length() <= 10)
                             try {
                                 OrderFields.put(GetColumn_id(holder.getLayoutPosition()), new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(s.toString()))));
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                        }
+                    }
 
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        }
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
 
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        }
-                    });
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
 
                 return holder;
             }//DataField
             default: {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_field, parent, false);
                 final TextViewHolder holder = new TextViewHolder(view);
-
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
@@ -184,26 +189,25 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                 if (f.getIcon() != null) {
                     ((TextViewHolder) holder).Layout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
                     ((TextViewHolder) holder).Layout.setEndIconDrawable(f.getIcon());
-                } else
-                    if (f.isDoubleSize()) {
-                        ((TextViewHolder) holder).field.setGravity(Gravity.START | Gravity.TOP);
-                        ((TextViewHolder) holder).field.setMinLines(4);
-                        ((TextViewHolder) holder).field.setLines(6);
-                        ((TextViewHolder) holder).field.setSingleLine(false);
-                        ((TextViewHolder) holder).field.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-                    }
+                } else if (f.isDoubleSize()) {
+                    ((TextViewHolder) holder).field.setGravity(Gravity.START | Gravity.TOP);
+                    ((TextViewHolder) holder).field.setMinLines(4);
+                    ((TextViewHolder) holder).field.setLines(6);
+                    ((TextViewHolder) holder).field.setSingleLine(false);
+                    ((TextViewHolder) holder).field.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+                }
                 break;
             } //Текстовое поле
             case 1: {
-               // ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(((SpinerHolder) holder).spiner.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
-                StringSpinnerAdapter adapter = new StringSpinnerAdapter(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item,((SpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()) , ((SpinerHolder) holder).spiner);
+                // ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(((SpinerHolder) holder).spiner.getContext(), f.getEntries(), android.R.layout.simple_spinner_item);
+                StringSpinnerAdapter adapter = new StringSpinnerAdapter(((SpinerHolder) holder).spiner.getContext(), android.R.layout.simple_spinner_item, ((SpinerHolder) holder).spiner.getContext().getResources().getStringArray(f.getEntries()), ((SpinerHolder) holder).spiner);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 ((SpinerHolder) holder).spiner.setAdapter(adapter);
                 ((SpinerHolder) holder).txtHint.setText(f.getHint());
-               // ((SpinerHolder) holder).layout.setHint(f.getHint());
+                // ((SpinerHolder) holder).layout.setHint(f.getHint());
 
-               // if (OrderFields.containsKey((short) f.getColumn_id()))
-                    ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(OrderFields.get((short) f.getColumn_id())));
+                // if (OrderFields.containsKey((short) f.getColumn_id()))
+                ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(OrderFields.get((short) f.getColumn_id())));
 
                 break;
             } //Одиночный спинер
@@ -263,12 +267,12 @@ public class FieldsAdapter extends RecyclerView.Adapter {
             case 6: {
                 ((DataFieldHolder) holder).Layout.setHint(f.getHint());
 
-                if(OrderFields.containsKey((short) f.getColumn_id()))
-                try {
-                    ((DataFieldHolder) holder).field.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(Objects.requireNonNull(OrderFields.get((short) f.getColumn_id()))))));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                if (OrderFields.containsKey((short) f.getColumn_id()))
+                    try {
+                        ((DataFieldHolder) holder).field.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(Objects.requireNonNull(OrderFields.get((short) f.getColumn_id()))))));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
 
 
                 final DatePickerDialog.OnDateSetListener Datapicker = (view, year, monthOfYear, dayOfMonth) -> ChangeData(year, monthOfYear, dayOfMonth, ((DataFieldHolder) holder).field);

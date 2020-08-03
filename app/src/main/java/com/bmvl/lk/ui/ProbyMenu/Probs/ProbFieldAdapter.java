@@ -130,7 +130,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
 
         switch (viewType) {
             case R.layout.item_spiner: {

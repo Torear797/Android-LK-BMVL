@@ -10,6 +10,7 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -45,10 +46,12 @@ import com.bmvl.lk.ui.ProbyMenu.ProbyMenuFragment;
 import com.bmvl.lk.ui.order.OrderFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -380,7 +383,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     private void SaveOrder(final View view) {
         //String json = order.getJsonOrder();
         //   Hawk.put("obraz",json);
-        Log.d("JSON", order.getJsonOrder());
+      //  Log.d("JSON", order.getJsonOrder());
 
         if (status != 11) {
             NetworkService.getInstance()
@@ -391,15 +394,20 @@ public class CreateOrderActivity extends AppCompatActivity {
                         public void onResponse(@NonNull Call<AnswerSendOrder> call, @NonNull Response<AnswerSendOrder> response) {
                             if (response.isSuccessful() && response.body() != null) {
                                 if (response.body().getStatus() == 200) {
-                                    Toast.makeText(view.getContext(), R.string.order_isEdit, Toast.LENGTH_SHORT).show();
+                                   // Toast.makeText(view.getContext(), R.string.order_isEdit, Toast.LENGTH_SHORT).show();
                                     if (FileActOfSelection != null)
                                         LoadActOfSelection(response.body().getOrder_id());
-                                    else {
-                                        ClearDate();
-                                        CreateOrderActivity.this.finish();
-                                    }
+//                                    else {
+//                                        ClearDate();
+//                                        CreateOrderActivity.this.finish();
+//                                    }
 //                                    ClearDate();
 //                                    CreateOrderActivity.this.finish();
+
+                                    StringBuilder msg = new StringBuilder(getString(R.string.order_isEdit));
+                                    if(response.body().isHaveNotAccredited())
+                                        msg.append(getString(R.string.probIsSort));
+                                    OpenDialogMessage(String.valueOf(msg));
                                 }
                             } else {
                                 view.setEnabled(true);
@@ -476,8 +484,24 @@ public class CreateOrderActivity extends AppCompatActivity {
         order = null;
     }
 
+    private void OpenDialogMessage(String msg) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.attention)
+                .setMessage(msg)
+                .setPositiveButton(R.string.Continue,
+                        (dialog, which) -> {
+                                ClearDate();
+                                CreateOrderActivity.this.finish();
+                        })
+                .setOnDismissListener(v->{
+                    ClearDate();
+                    CreateOrderActivity.this.finish();
+                })
+                .show();
+    }
+
     private void SendOrder(final View view) {
-        Log.d("JSON", order.getJsonOrder());
+      //  Log.d("JSON", order.getJsonOrder());
 
         //   view.setEnabled(true);
         //  bar.setVisibility(View.GONE);
@@ -489,7 +513,7 @@ public class CreateOrderActivity extends AppCompatActivity {
             final Gson gson = new Gson();
             orders.add(order);
 
-            Log.d("JSON2", gson.toJson(orders));
+            //Log.d("JSON2", gson.toJson(orders));
 
             NetworkService.getInstance()
                     .getJSONApi()
@@ -499,13 +523,18 @@ public class CreateOrderActivity extends AppCompatActivity {
                         public void onResponse(@NonNull Call<AnswerSendOrder> call, @NonNull Response<AnswerSendOrder> response) {
                             if (response.isSuccessful() && response.body() != null) {
                                 if (response.body().getStatus() == 200) {
-                                    Toast.makeText(view.getContext(), "Заказ успешно создан!", Toast.LENGTH_SHORT).show();
+                                  //  Toast.makeText(view.getContext(), "Заказ успешно создан!", Toast.LENGTH_SHORT).show();
                                     if (FileActOfSelection != null)
                                         LoadActOfSelection(response.body().getOrder_id());
-                                    else {
-                                        ClearDate();
-                                        CreateOrderActivity.this.finish();
-                                    }
+//                                    else {
+//                                        ClearDate();
+//                                        CreateOrderActivity.this.finish();
+//                                    }
+
+                                    StringBuilder msg = new StringBuilder(getString(R.string.orderIsCreate));
+                                   if(response.body().isHaveNotAccredited())
+                                       msg.append(getString(R.string.probIsSort));
+                                    OpenDialogMessage(String.valueOf(msg));
                                 }
                             } else {
                                 view.setEnabled(true);

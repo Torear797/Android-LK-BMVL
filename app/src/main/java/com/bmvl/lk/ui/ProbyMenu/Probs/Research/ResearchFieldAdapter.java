@@ -186,8 +186,9 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter<com.bmvl.lk.ViewH
                         CurrentResearch.setTypeId(CurrentItem.getId());
                         CurrentResearch.setTypeVal(String.valueOf(parent12.getItemAtPosition(position)));
                         CurrentResearch.setPrice(CurrentItem.getPrice());
+                        CurrentResearch.setAccredited(CurrentItem.getInAccreditationArea());
 
-                        if (CurrentResearch.isAccreditation())
+                        if (CurrentResearch.getAccredited() == (byte)1)
                             ResearchHolder.Number.setText(MessageFormat.format("№ {0} - {1}", ResearchPosition, holder1.TextView.getContext().getString(R.string.accreditation_ok)));
 
                         if (ResearchHolder.Info != null)
@@ -274,7 +275,7 @@ public class ResearchFieldAdapter extends RecyclerView.Adapter<com.bmvl.lk.ViewH
             SpinType.TextView.setAdapter(null);
             //  notifyItemChanged(2);
         }
-        if (!CurrentResearch.isAccreditation())
+        if (CurrentResearch.getAccredited() == (byte)0)
             ResearchHolder.Number.setText(MessageFormat.format("№ {0} - {1}", ResearchPosition, ResearchHolder.Number.getContext().getString(R.string.accreditation_bad)));
 
         ResearchHolder.Info.setText(MessageFormat.format("Цена: {0} руб.", CurrentResearch.getPrice()));

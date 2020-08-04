@@ -3,7 +3,6 @@ package com.bmvl.lk.ui.ProbyMenu.Probs;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -71,16 +70,14 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     public void onBindViewHolder(@NonNull SimpleViewHolder simpleViewHolder, int i) {
         final ProbyRest CurrentProb = Probs.get(getPositionKey(i));
 
-       // if (simpleViewHolder.ProbList.getAdapter() == null) //под вопросом. Будут проблемы - убрать.
-            initRecyclerView(simpleViewHolder, CurrentProb);
-
+        initRecyclerView(simpleViewHolder, CurrentProb);
         simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", i + 1));
 
         assert CurrentProb != null;
         if (CurrentProb.getProtocol() != null)
             simpleViewHolder.btnDownload.setVisibility(View.VISIBLE);
 
-        if(ExpandProb){
+        if (ExpandProb) {
             ExpandProb = false;
             simpleViewHolder.swipeLayout.setSwipeEnabled(false);
             simpleViewHolder.ProbList.setVisibility(View.VISIBLE);
@@ -88,7 +85,6 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 
             simpleViewHolder.ProbList.post(() -> {
                 simpleViewHolder.ProbList.scrollToPosition(adapter.getItemCount() - 1);
-                // Here adapter.getItemCount()== child count
             });
         }
 
@@ -137,7 +133,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
         //simpleViewHolder.ProbList.setNestedScrollingEnabled(false);
         simpleViewHolder.ProbList.setNestedScrollingEnabled(false);
         simpleViewHolder.ProbList.setAdapter(adapter);
-       // simpleViewHolder.ProbList.scrollToPosition(6);
+        // simpleViewHolder.ProbList.scrollToPosition(6);
     }
 
     class SimpleViewHolder extends RecyclerView.ViewHolder {
@@ -167,8 +163,15 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
                 else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close)
                     swipeLayout.setSwipeEnabled(false);
 
+                //  Transition transition = new Slide(Gravity.BOTTOM);
+                //  transition.setDuration(600);
+                //    transition.addTarget(ProbList);
+                // TransitionManager.beginDelayedTransition, transition);
+
                 ProbList.setVisibility(ProbList.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                //    ProbList.startAnimation(AnimationUtils.loadAnimation(ProbList.getContext(), R.anim.slide));
                 arrow.setImageResource(ProbList.getVisibility() == View.VISIBLE ? R.drawable.ic_w_arrow_ap : R.drawable.ic_w_arrow_down);
+
             });
 
             buttonDelete.setOnClickListener(view -> {

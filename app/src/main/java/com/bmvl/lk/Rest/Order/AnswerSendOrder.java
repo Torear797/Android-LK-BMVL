@@ -10,6 +10,12 @@ public class AnswerSendOrder extends StandardAnswer {
     @Expose
     private int order_id;
 
+    public boolean isHaveNotAccredited() {
+        return haveNotAccredited;
+    }
+
+    private boolean haveNotAccredited;
+
     public int getOrder_id() {
         return order_id;
     }

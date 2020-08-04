@@ -4,6 +4,7 @@ public class SuggestionType {
     private String value;
     private short id;
     private double price;
+    private byte inAccreditationArea;
 
     public String getValue() {
         return value;
@@ -15,5 +16,13 @@ public class SuggestionType {
 
     public double getPrice() {
         return price;
+    }
+
+    public byte getInAccreditationArea() {
+        return inAccreditationArea;
+    }
+
+    public void setInAccreditationArea(byte inAccreditationArea) {
+        this.inAccreditationArea = inAccreditationArea;
     }
 }

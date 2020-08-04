@@ -1,7 +1,5 @@
 package com.bmvl.lk.Rest.Order;
 
-import android.util.Log;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -57,6 +55,16 @@ public class ResearchRest implements Serializable {
     @Expose
     private Short id;
 
+    public byte getAccredited() {
+        return accredited;
+    }
+
+    public void setAccredited(byte accredited) {
+        this.accredited = accredited;
+    }
+
+    private byte accredited;
+
     public ResearchRest(Short id) {
         this.id = id;
         ClearAll();
@@ -72,20 +80,17 @@ public class ResearchRest implements Serializable {
         this.indicatorId = 0;
         this.indicatorNd = null;
         this.indicatorNdId = 0;
-        this.typeId = 0;
-        this.typeVal = "";
+        ClearType();
     }
 
     public void ClearType() {
         this.typeId = 0;
         this.typeVal = "";
+        this.accredited = (byte)0;
     }
 
-    public boolean isComplete(){
+    public boolean isComplete() {
         return !this.indicatorVal.equals("") && !this.methodVal.equals("") && this.indicatorVal.length() > 1 && this.methodVal.length() > 1;
-    }
-    public boolean isAccreditation(){
-        return isComplete() && methodId != 0 &&  indicatorId != 0 && indicatorNd != null && indicatorNdId != 0;
     }
 
     public short getIndicatorId() {

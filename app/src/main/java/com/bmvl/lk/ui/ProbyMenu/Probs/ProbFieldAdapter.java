@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -300,8 +301,10 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if (!String.valueOf(s).equals(""))
+                        if (!String.valueOf(s).equals("")) {
+                            //&& !Objects.equals(CurrentProb.getFields().get(GetColumn_id(holder.getLayoutPosition())), String.valueOf(s))
                             CurrentProb.getFields().put(GetColumn_id(holder.getLayoutPosition()), String.valueOf(s));
+                        }
                     }
 
                     @Override

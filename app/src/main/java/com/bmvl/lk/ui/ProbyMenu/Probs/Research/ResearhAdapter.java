@@ -65,7 +65,7 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
         researchItemHolder.List.setAdapter(adapter);
 
         assert CurrentResearch != null;
-        if (CurrentResearch.isAccreditation())
+        if (CurrentResearch.getAccredited() == (byte) 1)
             researchItemHolder.Number.setText(MessageFormat.format("№ {0} - {1}", i + 1, researchItemHolder.Number.getContext().getString(R.string.accreditation_ok)));
         else
             researchItemHolder.Number.setText(MessageFormat.format("№ {0} - {1}", i + 1, researchItemHolder.Number.getContext().getString(R.string.accreditation_bad)));

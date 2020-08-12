@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -31,13 +32,13 @@ android {
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-    implementation 'com.google.android.material:material:1.3.0-alpha01'
+    implementation 'com.google.android.material:material:1.3.0-alpha02'
     implementation "com.daimajia.swipelayout:library:1.2.0@aar"
 
     implementation 'com.daimajia.androidanimations:library:2.3@aar'
@@ -47,7 +48,7 @@ dependencies {
     implementation "com.orhanobut:hawk:2.0.1"
     implementation 'com.squareup.retrofit2:retrofit:2.4.0' //не обновлять minSDK Android O
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0' //не обновлять minSDK Android O
-    
+
 
     implementation 'com.squareup.okhttp3:logging-interceptor:4.7.0' //log
 
@@ -55,5 +56,8 @@ dependencies {
 
     implementation 'ru.egslava:MaskedEditText:1.0.5' //EditText with Mask
 
-    implementation "com.splitwise:tokenautocomplete:3.0.1@aar" //AndroidChipLayout
+    implementation 'com.splitwise:tokenautocomplete:3.0.2@aar' //AndroidChipLayout
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+
+    implementation 'com.google.firebase:firebase-core:17.4.4'
 }

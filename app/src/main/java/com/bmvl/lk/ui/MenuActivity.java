@@ -56,7 +56,6 @@ public class MenuActivity extends AppCompatActivity {
                         return true;
                     case R.id.navigation_patterns:
                         MenuToolbar.setTitle(R.string.menu_patterns);
-                        //  loadFragment(PatternsFragment.newInstance());
                         loadFragment(PatternsMenu.newInstance());
                         return true;
                     case R.id.navigation_search:
@@ -130,7 +129,11 @@ public class MenuActivity extends AppCompatActivity {
 
             final BottomNavigationView navigation = findViewById(R.id.nav_view);
             navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+         //   if(getIntent().getBooleanExtra("GoToNotify", false))
             navigation.setSelectedItemId(R.id.navigation_order);
+          //  else  navigation.setSelectedItemId(R.id.notice);
+
             setSupportActionBar(MenuToolbar);
         }
     }

@@ -1,8 +1,11 @@
 package com.bmvl.lk.ui.order;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +30,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.SimpleViewHolder> {
     private static List<Orders> Orders;
@@ -60,10 +64,11 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //  View view = inflater.inflate(R.layout.item_order, parent, false);
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_order, parent, false);
-        return new SimpleViewHolder(view);
+     //   View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_order, parent, false);
+        return new SimpleViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_order, parent, false));
     }
 
+    @SuppressLint("SimpleDateFormat")
     @Override
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final Orders Order = Orders.get(i);
@@ -76,19 +81,18 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 
 
         try {
-            simpleViewHolder.Data.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(Order.getDate())));
+            simpleViewHolder.Data.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(Order.getDate()))));
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        //simpleViewHolder.Data.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date()));
         if (Order.getStatus_id() == 11) {
             simpleViewHolder.buttonDownload.setVisibility(View.GONE);
             simpleViewHolder.buttonCopy.setVisibility(View.GONE);
             simpleViewHolder.Card.setCardBackgroundColor(simpleViewHolder.Card.getContext().getResources().getColor(R.color.notify_old_color));
         }
 
-        simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+       // simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         simpleViewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
             @Override
             public void onOpen(SwipeLayout layout) {
@@ -168,13 +172,17 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 
             buttonDelete.setOnClickListener(view -> {
                 closeAllItems();
-                onOrderClickListener.onDeleteOrder(Orders.get(getLayoutPosition()).getId(), getLayoutPosition(), Orders.get(getLayoutPosition()).getStatus_id());
+               // onOrderClickListener.onDeleteOrder(Orders.get(getLayoutPosition()).getId(), getLayoutPosition(), Orders.get(getLayoutPosition()).getStatus_id());
+                Orders.remove(getLayoutPosition());
+                notifyItemRemoved(getLayoutPosition());
             });
 
             buttonDownload.setOnClickListener(view -> {
                 closeAllItems();
                 onOrderClickListener.onDownloadOrder(Orders.get(getLayoutPosition()).getId());
             });
+
+            swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         }
     }
 

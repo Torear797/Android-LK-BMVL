@@ -1,5 +1,6 @@
 package com.bmvl.lk.ui.patterns;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class PatternAdapter extends RecyclerSwipeAdapter<PatternAdapter.SimpleViewHolder> {
     private List<Pattern> Patterns;
@@ -50,10 +52,11 @@ public class PatternAdapter extends RecyclerSwipeAdapter<PatternAdapter.SimpleVi
     @NonNull
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pattern, parent, false);
-        return new SimpleViewHolder(view);
+        // View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pattern, parent, false);
+        return new SimpleViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pattern, parent, false));
     }
 
+    @SuppressLint("SimpleDateFormat")
     @Override
     public void onBindViewHolder(SimpleViewHolder simpleViewHolder, int i) {
         final Pattern pattern = Patterns.get(i);
@@ -62,12 +65,12 @@ public class PatternAdapter extends RecyclerSwipeAdapter<PatternAdapter.SimpleVi
         // simpleViewHolder.Date.setText(pattern.getDate());
 
         try {
-            simpleViewHolder.Date.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(pattern.getDate())));
+            simpleViewHolder.Date.setText(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(pattern.getDate()))));
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+//        simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         simpleViewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
             @Override
             public void onOpen(SwipeLayout layout) {
@@ -103,37 +106,27 @@ public class PatternAdapter extends RecyclerSwipeAdapter<PatternAdapter.SimpleVi
             buttonEdit = itemView.findViewById(R.id.edit);
             buttonCreate = itemView.findViewById(R.id.create);
 
-            buttonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    closeAllItems();
-                    onPatternClickListener.onDeleteOrder(Patterns.get(getLayoutPosition()).getId(), getLayoutPosition(), Patterns.get(getLayoutPosition()).getStatus_id());
-                }
+            buttonDelete.setOnClickListener(view -> {
+                closeAllItems();
+                onPatternClickListener.onDeleteOrder(Patterns.get(getLayoutPosition()).getId(), getLayoutPosition(), Patterns.get(getLayoutPosition()).getStatus_id());
             });
 
-            buttonCopy.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    closeAllItems();
-                    onPatternClickListener.onCopyOrder(Patterns.get(getLayoutPosition()));
-                }
+            buttonCopy.setOnClickListener(view -> {
+                closeAllItems();
+                onPatternClickListener.onCopyOrder(Patterns.get(getLayoutPosition()));
             });
 
-            buttonEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    closeAllItems();
-                    onPatternClickListener.onEditOrder(Patterns.get(getLayoutPosition()));
-                }
+            buttonEdit.setOnClickListener(view -> {
+                closeAllItems();
+                onPatternClickListener.onEditOrder(Patterns.get(getLayoutPosition()));
             });
 
-            buttonCreate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    closeAllItems();
-                    onPatternClickListener.onCreateOrder(Patterns.get(getLayoutPosition()));
-                }
+            buttonCreate.setOnClickListener(view -> {
+                closeAllItems();
+                onPatternClickListener.onCreateOrder(Patterns.get(getLayoutPosition()));
             });
+
+            swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
 
         }
     }

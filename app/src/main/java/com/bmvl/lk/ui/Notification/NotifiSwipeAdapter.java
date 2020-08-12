@@ -1,5 +1,6 @@
 package com.bmvl.lk.ui.Notification;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleViewHolder> {
     private static List<Notifications> Notifi;
@@ -49,23 +51,22 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //View view = inflater.inflate(R.layout.item_notifi, parent, false);
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notifi, parent, false);
-        return new SimpleViewHolder(view);
+     //   View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notifi, parent, false);
+        return new SimpleViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notifi, parent, false));
     }
 
+    @SuppressLint("SimpleDateFormat")
     @Override
     public void onBindViewHolder(@NonNull NotifiSwipeAdapter.SimpleViewHolder simpleViewHolder, int i) {
 
         final Notifications notifi = Notifi.get(i);
-        //simpleViewHolder.Data.setText(notifi.getDate());
         try {
-            simpleViewHolder.Data.setText(new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(notifi.getDate())));
+            simpleViewHolder.Data.setText(new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(notifi.getDate()))));
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
         simpleViewHolder.Event.setText(notifi.getEvent());
-
         simpleViewHolder.Order.setText(notifi.getOrder_type());
 
         if (notifi.getStatus() == 0) {
@@ -82,7 +83,7 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
         }
 
 
-        simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+      //  simpleViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         simpleViewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
             @Override
             public void onOpen(SwipeLayout layout) {
@@ -134,18 +135,17 @@ class NotifiSwipeAdapter extends RecyclerSwipeAdapter<NotifiSwipeAdapter.SimpleV
             swipeLayout = itemView.findViewById(R.id.swipeNotifi);
             buttonRead = itemView.findViewById(R.id.read);
 
-            buttonRead.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Notifications Notify = Notifi.get(getLayoutPosition());
-                    closeAllItems();
-                    swipeLayout.close();
-                    if (Notify.getStatus() == 1) {
-                        Notify.setStatus(0);
-                        onNotifyClickListener.onNotifyClick(getLayoutPosition(), Notify.getId());
-                    }
+            buttonRead.setOnClickListener(v -> {
+                final Notifications Notify = Notifi.get(getLayoutPosition());
+                closeAllItems();
+                swipeLayout.close();
+                if (Notify.getStatus() == 1) {
+                    Notify.setStatus(0);
+                    onNotifyClickListener.onNotifyClick(getLayoutPosition(), Notify.getId());
                 }
             });
+
+           swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
 
 
         }

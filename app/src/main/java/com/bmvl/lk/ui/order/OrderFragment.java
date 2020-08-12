@@ -2,11 +2,13 @@ package com.bmvl.lk.ui.order;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,6 +49,7 @@ import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.orhanobut.hawk.Hawk;
 
@@ -55,11 +59,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TreeMap;
+import java.util.concurrent.Executor;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -174,6 +178,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
     }
 
     private void LoadOrders(final List<Orders> NewList, final byte Type) {
+        if(App.UserAccessData.getToken() != null)
         NetworkService.getInstance()
                 .getJSONApi()
                 .LoadOrders(App.UserAccessData.getToken(), (byte) (CurrentPage + 1))
@@ -231,9 +236,13 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                 public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
                                     if (response.isSuccessful() && response.body() != null) {
                                         if (response.body().getStatus() == 200) {
-                                            List<Orders> insertlist = new ArrayList<>(Orders);
-                                            insertlist.remove(position);
-                                            OrderAdapter.updateList(insertlist);
+//                                            List<Orders> insertlist = new ArrayList<>(Orders);
+//                                            insertlist.remove(position);
+//                                            OrderAdapter.updateList(insertlist);
+
+                                            Orders.remove(position);
+                                            OrderAdapter.notifyItemRemoved(position);
+
                                             Hawk.put("OrdersList", Orders);
                                             Snackbar.make(Objects.requireNonNull(getView()), R.string.order_deleted, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                         }
@@ -365,11 +374,12 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
         };
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 10, (byte) 10));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+       // recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         OrderAdapter = new OrderSwipeAdapter(Orders, onClickListener);
         (OrderAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(OrderAdapter);
+
     }
 
     private void checkPermissions() {
@@ -378,6 +388,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.INTERNET,
+                Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_NETWORK_STATE}; // Here i used multiple permission check
 
         List<String> listPermissionsNeeded = new ArrayList<>();

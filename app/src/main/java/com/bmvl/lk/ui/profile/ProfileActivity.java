@@ -92,8 +92,9 @@ public class ProfileActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
-                        Snackbar.make(view, getString(R.string.server_lost), Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+//                        Snackbar.make(view, getString(R.string.server_lost), Snackbar.LENGTH_LONG)
+//                                .setAction("Action", null).show();
+                        exit();
                     }
                 }));
     }

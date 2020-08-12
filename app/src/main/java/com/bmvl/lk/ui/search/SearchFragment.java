@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
@@ -126,6 +128,16 @@ public class SearchFragment extends Fragment implements OnBackPressedListener {
         final Spinner Sort = MyView.findViewById(R.id.Sort);
 
         final NestedScrollView Container = MyView.findViewById(R.id.scrollView);
+
+        final Button testGetId = MyView.findViewById(R.id.button);
+
+        testGetId.setOnClickListener(v -> {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(Objects.requireNonNull(getActivity()), instanceIdResult -> {
+                String newToken = instanceIdResult.getToken();
+                Log.e("newToken",newToken);
+                NumberOrder.setText(newToken);
+            });
+        });
 
         message = MyView.findViewById(R.id.message);
 

@@ -10,6 +10,8 @@ import com.bmvl.lk.Rest.UserInfo.UserAccess;
 import com.bmvl.lk.data.models.LoggedInUser;
 import com.orhanobut.hawk.Hawk;
 
+import java.util.Objects;
+
 public class App extends Application {
     public static UserAccess UserAccessData = null;
     public static LoggedInUser UserInfo = null;
@@ -22,10 +24,7 @@ public class App extends Application {
     }
 
     public static boolean isOnline(Context context) {
-        ConnectivityManager cm =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        assert cm != null;
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        NetworkInfo netInfo = ((ConnectivityManager) Objects.requireNonNull(context.getSystemService(Context.CONNECTIVITY_SERVICE))).getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 

@@ -22,11 +22,12 @@ import retrofit2.http.Part;
 public interface ServerApi {
     @FormUrlEncoded
     @POST("/session/login")
-    Call<UserAccess> getTestUser(
+    Call<UserAccess> login(
             @Field("login") String login,
             @Field("password") String password,
             @Field("device_id") String device_id,
-            @Field("getToken") boolean getToken);
+            @Field("getToken") boolean getToken,
+            @Field("firebase_id") String firebase_id);
 
     @FormUrlEncoded
     @POST("account/info")
@@ -146,7 +147,7 @@ public interface ServerApi {
     @Multipart
     @POST("orders/uploadAct")
     Call<StandardAnswer> UploadAct(
-            @Part("token") RequestBody  token,
+            @Part("token") RequestBody token,
             @Part("order_id") RequestBody order_id,
             @Part MultipartBody.Part act_of_selection
     );
@@ -165,7 +166,7 @@ public interface ServerApi {
     @Multipart
     @POST("account/setDefaultFields")
     Call<StandardAnswer> setDefaultFieldsWithScanFile(
-            @Part("token") RequestBody  token,
+            @Part("token") RequestBody token,
             @Part("defaultFields") RequestBody defaultFields,
             @Part MultipartBody.Part doverennost
     );

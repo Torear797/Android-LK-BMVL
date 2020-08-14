@@ -29,6 +29,7 @@
     <string name="new_order">Новая заявка</string>
     <string name="edit_order">Редактирование заявки</string>
     <string name="Doc_Face">Доверянное лицо</string>
+    <string name="menu_download_file_title">Выберите способ загрузки</string>
 
     <string-array name="DocList">
         <item>Выдать результаты на руки определенному лицу по доверенности</item>
@@ -75,6 +76,11 @@
         <item>Гарантийное письмо</item>
         <item>Информационное письмо</item>
         <item>Запрос</item>
+    </string-array>
+
+    <string-array name="menu_download_file">
+        <item>Скачать на устройство</item>
+        <item>Отправить на почту</item>
     </string-array>
 
     <string-array name="menu_patterns">
@@ -131,7 +137,7 @@
     <string name="create_botton">Отправить</string>
     <string name="Select_btn">Обзор…</string>
     <string name="file_no_select">Файл не выбран</string>
-    <string name="accept">Согласен с <a href="http://192.168.0.100/terms">условиями</a></string>
+    <string name="accept">Согласен с <a href="http://lk.belmvl.ru/terms">условиями</a></string>
     <string name="add_prob">Новая проба</string>
     <string name="Indicator">Показатель</string>
     <string name="Test_method">Метод испытаний</string>
@@ -213,5 +219,6 @@
     <string name="status">Статус</string>
     <string name="orderIsCreate">Заказ успешно создан.</string>
     <string name="probIsSort">Были созданы новые пробы, состоящие из исследований, не входящих в область аккредитации, по этим пробам будет выдано Экспертное заключение.</string>
+    <string name="push">Push уведомления</string>
 
 </resources>

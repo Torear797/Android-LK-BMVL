@@ -1,5 +1,6 @@
 package com.bmvl.lk.ui.login;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +23,10 @@ import com.bmvl.lk.R;
 import com.bmvl.lk.ui.MenuActivity;
 import com.bmvl.lk.ui.reset_password.ResetPasswordActivity;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.orhanobut.hawk.Hawk;
+
+import java.util.Objects;
 
 import br.com.sapereaude.maskedEditText.MaskedEditText;
 
@@ -31,16 +35,20 @@ public class LoginActivity extends AppCompatActivity {
     public static LoginViewModel loginViewModel;
     public Button loginButton;
     //  private ProgressBar loadingProgressBar;
+    private static String FireBase_id = "no token";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        final String ANDROID_ID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        @SuppressLint("HardwareIds") final String ANDROID_ID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         final MaterialToolbar toolbar = findViewById(R.id.toolbar);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
         toolbar.setTitle(R.string.Login_title);
         setSupportActionBar(toolbar);
+
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(Objects.requireNonNull(this), instanceIdResult -> FireBase_id = instanceIdResult.getToken());
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
 
@@ -99,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
+                loginViewModel.loginDataChanged(String.valueOf(usernameEditText.getText()),
                         passwordEditText.getText().toString());
             }
         };
@@ -123,9 +131,9 @@ public class LoginActivity extends AppCompatActivity {
                 if (s.toString().equals("+")) {
                     usernameEditText.setMask("+7(###)###-##-##");
                     usernameEditText.setInputType(InputType.TYPE_CLASS_PHONE);
-                    usernameEditText.setSelection(usernameEditText.getText().length());
+                    usernameEditText.setSelection(Objects.requireNonNull(usernameEditText.getText()).length());
                 }
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
+                loginViewModel.loginDataChanged(String.valueOf(usernameEditText.getText()),
                         passwordEditText.getText().toString());
             }
         };
@@ -135,8 +143,8 @@ public class LoginActivity extends AppCompatActivity {
 
         passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString(), ANDROID_ID, getApplicationContext());
+                loginViewModel.login(String.valueOf(usernameEditText.getText()),
+                        passwordEditText.getText().toString(), ANDROID_ID, getApplicationContext(), FireBase_id);
             }
             return false;
         });
@@ -144,11 +152,14 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> {
             loginButton.setEnabled(false);
             loadingProgressBar.setVisibility(View.VISIBLE);
-            loginViewModel.login(usernameEditText.getText().toString(), passwordEditText.getText().toString(), ANDROID_ID, getApplicationContext());
+            loginViewModel.login(String.valueOf(usernameEditText.getText()), passwordEditText.getText().toString(), ANDROID_ID, getApplicationContext(), FireBase_id);
+            // loginViewModel.login(usernameEditText.getText().toString(), passwordEditText.getText().toString(), ANDROID_ID, getApplicationContext());
         });
     }
 
     private void updateUiWithUser(LoggedInUserView User) {
+        Hawk.deleteAll();
+
         Hawk.put("UserAccessData", User.getAccessData());
         Hawk.put("UserInfo", User.getUserInfo());
         Hawk.put("OrderInfo", User.getOrderInfo());
@@ -164,17 +175,17 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void AccessIsObtained() {
-        Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
+        //   Intent intent = ;
+        startActivity(new Intent(this, MenuActivity.class));
         finish();
     }
 
     public void resetPassword(View view) {
-        Intent intent = new Intent(this, ResetPasswordActivity.class);
+        //Intent intent = ;
 //        intent.putExtra("type_id", (byte) 2);
 //        intent.putExtra("name", R.string.change_password_desc);
 //        intent.putExtra("needChangePassword", true);
 //        intent.putExtra("token", accessData.getToken());
-        startActivity(intent);
+        startActivity(new Intent(this, ResetPasswordActivity.class));
     }
 }

@@ -172,9 +172,9 @@ public class OrderSwipeAdapter extends RecyclerSwipeAdapter<OrderSwipeAdapter.Si
 
             buttonDelete.setOnClickListener(view -> {
                 closeAllItems();
-               // onOrderClickListener.onDeleteOrder(Orders.get(getLayoutPosition()).getId(), getLayoutPosition(), Orders.get(getLayoutPosition()).getStatus_id());
-                Orders.remove(getLayoutPosition());
-                notifyItemRemoved(getLayoutPosition());
+                onOrderClickListener.onDeleteOrder(Orders.get(getLayoutPosition()).getId(), getLayoutPosition(), Orders.get(getLayoutPosition()).getStatus_id());
+//                Orders.remove(getLayoutPosition());
+//                notifyItemRemoved(getLayoutPosition());
             });
 
             buttonDownload.setOnClickListener(view -> {

@@ -1,5 +1,6 @@
 package com.bmvl.lk.ui.profile;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -19,7 +20,6 @@ import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.ui.MenuActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.Objects;
@@ -29,6 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity {
+    @SuppressLint("HardwareIds")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,20 +112,18 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void PhoneChangeListener(TextView txt) {
         final ToggleButton changePhone = findViewById(R.id.changePhone);
         changePhone.setVisibility(View.VISIBLE);
         changePhone.setOnClickListener(v -> {
-            EditDialogFragment dialog = new EditDialogFragment(txt , changePhone);
+            EditDialogFragment dialog = new EditDialogFragment(txt, changePhone);
             Bundle args = new Bundle();
             args.putBoolean("phone", true);
             dialog.setArguments(args);

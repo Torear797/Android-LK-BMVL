@@ -64,7 +64,6 @@
                     android:nextFocusRight="@+id/password"
                     android:selectAllOnFocus="true"
                     android:singleLine="true"
-                    android:typeface="monospace"
                     app:mask="####################" />
             </com.google.android.material.textfield.TextInputLayout>
 

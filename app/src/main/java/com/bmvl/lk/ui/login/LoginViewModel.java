@@ -17,6 +17,9 @@ import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.UserInfo.OrderInfo;
 import com.bmvl.lk.Rest.UserInfo.UserAccess;
 import com.bmvl.lk.ui.settings.SettingItemActivity;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,22 +41,15 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
-    public void login(String username, String password, String device_id, final Context context) {
+    public void login(String username, String password, String device_id, final Context context, String Firebase_id) {
+
         NetworkService.getInstance()
                 .getJSONApi()
-                .getTestUser(username, password, device_id, true)
+                .login(username, password, device_id, true, Firebase_id)
                 .enqueue(new Callback<UserAccess>() {
                     @Override
                     public void onResponse(@NonNull Call<UserAccess> call, @NonNull Response<UserAccess> response) {
                         if (response.isSuccessful() && response.body() != null) {
-//                            if (response.body().getUser_id() != null)
-//
-//
-//                            else {
-//                                //Пользователь ввел не верный лог/пас
-//                                loginResult.setValue(new LoginResult(response.body().getText()));
-//                            }
-
                             switch (response.body().getStatus()) {
                                 case 200:
                                   //  App.UserAccessData.setToken(response.body().getToken());

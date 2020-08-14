@@ -50,6 +50,7 @@
             android:layout_height="wrap_content"
             android:text="@string/inLK"
             android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/SMS"
             app:layout_constraintEnd_toStartOf="@+id/Email"
             app:layout_constraintTop_toBottomOf="@+id/txt_type" />
 
@@ -59,7 +60,9 @@
             android:layout_height="wrap_content"
             android:text="@string/InEmail"
             android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/Push"
             app:layout_constraintEnd_toStartOf="@+id/SMS"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/LK"
             app:layout_constraintTop_toBottomOf="@+id/SMS" />
 
@@ -69,16 +72,28 @@
             android:layout_height="wrap_content"
             android:text="@string/InSMS"
             android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/Email"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/Email"
             app:layout_constraintTop_toBottomOf="@+id/LK" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/Push"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/push"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Email" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/MaterialCheckBoxes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:constraint_referenced_ids="SMS,Email,LK" />
+            app:constraint_referenced_ids="SMS,Email,LK, Push" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

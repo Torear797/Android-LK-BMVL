@@ -6,15 +6,26 @@ public class ItemNotify {
     private boolean LK;
     private boolean Email;
     private boolean SMS;
+
+    public boolean isPush() {
+        return Push;
+    }
+
+    public void setPush(boolean push) {
+        Push = push;
+    }
+
+    private boolean Push;
     private byte type;
 
-    public ItemNotify(String name, String columnId, boolean LK, boolean email, boolean SMS) {
+    public ItemNotify(String name, String columnId, boolean LK, boolean email, boolean SMS, boolean Push) {
         Name = name;
         ColumnId = columnId;
         this.LK = LK;
         Email = email;
         this.SMS = SMS;
         this.type = 0;
+        this.Push = Push;
     }
 
     public String getName() {

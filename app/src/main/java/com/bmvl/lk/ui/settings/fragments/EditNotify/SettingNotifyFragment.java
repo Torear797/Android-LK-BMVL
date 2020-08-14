@@ -64,6 +64,7 @@ public class SettingNotifyFragment extends Fragment implements OnBackPressedList
                 fields.put("lk", (item.isLK() ? "1" : "0" ));
                 fields.put("email", (item.isEmail() ? "1" : "0"));
                 fields.put("sms", (item.isSMS() ? "1" : "0" ));
+                fields.put("push", (item.isPush() ? "1" : "0" ));
 
                 userNotifiactions.put(item.getColumnId(), fields);
             }
@@ -110,7 +111,8 @@ public class SettingNotifyFragment extends Fragment implements OnBackPressedList
                                     SettingsFields.add(new ItemNotify(getNameField(entry.getKey()),entry.getKey(),
                                             getBooleanValue(entry.getValue().get("lk")),
                                             getBooleanValue(entry.getValue().get("email")),
-                                            getBooleanValue(entry.getValue().get("sms"))
+                                            getBooleanValue(entry.getValue().get("sms")),
+                                            getBooleanValue(entry.getValue().get("push"))
                                             ));
                                 }
 
@@ -122,7 +124,7 @@ public class SettingNotifyFragment extends Fragment implements OnBackPressedList
                     @Override
                     public void onFailure(@NonNull Call<AnswerNotifySettings> call, @NonNull Throwable t) {
                         Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
-                        Log.d("TAG","PROBLEM",t);
+                      //  Log.d("TAG","PROBLEM",t);
                     }
                 });
     }
@@ -161,7 +163,7 @@ public class SettingNotifyFragment extends Fragment implements OnBackPressedList
 //            startActivity(intent);
 //        };
 
-        ItemSettingAdapter adapter = new ItemSettingAdapter(SettingsFields);
-        SettingsList.setAdapter(adapter);
+       // ItemSettingAdapter adapter = new ItemSettingAdapter(SettingsFields);
+        SettingsList.setAdapter(new ItemSettingAdapter(SettingsFields));
     }
 }

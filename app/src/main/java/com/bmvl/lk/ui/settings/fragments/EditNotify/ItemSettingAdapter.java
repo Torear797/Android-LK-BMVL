@@ -37,8 +37,8 @@ public class ItemSettingAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-        return new FieldHolder(view);
+       // View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+        return new FieldHolder(LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
 //        if (viewType == R.layout.item_setting_field) {
 //            return new FieldHolder(view);
 //        } else {
@@ -55,6 +55,7 @@ public class ItemSettingAdapter extends RecyclerView.Adapter {
             ((FieldHolder) holder).Email.setChecked(item.isEmail());
             ((FieldHolder) holder).LK.setChecked(item.isLK());
             ((FieldHolder) holder).SMS.setChecked(item.isSMS());
+            ((FieldHolder) holder).Push.setChecked(item.isPush());
         }
     }
 
@@ -68,6 +69,9 @@ public class ItemSettingAdapter extends RecyclerView.Adapter {
         if (status.length() > 0 && item.isSMS()) status.append(", ");
         if (item.isSMS()) status.append("по SMS");
 
+        if (status.length() > 0 && item.isPush()) status.append(", ");
+        if (item.isPush()) status.append("Push");
+
         return status.toString();
     }
 
@@ -79,7 +83,7 @@ public class ItemSettingAdapter extends RecyclerView.Adapter {
 
     private class FieldHolder extends RecyclerView.ViewHolder {
         public TextView Name;
-        public MaterialCheckBox LK, Email, SMS;
+        public MaterialCheckBox LK, Email, SMS, Push;
         public MaterialCardView Card;
         public Group group;
         public ImageView arrow;
@@ -91,6 +95,7 @@ public class ItemSettingAdapter extends RecyclerView.Adapter {
             LK = itemView.findViewById(R.id.LK);
             Email = itemView.findViewById(R.id.Email);
             SMS = itemView.findViewById(R.id.SMS);
+            Push = itemView.findViewById(R.id.Push);
             Card = itemView.findViewById(R.id.Card);
             group = itemView.findViewById(R.id.MaterialCheckBoxes);
             arrow = itemView.findViewById(R.id.arrow_icon);
@@ -109,6 +114,12 @@ public class ItemSettingAdapter extends RecyclerView.Adapter {
                 SettingsFields.get(getLayoutPosition()).setSMS(isChecked);
                 Name.setText(MessageFormat.format("{0}({1})", SettingsFields.get(getLayoutPosition()).getName(), getChecBoxTextStatus(SettingsFields.get(getLayoutPosition()))));
             });
+
+            Push.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                SettingsFields.get(getLayoutPosition()).setPush(isChecked);
+                Name.setText(MessageFormat.format("{0}({1})", SettingsFields.get(getLayoutPosition()).getName(), getChecBoxTextStatus(SettingsFields.get(getLayoutPosition()))));
+            });
+
 
             Card.setOnClickListener(v -> {
                 group.setVisibility(group.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);

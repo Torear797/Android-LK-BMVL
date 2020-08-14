@@ -172,7 +172,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                 .duration(700)
                 .playOn(fab);
 
-        FabLisener(); //Слушатель нажатия кнопки меню
+        FabListener(); //Слушатель нажатия кнопки меню
         RecyclerViewEndLisener(); //Слушатель конца списка
         return MyView;
     }
@@ -293,34 +293,24 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
             @Override
             public void onDownloadOrder(final int id) {
-                ProgresBar.setVisibility(View.VISIBLE);
-                if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    NetworkService.getInstance()
-                            .getJSONApi()
-                            .DOWNLOAD_ORDER_CALL(App.UserAccessData.getToken(), id)
-                            .enqueue(new Callback<AnswerDownloadOrder>() {
-                                @Override
-                                public void onResponse(@NonNull Call<AnswerDownloadOrder> call, @NonNull Response<AnswerDownloadOrder> response) {
-                                    if (response.isSuccessful() && response.body() != null) {
-                                        if (response.body().getStatus() == 200) {
-                                            if (SavePhpWordFile(response.body().getDocx(), id))
-                                                Toast.makeText(getContext(), R.string.download_successfully, Toast.LENGTH_SHORT).show();
-                                            else
-                                                Toast.makeText(getContext(), R.string.error_download, Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                    ProgresBar.setVisibility(View.GONE);
-                                }
+                if (!App.isOnline(Objects.requireNonNull(getContext()))) {
+                    Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                                @Override
-                                public void onFailure(@NonNull Call<AnswerDownloadOrder> call, @NonNull Throwable t) {
-                                    ProgresBar.setVisibility(View.GONE);
-                                    Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                } else {
-                    ProgresBar.setVisibility(View.GONE);
-                    Toast.makeText(getContext(), R.string.no_permisssion_write, Toast.LENGTH_SHORT).show();
+                if (App.UserInfo.getEmail() == null || App.UserInfo.getEmail().equals(""))
+                downloadOrder(id);
+                else {
+                    new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
+                            .setTitle(R.string.menu_download_file_title)
+                            .setItems(R.array.menu_download_file, (dialog, which) -> {
+                                    if (which == 0)
+                                        downloadOrder(id);
+                                    else
+                                        sendFileToEmail();
+                            })
+                            .create()
+                            .show();
                 }
             }
 
@@ -380,6 +370,40 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         (OrderAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(OrderAdapter);
 
+    }
+    private void sendFileToEmail(){
+
+    }
+    private void downloadOrder(int id){
+        ProgresBar.setVisibility(View.VISIBLE);
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            NetworkService.getInstance()
+                    .getJSONApi()
+                    .DOWNLOAD_ORDER_CALL(App.UserAccessData.getToken(), id)
+                    .enqueue(new Callback<AnswerDownloadOrder>() {
+                        @Override
+                        public void onResponse(@NonNull Call<AnswerDownloadOrder> call, @NonNull Response<AnswerDownloadOrder> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                if (response.body().getStatus() == 200) {
+                                    if (SavePhpWordFile(response.body().getDocx(), id))
+                                        Toast.makeText(getContext(), R.string.download_successfully, Toast.LENGTH_SHORT).show();
+                                    else
+                                        Toast.makeText(getContext(), R.string.error_download, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            ProgresBar.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<AnswerDownloadOrder> call, @NonNull Throwable t) {
+                            ProgresBar.setVisibility(View.GONE);
+                            Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            ProgresBar.setVisibility(View.GONE);
+            Toast.makeText(getContext(), R.string.no_permisssion_write, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void checkPermissions() {
@@ -477,7 +501,7 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
         });
     }
 
-    private void FabLisener() {
+    private void FabListener() {
         fab.setOnClickListener(v -> new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
                 .setTitle(R.string.new_order_title)
                 .setItems(R.array.order_types, (dialog, which) -> {

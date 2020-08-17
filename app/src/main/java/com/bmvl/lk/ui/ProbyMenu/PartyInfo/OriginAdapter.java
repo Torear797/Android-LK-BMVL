@@ -72,7 +72,7 @@ class OriginAdapter extends RecyclerView.Adapter {
             case R.layout.item_check_button: {
                 final SwitchHolder holder3 = new SwitchHolder(view);
 
-                if (!ReadOnly)
+                if (!ReadOnly && !CreateOrderActivity.ReadOnly)
                     holder3.switchButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
                         if (fieldsProb == null) {
                             fields.put(GetColumn_id(holder3.getLayoutPosition()), String.valueOf(isChecked));
@@ -90,6 +90,8 @@ class OriginAdapter extends RecyclerView.Adapter {
             case R.layout.item_auto_compiete_field:{
                 final AutoCompleteFieldHolder holder = new AutoCompleteFieldHolder(view);
                 holder.TextView.setThreshold(2);
+
+                if(!CreateOrderActivity.ReadOnly)
                 holder.TextView.setOnItemClickListener((parent1, MeView, position, id) -> {
                     if (fieldsProb == null) {
                         fields.put(GetColumn_id(holder.getLayoutPosition()), holder.TextView.getAdapter().getItem(position).toString());
@@ -121,7 +123,7 @@ class OriginAdapter extends RecyclerView.Adapter {
             default: {
                 final TextViewHolder holder = new TextViewHolder(view);
 
-                if (!ReadOnly)
+                if (!ReadOnly && !CreateOrderActivity.ReadOnly)
                     holder.field.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void afterTextChanged(Editable s) {
@@ -186,7 +188,7 @@ class OriginAdapter extends RecyclerView.Adapter {
                 else
                     ((TextViewHolder) holder).field.setText(fieldsProb.get(String.valueOf(f.getColumn_id())));
 
-                if (ReadOnly) ((TextViewHolder) holder).field.setEnabled(false);
+                if (ReadOnly || CreateOrderActivity.ReadOnly) ((TextViewHolder) holder).field.setEnabled(false);
                 else ((TextViewHolder) holder).field.setEnabled(true);
 
                 break;
@@ -203,6 +205,8 @@ class OriginAdapter extends RecyclerView.Adapter {
                     ((SwitchHolder) holder).switchButton.setChecked(Boolean.parseBoolean(fields.get((short) f.getColumn_id())));
                 else
                     ((SwitchHolder) holder).switchButton.setChecked(Boolean.parseBoolean(fieldsProb.get(String.valueOf(f.getColumn_id()))));
+
+                if (CreateOrderActivity.ReadOnly) ((SwitchHolder) holder).switchButton.setEnabled(false);
                 break;
             } //Свитч
             case (byte)11:{
@@ -230,6 +234,8 @@ class OriginAdapter extends RecyclerView.Adapter {
                         break;
                     }
                 }
+
+                if (CreateOrderActivity.ReadOnly) ((AutoCompleteFieldHolder) holder).Layout.setEnabled(false);
                 break;
             }
         }

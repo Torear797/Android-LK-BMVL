@@ -2,13 +2,11 @@ package com.bmvl.lk.ui.order;
 
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -49,7 +45,6 @@ import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.orhanobut.hawk.Hawk;
 
@@ -63,7 +58,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TreeMap;
-import java.util.concurrent.Executor;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -178,49 +172,49 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
     }
 
     private void LoadOrders(final List<Orders> NewList, final byte Type) {
-        if(App.UserAccessData.getToken() != null)
-        NetworkService.getInstance()
-                .getJSONApi()
-                .LoadOrders(App.UserAccessData.getToken(), (byte) (CurrentPage + 1))
-                .enqueue(new Callback<OrdersAnswer>() {
-                    @Override
-                    public void onResponse(@NonNull Call<OrdersAnswer> call, @NonNull Response<OrdersAnswer> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            if (response.body().getStatus() == 200) {
-                                TotalPage = response.body().getOrders().getTotal_pages();
-                                CurrentPage = response.body().getOrders().getCurrent();
-                                NewList.addAll(response.body().getOrders().getOrders());
-                                Hawk.put("OrdersList", NewList);
-                                switch (Type) {
-                                    case 0:
-                                        OrderAdapter.notifyDataSetChanged();
-                                        recyclerView.scrollToPosition(0);
-                                        break;
-                                    case 1:
-                                        OrderAdapter.updateList(NewList);
-                                        swipeRefreshLayout.setRefreshing(false);
-                                        recyclerView.scrollToPosition(0);
-                                        break;
-                                    case 2:
-                                        // OrderAdapter.insertdata(NewList, false);
-                                        Orders.addAll(NewList);
-                                        OrderAdapter.notifyDataSetChanged();
-                                        loading = true;
-                                        break;
+        if (App.UserAccessData.getToken() != null)
+            NetworkService.getInstance()
+                    .getJSONApi()
+                    .LoadOrders(App.UserAccessData.getToken(), (byte) (CurrentPage + 1))
+                    .enqueue(new Callback<OrdersAnswer>() {
+                        @Override
+                        public void onResponse(@NonNull Call<OrdersAnswer> call, @NonNull Response<OrdersAnswer> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                if (response.body().getStatus() == 200) {
+                                    TotalPage = response.body().getOrders().getTotal_pages();
+                                    CurrentPage = response.body().getOrders().getCurrent();
+                                    NewList.addAll(response.body().getOrders().getOrders());
+                                    Hawk.put("OrdersList", NewList);
+                                    switch (Type) {
+                                        case 0:
+                                            OrderAdapter.notifyDataSetChanged();
+                                            recyclerView.scrollToPosition(0);
+                                            break;
+                                        case 1:
+                                            OrderAdapter.updateList(NewList);
+                                            swipeRefreshLayout.setRefreshing(false);
+                                            recyclerView.scrollToPosition(0);
+                                            break;
+                                        case 2:
+                                            // OrderAdapter.insertdata(NewList, false);
+                                            Orders.addAll(NewList);
+                                            OrderAdapter.notifyDataSetChanged();
+                                            loading = true;
+                                            break;
+                                    }
                                 }
-                            }
-                        } else swipeRefreshLayout.setRefreshing(false);
-                        if (Orders.size() == 0) message.setVisibility(View.VISIBLE);
-                        else message.setVisibility(View.GONE);
-                    }
+                            } else swipeRefreshLayout.setRefreshing(false);
+                            if (Orders.size() == 0) message.setVisibility(View.VISIBLE);
+                            else message.setVisibility(View.GONE);
+                        }
 
-                    @Override
-                    public void onFailure(@NonNull Call<OrdersAnswer> call, @NonNull Throwable t) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        if (Orders.size() == 0) message.setVisibility(View.VISIBLE);
-                        else message.setVisibility(View.GONE);
-                    }
-                });
+                        @Override
+                        public void onFailure(@NonNull Call<OrdersAnswer> call, @NonNull Throwable t) {
+                            swipeRefreshLayout.setRefreshing(false);
+                            if (Orders.size() == 0) message.setVisibility(View.VISIBLE);
+                            else message.setVisibility(View.GONE);
+                        }
+                    });
     }
 
     private void initRecyclerView() {
@@ -297,17 +291,27 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                     Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
                     return;
                 }
+                //   downloadOrder(id);
 
                 if (App.UserInfo.getEmail() == null || App.UserInfo.getEmail().equals(""))
-                downloadOrder(id);
+                    downloadOrder(id);
                 else {
                     new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
-                            .setTitle(R.string.menu_download_file_title)
+                            .setTitle(R.string.menu_choice_move)
                             .setItems(R.array.menu_download_file, (dialog, which) -> {
-                                    if (which == 0)
+
+                                switch (which) {
+                                    case 0:
+                                        break;
+                                    case 1:
+                                        break;
+                                    case 2:
                                         downloadOrder(id);
-                                    else
-                                        sendFileToEmail();
+                                        break;
+                                    case 3:
+                                        sendFileToEmail(id);
+                                        break;
+                                }
                             })
                             .create()
                             .show();
@@ -333,6 +337,8 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
                                             Intent intent = new Intent(getActivity(), CreateOrderActivity.class);
                                             intent.putExtra("type_id", order.getType_id());
                                             intent.putExtra("isEdit", true);
+                                            if (response.body().isReadonly())
+                                                intent.putExtra("ReadOnly", true);
                                             if (order.getAct_of_selection() != null)
                                                 intent.putExtra("ACT", order.getAct_of_selection());
                                             intent.putExtra(SendOrder.class.getSimpleName(), OpenOrder);
@@ -364,17 +370,39 @@ public class OrderFragment extends Fragment implements OnBackPressedListener {
 
         };
         recyclerView.addItemDecoration(new SpacesItemDecoration((byte) 10, (byte) 10));
-       // recyclerView.setItemAnimator(new DefaultItemAnimator());
+        // recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         OrderAdapter = new OrderSwipeAdapter(Orders, onClickListener);
         (OrderAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(OrderAdapter);
 
     }
-    private void sendFileToEmail(){
 
+    private void sendFileToEmail(int id) {
+        ProgresBar.setVisibility(View.VISIBLE);
+        NetworkService.getInstance()
+                .getJSONApi()
+                .SendFileToEmail(App.UserAccessData.getToken(), id)
+                .enqueue(new Callback<StandardAnswer>() {
+                    @Override
+                    public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            if (response.body().getStatus() == 200) {
+                                Toast.makeText(getContext(), "Файл успешно отправлен!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        ProgresBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
+                        ProgresBar.setVisibility(View.GONE);
+                        Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
-    private void downloadOrder(int id){
+
+    private void downloadOrder(int id) {
         ProgresBar.setVisibility(View.VISIBLE);
         if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             NetworkService.getInstance()

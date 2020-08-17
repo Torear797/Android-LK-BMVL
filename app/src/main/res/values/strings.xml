@@ -29,7 +29,7 @@
     <string name="new_order">Новая заявка</string>
     <string name="edit_order">Редактирование заявки</string>
     <string name="Doc_Face">Доверянное лицо</string>
-    <string name="menu_download_file_title">Выберите способ загрузки</string>
+    <string name="menu_choice_move">Выберите действие</string>
 
     <string-array name="DocList">
         <item>Выдать результаты на руки определенному лицу по доверенности</item>
@@ -79,8 +79,15 @@
     </string-array>
 
     <string-array name="menu_download_file">
-        <item>Скачать на устройство</item>
-        <item>Отправить на почту</item>
+        <item>Скачать архив протоколов на устройство</item>
+        <item>Отправить архив протоколов на почту</item>
+        <item>Скачать заявку на устройство</item>
+        <item>Отправить заявку на почту</item>
+    </string-array>
+
+    <string-array name="menu_create_order">
+        <item>Сохранить заявку</item>
+        <item>Отправить заявку</item>
     </string-array>
 
     <string-array name="menu_patterns">

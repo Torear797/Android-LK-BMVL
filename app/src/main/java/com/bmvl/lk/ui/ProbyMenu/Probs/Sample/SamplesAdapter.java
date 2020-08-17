@@ -146,13 +146,16 @@ public class SamplesAdapter extends RecyclerSwipeAdapter<SamplesAdapter.SimpleVi
             arrow = itemView.findViewById(R.id.arrow);
 
             head.setOnClickListener(view -> {
-                if (SampleList.getVisibility() == View.VISIBLE)
+                if (SampleList.getVisibility() == View.VISIBLE && !CreateOrderActivity.ReadOnly)
                     swipeLayout.setSwipeEnabled(true);
-                else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close)
+                else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close && !CreateOrderActivity.ReadOnly)
                     swipeLayout.setSwipeEnabled(false);
                 SampleList.setVisibility(SampleList.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 arrow.setImageResource(SampleList.getVisibility() == View.VISIBLE ? R.drawable.ic_w_arrow_ap : R.drawable.ic_w_arrow_down);
             });
+
+            if(CreateOrderActivity.ReadOnly)
+                swipeLayout.setSwipeEnabled(false);
 
             buttonDelete.setOnClickListener(view -> {
                 swipeLayout.close();

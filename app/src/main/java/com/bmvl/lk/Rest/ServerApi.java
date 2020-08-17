@@ -221,4 +221,8 @@ public interface ServerApi {
     @FormUrlEncoded
     @POST("ajax/getDistricts")
     Call<AnswerCountries> getDistricts(@Field("token") String token, @Field("country_name") String country_name, @Field("region_name") String region_name, @Field("query") String query);
+
+    @FormUrlEncoded
+    @POST("orders/sendFileToEmail")
+    Call<StandardAnswer> SendFileToEmail(@Field("token") String token, @Field("id") int id);
 }

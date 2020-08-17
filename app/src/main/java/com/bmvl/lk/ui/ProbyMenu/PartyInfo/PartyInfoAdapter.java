@@ -73,6 +73,7 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
                 //   View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spiner, parent, false);
                 final SpinerHolder holder1 = new SpinerHolder(view);
 
+
                 AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -86,13 +87,13 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
                     public void onNothingSelected(AdapterView<?> parent) {
                     }
                 };
-                if (!ReadOnly)
+                if (!ReadOnly && !CreateOrderActivity.ReadOnly)
                     holder1.spiner.setOnItemSelectedListener(itemSelectedListener);
                 return holder1;
             }
             case R.layout.item_data_field: {
                 final DataFieldHolder holder = new DataFieldHolder(view);
-                if (!ReadOnly)
+                if (!ReadOnly && !CreateOrderActivity.ReadOnly)
                     holder.field.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void afterTextChanged(Editable s) {
@@ -124,7 +125,7 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
             case R.layout.item_check_button: {
                 final SwitchHolder holder3 = new SwitchHolder(view);
 
-                if (!ReadOnly)
+                if (!ReadOnly && !CreateOrderActivity.ReadOnly)
                     holder3.switchButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
                         fields.put(GetColumn_id(holder3.getLayoutPosition()), String.valueOf(isChecked));
 
@@ -137,7 +138,7 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
             default: {
                 final TextViewHolder holder = new TextViewHolder(view);
 
-                if (!ReadOnly)
+                if (!ReadOnly && !CreateOrderActivity.ReadOnly)
                     holder.field.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void afterTextChanged(Editable s) {
@@ -193,7 +194,7 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
                     ((TextViewHolder) holder).field.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
                 }
 
-                if (ReadOnly) ((TextViewHolder) holder).field.setEnabled(false);
+                if (ReadOnly || CreateOrderActivity.ReadOnly) ((TextViewHolder) holder).field.setEnabled(false);
                 else ((TextViewHolder) holder).field.setEnabled(true);
 
                 break;
@@ -211,7 +212,7 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
                 else
                     ((SpinerHolder) holder).spiner.setSelection(adapter.getPosition(fieldsProb.get(String.valueOf(f.getColumn_id()))));
 
-                if (ReadOnly) ((SpinerHolder) holder).spiner.setEnabled(false);
+                if (ReadOnly || CreateOrderActivity.ReadOnly) ((SpinerHolder) holder).spiner.setEnabled(false);
                 else ((SpinerHolder) holder).spiner.setEnabled(true);
                 break;
             } //Спинер
@@ -233,13 +234,13 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
                     e.printStackTrace();
                 }
 
-                if (ReadOnly) ((DataFieldHolder) holder).field.setEnabled(false);
+                if (ReadOnly || CreateOrderActivity.ReadOnly) ((DataFieldHolder) holder).field.setEnabled(false);
                 else ((DataFieldHolder) holder).field.setEnabled(true);
 
 
 
                 final DatePickerDialog.OnDateSetListener Datapicker = (view, year, monthOfYear, dayOfMonth) -> ChangeData(year, monthOfYear, dayOfMonth, ((DataFieldHolder) holder).field);
-                if(!ReadOnly)
+                if(!ReadOnly && !CreateOrderActivity.ReadOnly)
                 ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(v -> new DatePickerDialog(Objects.requireNonNull(((DataFieldHolder) holder).Layout.getContext()), Datapicker,
                         dateAndTime.get(Calendar.YEAR),
                         dateAndTime.get(Calendar.MONTH),
@@ -253,7 +254,7 @@ public class PartyInfoAdapter extends RecyclerView.Adapter {
                     ((SwitchHolder) holder).switchButton.setChecked(Boolean.parseBoolean(fields.get((short) f.getColumn_id())));
                 //else  ((SwitchHolder) holder).switchButton.setChecked(false);
 
-                if (ReadOnly) ((SwitchHolder) holder).switchButton.setEnabled(false);
+                if (ReadOnly || CreateOrderActivity.ReadOnly) ((SwitchHolder) holder).switchButton.setEnabled(false);
                 else ((SwitchHolder) holder).switchButton.setEnabled(true);
             } //Чекбокс
             break;

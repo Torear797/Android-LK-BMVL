@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.google.android.material.button.MaterialButton;
 
 public class ResearchPanelHolder extends RecyclerView.ViewHolder {
@@ -25,5 +26,7 @@ public class ResearchPanelHolder extends RecyclerView.ViewHolder {
         btnAddReserch.setText("Добавить исследование");
         ResearchList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
         ResearchList.setItemAnimator(new DefaultItemAnimator());
+
+        if(CreateOrderActivity.ReadOnly)btnAddReserch.setVisibility(View.GONE);
     }
 }

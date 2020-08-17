@@ -26,6 +26,10 @@ public class SendOrder implements Serializable{
     @Expose
     private byte enableNotifications;
 
+    public void setSendOrder(byte sendOrder) {
+        this.sendOrder = sendOrder;
+    }
+
     @SerializedName("sendOrder")
     @Expose
     private byte sendOrder;

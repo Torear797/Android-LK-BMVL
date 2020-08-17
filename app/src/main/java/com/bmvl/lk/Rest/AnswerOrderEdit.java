@@ -13,6 +13,12 @@ public class AnswerOrderEdit extends StandardAnswer {
     @Expose
     private SendOrder order;
 
+    public boolean isReadonly() {
+        return readonly;
+    }
+
+    private boolean readonly;
+
     public Map<Short, String> getOrderFields() {
         return order.getFields();
     }

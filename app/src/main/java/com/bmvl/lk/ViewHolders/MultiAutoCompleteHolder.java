@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
+import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class MultiAutoCompleteHolder extends RecyclerView.ViewHolder {
@@ -17,5 +18,7 @@ public class MultiAutoCompleteHolder extends RecyclerView.ViewHolder {
         super(itemView);
         Layout = itemView.findViewById(R.id.TextLayout);
         TextView = itemView.findViewById(R.id.MultiAutoCompleteTextView);
+
+        if(CreateOrderActivity.ReadOnly)Layout.setEnabled(false);
     }
 }

@@ -26,6 +26,7 @@ import com.bmvl.lk.Rest.Order.SendOrder;
 import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.data.models.Orders;
 import com.bmvl.lk.data.models.Pattern;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.daimajia.androidanimations.library.Techniques;
@@ -36,8 +37,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.orhanobut.hawk.Hawk;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -236,6 +240,13 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
                             public void onResponse(@NonNull Call<AnswerCopyOrder> call, @NonNull Response<AnswerCopyOrder> response) {
                                 if (response.isSuccessful() && response.body() != null) {
                                     if (response.body().getStatus() == 200) {
+//                                        List<Pattern> insertlist = new ArrayList<>(Patterns);
+//                                        insertlist.add(new Orders(response.body().getOrderId(), order.getUser_id(), order.getType_id(), order.getStatus_id(), new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(new Date())));
+//                                        PatternAdapter.insertdata(insertlist, true);
+
+                                        PatternAdapter.notifyDataSetChanged();
+                                        Hawk.put("PatternsList", Patterns);
+
                                         Snackbar.make(Objects.requireNonNull(getView()), R.string.order_copy, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                     }
                                 }
@@ -320,7 +331,7 @@ public class PatternsFragment extends Fragment implements OnBackPressedListener 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
 
-        PatternAdapter = new PatternAdapter(Patterns, onClickListener);
+        PatternAdapter = new PatternAdapter(Patterns, onClickListener, false);
         (PatternAdapter).setMode(Attributes.Mode.Single);
         recyclerView.setAdapter(PatternAdapter);
     }

@@ -91,6 +91,7 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     public static boolean NoChoiceMaterial = false;
     public static boolean NoChoiceSamples = false;
+    public static boolean ReadOnly = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +100,7 @@ public class CreateOrderActivity extends AppCompatActivity {
 
         final TextView OrderName = findViewById(R.id.Order_name);
         final Toolbar toolbar = findViewById(R.id.toolbar);
+        final MaterialButton btn = findViewById(R.id.Create);
         //    final RecyclerView recyclerView = findViewById(R.id.FieldList);
         c_box_accept_rules = findViewById(R.id.AcceptcheckBox);
         Frame = findViewById(R.id.Menu_proby_fragment);
@@ -109,6 +111,11 @@ public class CreateOrderActivity extends AppCompatActivity {
         status = getIntent().getByteExtra("status", (byte) 0);
         act_of_selection = getIntent().getStringExtra("ACT");
         //  Log.d("STATUS", " " + status);
+        ReadOnly = getIntent().getBooleanExtra("ReadOnly", false);
+        if(ReadOnly) {
+            btn.setVisibility(View.GONE);
+        }
+
         IsPattern = getIntent().getBooleanExtra("Pattern", false);
         Edit = getIntent().getBooleanExtra("isEdit", false);
         if (!Edit) {
@@ -122,7 +129,6 @@ public class CreateOrderActivity extends AppCompatActivity {
             assert order != null;
             //   Log.d("JSON", order.getJsonOrder());
             toolbar.setTitle(R.string.edit_order);
-            final MaterialButton btn = findViewById(R.id.Create);
             btn.setText(R.string.save_text);
         }
         order_id = order.getType_id();
@@ -136,8 +142,10 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private void EnableTable(FrameLayout Frame) {
-        c_box_accept_rules.setVisibility(View.VISIBLE);
-        c_box_accept_rules.setMovementMethod(LinkMovementMethod.getInstance());
+        if(!ReadOnly) {
+            c_box_accept_rules.setVisibility(View.VISIBLE);
+            c_box_accept_rules.setMovementMethod(LinkMovementMethod.getInstance());
+        }
         Frame.setVisibility(View.VISIBLE);
         loadFragment(ProbyMenuFragment.newInstance());
     } //Включает отображение таблицы проб
@@ -368,22 +376,41 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     public void sendAction(View view) {
         ///  LoadActOfSelection(358);
-        if (isFieldCorrect()) {
-            view.setEnabled(false);
-            bar.setVisibility(View.VISIBLE);
-            if (order.getProby() != null)
-                DeleteEmptyFields();
-            if (!Edit)
-                SendOrder(view);
-            else
-                SaveOrder(view);
-        }
+//        if (isFieldCorrect()) {
+//            view.setEnabled(false);
+//            bar.setVisibility(View.VISIBLE);
+//            if (order.getProby() != null)
+//                DeleteEmptyFields();
+//            if (!Edit)
+//                SendOrder(view);
+//            else
+//                SaveOrder(view);
+//        }
+
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.menu_choice_move)
+                .setItems(R.array.menu_create_order, (dialog, which) -> {
+                    if (isFieldCorrect()) {
+                        view.setEnabled(false);
+                        bar.setVisibility(View.VISIBLE);
+                        if (order.getProby() != null)
+                            DeleteEmptyFields();
+                        if (which == 1)
+                            order.setSendOrder((byte) 1);
+                        if (!Edit)
+                            SendOrder(view);
+                        else
+                            SaveOrder(view);
+                    }
+                })
+                .create()
+                .show();
     }
 
     private void SaveOrder(final View view) {
         //String json = order.getJsonOrder();
         //   Hawk.put("obraz",json);
-      //  Log.d("JSON", order.getJsonOrder());
+        //  Log.d("JSON", order.getJsonOrder());
 
         if (status != 11) {
             NetworkService.getInstance()
@@ -394,7 +421,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                         public void onResponse(@NonNull Call<AnswerSendOrder> call, @NonNull Response<AnswerSendOrder> response) {
                             if (response.isSuccessful() && response.body() != null) {
                                 if (response.body().getStatus() == 200) {
-                                   // Toast.makeText(view.getContext(), R.string.order_isEdit, Toast.LENGTH_SHORT).show();
+                                    // Toast.makeText(view.getContext(), R.string.order_isEdit, Toast.LENGTH_SHORT).show();
                                     if (FileActOfSelection != null)
                                         LoadActOfSelection(response.body().getOrder_id());
 //                                    else {
@@ -405,7 +432,7 @@ public class CreateOrderActivity extends AppCompatActivity {
 //                                    CreateOrderActivity.this.finish();
 
                                     StringBuilder msg = new StringBuilder(getString(R.string.order_isEdit));
-                                    if(response.body().isHaveNotAccredited())
+                                    if (response.body().isHaveNotAccredited())
                                         msg.append(getString(R.string.probIsSort));
                                     OpenDialogMessage(String.valueOf(msg));
                                 }
@@ -490,10 +517,10 @@ public class CreateOrderActivity extends AppCompatActivity {
                 .setMessage(msg)
                 .setPositiveButton(R.string.Continue,
                         (dialog, which) -> {
-                                ClearDate();
-                                CreateOrderActivity.this.finish();
+                            ClearDate();
+                            CreateOrderActivity.this.finish();
                         })
-                .setOnDismissListener(v->{
+                .setOnDismissListener(v -> {
                     ClearDate();
                     CreateOrderActivity.this.finish();
                 })
@@ -501,7 +528,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private void SendOrder(final View view) {
-      //  Log.d("JSON", order.getJsonOrder());
+        //  Log.d("JSON", order.getJsonOrder());
 
         //   view.setEnabled(true);
         //  bar.setVisibility(View.GONE);
@@ -523,7 +550,7 @@ public class CreateOrderActivity extends AppCompatActivity {
                         public void onResponse(@NonNull Call<AnswerSendOrder> call, @NonNull Response<AnswerSendOrder> response) {
                             if (response.isSuccessful() && response.body() != null) {
                                 if (response.body().getStatus() == 200) {
-                                  //  Toast.makeText(view.getContext(), "Заказ успешно создан!", Toast.LENGTH_SHORT).show();
+                                    //  Toast.makeText(view.getContext(), "Заказ успешно создан!", Toast.LENGTH_SHORT).show();
                                     if (FileActOfSelection != null)
                                         LoadActOfSelection(response.body().getOrder_id());
 //                                    else {
@@ -532,8 +559,8 @@ public class CreateOrderActivity extends AppCompatActivity {
 //                                    }
 
                                     StringBuilder msg = new StringBuilder(getString(R.string.orderIsCreate));
-                                   if(response.body().isHaveNotAccredited())
-                                       msg.append(getString(R.string.probIsSort));
+                                    if (response.body().isHaveNotAccredited())
+                                        msg.append(getString(R.string.probIsSort));
                                     OpenDialogMessage(String.valueOf(msg));
                                 }
                             } else {

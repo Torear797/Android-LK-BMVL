@@ -19,6 +19,7 @@ import com.bmvl.lk.Rest.Order.ResearchRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
 import com.bmvl.lk.Rest.Suggestion;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -120,13 +121,16 @@ public class ResearhAdapter extends RecyclerSwipeAdapter<ResearhAdapter.Research
             arrow = itemView.findViewById(R.id.arrow);
 
             head.setOnClickListener(view -> {
-                if (List.getVisibility() == View.VISIBLE)
+                if (List.getVisibility() == View.VISIBLE && !CreateOrderActivity.ReadOnly)
                     swipeLayout.setSwipeEnabled(true);
-                else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close)
+                else if (swipeLayout.getOpenStatus() == SwipeLayout.Status.Close && !CreateOrderActivity.ReadOnly)
                     swipeLayout.setSwipeEnabled(false);
                 List.setVisibility(List.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 arrow.setImageResource(List.getVisibility() == View.VISIBLE ? R.drawable.ic_w_arrow_ap : R.drawable.ic_w_arrow_down);
             });
+
+            if(CreateOrderActivity.ReadOnly)
+                swipeLayout.setSwipeEnabled(false);
 
             buttonDelete.setOnClickListener(view -> {
                 swipeLayout.close();

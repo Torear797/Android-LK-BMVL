@@ -28,10 +28,12 @@ import java.util.Objects;
 public class PatternAdapter extends RecyclerSwipeAdapter<PatternAdapter.SimpleViewHolder> {
     private List<Pattern> Patterns;
     private PatternAdapter.OnPatternClickListener onPatternClickListener;
+    private boolean standartPattern;
 
-    PatternAdapter(List<Pattern> list, OnPatternClickListener onPatternClickListener) {
+    PatternAdapter(List<Pattern> list, OnPatternClickListener onPatternClickListener,boolean isStandart) {
         this.onPatternClickListener = onPatternClickListener;
         this.Patterns = list;
+        this.standartPattern = isStandart;
     }
 
     public interface OnPatternClickListener {
@@ -106,10 +108,12 @@ public class PatternAdapter extends RecyclerSwipeAdapter<PatternAdapter.SimpleVi
             buttonEdit = itemView.findViewById(R.id.edit);
             buttonCreate = itemView.findViewById(R.id.create);
 
+            if(!standartPattern)
             buttonDelete.setOnClickListener(view -> {
                 closeAllItems();
                 onPatternClickListener.onDeleteOrder(Patterns.get(getLayoutPosition()).getId(), getLayoutPosition(), Patterns.get(getLayoutPosition()).getStatus_id());
             });
+            else buttonDelete.setVisibility(View.GONE);
 
             buttonCopy.setOnClickListener(view -> {
                 closeAllItems();

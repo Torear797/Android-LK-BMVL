@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
 import com.bmvl.lk.data.SpacesItemDecoration;
+import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.google.android.material.button.MaterialButton;
 
 public class SamplesPanelHolder extends RecyclerView.ViewHolder {
@@ -27,5 +28,7 @@ public class SamplesPanelHolder extends RecyclerView.ViewHolder {
 
         SampleList.addItemDecoration(new SpacesItemDecoration((byte) 20, (byte) 0));
         SampleList.setItemAnimator(new DefaultItemAnimator());
+
+        if(CreateOrderActivity.ReadOnly)btnAddSample.setVisibility(View.GONE);
     }
 }

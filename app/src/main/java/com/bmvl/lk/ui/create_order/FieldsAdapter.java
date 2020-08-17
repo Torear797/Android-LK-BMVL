@@ -98,8 +98,10 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                     public void onNothingSelected(AdapterView<?> parent) {
                     }
                 };
+                if(!CreateOrderActivity.ReadOnly)
                 holder1.spiner.setOnItemSelectedListener(itemSelectedListener);
 
+                if(CreateOrderActivity.ReadOnly) holder1.spiner.setEnabled(false);
                 return holder1;
             }//Спинер
             case R.layout.item_original_doc: {
@@ -107,7 +109,9 @@ public class FieldsAdapter extends RecyclerView.Adapter {
             }//DocOriginal
             case R.layout.item_check_button: {
                 final SwitchHolder holder3 = new SwitchHolder(view);
+                if(!CreateOrderActivity.ReadOnly)
                 holder3.switchButton.setOnCheckedChangeListener((buttonView, isChecked) -> OrderFields.put(GetColumn_id(holder3.getLayoutPosition()), String.valueOf(isChecked)));
+                if(CreateOrderActivity.ReadOnly) holder3.switchButton.setEnabled(false);
                 return holder3;
             } //item_check_button
             case R.layout.item_button_select: {
@@ -118,6 +122,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
             }//item_box_text
             case R.layout.item_data_field: {
                 final DataFieldHolder holder = new DataFieldHolder(view);
+                if(!CreateOrderActivity.ReadOnly)
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
@@ -137,11 +142,12 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                     }
                 });
-
+                if(CreateOrderActivity.ReadOnly) holder.Layout.setEnabled(false);
                 return holder;
             }//DataField
             default: {
                 final TextViewHolder holder = new TextViewHolder(view);
+                if(!CreateOrderActivity.ReadOnly)
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
@@ -160,7 +166,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                     }
                 });
-
+                if(CreateOrderActivity.ReadOnly) holder.Layout.setEnabled(false);
                 return holder;
             }//EditText
         }
@@ -329,29 +335,31 @@ public class FieldsAdapter extends RecyclerView.Adapter {
             field = itemView.findViewById(R.id.TextInput);
             Layout = itemView.findViewById(R.id.TextLayout);
 
-            switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if(!CreateOrderActivity.ReadOnly) {
+                switchButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     OrderFields.put(GetColumn_id(getLayoutPosition()), String.valueOf(isChecked));
                     if (isChecked) Layout.setVisibility(View.VISIBLE);
                     else Layout.setVisibility(View.GONE);
-                }
-            });
+                });
 
-            field.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void afterTextChanged(Editable s) {
-                    if (!String.valueOf(s).equals("") && Layout.getVisibility() == View.VISIBLE)
-                        OrderFields.put((short) 67, String.valueOf(s));
-                }
+                field.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (!String.valueOf(s).equals("") && Layout.getVisibility() == View.VISIBLE)
+                            OrderFields.put((short) 67, String.valueOf(s));
+                    }
 
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-            });
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
+            } else {
+                switchButton.setEnabled(false);
+            }
         }
     }
 }

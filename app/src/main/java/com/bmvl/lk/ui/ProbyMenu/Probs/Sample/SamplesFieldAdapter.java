@@ -33,6 +33,7 @@ import com.bmvl.lk.data.models.Document;
 import com.bmvl.lk.ui.ProbyMenu.Probs.ProbAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.ProbFieldAdapter;
 import com.bmvl.lk.ui.ProbyMenu.Probs.Research.ResearhAdapter;
+import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.daimajia.swipe.util.Attributes;
 
 import java.text.MessageFormat;
@@ -219,6 +220,8 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 ((TextViewHolder) holder).field.setInputType(f.getInputType());
                 if (CurrentSample.getFields().containsKey((short) f.getColumn_id()))
                     ((TextViewHolder) holder).field.setText(CurrentSample.getFields().get((short) f.getColumn_id()));
+
+                if(CreateOrderActivity.ReadOnly) ((TextViewHolder) holder).Layout.setEnabled(false);
                 break;
             }//Edittext
             case 1: {
@@ -237,6 +240,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
 
 
                 ((SpinerHolder) holder).txtHint.setText(f.getHint());
+                if(CreateOrderActivity.ReadOnly) ((SpinerHolder) holder).spiner.setEnabled(false);
                 // ((SpinerHolder) holder).layout.setHint(f.getHint());
                 break;
             }//Spiner
@@ -266,6 +270,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                 ((MultiChipChoceHoldeer) holder).textInputLayout.setHint(f.getHint());
 
 
+                if(!CreateOrderActivity.ReadOnly)
                 ((MultiChipChoceHoldeer) holder).contactsCompletionView.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
@@ -284,6 +289,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                     }
                 });
+                if(CreateOrderActivity.ReadOnly) ((MultiChipChoceHoldeer) holder).textInputLayout.setEnabled(false);
                 break;
             }//Мультиспинер
             case 6: {
@@ -294,6 +300,7 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
 
 
                 //Добавляет исследование
+                if(!CreateOrderActivity.ReadOnly)
                 ((ResearchPanelHolder) holder).btnAddReserch.setOnClickListener(v -> {
                     if (ProbFields.containsKey("5") && suggestions != null) {
                         short newid = getPositionKeyR(CurrentSample.getResearches());
@@ -323,11 +330,13 @@ public class SamplesFieldAdapter extends RecyclerView.Adapter {
                     }
 
                 final DatePickerDialog.OnDateSetListener Datapicker = (view, year, monthOfYear, dayOfMonth) -> ChangeData(year, monthOfYear, dayOfMonth, ((DataFieldHolder) holder).field);
-                ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(v -> new DatePickerDialog(Objects.requireNonNull(((DataFieldHolder) holder).Layout.getContext()), Datapicker,
+                if(!CreateOrderActivity.ReadOnly)
+                    ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(v -> new DatePickerDialog(Objects.requireNonNull(((DataFieldHolder) holder).Layout.getContext()), Datapicker,
                         dateAndTime.get(Calendar.YEAR),
                         dateAndTime.get(Calendar.MONTH),
                         dateAndTime.get(Calendar.DAY_OF_MONTH))
                         .show());
+                else ((DataFieldHolder) holder).Layout.setEnabled(false);
             }//DataField
         }
     }

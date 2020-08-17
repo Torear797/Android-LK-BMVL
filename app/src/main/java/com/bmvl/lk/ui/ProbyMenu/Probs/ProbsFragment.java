@@ -493,7 +493,9 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
             super.onPostExecute(aVoid);
             recyclerView.setAdapter(adapter);
             final MaterialButton AddProbBtn = Objects.requireNonNull(getView()).findViewById(R.id.addProb);
+            if(!CreateOrderActivity.ReadOnly)
             NewProbListener(AddProbBtn, adapter, recyclerView);
+            else AddProbBtn.setVisibility(View.GONE);
         }
     }
 }

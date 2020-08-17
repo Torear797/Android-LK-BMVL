@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bmvl.lk.R;
 import com.bmvl.lk.ui.ProbyMenu.Probs.MultiSpinner;
+import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 
 public class MultiSpinerHolder extends RecyclerView.ViewHolder  {
     final public MultiSpinner spiner;
@@ -16,5 +17,7 @@ public class MultiSpinerHolder extends RecyclerView.ViewHolder  {
         super(itemView);
         spiner = itemView.findViewById(R.id.spinner);
         txtHint = itemView.findViewById(R.id.hint);
+
+        if(CreateOrderActivity.ReadOnly)spiner.setEnabled(false);
     }
 }

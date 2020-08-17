@@ -11,7 +11,7 @@ public class NetworkService {
     //При смене BASE_URL необходимо изменить XML файл CreateOrderActivity
    private static final String BASE_URL = "http://192.168.0.69";
    // private static final String BASE_URL = "http://192.168.0.100";
-   // private static final String BASE_URL = "http://lk.belmvl.ru";
+    //private static final String BASE_URL = "http://lk.belmvl.ru";
 
     private Retrofit mRetrofit;
 

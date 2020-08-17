@@ -64,7 +64,7 @@
                     android:layout_gravity="start"
                     android:layout_marginEnd="10dp"
                     android:onClick="sendAction"
-                    android:text="@string/create_botton"
+                    android:text="@string/save_text"
                     app:cornerRadius="5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -151,6 +151,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 //                };
                 // holder1.spiner.setOnItemSelectedListener(itemSelectedListener);
 
+                if(!CreateOrderActivity.ReadOnly)
                 holder1.spiner.post(() -> holder1.spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent12, View view1, int position, long id) {
@@ -169,6 +170,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             } //Spiner
             case R.layout.item_check_button: {
                 final SwitchHolder holder3 = new SwitchHolder(view);
+                if(!CreateOrderActivity.ReadOnly)
                 holder3.switchButton.setOnCheckedChangeListener((buttonView, isChecked) -> CurrentProb.getFields().put(GetColumn_id(holder3.getLayoutPosition()), String.valueOf(isChecked)));
                 return holder3;
             }//Swith
@@ -180,6 +182,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             }//MultiSpinerHolder
             case R.layout.item_material_field: {
                 final MaterialFieldHolder holder6 = new MaterialFieldHolder(view);
+                if(!CreateOrderActivity.ReadOnly)
                 holder6.TextView.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
@@ -223,6 +226,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     }
                 });
 
+                if(!CreateOrderActivity.ReadOnly)
                 holder6.TextView.setOnItemClickListener((parent1, MeView, position, id) -> holder6.TextView.clearFocus());
 
                 return holder6;
@@ -232,6 +236,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             }//Список Образцов
             case R.layout.item_data_field: {
                 final DataFieldHolder holder = new DataFieldHolder(view);
+                if(!CreateOrderActivity.ReadOnly)
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
@@ -266,6 +271,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             case R.layout.item_auto_compiete_field: {
                 final AutoCompleteFieldHolder holder = new AutoCompleteFieldHolder(view);
                 holder.TextView.setThreshold(2);
+                if(!CreateOrderActivity.ReadOnly)
                 holder.TextView.setOnItemClickListener((parent1, MeView, position, id) -> {
                     CurrentProb.getFields().put(GetColumn_id(holder.getLayoutPosition()), holder.TextView.getAdapter().getItem(position).toString());
 
@@ -298,6 +304,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
             }
             default: {
                 final TextViewHolder holder = new TextViewHolder(view);
+                if(!CreateOrderActivity.ReadOnly)
                 holder.field.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable s) {
@@ -459,6 +466,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 //                    ((TextViewHolder) holder).field.setFocusableInTouchMode(true);
 //                    ((TextViewHolder) holder).field.requestFocus();
 //                }
+                if(CreateOrderActivity.ReadOnly)((TextViewHolder) holder).Layout.setEnabled(false);
                 break;
             } //Текстовое поле
             case (byte) 1: {
@@ -483,7 +491,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
 
                 ((SpinerHolder) holder).txtHint.setText(f.getHint());
                 // ((SpinerHolder) holder).layout.setHint(f.getHint());
-
+                if(CreateOrderActivity.ReadOnly)((SpinerHolder) holder).spiner.setEnabled(false);
                 break;
             } //Spiner
             case (byte) 3: {
@@ -492,6 +500,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                 if (CurrentProb.getFields().containsKey(String.valueOf(f.getColumn_id())))
                     ((SwitchHolder) holder).switchButton.setEnabled(Boolean.parseBoolean(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))));
 
+                if(CreateOrderActivity.ReadOnly)((SwitchHolder) holder).switchButton.setEnabled(false);
                 break;
             } //Swith
             case (byte) 4: {
@@ -522,24 +531,26 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     SelectElements(Objects.requireNonNull(CurrentProb.getFields().get(String.valueOf(f.getColumn_id()))), ((MultiChipChoceHoldeer) holder).contactsCompletionView);
                 ((MultiChipChoceHoldeer) holder).textInputLayout.setHint(f.getHint());
 
-                ((MultiChipChoceHoldeer) holder).contactsCompletionView.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        if (s.length() > 0) {
-                            StringBuilder str = new StringBuilder(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContentText());
-                            str.delete(str.length() - 2, str.length());
-                            CurrentProb.getFields().put(String.valueOf(f.getColumn_id()), str.toString());
+                if(!CreateOrderActivity.ReadOnly) {
+                    ((MultiChipChoceHoldeer) holder).contactsCompletionView.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            if (s.length() > 0) {
+                                StringBuilder str = new StringBuilder(((MultiChipChoceHoldeer) holder).contactsCompletionView.getContentText());
+                                str.delete(str.length() - 2, str.length());
+                                CurrentProb.getFields().put(String.valueOf(f.getColumn_id()), str.toString());
+                            }
                         }
-                    }
 
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
 
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-                });
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                    });
+                } else ((MultiChipChoceHoldeer) holder).textInputLayout.setEnabled(false);
                 break;
             } //Мультиспинер
             case (byte) 6: {
@@ -562,7 +573,12 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     ((MaterialFieldHolder) holder).TextView.requestFocus();
                 }
 
+                if(!CreateOrderActivity.ReadOnly)
                 ((MaterialFieldHolder) holder).ChoceBtn.setOnClickListener(v -> new ChoceMaterialDialogFragment(((MaterialFieldHolder) holder).TextView).show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), "ChoceMaterialDialogFragment"));
+                else{
+                    ((MaterialFieldHolder) holder).ChoceBtn.setVisibility(View.GONE);
+                    ((MaterialFieldHolder) holder).Layout.setEnabled(false);
+                }
                 break;
             } //Materials Field
             case (byte) 7: {
@@ -619,11 +635,13 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                     }
 
                 final DatePickerDialog.OnDateSetListener Datapicker = (view, year, monthOfYear, dayOfMonth) -> ChangeData(year, monthOfYear, dayOfMonth, ((DataFieldHolder) holder).field);
+                if(!CreateOrderActivity.ReadOnly)
                 ((DataFieldHolder) holder).Layout.setEndIconOnClickListener(v -> new DatePickerDialog(Objects.requireNonNull(((DataFieldHolder) holder).Layout.getContext()), Datapicker,
                         dateAndTime.get(Calendar.YEAR),
                         dateAndTime.get(Calendar.MONTH),
                         dateAndTime.get(Calendar.DAY_OF_MONTH))
                         .show());
+                else ((DataFieldHolder) holder).Layout.setEnabled(false);
                 break;
             }//DataField
             case (byte) 9: {
@@ -684,6 +702,7 @@ public class ProbFieldAdapter extends RecyclerView.Adapter {
                         break;
                     }
                 }
+                if(CreateOrderActivity.ReadOnly)((AutoCompleteFieldHolder) holder).Layout.setEnabled(false);
                 break;
             } //AutoCompleteFieldHolder
 //            case (byte)12:{

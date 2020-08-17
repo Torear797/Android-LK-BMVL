@@ -26,6 +26,7 @@ public class OriginalDocHolder extends RecyclerView.ViewHolder {
 
     final public TextInputEditText fieldAdres;
     final public TextInputLayout LayoutAdres;
+
     public OriginalDocHolder(@NonNull View itemView) {
         super(itemView);
 
@@ -51,77 +52,86 @@ public class OriginalDocHolder extends RecyclerView.ViewHolder {
             case 63:
                 spiner.setSelection(1);
                 fieldAdres.setText(App.OrderInfo.getOD_Adres());
-                // ((OriginalDocHolder) holder).fieldEmail.setText(App.OrderInfo.getOD_Email());
                 break;
             case 64:
                 spiner.setSelection(2);
                 fieldAdres.setText(App.OrderInfo.getOD_Adres());
-               fieldEmail.setText(App.OrderInfo.getOD_Email());
+                fieldEmail.setText(App.OrderInfo.getOD_Email());
                 break;
         }
 
 
-       spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View itemSelected, int selectedItemPosition, long selectedId) {
+        if (!CreateOrderActivity.ReadOnly)
+            spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                public void onItemSelected(AdapterView<?> parent, View itemSelected, int selectedItemPosition, long selectedId) {
 
-                if (selectedItemPosition == 0 || selectedItemPosition == 1) {
-                    fieldEmail.setVisibility(View.GONE);
-                    LayoutEmail.setVisibility(View.GONE);
+                    if (selectedItemPosition == 0 || selectedItemPosition == 1) {
+                        fieldEmail.setVisibility(View.GONE);
+                        LayoutEmail.setVisibility(View.GONE);
+                    }
+
+                    switch (selectedItemPosition) {
+                        case 0:
+                            LayoutAdres.setHint(parent.getContext().getResources().getString(R.string.Doc_Face));
+                            CreateOrderActivity.Fields.get(getLayoutPosition()).setColumn_id(52);
+                            break;
+                        case 1:
+                            LayoutAdres.setHint(parent.getContext().getResources().getString(R.string.adres));
+                            CreateOrderActivity.Fields.get(getLayoutPosition()).setColumn_id(63);
+                            break;
+                        case 2:
+                            fieldEmail.setVisibility(View.VISIBLE);
+                            LayoutEmail.setVisibility(View.VISIBLE);
+                            LayoutAdres.setHint(parent.getContext().getResources().getString(R.string.adres));
+                            CreateOrderActivity.Fields.get(getLayoutPosition()).setColumn_id(64);
+                            break;
+                    }
                 }
 
-                switch (selectedItemPosition) {
-                    case 0:
-                        LayoutAdres.setHint(parent.getContext().getResources().getString(R.string.Doc_Face));
-                        CreateOrderActivity.Fields.get(getLayoutPosition()).setColumn_id(52);
-                        break;
-                    case 1:
-                        LayoutAdres.setHint(parent.getContext().getResources().getString(R.string.adres));
-                        CreateOrderActivity.Fields.get(getLayoutPosition()).setColumn_id(63);
-                        break;
-                    case 2:
-                        fieldEmail.setVisibility(View.VISIBLE);
-                        LayoutEmail.setVisibility(View.VISIBLE);
-                        LayoutAdres.setHint(parent.getContext().getResources().getString(R.string.adres));
-                        CreateOrderActivity.Fields.get(getLayoutPosition()).setColumn_id(64);
-                        break;
+                public void onNothingSelected(AdapterView<?> parent) {
                 }
-            }
+            });
 
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+        if (!CreateOrderActivity.ReadOnly)
+            fieldEmail.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void afterTextChanged(Editable s) {
+                    CreateOrderActivity.order.getFields().put(GetColumn_id(getLayoutPosition()), String.valueOf(s));
+                }
 
-        fieldEmail.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                CreateOrderActivity.order.getFields().put(GetColumn_id(getLayoutPosition()), String.valueOf(s));
-            }
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+            });
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
+        if (!CreateOrderActivity.ReadOnly)
+            fieldAdres.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void afterTextChanged(Editable s) {
+                    CreateOrderActivity.order.getFields().put(GetColumn_id(getLayoutPosition()), String.valueOf(s));
+                }
 
-        fieldAdres.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                CreateOrderActivity.order.getFields().put(GetColumn_id(getLayoutPosition()), String.valueOf(s));
-            }
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+            });
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
+        if (CreateOrderActivity.ReadOnly) {
+            spiner.setEnabled(false);
+            LayoutEmail.setEnabled(false);
+            LayoutAdres.setEnabled(false);
+        }
     }
-    private short GetColumn_id(int position){
+
+    private short GetColumn_id(int position) {
         return (short) CreateOrderActivity.Fields.get(position).getColumn_id();
     }
 }

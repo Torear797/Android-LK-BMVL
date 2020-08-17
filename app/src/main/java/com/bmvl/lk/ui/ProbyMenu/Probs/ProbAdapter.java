@@ -204,7 +204,9 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
                     if (!CreateOrderActivity.IsPattern) {
                         if ((CreateOrderActivity.order_id == 3) && (position == 22 || position == 23))
                             return 1;
-                    } else if ((CreateOrderActivity.order_id == 1 || CreateOrderActivity.order_id == 3) && (position == 21 || position == 22))
+                    } else
+
+                        if (CreateOrderActivity.order_id == 3 && (position == 21 || position == 22))
                         return 1;
 
                     return 2;

@@ -258,6 +258,8 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)146), 146, " "));
         ProbFields.add(new Field(68, "", "Особые условия доставки проб", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field(69, "", "Отклонения проб от нормального состояния", InputType.TYPE_CLASS_TEXT));
+        ProbFields.add(new Field((byte) 9, 19));
+        ProbFields.add(new Field((byte) 10, 19));
         AddSamplesForType3();
         ProbFields.add(new Field((byte) 7));
     } //Поля пробы Заявка на исследование семян, почв, удобрений
@@ -267,6 +269,8 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         ProbFields.add(new Field(131, "", "Вид животного", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)25), 25, "Пробы упакованы"));
         AddStandartFieldPart2();
+        ProbFields.add(new Field((byte) 9, 19));
+        ProbFields.add(new Field((byte) 10, 19));
         ProbFields.add(new Field((byte) 7));
         AddSamplesForType4();
     } //Поля пробы сопроводительного письма
@@ -275,6 +279,8 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         AddStandartFieldPart1();
         ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)25), 25, "Вид упаковки, наличие маркировки"));
         AddStandartFieldPart3();
+        ProbFields.add(new Field((byte) 9, 19));
+        ProbFields.add(new Field((byte) 10, 19));
         AddSamplesForPatternType1();
         ProbFields.add(new Field((byte) 7));
     }
@@ -287,6 +293,8 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         ProbFields.add(new Field(144, "", "Глубина отбора", InputType.TYPE_NULL));
         ProbFields.add(new Field(145, "", "Площадь с которой отобрано", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)146), 146, " "));
+        ProbFields.add(new Field((byte) 9, 19));
+        ProbFields.add(new Field((byte) 10, 19));
         AddSamplesForType3();
         ProbFields.add(new Field((byte) 7));
     }
@@ -296,6 +304,8 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         ProbFields.add(new Field(131, "", "Вид животного", InputType.TYPE_CLASS_TEXT));
         ProbFields.add(new Field((byte) 1, App.OrderInfo.getFieldValues().get((short)25), 25, "Пробы упакованы"));
         AddStandartFieldPart3();
+        ProbFields.add(new Field((byte) 9, 19));
+        ProbFields.add(new Field((byte) 10, 19));
         AddSamplesForPatternType4();
         ProbFields.add(new Field((byte) 7));
     }

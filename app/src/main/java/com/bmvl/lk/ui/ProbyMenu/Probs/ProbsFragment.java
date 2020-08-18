@@ -22,6 +22,7 @@ import com.bmvl.lk.Rest.Material;
 import com.bmvl.lk.Rest.NetworkService;
 import com.bmvl.lk.Rest.Order.ProbyRest;
 import com.bmvl.lk.Rest.Order.SamplesRest;
+import com.bmvl.lk.Rest.StandardAnswer;
 import com.bmvl.lk.data.Field;
 import com.bmvl.lk.data.OnBackPressedListener;
 import com.bmvl.lk.data.SpacesItemDecoration;
@@ -29,6 +30,7 @@ import com.bmvl.lk.data.models.SuggestionCountries;
 import com.bmvl.lk.ui.create_order.CreateOrderActivity;
 import com.daimajia.swipe.util.Attributes;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.unnamed.b.atv.model.TreeNode;
 
 import java.io.File;
@@ -362,10 +364,103 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
         SampleFields.add(new Field((byte) 6, 0, "", ""));
     }
 
+    private void saveProtocol(final int position,  short id){
+        NetworkService.getInstance()
+                .getJSONApi()
+                .DownloadProtocol(App.UserAccessData.getToken(), id)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            if (writeResponseBodyToDisk(response.body(), position)) {
+                                Toast.makeText(getContext(), R.string.download_successfully, Toast.LENGTH_SHORT).show();
+                            } else
+                                Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                        Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void sendProtocolToEmail(int probid){
+        NetworkService.getInstance()
+                .getJSONApi()
+                .SendFileToEmail(App.UserAccessData.getToken(), CreateOrderActivity.order.getId(),"Protocol",probid)
+                .enqueue(new Callback<StandardAnswer>() {
+                    @Override
+                    public void onResponse(@NonNull Call<StandardAnswer> call, @NonNull Response<StandardAnswer> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            if (response.body().getStatus() == 200) {
+                                Toast.makeText(getContext(), R.string.file_send_ok, Toast.LENGTH_SHORT).show();
+                            } else if(response.body().getStatus() == 403)
+                                Toast.makeText(getContext(), R.string.sendemail_error, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<StandardAnswer> call, @NonNull Throwable t) {
+                        Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     @Override
     public void onBackPressed() {
         ProbFields.clear();
         SampleFields.clear();
+    }
+
+    private boolean writeResponseBodyToDisk(ResponseBody body, int id) {
+        try {
+            final File futureStudioIconFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "Protocol_" + id + ".pdf");
+
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+
+            try {
+                byte[] fileReader = new byte[4096];
+
+                //  long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(futureStudioIconFile);
+
+                while (true) {
+                    int read = inputStream.read(fileReader);
+
+                    if (read == -1) {
+                        break;
+                    }
+
+                    outputStream.write(fileReader, 0, read);
+
+                    fileSizeDownloaded += read;
+
+                    //  Log.d("File Download: " , fileSizeDownloaded + " of " + fileSize);
+                }
+
+                outputStream.flush();
+
+                return true;
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     private class MyTask extends AsyncTask<Void, Void, Void> {
@@ -400,26 +495,27 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
                 }
 
                 @Override
-                public void onDownloadProtocol(String adres, final short id) {
-                    NetworkService.getInstance()
-                            .getJSONApi()
-                            .DownloadProtocol(App.UserAccessData.getToken())
-                            .enqueue(new Callback<ResponseBody>() {
-                                @Override
-                                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                                    if (response.isSuccessful() && response.body() != null) {
-                                        if (writeResponseBodyToDisk(response.body(), id)) {
-                                            Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
-                                        } else
-                                            Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
-                                    }
-                                }
+                public void onDownloadProtocol(final int position,  short id) {
+                    if (!App.isOnline(Objects.requireNonNull(getContext()))) {
+                        Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                                @Override
-                                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                                    Toast.makeText(getContext(), R.string.server_lost, Toast.LENGTH_SHORT).show();
+                    new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
+                            .setTitle(R.string.menu_choice_move)
+                            .setItems(R.array.menu_download_protocol, (dialog, which) -> {
+
+                                switch (which) {
+                                    case 0:
+                                        saveProtocol(position, id);
+                                        break;
+                                    case 1:
+                                        sendProtocolToEmail(id);
+                                        break;
                                 }
-                            });
+                            })
+                            .create()
+                            .show();
                 }
             };
 
@@ -447,55 +543,6 @@ public class ProbsFragment extends Fragment implements OnBackPressedListener {
             adapter = new ProbAdapter(ProbFields, SampleFields, onClickListener);
             (adapter).setMode(Attributes.Mode.Single);
             return null;
-        }
-
-        private boolean writeResponseBodyToDisk(ResponseBody body, short id) {
-            try {
-                File futureStudioIconFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "Protocol_" + id + ".pdf");
-
-                InputStream inputStream = null;
-                OutputStream outputStream = null;
-
-                try {
-                    byte[] fileReader = new byte[4096];
-
-                    long fileSize = body.contentLength();
-                    long fileSizeDownloaded = 0;
-
-                    inputStream = body.byteStream();
-                    outputStream = new FileOutputStream(futureStudioIconFile);
-
-                    while (true) {
-                        int read = inputStream.read(fileReader);
-
-                        if (read == -1) {
-                            break;
-                        }
-
-                        outputStream.write(fileReader, 0, read);
-
-                        fileSizeDownloaded += read;
-
-                        //  Log.d("File Download: " , fileSizeDownloaded + " of " + fileSize);
-                    }
-
-                    outputStream.flush();
-
-                    return true;
-                } catch (IOException e) {
-                    return false;
-                } finally {
-                    if (inputStream != null) {
-                        inputStream.close();
-                    }
-
-                    if (outputStream != null) {
-                        outputStream.close();
-                    }
-                }
-            } catch (IOException e) {
-                return false;
-            }
         }
 
         @Override

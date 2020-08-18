@@ -52,7 +52,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
     public interface OnProbClickListener {
         void onDeletedProb(short id);
 
-        void onDownloadProtocol(String adres, short id);
+        void onDownloadProtocol(int position, short id);
     }
 
     @NonNull
@@ -72,6 +72,7 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
 
         initRecyclerView(simpleViewHolder, CurrentProb);
         simpleViewHolder.NameProb.setText(MessageFormat.format("Проба № {0}", i + 1));
+
 
         assert CurrentProb != null;
         if (CurrentProb.getProtocol() != null)
@@ -178,15 +179,18 @@ public class ProbAdapter extends RecyclerSwipeAdapter<ProbAdapter.SimpleViewHold
                 swipeLayout.setSwipeEnabled(false);
 
             buttonDelete.setOnClickListener(view -> {
-                swipeLayout.close();
+              //  swipeLayout.close();
                 closeAllItems();
                 OnProbClickListener.onDeletedProb(getPositionKey(getLayoutPosition()));
             });
 
             btnDownload.setOnClickListener(view -> {
-                swipeLayout.close();
+              //  swipeLayout.close();
                 closeAllItems();
-                OnProbClickListener.onDownloadProtocol(Objects.requireNonNull(Probs.get(getPositionKey(getLayoutPosition()))).getProtocol(), Objects.requireNonNull(Probs.get(getPositionKey(getLayoutPosition()))).getId());
+                OnProbClickListener.onDownloadProtocol(
+                        getLayoutPosition() + 1,
+                        getPositionKey(getLayoutPosition())
+                );
             });
 
             buttonCopy.setVisibility(View.GONE);

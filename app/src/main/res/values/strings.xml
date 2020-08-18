@@ -85,6 +85,16 @@
         <item>Отправить заявку на почту</item>
     </string-array>
 
+    <string-array name="menu_download_file_no_email">
+        <item>Скачать архив протоколов на устройство</item>
+        <item>Скачать заявку на устройство</item>
+    </string-array>
+
+    <string-array name="menu_download_protocol">
+        <item>Скачать протокол на устройство</item>
+        <item>Отправить протокол на почту</item>
+    </string-array>
+
     <string-array name="menu_create_order">
         <item>Сохранить заявку</item>
         <item>Отправить заявку</item>
@@ -227,5 +237,7 @@
     <string name="orderIsCreate">Заказ успешно создан.</string>
     <string name="probIsSort">Были созданы новые пробы, состоящие из исследований, не входящих в область аккредитации, по этим пробам будет выдано Экспертное заключение.</string>
     <string name="push">Push уведомления</string>
+    <string name="sendemail_error">Отправляемый файл не существует.</string>
+    <string name="file_send_ok">Файл успешно отправлен!</string>
 
 </resources>

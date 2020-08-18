@@ -111,8 +111,8 @@ public interface ServerApi {
     Call<AnswerSendOrder> SaveOrder(@Field("token") String token, @Field("order") String order);
 
     @FormUrlEncoded
-    @POST("orders/save")
-    Call<ResponseBody> DownloadProtocol(@Field("token") String token);
+    @POST("orders/saveProtocol")
+    Call<ResponseBody> DownloadProtocol(@Field("token") String token, @Field("id") int id);
 
     @FormUrlEncoded
     @POST("session/checkTokenStatus")
@@ -224,5 +224,13 @@ public interface ServerApi {
 
     @FormUrlEncoded
     @POST("orders/sendFileToEmail")
-    Call<StandardAnswer> SendFileToEmail(@Field("token") String token, @Field("id") int id);
+    Call<StandardAnswer> SendFileToEmail(@Field("token") String token, @Field("id") int id, @Field("Type") String Type);
+
+    @FormUrlEncoded
+    @POST("orders/sendFileToEmail")
+    Call<StandardAnswer> SendFileToEmail(@Field("token") String token, @Field("id") int id, @Field("Type") String Type, @Field("probId") int probId);
+
+    @FormUrlEncoded
+    @POST("orders/downloadArchive")
+    Call<ResponseBody> downloadArchive(@Field("token") String token, @Field("id") int id);
 }

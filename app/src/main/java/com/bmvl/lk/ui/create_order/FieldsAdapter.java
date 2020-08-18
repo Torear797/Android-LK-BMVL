@@ -261,12 +261,7 @@ public class FieldsAdapter extends RecyclerView.Adapter {
                     // ((SelectButtonHolder) holder).path.setText(MessageFormat.format("<a href=\"{0}", MessageFormat.format("{0}/{1}", NetworkService.getServerUrl(), f.getValue() + "\">Загруженный файл</a>")));
                 }
 
-                ((SelectButtonHolder) holder).select_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onClickFieldListener.onLoadActOfSelection(((SelectButtonHolder) holder).path);
-                    }
-                });
+                ((SelectButtonHolder) holder).select_btn.setOnClickListener(v -> onClickFieldListener.onLoadActOfSelection(((SelectButtonHolder) holder).path));
 
                 break;
             }//Акт
